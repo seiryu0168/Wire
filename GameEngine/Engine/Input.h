@@ -2,8 +2,10 @@
 
 #include <dInput.h>
 #include"Direct3D.h"
+#include"XInput.h"
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dInput8.lib")
+#pragma comment(lib,"Xinput.lib")
 #include"SAFE_DELETE_RELEASE.h"
 
 namespace Input
@@ -19,6 +21,11 @@ namespace Input
 	bool IsMouseButton(int buttonCode);
 	bool IsMouseButtonDown(int buttonCode);
 	bool IsMouseButtonUp(int buttonCode);
+
+	//コントローラー
+	bool IsPadButton(int buttonCode);
+	bool IsPadButtonDown(int buttonCode);
+	bool IsPadButtonUp(int buttonCode);
 
 	XMVECTOR GetMousePosition();
 	void SetMousePosition(int x, int y);

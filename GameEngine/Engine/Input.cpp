@@ -6,6 +6,8 @@ namespace Input
 		LPDIRECTINPUT8   pDInput = nullptr;				//ポインタなのであとでリリース
 		LPDIRECTINPUTDEVICE8 pKeyDevice = nullptr;		//キーデバイス
 		LPDIRECTINPUTDEVICE8 pMouseDevice = nullptr;	//マウスデバイス
+		XINPUT_STATE		 Controller_;
+		XINPUT_STATE		 prevController_;
 		BYTE keyState[256] = { 0 };						//押されてるかどうか判定する変数
 		BYTE prevKeyState[256] = { 0 };					//前フレーム押されてたかどうか
 		XMVECTOR mousePosition;
@@ -31,6 +33,7 @@ namespace Input
 		pMouseDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
 
 		//コントローラー
+		ZeroMemory(&Controller_, sizeof(XINPUT_STATE));
 	}
 
 	void Update()
@@ -42,6 +45,9 @@ namespace Input
 		pMouseDevice->Acquire();
 		memcpy(&prevMouseState, &mouseState, sizeof(mouseState));		//前フレームの状態をコピー
 		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);	//キー調べる
+
+		memcpy(&prevController_, &Controller_, sizeof(Controller_));
+		XInputGetState(0, &Controller_);
 	}
 
 	bool IsKey(int keyCode)
@@ -88,6 +94,32 @@ namespace Input
 	bool IsMouseButtonUp(int buttonCode)
 	{
 		if (!(mouseState.rgbButtons[buttonCode] & 0x80) && (prevMouseState.rgbButtons[buttonCode] & 0x80))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool IsPadButton(int buttonCode)
+	{
+		if (Controller_.Gamepad.wButtons & buttonCode)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	bool IsPadButtonDown(int buttonCode)
+	{
+		if (IsPadButton(buttonCode)&&!(Controller_.Gamepad.wButtons & buttonCode))
+		{
+			return true;
+		}
+		return false;
+	}
+	bool IsPadButtonUp(int buttonCode)
+	{
+		if (IsPadButton(buttonCode) && !(Controller_.Gamepad.wButtons & buttonCode))
 		{
 			return true;
 		}

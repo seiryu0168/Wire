@@ -28,19 +28,14 @@ void Player::Initialize()
 //XV
 void Player::Update()
 {
-    if (Input::IsKeyDown(DIK_A))
+    if (Input::IsPadButton(XINPUT_GAMEPAD_A))
     {
-        SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
-        pSceneManager->ChangeScene(SCENE_ID_PLAY);
+        int a = 10;
     }
-    
-    EngineTime::GetTime();
-    transform_.rotate_.x += 1.0f;
 }
 
 void Player::FixedUpdate()
 {
-    int aa = EngineTime::GetTime();
    
 }
 
