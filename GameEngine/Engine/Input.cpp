@@ -126,6 +126,58 @@ namespace Input
 		return false;
 	}
 
+	float GetLStick_X()
+	{
+		if (Controller_.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			return Controller_.Gamepad.sThumbLX / TILT_MAX;
+		}
+		return 0;
+	}
+	float GetLStick_Y()
+	{
+		if (Controller_.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			return Controller_.Gamepad.sThumbLY / TILT_MAX;
+		}
+		return 0;
+	}
+	float GetRStick_X()
+	{
+		if (Controller_.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			return Controller_.Gamepad.sThumbRX / TILT_MAX;
+		}
+		return 0;
+	}
+	float GetRStick_Y()
+	{
+		if (Controller_.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			return Controller_.Gamepad.sThumbRY / TILT_MAX;
+		}
+		return 0;
+	}
+
+	float GetLTrigger()
+	{
+		if (Controller_.Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bLeftTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+
+	float GetRTrigger()
+	{
+		if (Controller_.Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bRightTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+
+
 	XMVECTOR GetMousePosition()
 	{
 		return mousePosition;

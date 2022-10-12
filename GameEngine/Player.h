@@ -5,6 +5,11 @@
 class Player : public GameObject
 {
     int hModel_;
+    XMVECTOR vCamPos;
+    XMVECTOR vPlayerPos;
+    XMMATRIX matCam;
+    float angleY;
+    float angleX;
 public:
     //コンストラクタ
     Player(GameObject* parent);
@@ -24,6 +29,8 @@ public:
 
     //開放
     void Release() override;
+
+    void CameraMove();
 
     void OnCollision(GameObject* pTarget) override; 
 };

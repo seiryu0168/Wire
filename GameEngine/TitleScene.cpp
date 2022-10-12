@@ -12,7 +12,7 @@ TitleScene::TitleScene(GameObject* parent)
 void TitleScene::Initialize()
 {
 	Instantiate<Test>(this);
-	//Instantiate<Player>(this);
+	Instantiate<Player>(this);
 }
 
 //XV
