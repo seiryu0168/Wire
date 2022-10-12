@@ -19,7 +19,7 @@ Player::~Player()
 void Player::Initialize()
 {
     transform_.position_ = XMFLOAT3(-2.0f, 0.0f, 0.0f);
-    hModel_ = Model::Load("Assets\\Jet.fbx");
+    hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1,4,1));
     AddCollider(pCollider);
