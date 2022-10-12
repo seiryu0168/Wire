@@ -19,7 +19,7 @@ void Test::Initialize()
 {
     transform_.position_ = XMFLOAT3(2.0f, 0.0f, 10.0f);
     
-    hModel_=Model::Load("Assets\\PNGBox.fbx");
+    hModel_=Model::Load("Assets\\TestBox.fbx");
     //hModel_=Model::Load("Assets\\BlueBall.fbx");
     //hModel_=Model::Load("Assets\\BlueBall.fbx");
     assert(hModel_ >= 0);
@@ -112,6 +112,11 @@ void Test::Update()
     if (ray.hit)
     {
         bool a = ray.hit;
+        XMFLOAT3 b;
+        XMFLOAT3 c;
+        XMStoreFloat3(&b, ray.hitPos);
+        XMStoreFloat3(&c, ray.normal);
+        int g = 10;
     }
 
 }

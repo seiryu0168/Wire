@@ -49,7 +49,7 @@ bool Math::Intersect(RayCastData& rayCast, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2
 		XMVECTOR vU = XMLoadFloat3(&e1)*u;
 		XMVECTOR vV = XMLoadFloat3(&e2)*v;
 		XMVECTOR vV0 = XMLoadFloat3(&v0);
-		XMStoreFloat3(&rayCast.hitPos, (vV0 + vU + vV));
+		rayCast.hitPos=vV0 + vU + vV;
 		rayCast.dist = l;
 		return true;
 	}

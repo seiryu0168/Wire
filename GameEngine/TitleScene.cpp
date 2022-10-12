@@ -11,8 +11,8 @@ TitleScene::TitleScene(GameObject* parent)
 //‰Šú‰»
 void TitleScene::Initialize()
 {
-	//Instantiate<Test>(this);
-	Instantiate<Player>(this);
+	Instantiate<Test>(this);
+	//Instantiate<Player>(this);
 }
 
 //XV
