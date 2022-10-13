@@ -8,8 +8,10 @@ class Player : public GameObject
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
     XMMATRIX matCam;
+    float speed;
     float angleY;
     float angleX;
+
 public:
     //コンストラクタ
     Player(GameObject* parent);

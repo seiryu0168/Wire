@@ -6,7 +6,14 @@
 #include"EngineTime.h"
 //コンストラクタ
 Player::Player(GameObject* parent)
-    :GameObject(parent, "Player"),hModel_(-1),vCamPos(XMVectorSet(0,3,10,0)),matCam(XMMatrixIdentity()),angleY(0),angleX(0)
+    :GameObject(parent, "Player"),
+    hModel_(-1),
+    vCamPos(XMVectorSet(0, 3, -10, 0)),
+    vPlayerPos(XMVectorSet(0,0,0,0)),
+    matCam(XMMatrixIdentity()),
+    speed(4.0f),
+    angleY(0),
+    angleX(0)
 
 {
 }
@@ -29,13 +36,11 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
-    float sd = 0;
-    
     CameraMove();
-    if (Input::IsPadButton(XINPUT_GAMEPAD_A))
-    {
-        int a = 10;
-    }
+    transform_.position_.x += Input::GetLStick_X();
+    transform_.position_.z += Input::GetLStick_Y();
+
+
 }
 
 void Player::FixedUpdate()
@@ -57,31 +62,16 @@ void Player::Release()
 
 void Player::CameraMove()
 {
-    if (Input::IsKey(DIK_A))
-    {
-        angleY++;
-
-    }
-    if (Input::IsKey(DIK_D))
-    {
-        angleY--;
-    }
-    if (Input::IsKey(DIK_W))
-    {
-        angleX--;
-
-    }
-    if (Input::IsKey(DIK_S))
-    {
-        angleX++;
-    }
-
+    angleX += Input::GetRStick_X();
+    angleY += Input::GetRStick_Y();
 
     vPlayerPos = XMLoadFloat3(&transform_.position_);
+    Camera::SetTarget(vPlayerPos);
     XMVECTOR vMoveCam;
-    matCam = XMMatrixRotationX(angleX * (M_PI / 180));
-    matCam *= XMMatrixRotationY(angleY * (M_PI / 180));
+    matCam = XMMatrixRotationX(angleY*speed * (M_PI / 180));
+    matCam *= XMMatrixRotationY(angleX*speed * (M_PI / 180));
     vMoveCam = XMVector3TransformCoord(vCamPos, matCam);
+    
     Camera::SetPosition(vPlayerPos + vMoveCam);
 }
 

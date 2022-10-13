@@ -128,7 +128,7 @@ namespace Input
 
 	float GetLStick_X()
 	{
-		if (Controller_.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		if (fabs(Controller_.Gamepad.sThumbLX) >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 		{
 			return Controller_.Gamepad.sThumbLX / TILT_MAX;
 		}
@@ -136,7 +136,7 @@ namespace Input
 	}
 	float GetLStick_Y()
 	{
-		if (Controller_.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		if (fabs(Controller_.Gamepad.sThumbLY) >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 		{
 			return Controller_.Gamepad.sThumbLY / TILT_MAX;
 		}
@@ -144,7 +144,7 @@ namespace Input
 	}
 	float GetRStick_X()
 	{
-		if (Controller_.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		if (fabs(Controller_.Gamepad.sThumbRX) >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 		{
 			return Controller_.Gamepad.sThumbRX / TILT_MAX;
 		}
@@ -152,7 +152,7 @@ namespace Input
 	}
 	float GetRStick_Y()
 	{
-		if (Controller_.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		if (fabs(Controller_.Gamepad.sThumbRY) >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 		{
 			return Controller_.Gamepad.sThumbRY / TILT_MAX;
 		}
