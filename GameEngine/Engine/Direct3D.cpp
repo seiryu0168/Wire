@@ -24,11 +24,17 @@ namespace Direct3D
 		ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
+
+	int screenWidth;
+	int screenHeight;
 }
 
 //初期化
 HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
+
+	screenWidth = winW;
+	screenHeight = winH;
 	///////////////////////////いろいろ準備するための設定///////////////////////////////
 	//いろいろな設定項目をまとめた構造体
 	DXGI_SWAP_CHAIN_DESC scDesc;

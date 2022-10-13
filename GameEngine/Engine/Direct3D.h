@@ -37,6 +37,8 @@ namespace Direct3D
 {
 	extern ID3D11Device* pDevice;				//デバイス
 	extern ID3D11DeviceContext* pContext;		//デバイスコンテキスト
+	extern int screenWidth;
+	extern int screenHeight;
 	/*std::vector<RenderTarget*> renderTargetList_;
 	int targetList[] =
 	{

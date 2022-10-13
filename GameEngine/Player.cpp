@@ -10,6 +10,7 @@ Player::Player(GameObject* parent)
     hModel_(-1),
     vCamPos(XMVectorSet(0, 3, -10, 0)),
     vPlayerPos(XMVectorSet(0,0,0,0)),
+    vPlayerMove(XMVectorSet(0,0,0,0)),
     matCam(XMMatrixIdentity()),
     speed(4.0f),
     angleY(0),
@@ -37,9 +38,45 @@ void Player::Initialize()
 void Player::Update()
 {
     CameraMove();
-    transform_.position_.x += Input::GetLStick_X();
-    transform_.position_.z += Input::GetLStick_Y();
+ 
+    XMVECTOR vMove;
+    vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
+    vMove = XMVector3TransformCoord(vMove, matCam);
+    XMFLOAT3 Move;
+    XMStoreFloat3(&Move, vMove);
+    transform_.position_.x += Move.x;
+    transform_.position_.z += Move.z;
 
+
+    if (Input::GetLTrigger())
+    {
+
+        float w = (float)Direct3D::screenWidth / 2.0f;
+        float h = (float)Direct3D::screenHeight / 2.0f;
+
+        XMMATRIX vp = { w,0,0,0,
+                        0,-h,0,0,
+                        0,0,1,0,
+                        w,h,0,1
+        };
+
+        XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
+        XMMATRIX invVw = XMMatrixInverse(nullptr,Camera::GetViewMatrix());
+        XMMATRIX invPr = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
+
+        XMFLOAT3 ptrFront = { w,h,0 };
+        XMVECTOR vPtrFront = XMLoadFloat3(&ptrFront);
+        XMFLOAT3 ptrBack = { w,h,1 };
+        XMVECTOR vPtrBack = XMLoadFloat3(&ptrBack);
+ 
+        XMVector3TransformCoord(vPtrFront, invVp * invPr * invVw);
+        XMVector3TransformCoord(vPtrBack, invVp * invPr * invVw);
+
+        RayCastData ray;
+        XMStoreFloat3(&ray.start, vPtrFront);
+        XMStoreFloat3(&ray.dir, vPtrBack - vPtrFront);
+       // Model::RayCast()
+    }
 
 }
 

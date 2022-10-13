@@ -33,6 +33,8 @@ namespace Input
 	float GetRStick_X();
 	float GetRStick_Y();
 
+
+
 	float GetLTrigger();
 	float GetRTrigger();
 
