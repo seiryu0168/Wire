@@ -1,8 +1,9 @@
 #include "TitleScene.h"
-#include"Player.h"
 #include"Engine/Model.h"
-#include"Test.h"
 #include"Engine/Fbx.h"
+#include"Player.h"
+#include"Test.h"
+#include"Stage1.h"
 TitleScene::TitleScene(GameObject* parent)
 	: GameObject(parent, "TitleScene")
 {
@@ -13,6 +14,7 @@ void TitleScene::Initialize()
 {
 	Instantiate<Test>(this);
 	Instantiate<Player>(this);
+	Instantiate<Stage1>(this);
 }
 
 //çXêV

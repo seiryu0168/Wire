@@ -287,11 +287,11 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
 
-		if (cb.isTexture)
-		{
 			D3D11_MAPPED_SUBRESOURCE pdata;
 			Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
 			memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
+		if (cb.isTexture)
+		{
 
 			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
 			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
@@ -299,9 +299,10 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 
 			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
 
+
+		}
 			Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
 			Direct3D::pContext->OMSetBlendState(Direct3D::GetBlendState(), factor, 0xffffffff);			//ブレンドステート
-
 			//頂点バッファ
 			UINT stride = sizeof(VERTEX);
 			UINT offset = 0;
@@ -317,7 +318,6 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 			Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
 			Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
 			Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
-		}
 	}
 
 	//ToPipeLine(transform);

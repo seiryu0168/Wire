@@ -75,7 +75,7 @@ void Player::Update()
         RayCastData ray;
         XMStoreFloat3(&ray.start, vPtrFront);
         XMStoreFloat3(&ray.dir, vPtrBack - vPtrFront);
-       // Model::RayCast()
+        //Model::RayCast()
     }
 
 }
