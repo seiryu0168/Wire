@@ -337,7 +337,7 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 
 		XMVECTOR nmlVec1;
 		XMVECTOR nmlVec2;
-		for (int poly = 0; poly < 3; poly++)
+		for (int poly = 0; poly < indexCount_[material]; poly++)
 		{
 			XMFLOAT3 v0 = {0,0,0};
 			XMStoreFloat3(&v0, pVertices_[ppIndex_[material][poly]].position);

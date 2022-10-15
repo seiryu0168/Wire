@@ -5,6 +5,7 @@
 class Player : public GameObject
 {
     int hModel_;
+    int stageNum_;
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
     XMVECTOR vPlayerMove;

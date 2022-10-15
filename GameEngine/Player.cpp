@@ -2,6 +2,7 @@
 #include"Engine/Input.h"
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
+#include"Stage1.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
 //コンストラクタ
@@ -32,6 +33,7 @@ void Player::Initialize()
     assert(hModel_ >= 0);
     BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1,4,1));
     AddCollider(pCollider);
+    stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
 }
 
 //更新
@@ -54,28 +56,34 @@ void Player::Update()
         float w = (float)Direct3D::screenWidth / 2.0f;
         float h = (float)Direct3D::screenHeight / 2.0f;
 
-        XMMATRIX vp = { w,0,0,0,
-                        0,-h,0,0,
-                        0,0,1,0,
-                        w,h,0,1
-        };
+        XMMATRIX vp = { w, 0, 0, 0,
+                        0,-h, 0, 0,
+                        0, 0, 1, 0,
+                        w, h, 0, 1
+                      };
 
         XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
-        XMMATRIX invVw = XMMatrixInverse(nullptr,Camera::GetViewMatrix());
+        XMMATRIX invVw = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
         XMMATRIX invPr = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
 
-        XMFLOAT3 ptrFront = { w,h,0 };
+        XMFLOAT3 ptrFront = { w, h, 0 };
         XMVECTOR vPtrFront = XMLoadFloat3(&ptrFront);
-        XMFLOAT3 ptrBack = { w,h,1 };
+        XMFLOAT3 ptrBack = { w, h, 1 };
         XMVECTOR vPtrBack = XMLoadFloat3(&ptrBack);
  
-        XMVector3TransformCoord(vPtrFront, invVp * invPr * invVw);
-        XMVector3TransformCoord(vPtrBack, invVp * invPr * invVw);
+        vPtrFront = XMVector3Normalize(XMVector3TransformCoord(vPtrFront, invVp * invPr * invVw));
+        vPtrBack = XMVector3Normalize(XMVector3TransformCoord(vPtrBack, invVp * invPr * invVw));
 
         RayCastData ray;
         XMStoreFloat3(&ray.start, vPtrFront);
         XMStoreFloat3(&ray.dir, vPtrBack - vPtrFront);
-        //Model::RayCast()
+        Model::RayCast(stageNum_, ray);
+
+        if (ray.hit)
+        {
+            XMFLOAT3 hitPosition;
+            XMStoreFloat3(&hitPosition, ray.hitPos);
+        }
     }
 
 }
