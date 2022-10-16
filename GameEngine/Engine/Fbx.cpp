@@ -351,11 +351,12 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 			nmlVec1 = pVertices_[ppIndex_[material][poly + 1]].position - pVertices_[ppIndex_[material][poly]].position;
 			nmlVec2 = pVertices_[ppIndex_[material][poly + 2]].position - pVertices_[ppIndex_[material][poly]].position;
 			poly += 2;
-			float length = 0.0f;
+
 			XMVECTOR hitPosition;
 			if (Math::Intersect(ray.start,ray.dir, v0, v1, v2,ray.dist,hitPosition)&&ray.dist<prev)
 			{
 				ray.normal = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
+				ray.dist=
 				prev = ray.dist;
 				ray.hitPos = XMVector3TransformCoord(hitPosition, transform.GetWorldMatrix());
 				ray.hit = true;

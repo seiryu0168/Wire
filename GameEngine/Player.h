@@ -9,6 +9,7 @@ class Player : public GameObject
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
     XMVECTOR vPlayerMove;
+    XMVECTOR vBaseTarget;
     XMMATRIX matCam;
     float speed;
     float angleY;

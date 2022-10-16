@@ -19,7 +19,7 @@ bool Math::Intersect(XMFLOAT3 start, XMFLOAT3 dir, XMFLOAT3 v0, XMFLOAT3 v1, XMF
 	float e1e2d = Math::Det(e1, e2, d);
 	float u = Math::Det(s, e2, d) / e1e2d;
 	float v = Math::Det(e1, s, d) / e1e2d;
-	float l = Math::Det(s, e2, d) / e1e2d;
+	float l = Math::Det(e1, e2, s) / e1e2d;
 
 	if (u >= 0 && u <= 1 && v >= 0 && v <= 1 && (u + v) <= 1 && l >= 0)
 	{

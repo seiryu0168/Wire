@@ -111,7 +111,7 @@ namespace Input
 	
 	bool IsPadButtonDown(int buttonCode)
 	{
-		if (IsPadButton(buttonCode)&&!(Controller_.Gamepad.wButtons & buttonCode))
+		if (IsPadButton(buttonCode)&&!(prevController_.Gamepad.wButtons & buttonCode))
 		{
 			return true;
 		}
@@ -119,7 +119,7 @@ namespace Input
 	}
 	bool IsPadButtonUp(int buttonCode)
 	{
-		if (IsPadButton(buttonCode) && !(Controller_.Gamepad.wButtons & buttonCode))
+		if (!IsPadButton(buttonCode) && (prevController_.Gamepad.wButtons & buttonCode))
 		{
 			return true;
 		}
