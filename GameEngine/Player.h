@@ -4,6 +4,8 @@
 
 class Player : public GameObject
 {
+    XMVECTOR rayDir[6];
+
     int hModel_;
     int stageNum_;
     XMVECTOR vCamPos;
@@ -34,6 +36,8 @@ public:
 
     //ŠJ•ú
     void Release() override;
+
+    void CharactorControll();
 
     void CameraMove();
 

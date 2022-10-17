@@ -31,16 +31,21 @@ void Player::Initialize()
 {
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
-    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1,4,1));
+    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 4, 1));
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
+
+    rayDir[0] = XMVectorSet(0, 1, 0, 0);
+    rayDir[1] = XMVectorSet(0, -1, 0, 0);
+    rayDir[2] = XMVectorSet(1, 0, 0, 0);
+    rayDir[3] = XMVectorSet(-1, 0, 0, 0);
+    rayDir[4] = XMVectorSet(0, 0, 1, 0);
+    rayDir[5] = XMVectorSet(0, 0, -1, 0);
 }
 
 //更新
 void Player::Update()
 {
-    CameraMove();
- 
     XMVECTOR vMove;
     vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
     vMove = XMVector3TransformCoord(vMove, matCam);
@@ -61,6 +66,7 @@ void Player::Update()
                         0, 0, 1, 0,
                         w, h, 0, 1
                       };
+
         //ビューポート(vp),ビュー,プロジェクションの逆行列を作る
         XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
         XMMATRIX invVw = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
@@ -72,13 +78,11 @@ void Player::Update()
         //XMFLOAT3 ptrBack = { w, h, 1 };
         XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget, matCam);//XMLoadFloat3(&ptrBack);
  
-        //vPtrFront = XMLoadFloat3(&transform_.position_)//XMVector3Normalize(XMVector3TransformCoord(vPtrFront, invVp * invPr * invVw));
-        //vPtrBack = XMLoadFloat3()//XMVector3Normalize(XMVector3TransformCoord(vPtrBack, invVp * invPr * invVw));
-
         RayCastData ray;
         XMStoreFloat3(&ray.start, vPtrFront);
         XMStoreFloat3(&ray.dir, vPtrBack);
         Model::RayCast(stageNum_, ray);
+            
         if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
         {
             XMFLOAT3 nmlCheck;
@@ -95,6 +99,8 @@ void Player::Update()
             }
         }
     }
+    CharactorControll();
+    CameraMove();
 
 }
 
@@ -138,6 +144,24 @@ void Player::CameraMove()
     
     Camera::SetTarget(vPlayerPos+vTarCam);
     Camera::SetPosition(vPlayerPos + vMoveCam);
+}
+
+void Player::CharactorControll()
+{
+    RayCastData Ray;
+    Ray.start = transform_.position_;
+    for (XMVECTOR check : rayDir)
+    {
+
+        XMStoreFloat3(&Ray.dir, check);
+        Model::RayCast(stageNum_, Ray);
+        if (Ray.dist <= 1)
+        {
+            transform_.position_.x -= Ray.dir.x;
+            transform_.position_.y -= Ray.dir.y;
+            transform_.position_.z -= Ray.dir.z;
+        }
+    }
 }
 
 void Player::OnCollision(GameObject* pTarget)
