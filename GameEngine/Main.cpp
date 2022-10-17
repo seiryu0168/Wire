@@ -134,6 +134,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			if (((nowTime - lastFixedUpdateTime) * 60.0f) * 1.0f >= 1000.0f)
 			{
+				//ƒQ[ƒ€‚Ìˆ—
+				Input::Update();
+				Camera::Update();
+
 				lastFixedUpdateTime = nowTime;
 				pRootJob->FixedUpdateSub();
 			}

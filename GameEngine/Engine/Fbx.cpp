@@ -356,7 +356,7 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 			if (Math::Intersect(ray.start,ray.dir, v0, v1, v2,ray.dist,hitPosition)&&ray.dist<prev)
 			{
 				ray.normal = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
-				ray.dist=
+				//ray.dist=
 				prev = ray.dist;
 				ray.hitPos = XMVector3TransformCoord(hitPosition, transform.GetWorldMatrix());
 				ray.hit = true;
