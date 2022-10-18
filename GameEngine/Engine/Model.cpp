@@ -63,7 +63,7 @@ void Model::RayCast(int modelNum, RayCastData& ray)
 
 	XMStoreFloat3(&ray.start, vStart);
 	XMStoreFloat3(&ray.dir, vPass - vStart);
-		modelData_[modelNum]->pfbx_->RayCast(ray,modelData_[modelNum]->transform_);
+	modelData_[modelNum]->pfbx_->RayCast(ray,modelData_[modelNum]->transform_);
 }
 
 
