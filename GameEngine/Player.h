@@ -4,12 +4,16 @@
 
 class Player : public GameObject
 {
+    XMVECTOR rayDir[6];
+
     int hModel_;
     int stageNum_;
+    bool flyFlag;
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
     XMVECTOR vPlayerMove;
     XMVECTOR vBaseTarget;
+    XMVECTOR vFlyMove;
     XMMATRIX matCam;
     float speed;
     float angleY;
@@ -34,6 +38,8 @@ public:
 
     //ŠJ•ú
     void Release() override;
+
+    void CharactorControll();
 
     void CameraMove();
 
