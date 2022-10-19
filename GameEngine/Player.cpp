@@ -39,7 +39,6 @@ void Player::Initialize()
 //çXêV
 void Player::Update()
 {
-    CameraMove();
  
     XMVECTOR vMove;
     vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
@@ -96,6 +95,7 @@ void Player::Update()
         }
     }
 
+    CameraMove();
 }
 
 void Player::FixedUpdate()
