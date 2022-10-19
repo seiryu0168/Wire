@@ -13,7 +13,8 @@ Player::Player(GameObject* parent)
     vPlayerPos(XMVectorSet(0,0,0,0)),
     //vPlayerMove(XMVectorSet(0,0,0,0)),
     vBaseTarget(XMVectorSet(0,0,5,0)),
-    matCam(XMMatrixIdentity()),
+    matCamX(XMMatrixIdentity()),
+    matCamY(XMMatrixIdentity()),
     speed(4.0f),
     angleY(0),
     angleX(0),
@@ -64,8 +65,8 @@ void Player::Update()
 {
     XMVECTOR vMove;
     vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
-    vMove = XMVector3TransformCoord(vMove, matCam);
-    /*XMFLOAT3 Move;
+    vMove = XMVector3TransformCoord(vMove, matCamX);
+   /* XMFLOAT3 Move;
     XMStoreFloat3(&Move, vMove);
     transform_.position_.x += Move.x;
     transform_.position_.z += Move.z;*/
@@ -92,7 +93,7 @@ void Player::Update()
         //‰æ–Ê‚Ì’†‰›‚Ì
         //XMFLOAT3 ptrFront = { w, h, 0 };
         //XMFLOAT3 ptrBack = { w, h, 1 };
-        XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget, matCam);//XMLoadFloat3(&ptrBack);
+        XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget, matCamY*matCamX);//XMLoadFloat3(&ptrBack);
  
         RayCastData ray;
         XMStoreFloat3(&ray.start, vPlayerPos);
@@ -104,8 +105,8 @@ void Player::Update()
             XMFLOAT3 nmlCheck;
             XMStoreFloat3(&nmlCheck,XMVector3Dot(-(XMLoadFloat3(&ray.dir)), ray.normal));
             float nmlX = acos(nmlCheck.x);
-            float nmlY= acos(nmlCheck.y);
-            float nmlZ= acos(nmlCheck.z);
+            float nmlY = acos(nmlCheck.y);
+            float nmlZ = acos(nmlCheck.z);
             if (ray.hit && abs(nmlX) <= (M_PI/2) && abs(nmlY) <= (M_PI/2) && abs(nmlZ) <= (M_PI/2))
             {
                 vFlyMove = XMVector3Normalize(ray.hitPos - vPlayerPos);
@@ -121,9 +122,9 @@ void Player::Update()
     }
 
     XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
-    vPlayerMove = vPlayerPos + vFly;
+    vPlayerMove = vMove + vFly;
     CharactorControll(vPlayerMove);
-    XMStoreFloat3(&transform_.position_, vPlayerMove);
+    XMStoreFloat3(&transform_.position_, vPlayerPos + vPlayerMove);
     CameraMove();
 
 }
@@ -161,10 +162,10 @@ void Player::CameraMove()
     {
         angleX = 69;
     }
-    matCam = XMMatrixRotationX(angleX * (M_PI / 180));
-    matCam *= XMMatrixRotationY(angleY * (M_PI / 180));
-    vMoveCam = XMVector3TransformCoord(vCamPos, matCam);
-    vTarCam = XMVector3TransformCoord(vBaseTarget, matCam);
+    matCamY = XMMatrixRotationX(angleX * (M_PI / 180));
+    matCamX = XMMatrixRotationY(angleY * (M_PI / 180));
+    vMoveCam = XMVector3TransformCoord(vCamPos, matCamY*matCamX);
+    vTarCam = XMVector3TransformCoord(vBaseTarget, matCamY*matCamX);
     
     Camera::SetTarget(vPlayerPos+vTarCam);
     Camera::SetPosition(vPlayerPos + vMoveCam);
@@ -193,27 +194,26 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     XMFLOAT3 moveDist;
     XMStoreFloat3(&moveDist,moveVector);
-    if (moveDist.z <= FRay.dist)
+    if (moveDist.z >= FRay.dist)
     {
-        transform_.position_.z -= FRay.dist;
+        moveDist.z = FRay.dist;
+        flyFlag = false;
+    }
+    
+    if (abs(moveDist.z) >= BRay.dist)
+    {
+        moveDist.z= -BRay.dist+1;
         flyFlag = false;
     }
 
-    if (BRay.dist <= 1)
+    if (moveDist.x >= RRay.dist)
     {
-        transform_.position_.z += BRay.dist;
+        moveDist.x = RRay.dist-1;
         flyFlag = false;
     }
-
-    if (LRay.dist <= 1)
+    if (abs(moveDist.x) >= LRay.dist)
     {
-        transform_.position_.x += LRay.dist;
-        flyFlag = false;
-    }
-
-    if (RRay.dist <= 1)
-    {
-        transform_.position_.x -= RRay.dist;
+        moveDist.x = -LRay.dist+1;
         flyFlag = false;
     }
     /*for (int i = 0; i < 4; i++)

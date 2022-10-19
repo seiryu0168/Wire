@@ -14,7 +14,8 @@ class Player : public GameObject
     //XMVECTOR vPlayerMove;
     XMVECTOR vBaseTarget;
     XMVECTOR vFlyMove;
-    XMMATRIX matCam;
+    XMMATRIX matCamX;
+    XMMATRIX matCamY;
     float speed;
     float angleY;
     float angleX;
