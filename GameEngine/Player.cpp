@@ -63,16 +63,8 @@ void Player::Initialize()
 //XV
 void Player::Update()
 {
-    XMVECTOR vMove;
-    vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
-    vMove = XMVector3TransformCoord(vMove, matCamX);
-   /* XMFLOAT3 Move;
-    XMStoreFloat3(&Move, vMove);
-    transform_.position_.x += Move.x;
-    transform_.position_.z += Move.z;*/
-   // transform_.position_.y -= 0.3;
-
-        vPlayerPos = XMLoadFloat3(&transform_.position_);
+ 
+    vPlayerPos = XMLoadFloat3(&transform_.position_);
     if (Input::GetLTrigger())
     {
 
@@ -115,6 +107,10 @@ void Player::Update()
             }
         }
     }
+    XMVECTOR vMove;
+    vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
+    vMove = XMVector3TransformCoord(vMove, matCamX) * 0.3f;
+   
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
     if (flyFlag)
     {
@@ -123,8 +119,8 @@ void Player::Update()
 
     XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
     vPlayerMove = vMove + vFly;
-    CharactorControll(vPlayerMove);
     XMStoreFloat3(&transform_.position_, vPlayerPos + vPlayerMove);
+    CharactorControll(vPlayerMove);
     CameraMove();
 
 }
@@ -194,28 +190,54 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     XMFLOAT3 moveDist;
     XMStoreFloat3(&moveDist,moveVector);
-    if (moveDist.z >= FRay.dist)
+
+    if (FRay.dist<1.0f||moveDist.z>=FRay.dist)
     {
-        moveDist.z = FRay.dist;
-        flyFlag = false;
+       transform_.position_.z -= 1.0f-FRay.dist;
+        //if (FRay.dist <= 1.1f)
+        //{
+        //    moveDist.z = 0;
+        //    //transform_.position_.z += FRay.dist - 1;
+        //}
+            flyFlag = false;
     }
     
-    if (abs(moveDist.z) >= BRay.dist)
+    if (BRay.dist < 1.0f || abs(moveDist.z) >= BRay.dist)
     {
-        moveDist.z= -BRay.dist+1;
+        transform_.position_.z += 1.0f-BRay.dist;
+        //if (BRay.dist <= 1.1f)
+        //{
+        //    moveDist.z = 0;
+        //    //transform_.position_.z += 1 - BRay.dist;
+        //}
+            flyFlag = false;
+        
+    }
+
+    if (RRay.dist < 1.0f || moveDist.x >= RRay.dist)
+    {
+        transform_.position_.x -= 1.0f - RRay.dist;
+        //if (RRay.dist <= 1.1f)
+        //{
+        //    moveDist.x = 0;
+        //    //transform_.position_.x += RRay.dist - 1;
+        //}
+            flyFlag = false;
+    }
+    if (LRay.dist < 1.0f || abs(moveDist.x) >= LRay.dist)
+    {
+        transform_.position_.z += 1.0f - LRay.dist;
+        //if (LRay.dist <= 1.1f)
+        //{
+        //    moveDist.x = 0;
+        //    flyFlag = false;
+        //    //transform_.position_.z += 1 - LRay.dist;
+        //}
         flyFlag = false;
     }
 
-    if (moveDist.x >= RRay.dist)
-    {
-        moveDist.x = RRay.dist-1;
-        flyFlag = false;
-    }
-    if (abs(moveDist.x) >= LRay.dist)
-    {
-        moveDist.x = -LRay.dist+1;
-        flyFlag = false;
-    }
+
+    //moveVector = XMLoadFloat3(&moveDist);
     /*for (int i = 0; i < 4; i++)
     {
         XMVector3TransformCoord(rayDir[i + 2], matCam);

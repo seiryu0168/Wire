@@ -357,11 +357,10 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 			{
 				ray.normal      = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
 				ray.hitPos      = XMVector3TransformCoord(hitPosition, transform.GetWorldMatrix());
-				XMVECTOR vStart = XMLoadFloat3(&ray.start);
-				vStart			= XMVector3TransformCoord(vStart, transform.GetWorldMatrix());
-				ray.dist		= XMVectorGetX(XMVector3Length((vStart - ray.hitPos)));
-				
-				prev = ray.dist;
+				//XMVECTOR vStart = XMLoadFloat3(&ray.start);
+				prev=ray.dist;
+				//vStart			= XMVector3TransformCoord(vStart, transform.GetWorldMatrix());
+				//ray.dist		= XMVectorGetX(XMVector3Length((vStart - ray.hitPos)));
 				ray.hit	= true;
 			}
 

@@ -20,7 +20,7 @@ void Stage1::Initialize()
 	hModel_ = Model::Load("Assets\\Stage.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_ = XMFLOAT3(0, 0, 0);
-	transform_.scale_ = XMFLOAT3(5, 5, 5);
+	//transform_.scale_ = XMFLOAT3(5, 5, 5);
 }
 
 //çXêV
