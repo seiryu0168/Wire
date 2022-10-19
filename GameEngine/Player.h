@@ -11,7 +11,7 @@ class Player : public GameObject
     bool flyFlag;
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
-    XMVECTOR vPlayerMove;
+    //XMVECTOR vPlayerMove;
     XMVECTOR vBaseTarget;
     XMVECTOR vFlyMove;
     XMMATRIX matCam;
@@ -39,7 +39,7 @@ public:
     //ŠJ•ú
     void Release() override;
 
-    void CharactorControll();
+    void CharactorControll(XMVECTOR &moveVector);
 
     void CameraMove();
 

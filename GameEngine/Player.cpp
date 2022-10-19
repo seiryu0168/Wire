@@ -11,7 +11,7 @@ Player::Player(GameObject* parent)
     hModel_(-1),
     vCamPos(XMVectorSet(0, 5, -15, 0)),
     vPlayerPos(XMVectorSet(0,0,0,0)),
-    vPlayerMove(XMVectorSet(0,0,0,0)),
+    //vPlayerMove(XMVectorSet(0,0,0,0)),
     vBaseTarget(XMVectorSet(0,0,5,0)),
     matCam(XMMatrixIdentity()),
     speed(4.0f),
@@ -65,10 +65,10 @@ void Player::Update()
     XMVECTOR vMove;
     vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
     vMove = XMVector3TransformCoord(vMove, matCam);
-    XMFLOAT3 Move;
+    /*XMFLOAT3 Move;
     XMStoreFloat3(&Move, vMove);
     transform_.position_.x += Move.x;
-    transform_.position_.z += Move.z;
+    transform_.position_.z += Move.z;*/
    // transform_.position_.y -= 0.3;
 
         vPlayerPos = XMLoadFloat3(&transform_.position_);
@@ -114,14 +114,16 @@ void Player::Update()
             }
         }
     }
-
+    XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
     if (flyFlag)
     {
-        XMStoreFloat3(&transform_.position_, vPlayerPos + vFlyMove);
-
+        vFly=vFlyMove;
     }
 
-    CharactorControll();
+    XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
+    vPlayerMove = vPlayerPos + vFly;
+    CharactorControll(vPlayerMove);
+    XMStoreFloat3(&transform_.position_, vPlayerMove);
     CameraMove();
 
 }
@@ -168,7 +170,7 @@ void Player::CameraMove()
     Camera::SetPosition(vPlayerPos + vMoveCam);
 }
 
-void Player::CharactorControll()
+void Player::CharactorControll(XMVECTOR &moveVector)
 {
     RayCastData FRay;
     RayCastData BRay;
@@ -178,6 +180,7 @@ void Player::CharactorControll()
     BRay.start = transform_.position_;
     LRay.start = transform_.position_;
     RRay.start = transform_.position_;
+    
     XMStoreFloat3(&FRay.dir, rayDir[4]);
     XMStoreFloat3(&BRay.dir, rayDir[5]);
     XMStoreFloat3(&LRay.dir, rayDir[3]);
@@ -188,7 +191,9 @@ void Player::CharactorControll()
     Model::RayCast(stageNum_, LRay);
     Model::RayCast(stageNum_, RRay);
 
-    if (FRay.dist <= 1)
+    XMFLOAT3 moveDist;
+    XMStoreFloat3(&moveDist,moveVector);
+    if (moveDist.z <= FRay.dist)
     {
         transform_.position_.z -= FRay.dist;
         flyFlag = false;
