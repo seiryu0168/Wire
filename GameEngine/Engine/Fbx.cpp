@@ -333,7 +333,7 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 		XMVECTOR vDir = XMLoadFloat3(&ray.dir);
 		vDir = XMVector3Normalize(vDir);
 		XMStoreFloat3(&ray.dir, vDir);
-		float prev = 9999.0f;
+		//float prev = 9999.0f;
 
 		XMVECTOR nmlVec1;
 		XMVECTOR nmlVec2;
@@ -353,12 +353,13 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 			poly += 2;
 
 			XMVECTOR hitPosition;
-			if (Math::Intersect(ray.start,ray.dir, v0, v1, v2,ray.dist,hitPosition)&&ray.dist<prev)
+			float dist;
+			if (Math::Intersect(ray.start,ray.dir, v0, v1, v2,dist,hitPosition)&&dist<ray.dist)
 			{
 				ray.normal      = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
 				ray.hitPos      = XMVector3TransformCoord(hitPosition, transform.GetWorldMatrix());
 				//XMVECTOR vStart = XMLoadFloat3(&ray.start);
-				prev=ray.dist;
+				ray.dist = dist;
 				//vStart			= XMVector3TransformCoord(vStart, transform.GetWorldMatrix());
 				//ray.dist		= XMVectorGetX(XMVector3Length((vStart - ray.hitPos)));
 				ray.hit	= true;

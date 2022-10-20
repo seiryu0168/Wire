@@ -4,6 +4,15 @@
 
 class Player : public GameObject
 {
+    enum DIR_NAME
+    {
+        DIR_FRONT=0,
+        DIR_BACK,
+        DIR_LEFT,
+        DIR_RIGHT,
+        DIR_UP,
+        DIR_DOWN
+    };
     XMVECTOR rayDir[6];
 
     int hModel_;

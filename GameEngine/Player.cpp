@@ -44,12 +44,12 @@ void Player::Initialize()
     RayCastData firstRay;
     firstRay.start = startPos;*/
     
-    rayDir[0] = XMVectorSet(0, 1, 0, 0);
-    rayDir[1] = XMVectorSet(0, -1, 0,0);
-    rayDir[2] = XMVectorSet(1, 0, 0,0);
-    rayDir[3] = XMVectorSet(-1, 0, 0,0);
-    rayDir[4] = XMVectorSet(0, 0, 1,0);
-    rayDir[5] = XMVectorSet(0, 0, -1,0);
+    rayDir[0] = XMVectorSet( 0, 0, 1, 0);
+    rayDir[1] = XMVectorSet( 0, 0,-1, 0);
+    rayDir[2] = XMVectorSet(-1, 0, 0, 0);
+    rayDir[3] = XMVectorSet( 1, 0, 0, 0);
+    rayDir[4] = XMVectorSet( 0, 1, 0, 0);
+    rayDir[5] = XMVectorSet( 0,-1, 0, 0);
     
    /* firstRay.dir = rayDir[1];
     Model::RayCast(stageNum_, firstRay);
@@ -178,51 +178,52 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     LRay.start = transform_.position_;
     RRay.start = transform_.position_;
     
-    XMStoreFloat3(&FRay.dir, moveVector);
-    XMStoreFloat3(&BRay.dir, rayDir[5]);
-    XMStoreFloat3(&LRay.dir, rayDir[3]);
-    XMStoreFloat3(&RRay.dir, rayDir[2]);
+    XMStoreFloat3(&FRay.dir, rayDir[DIR_FRONT]);
+    XMStoreFloat3(&BRay.dir, rayDir[DIR_BACK]);
+    XMStoreFloat3(&LRay.dir, rayDir[DIR_LEFT]);
+    XMStoreFloat3(&RRay.dir, rayDir[DIR_RIGHT]);
 
     Model::RayCast(stageNum_, FRay);
     Model::RayCast(stageNum_, BRay);
     Model::RayCast(stageNum_, LRay);
     Model::RayCast(stageNum_, RRay);
 
-    float moveDist;
-    moveDist = XMVectorGetX(XMVector3Length(moveVector));
+    XMFLOAT3 moveDist;
+    XMStoreFloat3(&moveDist,moveVector);
 
-    if (moveDist >= FRay.dist-1)
-    {
-        moveVector = XMVector3Normalize(moveVector) * (FRay.dist-0.6f);
-    }
     //前方レイの距離(dist)が1以下になったらz軸の座標を戻す
-    //if (moveDist.z+1>=FRay.dist)
-    //{
-    //    moveDist.z = 0;
-    //    flyFlag = false;
-    //}
-    //
-    ////後方レイの距離(dist)が1以下になったらz軸の座標を戻す
-    //if (abs(moveDist.z-1) >= BRay.dist)
-    //{
-    //    moveDist.z = 0;
-    //    flyFlag = false;
-    //}
+    if (moveDist.z+transform_.scale_.z >= FRay.dist)
+    {
+       // transform_.position_.z += FRay.dist - 1.0f;
+        moveDist.z = FRay.dist-1.0f;
+        flyFlag = false;
+    }
+    
+    //後方レイの距離(dist)が1以下になったらz軸の座標を戻す
+    if (abs(moveDist.z-transform_.scale_.z) >= BRay.dist)
+    {
+        transform_.position_.z -= BRay.dist + 1.0f;
+        moveDist.z = 0;
+        flyFlag = false;
+    }
 
-    ////右レイの距離(dist)が1以下になったらx軸の座標を戻す
-    //if (moveDist.x+1 >= RRay.dist)
-    //{
-    //    moveDist.x = 0;
-    //        flyFlag = false;
-    //}
+    //右レイの距離(dist)が1以下になったらx軸の座標を戻す
+    if (moveDist.x+transform_.scale_.x >= RRay.dist)
+    {
+        transform_.position_.x += RRay.dist - 1.0f;
+        moveDist.x = 0;
+            flyFlag = false;
+    }
 
-    ////左レイの距離(dist)が1以下になったらx軸の座標を戻す
-    //if (abs(moveDist.x-1) >= LRay.dist)
-    //{
-    //    moveDist.x = 0;
-    //    flyFlag = false;
-    //}
+    //左レイの距離(dist)が1以下になったらx軸の座標を戻す
+    if (abs(moveDist.x-transform_.scale_.x) >= LRay.dist)
+    {
+        transform_.position_.z -= LRay.dist + 1.0f;
+        moveDist.x = 0;
+        flyFlag = false;
+    }
 
+    moveVector = XMLoadFloat3(&moveDist);
 
     //moveVector = XMLoadFloat3(&moveDist);
     /*for (int i = 0; i < 4; i++)
