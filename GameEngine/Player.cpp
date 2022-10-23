@@ -40,9 +40,9 @@ void Player::Initialize()
     /*transform_.position_.x = -24;
     transform_.position_.z = 10;
     XMFLOAT3 startPos = transform_.position_;
-    startPos.y += 10;
+    startPos.y += 10;*/
     RayCastData firstRay;
-    firstRay.start = startPos;*/
+    firstRay.start = transform_.position_;
     
     rayDir[0] = XMVectorSet( 0, 0, 1, 0);
     rayDir[1] = XMVectorSet( 0, 0,-1, 0);
@@ -51,13 +51,13 @@ void Player::Initialize()
     rayDir[4] = XMVectorSet( 0, 1, 0, 0);
     rayDir[5] = XMVectorSet( 0,-1, 0, 0);
     
-   /* firstRay.dir = rayDir[1];
+    XMStoreFloat3(&firstRay.dir,rayDir[DIR_DOWN]);
     Model::RayCast(stageNum_, firstRay);
 
     if (firstRay.hit)
     {
-        transform_.position_.y = firstRay.dist - transform_.position_.y - 2;
-    }*/
+        transform_.position_.y -= firstRay.dist-transform_.scale_.y;
+    }
 }
 
 //更新
@@ -65,9 +65,9 @@ void Player::Update()
 {
  
     vPlayerPos = XMLoadFloat3(&transform_.position_);
+    
     if (Input::GetLTrigger())
     {
-
         float w = (float)Direct3D::screenWidth / 2.0f;
         float h = (float)Direct3D::screenHeight / 2.0f;
         //ビューポート行列作成
@@ -116,6 +116,10 @@ void Player::Update()
     {
         vFly=vFlyMove;
     }
+    else
+    {
+        vMove += XMVectorSet(0, -0.2f, 0, 0);
+    }
 
     XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
     vPlayerMove = vMove + vFly;
@@ -146,7 +150,7 @@ void Player::CameraMove()
 {
     angleX += Input::GetRStick_Y() * speed;
     angleY += Input::GetRStick_X() * speed;
-
+    transform_.rotate_.y = angleY;
     //vPlayerPos = XMLoadFloat3(&transform_.position_);
     XMVECTOR vMoveCam;
     XMVECTOR vTarCam;
@@ -173,20 +177,28 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData BRay;
     RayCastData LRay;
     RayCastData RRay;
+    RayCastData URay;
+    RayCastData DRay;
     FRay.start = transform_.position_;
     BRay.start = transform_.position_;
     LRay.start = transform_.position_;
     RRay.start = transform_.position_;
+    URay.start = transform_.position_;
+    DRay.start = transform_.position_;
     
     XMStoreFloat3(&FRay.dir, rayDir[DIR_FRONT]);
     XMStoreFloat3(&BRay.dir, rayDir[DIR_BACK]);
     XMStoreFloat3(&LRay.dir, rayDir[DIR_LEFT]);
-    XMStoreFloat3(&RRay.dir, rayDir[DIR_RIGHT]);
+    XMStoreFloat3(&RRay.dir, rayDir[DIR_RIGHT]);    
+    XMStoreFloat3(&URay.dir, rayDir[DIR_UP]);    
+    XMStoreFloat3(&DRay.dir, rayDir[DIR_DOWN]);    
 
     Model::RayCast(stageNum_, FRay);
     Model::RayCast(stageNum_, BRay);
     Model::RayCast(stageNum_, LRay);
     Model::RayCast(stageNum_, RRay);
+    Model::RayCast(stageNum_, URay);
+    Model::RayCast(stageNum_, DRay);
 
     XMFLOAT3 moveDist;
     XMStoreFloat3(&moveDist,moveVector);
@@ -194,7 +206,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //前方レイの距離(dist)が1以下になったらz軸の座標を戻す
     if (moveDist.z+transform_.scale_.z >= FRay.dist)
     {
-       // transform_.position_.z += FRay.dist - 1.0f;
+        transform_.position_.z += FRay.dist - 1.0f;
         moveDist.z = FRay.dist-1.0f;
         flyFlag = false;
     }
@@ -222,29 +234,25 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         moveDist.x = 0;
         flyFlag = false;
     }
+    //上レイの距離(dist)が1以下になったらx軸の座標を戻す
+    if (moveDist.y - transform_.scale_.y >= URay.dist)
+    {
+        transform_.position_.y += URay.dist + 1.0f;
+        moveDist.y = 0;
+        flyFlag = false;
+    }
+
+    //下レイの距離(dist)が1以下になったらx軸の座標を戻す
+    if (abs(moveDist.y - transform_.scale_.y) >= DRay.dist)
+    {
+        transform_.position_.y -= DRay.dist + 1.0f;
+        moveDist.y = 0;
+        flyFlag = false;
+    }
 
     moveVector = XMLoadFloat3(&moveDist);
 
-    //moveVector = XMLoadFloat3(&moveDist);
-    /*for (int i = 0; i < 4; i++)
-    {
-        XMVector3TransformCoord(rayDir[i + 2], matCam);
-    }*/
     
-    /*Ray.start = transform_.position_;
-    for (XMVECTOR check : rayDir)
-    {
-
-        XMStoreFloat3(&Ray.dir,check);
-        Model::RayCast(stageNum_, Ray);
-        if (Ray.dist <= 1)
-        {
-            transform_.position_.x -= Ray.dir.x*Ray.dist;
-            transform_.position_.y -= Ray.dir.y*Ray.dist;
-            transform_.position_.z -= Ray.dir.z*Ray.dist;
-            flyFlag = false;
-        }
-    }*/
 }
 
 void Player::OnCollision(GameObject* pTarget)
