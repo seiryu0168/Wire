@@ -3,6 +3,7 @@
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
 #include"Stage1.h"
+#include"Pointer.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
 //コンストラクタ
@@ -33,14 +34,14 @@ void Player::Initialize()
 {
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
+   
     BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 4, 1));
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
+    
+    Instantiate<Pointer>(this);
+
     transform_.position_ = XMFLOAT3(-24, 20, 10);
-    /*transform_.position_.x = -24;
-    transform_.position_.z = 10;
-    XMFLOAT3 startPos = transform_.position_;
-    startPos.y += 10;*/
     RayCastData firstRay;
     firstRay.start = transform_.position_;
     
@@ -66,6 +67,8 @@ void Player::Update()
  
     vPlayerPos = XMLoadFloat3(&transform_.position_);
     
+        Pointer* pPointer = (Pointer*)FindChild("Pointer");
+        pPointer->IsDraw(false);
     if (Input::GetLTrigger())
     {
         float w = (float)Direct3D::screenWidth / 2.0f;
@@ -75,31 +78,35 @@ void Player::Update()
                         0,-h, 0, 0,
                         0, 0, 1, 0,
                         w, h, 0, 1
-                      };
+        };
 
         //ビューポート(vp),ビュー,プロジェクションの逆行列を作る
         XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
         XMMATRIX invVw = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
         XMMATRIX invPr = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
-     
-        //画面の中央の
-        //XMFLOAT3 ptrFront = { w, h, 0 };
-        //XMFLOAT3 ptrBack = { w, h, 1 };
-        XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget, matCamY*matCamX);//XMLoadFloat3(&ptrBack);
- 
+
+        XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget, matCamY * matCamX);//XMLoadFloat3(&ptrBack);
+
         RayCastData ray;
         XMStoreFloat3(&ray.start, vPlayerPos);
         XMStoreFloat3(&ray.dir, vPtrBack);
         Model::RayCast(stageNum_, ray);
-            
+        if (ray.hit)
+        {
+            XMFLOAT3 pointerPos;
+            XMStoreFloat3(&pointerPos, ray.hitPos);
+            pPointer->SetPointerPos(pointerPos);
+            pPointer->IsDraw(ray.hit);
+        }
+
         if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
         {
             XMFLOAT3 nmlCheck;
-            XMStoreFloat3(&nmlCheck,XMVector3Dot(-(XMLoadFloat3(&ray.dir)), ray.normal));
+            XMStoreFloat3(&nmlCheck, XMVector3Dot(-(XMLoadFloat3(&ray.dir)), ray.normal));
             float nmlX = acos(nmlCheck.x);
             float nmlY = acos(nmlCheck.y);
             float nmlZ = acos(nmlCheck.z);
-            if (ray.hit && abs(nmlX) <= (M_PI/2) && abs(nmlY) <= (M_PI/2) && abs(nmlZ) <= (M_PI/2))
+            if (ray.hit && abs(nmlX) <= (M_PI / 2) && abs(nmlY) <= (M_PI / 2) && abs(nmlZ) <= (M_PI / 2))
             {
                 vFlyMove = XMVector3Normalize(ray.hitPos - vPlayerPos);
                 //XMStoreFloat3(&transform_.position_, ray.hitPos);
