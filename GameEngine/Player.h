@@ -17,13 +17,15 @@ class Player : public GameObject
     int hModel_;
     int stageNum_;
     bool flyFlag;
+
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
-    //XMVECTOR vPlayerMove;
+    
     XMVECTOR vBaseTarget;
     XMVECTOR vFlyMove;
     XMMATRIX matCamX;
     XMMATRIX matCamY;
+    float y_Velocity_;
     float speed;
     float angleY;
     float angleX;

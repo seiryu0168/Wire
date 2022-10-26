@@ -220,6 +220,14 @@ GameObject* GameObject::FindChild(std::string name)
 	return nullptr;
 }
 
+XMVECTOR GameObject::CalcGravity(float time, float ground_Y, float firstVelocity)
+{
+	float y = 0;
+	y = 0.5 * 9.8 * time * time - firstVelocity * time + ground_Y;
+
+	return XMVectorSet(0,y,0,0);
+}
+
 //ワールド行列取得
 //親の影響込みの最終的な行列
 XMMATRIX GameObject::GetWorldMatrix()

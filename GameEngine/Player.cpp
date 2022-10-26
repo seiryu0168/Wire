@@ -12,10 +12,10 @@ Player::Player(GameObject* parent)
     hModel_(-1),
     vCamPos(XMVectorSet(0, 5, -15, 0)),
     vPlayerPos(XMVectorSet(0,0,0,0)),
-    //vPlayerMove(XMVectorSet(0,0,0,0)),
     vBaseTarget(XMVectorSet(0,0,5,0)),
     matCamX(XMMatrixIdentity()),
     matCamY(XMMatrixIdentity()),
+    y_Velocity_(0),
     speed(4.0f),
     angleY(0),
     angleX(0),
@@ -127,6 +127,11 @@ void Player::Update()
     {
         vMove += XMVectorSet(0, -0.2f, 0, 0);
     }
+
+    
+
+
+
 
     XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
     vPlayerMove = vMove + vFly;
