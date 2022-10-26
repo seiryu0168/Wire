@@ -17,15 +17,16 @@ class Player : public GameObject
     int hModel_;
     int stageNum_;
     bool flyFlag;
+    bool jumpFlag_;
 
     XMVECTOR vCamPos;
     XMVECTOR vPlayerPos;
-    
     XMVECTOR vBaseTarget;
     XMVECTOR vFlyMove;
     XMMATRIX matCamX;
     XMMATRIX matCamY;
-    float y_Velocity_;
+
+    float velocity_;
     float speed;
     float angleY;
     float angleX;
@@ -49,6 +50,8 @@ public:
 
     //ŠJ•ú
     void Release() override;
+
+    void Jump();
 
     void CharactorControll(XMVECTOR &moveVector);
 

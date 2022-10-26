@@ -15,7 +15,7 @@ Player::Player(GameObject* parent)
     vBaseTarget(XMVectorSet(0,0,5,0)),
     matCamX(XMMatrixIdentity()),
     matCamY(XMMatrixIdentity()),
-    y_Velocity_(0),
+    velocity_(5),
     speed(4.0f),
     angleY(0),
     angleX(0),
@@ -64,11 +64,11 @@ void Player::Initialize()
 //XV
 void Player::Update()
 {
- 
+
     vPlayerPos = XMLoadFloat3(&transform_.position_);
-    
-        Pointer* pPointer = (Pointer*)FindChild("Pointer");
-        pPointer->IsDraw(false);
+
+    Pointer* pPointer = (Pointer*)FindChild("Pointer");
+    pPointer->IsDraw(false);
     if (Input::GetLTrigger())
     {
         float w = (float)Direct3D::screenWidth / 2.0f;
@@ -109,32 +109,41 @@ void Player::Update()
             if (ray.hit && abs(nmlX) <= (M_PI / 2) && abs(nmlY) <= (M_PI / 2) && abs(nmlZ) <= (M_PI / 2))
             {
                 vFlyMove = XMVector3Normalize(ray.hitPos - vPlayerPos);
-                //XMStoreFloat3(&transform_.position_, ray.hitPos);
+                jumpFlag_ = false;
                 flyFlag = true;
             }
         }
     }
-    XMVECTOR vMove;
-    vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
-    vMove = XMVector3TransformCoord(vMove, matCamX);
-   
+    XMVECTOR vMove = XMVectorSet(0, 0, 0, 0);
+    if (!jumpFlag_ && !flyFlag)
+    {
+        vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
+        vMove = XMVector3TransformCoord(vMove, matCamX);
+
+    }
+
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
     if (flyFlag)
     {
-        vFly=vFlyMove;
+        vFly = vFlyMove;
     }
     else
     {
-        vMove += XMVectorSet(0, -0.2f, 0, 0);
+
     }
+    if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && jumpFlag_ == false)
+    {
+        velocity_ = 2;
+        jumpFlag_ = true;
+    }
+    XMVECTOR vJump = XMVectorSet(0, velocity_, 0, 0);
 
-    
-
+    velocity_ -= 0.06;
 
 
 
     XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
-    vPlayerMove = vMove + vFly;
+    vPlayerMove = vMove + vFly + vJump;
     CharactorControll(vPlayerMove);
     XMStoreFloat3(&transform_.position_, vPlayerPos + vPlayerMove);
     CameraMove();
@@ -181,6 +190,11 @@ void Player::CameraMove()
     
     Camera::SetTarget(vPlayerPos+vTarCam);
     Camera::SetPosition(vPlayerPos + vMoveCam);
+}
+
+void Player::Jump()
+{
+
 }
 
 void Player::CharactorControll(XMVECTOR &moveVector)
@@ -260,6 +274,9 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.y -= DRay.dist + 1.0f;
         moveDist.y = 0;
         flyFlag = false;
+        jumpFlag_ = false;
+        velocity_ = 0;
+
     }
 
     moveVector = XMLoadFloat3(&moveDist);
