@@ -55,3 +55,19 @@ bool Math::Intersect(RayCastData& rayCast, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2
 	}
 	return false;
 }
+
+bool Math::IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir)
+{
+	XMFLOAT3 normal;
+	XMFLOAT3 dir;
+
+	XMStoreFloat3(&normal, vNormal);
+	XMStoreFloat3(&dir, -vDir);
+	float denominator = sqrtf(pow(normal.x, 2) + pow(normal.y, 2) + pow(normal.z, 2)) * sqrtf(pow(dir.x, 2) + pow(dir.y, 2) + pow(dir.z, 2));
+	float dot = ((normal.x * dir.x) + (normal.y * dir.y) + (normal.z * dir.z))/denominator;
+	if (dot <= 1.0f && dot >= 0.0f)
+	{
+		return true;
+	}
+	return false;
+}

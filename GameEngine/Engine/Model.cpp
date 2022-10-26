@@ -66,7 +66,6 @@ void Model::RayCast(int modelNum, RayCastData& ray)
 	modelData_[modelNum]->pfbx_->RayCast(ray,modelData_[modelNum]->transform_);
 }
 
-
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない
 void Model::Release()
 {

@@ -41,7 +41,7 @@ void Player::Initialize()
     
     Instantiate<Pointer>(this);
 
-    transform_.position_ = XMFLOAT3(-24, 20, 10);
+    transform_.position_ = XMFLOAT3(0, 20,0);
     RayCastData firstRay;
     firstRay.start = transform_.position_;
     
@@ -90,13 +90,13 @@ void Player::Update()
 
     if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && pPointer->IsDraw())
     {
-        XMFLOAT3 nmlCheck;
+        /*XMFLOAT3 nmlCheck;
         XMStoreFloat3(&nmlCheck, XMVector3Dot(-(XMLoadFloat3(&ray.dir)), ray.normal));
         float nmlX = acos(nmlCheck.x);
         float nmlY = acos(nmlCheck.y);
-        float nmlZ = acos(nmlCheck.z);
+        float nmlZ = acos(nmlCheck.z);*/
 
-        if (ray.hit && abs(nmlX) <= (M_PI / 2) && abs(nmlY) <= (M_PI / 2) && abs(nmlZ) <= (M_PI / 2))//’·‚¢ðŒŽ®‚ÍŠÖ”‚È‚Ç‚É‚µ‚Ä’Z‚­‚Ü‚Æ‚ß‚é
+        if (ray.hit )//&& abs(nmlX) <= (M_PI / 2) && abs(nmlY) <= (M_PI / 2) && abs(nmlZ) <= (M_PI / 2))//’·‚¢ðŒŽ®‚ÍŠÖ”‚È‚Ç‚É‚µ‚Ä’Z‚­‚Ü‚Æ‚ß‚é
         {
             vFlyMove = XMVector3Normalize(ray.hitPos - vPlayerPos);
             jumpFlag_ = false;
