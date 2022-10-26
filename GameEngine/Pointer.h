@@ -24,7 +24,8 @@ public:
 
     //ŠJ•ú
     void Release() override;
-    void IsDraw(bool flag) { drawFlag_ = flag; }
+    bool IsDraw() { return drawFlag_; }
+    void SetDraw(bool flag) { drawFlag_ = flag; }
     void SetPointerPos(XMFLOAT3 position);
 };
 

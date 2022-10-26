@@ -57,7 +57,6 @@ public:
 			void KillAllChildren();
 			void KillObjectSub(GameObject* pTarget);
 			void PushBackChild(GameObject* pTarget);
-			XMVECTOR CalcGravity(float time, float ground_Y,float firstVelocity);
 
 	//親オブジェクト取得
 	GameObject* GetParent();
