@@ -114,6 +114,11 @@ void Player::Update()
             }
         }
     }
+    else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && jumpFlag_ == false)
+    {
+        velocity_ = 2;
+        jumpFlag_ = true;
+    }
     XMVECTOR vMove = XMVectorSet(0, 0, 0, 0);
     if (!jumpFlag_ && !flyFlag)
     {
@@ -130,11 +135,6 @@ void Player::Update()
     else
     {
 
-    }
-    if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && jumpFlag_ == false)
-    {
-        velocity_ = 2;
-        jumpFlag_ = true;
     }
     XMVECTOR vJump = XMVectorSet(0, velocity_, 0, 0);
 
