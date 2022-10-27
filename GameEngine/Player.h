@@ -13,23 +13,23 @@ class Player : public GameObject
         DIR_UP,
         DIR_DOWN
     };
-    XMVECTOR rayDir[6];
+    XMVECTOR rayDir_[6];
     int hModel_;
     int stageNum_;
-    bool flyFlag;
-    bool jumpFlag_;
+    bool flyFlag_;
+    bool airFlag_;
 
-    XMVECTOR vCamPos;
-    XMVECTOR vPlayerPos;
-    XMVECTOR vBaseTarget;
-    XMVECTOR vFlyMove;
-    XMMATRIX matCamX;
-    XMMATRIX matCamY;
+    XMVECTOR vCamPos_;
+    XMVECTOR vPlayerPos_;
+    XMVECTOR vBaseTarget_;
+    XMVECTOR vFlyMove_;
+    XMMATRIX matCamX_;
+    XMMATRIX matCamY_;
 
     float velocity_;
-    float speed;
-    float angleY;
-    float angleX;
+    float speed_;
+    float angleY_;
+    float angleX_;
 
 public:
     //コンストラクタ
