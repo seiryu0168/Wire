@@ -23,9 +23,11 @@ class Player : public GameObject
     XMVECTOR vPlayerPos_;
     XMVECTOR vBaseTarget_;
     XMVECTOR vFlyMove_;
+    XMVECTOR vBaseAim_;
     XMMATRIX matCamX_;
     XMMATRIX matCamY_;
 
+    float trrigerPower_;
     float velocity_;
     float speed_;
     float angleY_;
@@ -55,7 +57,7 @@ public:
 
     void CharactorControll(XMVECTOR &moveVector);
 
-    void CameraMove();
+    void CameraMove(RayCastData ray);
 
     void OnCollision(GameObject* pTarget) override; 
 };

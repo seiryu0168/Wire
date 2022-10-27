@@ -21,6 +21,9 @@ namespace Camera
 	//焦点（見る位置）を設定
 	void SetTarget(XMVECTOR target);
 
+	//カメラの上方向ベクトルを設定
+	void SetUpVector(XMVECTOR upVector);
+
 	//視点(見える位置)を取得
 	XMFLOAT3 GetPosition();
 	//ビュー行列を取得
@@ -28,4 +31,5 @@ namespace Camera
 
 	//プロジェクション行列を取得
 	XMMATRIX GetProjectionMatrix();
+
 };
