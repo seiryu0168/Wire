@@ -19,7 +19,7 @@ class Player : public GameObject
     bool flyFlag_;
     bool airFlag_;
     bool aimFlag_;
-
+    
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
     XMVECTOR vPlayerMove_;
@@ -30,6 +30,7 @@ class Player : public GameObject
     XMMATRIX matCamX_;
     XMMATRIX matCamY_;
 
+    float moveTime_;
     float aimTime_;
     float velocity_;
     float speed_;
