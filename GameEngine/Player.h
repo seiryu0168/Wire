@@ -18,16 +18,19 @@ class Player : public GameObject
     int stageNum_;
     bool flyFlag_;
     bool airFlag_;
+    bool aimFlag_;
 
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
+    XMVECTOR vPlayerMove_;
     XMVECTOR vBaseTarget_;
     XMVECTOR vFlyMove_;
     XMVECTOR vBaseAim_;
+    XMFLOAT3 flyMove_;
     XMMATRIX matCamX_;
     XMMATRIX matCamY_;
 
-    float trrigerPower_;
+    float aimTime_;
     float velocity_;
     float speed_;
     float angleY_;

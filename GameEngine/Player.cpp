@@ -16,12 +16,13 @@ Player::Player(GameObject* parent)
     vBaseAim_(XMVectorSet(3, 2, -4, 0)),
     matCamX_(XMMatrixIdentity()),
     matCamY_(XMMatrixIdentity()),
-    trrigerPower_(0),
+    aimTime_(0),
     velocity_(2),
     speed_(4.0f),
     angleY_(0),
     angleX_(0),
-    flyFlag_(false)
+    flyFlag_(false),
+    aimFlag_(false)
 {
 }
 
@@ -71,9 +72,12 @@ void Player::Update()
     pPointer->SetDraw(false);
     RayCastData ray;
 
+    
+    aimFlag_ = false;
     //トリガーを引くと移動できる壁にマーカーが表示される
-    if (trrigerPower_=Input::GetLTrigger())
+    if (Input::GetLTrigger())
     {
+        aimFlag_ = true;
         //当たる位置の計算
         XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
 
@@ -98,34 +102,38 @@ void Player::Update()
     {
         if (ray.hit)
         {
-            vFly = XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.02f;
+            flyFlag_ = true;
+            vFly = XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.06f;
+            //XMStoreFloat3(&flyMove_,XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.02f);
         }
     }
     //当たってなかったらジャンプ
     else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && airFlag_ == false)
     {
         velocity_ = 2;
+        vFly = XMVectorSet(0, velocity_, 0, 0);
         airFlag_ = true;
     }
+
     //
     vFlyMove_ += vFly;
 
     //L,Rスティックで移動
-    XMVECTOR vMove = XMVectorSet(0, 0, 0, 0);
-    vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
-    vMove = XMVector3TransformCoord(vMove, matCamX_);
+    XMFLOAT3 Move = { 0,0,0 };
+    XMVECTOR vMove = XMVectorSet(Input::GetLStick_X(), 0, Input::GetLStick_Y(), 0);
+    //Move = { Input::GetLStick_X(), 0, Input::GetLStick_Y() };
     
-    
+    vMove = XMVector3TransformCoord(vMove, matCamX_) + vFlyMove_;
+    //vFlyMove_ *= 0.98f;
     //重力加算
     vMove += XMVectorSet(0, velocity_, 0, 0);
     velocity_ -= 0.06;
 
 
 
-    XMVECTOR vPlayerMove = XMVectorSet(0, 0, 0, 0);
-    vPlayerMove = vMove + vFlyMove_;
-    CharactorControll(vPlayerMove);
-    XMStoreFloat3(&transform_.position_, vPlayerPos_ + vPlayerMove);
+    vPlayerMove_ = vMove;
+    CharactorControll(vPlayerMove_);
+    XMStoreFloat3(&transform_.position_, vPlayerPos_ + vPlayerMove_);
     CameraMove(ray);
 
 }
@@ -149,6 +157,16 @@ void Player::Release()
 
 void Player::CameraMove(RayCastData ray)
 {
+    if (aimFlag_)
+    {
+        aimTime_ += 0.05f;
+        aimTime_ = min(aimTime_, 1);
+    }
+    else
+    {
+        aimTime_ -= 0.07f;
+        aimTime_ = max(aimTime_, 0);
+    }
     angleX_ += Input::GetRStick_Y() * speed_;
     angleY_ += Input::GetRStick_X() * speed_;
     transform_.rotate_.y = angleY_;
@@ -170,11 +188,11 @@ void Player::CameraMove(RayCastData ray)
 
     matCamY_   = XMMatrixRotationX(angleX_ * (M_PI / 180));
     matCamX_   = XMMatrixRotationY(angleY_ * (M_PI / 180));
-    vNormalCam = XMVector3TransformCoord(vCamPos_, matCamY_ * matCamX_);
+    vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_);
     vAimCam    = XMVector3TransformCoord(vBaseAim_, matCamY_ * matCamX_);
     vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
     
-    vMoveCam = XMVectorLerp(vAimCam, vNormalCam, 1 - trrigerPower_);
+    vMoveCam   = XMVectorLerp(vNormalCam, vAimCam, aimTime_);
     
     Camera::SetTarget(vTarCam);
     Camera::SetPosition(vPlayerPos_ + vMoveCam);
@@ -265,12 +283,12 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     if (abs(moveDist.y-transform_.scale_.y) >= DRay.dist)
     {
 
-        transform_.position_.y -= DRay.dist+1.0f;
+        transform_.position_.y -= DRay.dist-1.0f;
         moveDist.y = 0;
-        flyFlag_ = false;
+        //flyFlag_ = false;
         airFlag_ = false;
         //vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-        //velocity_ = -1;
+        velocity_ = -2;
 
     }
 
