@@ -61,8 +61,6 @@ public:
     //ŠJ•ú
     void Release() override;
 
-    void Jump();
-
     void CharactorControll(XMVECTOR &moveVector);
 
     void CameraMove(RayCastData ray);
