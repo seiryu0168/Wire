@@ -18,6 +18,7 @@ Player::Player(GameObject* parent)
     matCamY_(XMMatrixIdentity()),
     moveTime_(0),
     aimTime_(0),
+    flyTime_(0),
     velocity_(2),
     speed_(4.0f),
     angleY_(0),
@@ -105,7 +106,10 @@ void Player::Update()
         if (ray.hit)
         {
             flyFlag_ = true;
-            vFly = XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.06f;
+            flyTime_ = 1;
+            transform_.position_.y += 0.2f;
+            velocity_ = 0;
+            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.06f;
             //XMStoreFloat3(&flyMove_,XMVector3Normalize(ray.hitPos - vPlayerPos_) * ray.dist * 0.02f);
         }
     }
@@ -120,7 +124,6 @@ void Player::Update()
     //重力加算
     vFly += XMVectorSet(0, velocity_, 0, 0);
     velocity_ -= 0.06;
-    vFlyMove_ += vFly;
 
     //L,Rスティックで移動
     float moveX = Input::GetLStick_X();
@@ -128,25 +131,36 @@ void Player::Update()
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
     if (abs(moveX) > 0 || abs(moveZ)>0)
     {
-        moveTime_ -= 0.05f;
-        min(moveTime_, 1);
+        moveTime_ += 0.1f;
+        moveTime_=min(moveTime_, 1);
     }
     else
     {
-        moveTime_ += 0.05f;
-        max(moveTime_, 0);
+        moveTime_ -= 0.05f;
+        moveTime_=max(moveTime_, 0);
     }
-    //XMFLOAT3 Move = { 0,0,0 };
-    //Move = { Input::GetLStick_X(), 0, Input::GetLStick_Y() };
+    if (flyFlag_)
+    {
+        flyTime_ += 0.3f;
+        flyTime_=min(flyTime_, 1);
+    }
+    else
+    {
+        flyTime_ -= 0.01f;
+        flyTime_=max(flyTime_, 0);
+    }
     vMove = XMVector3TransformCoord(vMove, matCamX_);
-    vMove = XMVector3Normalize(vMove);
     //vMove +=vFly;
     //vFlyMove_ *= 0.98f;
     //vPlayerMove_ *= 0.9f;
 
 
-    vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vMove, moveTime_);
-     vPlayerMove_ += vFly;
+    vPlayerMove_ += vMove;
+    vPlayerMove_ = XMVector3Normalize(vPlayerMove_);
+    vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vPlayerMove_, moveTime_);
+    vFlyMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, flyTime_);
+    vPlayerMove_ += vFlyMove_;
+    vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
@@ -264,7 +278,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.z -= BRay.dist + 1.0f;
         moveDist.z = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-        //flyFlag_ = false;
+        flyFlag_ = false;
     }
 
     //右レイの距離(dist)が1以下になったらx軸の座標を戻す
@@ -273,7 +287,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.x += RRay.dist - 1.0f;
         moveDist.x = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-            //flyFlag_ = false;
+            flyFlag_ = false;
     }
 
     //左レイの距離(dist)が1以下になったらx軸の座標を戻す
@@ -282,7 +296,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.x -= LRay.dist + 1.0f;
         moveDist.x = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-        //flyFlag_ = false;
+        flyFlag_ = false;
     }
     //上レイの距離(dist)が1以下になったらx軸の座標を戻す
     if (moveDist.y + transform_.scale_.y >= URay.dist)
@@ -291,7 +305,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         moveDist.y = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         velocity_ = 0;
-        //flyFlag_ = false;
+        flyFlag_ = false;
     }
 
     //下レイの距離(dist)が1以下になったら軸の座標を戻す
@@ -299,7 +313,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         transform_.position_.y -= DRay.dist+1.0f;
         moveDist.y = 0;
-        //flyFlag_ = false;
+        flyFlag_ = false;
         //airFlag_ = false;
         //vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         velocity_ = -2;

@@ -32,6 +32,7 @@ class Player : public GameObject
 
     float moveTime_;
     float aimTime_;
+    float flyTime_;
     float velocity_;
     float speed_;
     float angleY_;
