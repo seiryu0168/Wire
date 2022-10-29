@@ -14,6 +14,9 @@ class Player : public GameObject
         DIR_DOWN
     };
     XMVECTOR rayDir_[6];
+
+    const float gravity_;
+
     int hModel_;
     int stageNum_;
     bool flyFlag_;
