@@ -116,14 +116,18 @@ void Player::Update()
     //当たってなかったらジャンプ
     else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
     {
+        //ワイヤーで飛んでたらjumpFlag_はfalseにし、そうでなければtrue
         if (flyFlag_ == true)
         {
             jumpFlag_ = false;
         }
         else
             jumpFlag_ = true;
+        //ジャンプするとワイヤーアクションは中断されるのでflyFlag_はfalse
         flyFlag_ = false;
+        //空中にいるのでairFlag_はtrue
         airFlag_ = true;
+        //垂直方向の速度変更
         velocity_ = 2;
         vFlyMove_ *= 0.3f;
         transform_.position_.y += 0.2f;
