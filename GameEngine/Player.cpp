@@ -116,9 +116,16 @@ void Player::Update()
     //当たってなかったらジャンプ
     else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
     {
+        if (flyFlag_ == true)
+        {
+            jumpFlag_ = false;
+        }
+        else
+            jumpFlag_ = true;
         flyFlag_ = false;
         airFlag_ = true;
         velocity_ = 2;
+        vFlyMove_ *= 0.3f;
         transform_.position_.y += 0.2f;
     }
 
@@ -132,10 +139,16 @@ void Player::Update()
     //ワイヤーで飛んでなければ移動と落下が出来る
     if (flyFlag_ == false)
     {
-        velocity_ +=gravity_;
+        velocity_ += gravity_;
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
+        if (airFlag_ == true&&jumpFlag_==false)
+        {
+            moveX *= 0.3f;
+            moveZ *= 0.3f;
+        }
     }
+
 
 
     //L,Rスティックで移動
@@ -151,6 +164,7 @@ void Player::Update()
         moveTime_ -= 0.05f;
         moveTime_=max(moveTime_, 0);
     }
+
     //ワイヤーで飛んでいれば徐々に加速し、飛んでなければ徐々に減速
     if (flyFlag_)
     {
@@ -167,9 +181,9 @@ void Player::Update()
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
 
-    vPlayerMove_ += vMove;
-    vPlayerMove_ = XMVector3Normalize(vPlayerMove_);
-    vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vPlayerMove_, moveTime_);
+    vPlayerMove_ = vMove;
+    //vPlayerMove_ = XMVector3Normalize(vPlayerMove_);
+    //vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vPlayerMove_, moveTime_);
     
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, flyTime_);
     vPlayerMove_ += vFly;
@@ -335,6 +349,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         moveDist.y = 0;
         flyFlag_ = false;
         airFlag_ = false;
+        jumpFlag_ = false;
         //vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         velocity_ = 0;
     }

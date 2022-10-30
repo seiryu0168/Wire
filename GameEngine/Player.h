@@ -22,7 +22,8 @@ class Player : public GameObject
     bool flyFlag_;
     bool airFlag_;
     bool aimFlag_;
-    
+    bool jumpFlag_;
+
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
     XMVECTOR vPlayerMove_;
