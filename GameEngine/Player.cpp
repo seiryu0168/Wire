@@ -69,7 +69,7 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
-    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+    vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
 
     Pointer* pPointer = (Pointer*)FindChild("Pointer");
@@ -77,7 +77,6 @@ void Player::Update()
     RayCastData ray;
 
     aimFlag_ = false;
-    //airFlag_ = false;
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
