@@ -100,7 +100,7 @@ void Player::Update()
     }
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
-    if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && pPointer->IsDraw())
+    if (Input::GetRTrigger() && pPointer->IsDraw())
     {
         if (ray.hit)
         {
