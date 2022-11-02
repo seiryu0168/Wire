@@ -193,7 +193,6 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
-
 }
 
 void Player::FixedUpdate()
