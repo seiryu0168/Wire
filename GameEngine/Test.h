@@ -1,10 +1,13 @@
 #pragma once
 #include "Engine//GameObject.h"
 #include"Engine/Fbx.h"
+#include"BillBoard.h"
 
 class Test : public GameObject
 {
     int hModel_;
+    //BillBoard aaa;
+    //int hBill = aaa.Load("Assets\\bluefire.png");
 public:
     //コンストラクタ
     Test(GameObject* parent);

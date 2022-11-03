@@ -1,7 +1,10 @@
 #pragma once
 #include"Engine/GameObject.h"
+
 class TitleScene : public GameObject
 {
+	
+	
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

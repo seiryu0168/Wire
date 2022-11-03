@@ -66,10 +66,11 @@ class Fbx
 	int polygonCount_;		//ポリゴン数
 	int materialCount_;		//マテリアル数
 
-	ID3D11Buffer* pVertexBuffer_;
-	ID3D11Buffer** pIndexBuffer_;
-	ID3D11Buffer* pConstantBuffer_;
-	MATERIAL* pMaterialList_;
+	ID3D11Buffer* pVertexBuffer_; //頂点バッファ
+	ID3D11Buffer** pIndexBuffer_;//インデックスバッファ
+	ID3D11Buffer* pConstantBuffer_;//コンスタントバッファ
+	
+	MATERIAL* pMaterialList_;//マテリアルリスト
 	int* indexCount_;
 
 	int** ppIndex_;

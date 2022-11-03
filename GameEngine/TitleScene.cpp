@@ -4,6 +4,7 @@
 #include"Player.h"
 #include"Test.h"
 #include"Stage1.h"
+
 TitleScene::TitleScene(GameObject* parent)
 	: GameObject(parent, "TitleScene")
 {
