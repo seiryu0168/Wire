@@ -6,8 +6,8 @@
 class Test : public GameObject
 {
     int hModel_;
-    //BillBoard aaa;
-    //int hBill = aaa.Load("Assets\\bluefire.png");
+    BillBoard aaa;
+    int hBill = aaa.Load("Assets\\PNG.png");
 public:
     //コンストラクタ
     Test(GameObject* parent);

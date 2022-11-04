@@ -128,8 +128,8 @@ void Test::FixedUpdate()
 void Test::Draw()
 {
     Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
-    //aaa.Draw(transform_.GetWorldMatrix(), XMFLOAT4(0, 0, 1, 1));
+    //Model::Draw(hModel_);
+    aaa.Draw(transform_.GetWorldMatrix(), XMFLOAT4(0, 1, 0, 1));
 
 }
 

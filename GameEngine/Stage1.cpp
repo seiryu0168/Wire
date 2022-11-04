@@ -38,7 +38,7 @@ void Stage1::FixedUpdate()
 void Stage1::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	//Model::Draw(hModel_);
 }
 
 //ŠJ•ú

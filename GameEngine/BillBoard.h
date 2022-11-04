@@ -13,6 +13,7 @@ struct VERTEX
 	XMFLOAT3 position;
 	XMFLOAT3 uv;
 };
+
 class BillBoard
 {
 	ID3D11Buffer* pVertexBuffer_;

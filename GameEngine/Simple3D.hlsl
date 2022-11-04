@@ -30,12 +30,6 @@ cbuffer global
 //───────────────────────────────────────
 // 頂点シェーダー出力＆ピクセルシェーダー入力データ構造体
 //───────────────────────────────────────
-//struct VS_IN
-//{
-//	float4 pos		: SV_POSITION;	//位置
-//	float4 color	: COLOR;		//明るさ
-//	float2 uv		: TEXCOORD;		//UV座標
-//};
 struct VS_OUT
 {
 	float4 pos		: SV_POSITION;	//位置
@@ -45,14 +39,6 @@ struct VS_OUT
 	float2 uv		: TEXCOORD2;	//UV座標
 };
 
-//struct PS_IN
-//{
-//	float4 pos		: SV_POSITION;   //位置
-//	float4 col		: COLOR;		 //色
-//	float4 normal	: TEXCOORD0;	 //法線
-//	float2 tex		: TEXCOORD1;     //UV座標
-//
-//};
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────

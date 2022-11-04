@@ -20,6 +20,7 @@ HRESULT BillBoard::Load(std::string fileName)
 							{XMFLOAT3(0.5,-0.5,0),	XMFLOAT3(1,1,0)},//右下
 							{XMFLOAT3(-0.5,-0.5,0),	XMFLOAT3(0,1,0)},//左下
 						};
+
 	int index[]={ 0,1,2, 0,2,3 };
 
 	
@@ -32,9 +33,9 @@ HRESULT BillBoard::Load(std::string fileName)
 	bd_vertex.MiscFlags = 0;
 	bd_vertex.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA data_vertex;
-	data_vertex.pSysMem = &vertices;
+	data_vertex.pSysMem = vertices;
 
-	hr=Direct3D::pDevice->CreateBuffer(&bd_vertex, nullptr, &pVertexBuffer_);
+	hr=Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FALSE(hr))
 	{
 		MessageBox(nullptr, L"ビルボード頂点バッファの作成に失敗", L"エラー", MB_OK);
@@ -61,18 +62,18 @@ HRESULT BillBoard::Load(std::string fileName)
 	////////////////インデックスバッファ//////////////////
 	D3D11_BUFFER_DESC bd_index;
 	bd_index.ByteWidth = sizeof(index);
-	bd_index.Usage = D3D11_USAGE_DYNAMIC;
+	bd_index.Usage = D3D11_USAGE_DEFAULT;
 	bd_index.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd_index.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bd_index.CPUAccessFlags = 0;
 	bd_index.MiscFlags = 0;
-	bd_index.StructureByteStride = 0;
+	
 
 	D3D11_SUBRESOURCE_DATA initData;
 	initData.pSysMem = index;
 	initData.SysMemPitch = 0;
 	initData.SysMemSlicePitch = 0;
 
-	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, nullptr, &pIndexBuffer_);
+	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &initData, &pIndexBuffer_);
 	if (FALSE(hr))
 	{
 		MessageBox(nullptr, L"ビルボードインデックスバッファの作成に失敗", L"エラー", MB_OK);
@@ -95,7 +96,7 @@ HRESULT BillBoard::Load(std::string fileName)
 
 void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 {
-
+	Direct3D::SetShader(SHADER_EFF);
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(matW * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = col;
@@ -117,6 +118,8 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	UINT offset = 0;
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
+	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
+	Direct3D::pContext->OMSetBlendState(Direct3D::GetBlendState(), factor, 0xffffffff);			//ブレンドステート
 	// インデックスバッファーをセット
 	stride = sizeof(int);
 	offset = 0;
