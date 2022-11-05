@@ -1,6 +1,8 @@
 #pragma once
 #include"Engine/GameObject.h"
-
+#include"BillBoard.h"
+#include<list>
+//エミッター作成時のデータ
 struct EmitterData
 {
     std::string textureFileName;    //貼るテクスチャのファイル名
@@ -40,10 +42,38 @@ struct EmitterData
 class Particle : public GameObject
 {
 private:
-    int hModel_;
-    float lifeTime_;
-     XMFLOAT3 particleScale_;
-     XMFLOAT3 particleRotate_;
+    //エミッターのデータ
+    struct Emitter
+    {
+        EmitterData data;                   //エミッターのデータ
+        int hParticle = -1;                 //ハンドル
+        DWORD frameCount = 0;               //経過フレーム数
+        BillBoard* pBillBoard = nullptr;    //パーティクルに使うポリゴン
+        bool isDead = false;                //消すかどうか
+        int particleCount = 0;              //このエミッターから出て今残ってるパーティクルの数
+    };
+
+    //パーティクルの変化するデータ
+    struct Data
+    {
+        XMFLOAT3 position;  //位置
+        XMFLOAT2 scale;     //サイズ
+        XMFLOAT4 color;     //色
+    };
+
+    //パーティクル一粒のデータ
+    struct ParticleData
+    {
+        Data     nowData;           //今のパーティクルデータ
+        Data     deltaData;         //1フレームの変化量
+        DWORD    life;             //残り寿命
+        float    acceleration;     //加速度
+        float    gravity;          //重力
+        Emitter* pEmitter;      //エミッター
+    };
+
+    std::list<Emitter*>      emitterList_;
+    std::list<ParticleData*> particleList_;
 
 public:
     Particle(GameObject* parent);
@@ -57,7 +87,16 @@ public:
     //更新
     void Update() override;
 
+    //パーティクルのアップデート
+    void UpdateParticle();
+    
+    //エミッターのアップデート
+    void UpdateEmitter();
+
+    int ParticleStart(EmitterData data);
+
     void FixedUpdate() override;
+
     //描画
     void Draw() override;
 

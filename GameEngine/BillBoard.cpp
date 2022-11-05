@@ -96,7 +96,7 @@ HRESULT BillBoard::Load(std::string fileName)
 
 void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 {
-	Direct3D::SetShader(SHADER_EFF);
+	
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(matW * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = col;
@@ -118,8 +118,7 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	UINT offset = 0;
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
-	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
-	Direct3D::pContext->OMSetBlendState(Direct3D::GetBlendState(), factor, 0xffffffff);			//ブレンドステート
+	
 	// インデックスバッファーをセット
 	stride = sizeof(int);
 	offset = 0;
