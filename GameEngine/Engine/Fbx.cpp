@@ -302,7 +302,7 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 
 		}
 			Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
-			Direct3D::pContext->OMSetBlendState(Direct3D::GetBlendState(), factor, 0xffffffff);			//ブレンドステート
+			Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
 			//頂点バッファ
 			UINT stride = sizeof(VERTEX);
 			UINT offset = 0;

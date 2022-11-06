@@ -6,6 +6,7 @@ XMVECTOR target_;	//見る位置（焦点）
 XMVECTOR upVector_;
 XMMATRIX viewMatrix_;	//ビュー行列
 XMMATRIX projMatrix_;	//プロジェクション行列
+XMMATRIX billBoardMatrix_;
 
 //初期化
 void Camera::Initialize(float width,float height)
@@ -23,6 +24,9 @@ void Camera::Update()
 {
 	//ビュー行列の作成
 	viewMatrix_ = XMMatrixLookAtLH(position_, target_, upVector_);
+
+	billBoardMatrix_ = XMMatrixLookAtLH(XMVectorSet(0, 0, 0, 0), target_ - position_, upVector_);
+	billBoardMatrix_ = XMMatrixInverse(nullptr, billBoardMatrix_);
 }
 
 //位置を設定
@@ -55,6 +59,10 @@ XMMATRIX Camera::GetViewMatrix()
 	return viewMatrix_;
 }
 
+XMMATRIX Camera::GetBillBoardMatrix()
+{
+	return billBoardMatrix_;
+}
 //プロジェクション行列を取得
 XMMATRIX Camera::GetProjectionMatrix()
 {

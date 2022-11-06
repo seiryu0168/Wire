@@ -5,7 +5,9 @@
 #include"Engine/Camera.h"
 //コンストラクタ
 Test::Test(GameObject* parent)
-    :GameObject(parent, "Test"),hModel_(-1)
+    :GameObject(parent, "Test"),
+    hModel_(-1),
+    pParticle_(nullptr)
 {
 }
 
@@ -25,6 +27,27 @@ void Test::Initialize()
     assert(hModel_ >= 0);
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
     AddCollider(pCollider);
+    pParticle_ = Instantiate<Particle>(this);
+
+    EmitterData data;
+    data.textureFileName = "Assets\\Effect01.png";
+    data.position = XMFLOAT3(0, 0, 0);
+    data.positionErr = XMFLOAT3(1.4f, 0, 1.4f);
+    data.delay = 20;
+    data.number = 5;
+    data.lifTime = 100.0f;
+    data.acceleration = 0.98f;
+    data.gravity = 0.1f;
+    data.dir = XMFLOAT3(0, 1, 0);
+    data.dirErr = XMFLOAT3(1.0f, 0.3, 1.0f);
+    data.firstSpeed = 1.0f;
+    data.speedErr = 0.0f;
+    data.size = XMFLOAT2(1.5f,1.5f);
+    data.sizeErr = XMFLOAT2(0.3, 0.3);
+    data.scale = XMFLOAT2(1.01f, 1.01f);
+    data.color = XMFLOAT4(1, 1, 1, 1);
+    data.deltaColor = XMFLOAT4(0, 0, 0, -0.02);
+    pParticle_->ParticleStart(data);
 }
 
 //更新
@@ -128,9 +151,7 @@ void Test::FixedUpdate()
 void Test::Draw()
 {
     Model::SetTransform(hModel_, transform_);
-    //Model::Draw(hModel_);
-    aaa.Draw(transform_.GetWorldMatrix(), XMFLOAT4(0, 1, 0, 1));
-
+    Model::Draw(hModel_);
 }
 
 //開放

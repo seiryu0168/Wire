@@ -26,6 +26,13 @@ enum TARGET
 	TARGET_RENDER_TARGET_MAX
 };
 
+enum BLEND_MODE
+{
+	BLEND_DEFAULT = 0,
+	BLEND_ADD,
+	BLEND_MAX
+};
+
 
 namespace Direct3D
 {
@@ -34,12 +41,6 @@ namespace Direct3D
 		BACK_BUFFER = 0,
 		RENDER_TARGET,
 		RENDER_MAX
-	};
-	enum BLEND_MODE
-	{
-		BLEND_DEFAULT=0,
-		BLEND_ADD,
-		BLEND_MAX
 	};
 	extern ID3D11Device* pDevice;				//デバイス
 	extern ID3D11DeviceContext* pContext;		//デバイスコンテキスト
@@ -63,7 +64,7 @@ namespace Direct3D
 	HRESULT InitShader3D();
 	HRESULT InitShaderEFF();
 
-	ID3D11BlendState* GetBlendState();
+	//ID3D11BlendState* GetBlendState();
 	//void SetRenderTargetView(int renderTarget);
 	void SetShader(SHADER_TYPE type);
 	void SetBlendMode(BLEND_MODE mode);

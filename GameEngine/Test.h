@@ -2,12 +2,11 @@
 #include "Engine//GameObject.h"
 #include"Engine/Fbx.h"
 #include"BillBoard.h"
-
+#include"Particle.h"
 class Test : public GameObject
 {
     int hModel_;
-    BillBoard aaa;
-    int hBill = aaa.Load("Assets\\PNG.png");
+    Particle* pParticle_;
 public:
     //コンストラクタ
     Test(GameObject* parent);

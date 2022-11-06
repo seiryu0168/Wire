@@ -1,5 +1,6 @@
 #include "Particle.h"
-#include"Engine/Model.h"
+//#include"Engine/Model.h"
+#include"Engine/Camera.h"
 Particle::Particle(GameObject* parent)
 	:GameObject(parent,"Particle")
 {
@@ -20,7 +21,8 @@ void Particle::Initialize()
 //更新
 void Particle::Update()
 {
-
+	UpdateEmitter();
+	UpdateParticle();
 }
 
 void Particle::UpdateParticle()
@@ -38,6 +40,7 @@ void Particle::UpdateParticle()
 		//生きてる場合
 		else
 		{
+			(*particleCount)->life--;
 
 			//パーティクルの位置を更新
 			(*particleCount)->nowData.position.x += (*particleCount)->deltaData.position.x;
@@ -96,6 +99,7 @@ void Particle::UpdateEmitter()
 					ParticleData* pParticle = new ParticleData;
 					
 					//初期位置
+					pParticle->nowData.position = (*emitterCount)->data.position;
 					float deltaX = (float)((*emitterCount)->data.positionErr.x == 0 ? 0 : rand() % (int)((*emitterCount)->data.positionErr.x * 201) - ((*emitterCount)->data.positionErr.x * 100))/100.0f;
 					float deltaY = (float)((*emitterCount)->data.positionErr.y == 0 ? 0 : rand() % (int)((*emitterCount)->data.positionErr.y * 201) - ((*emitterCount)->data.positionErr.y * 100))/100.0f;
 					float deltaZ = (float)((*emitterCount)->data.positionErr.z == 0 ? 0 : rand() % (int)((*emitterCount)->data.positionErr.z * 201) - ((*emitterCount)->data.positionErr.z * 100))/100.0f;
@@ -125,9 +129,9 @@ void Particle::UpdateEmitter()
 
 					vecDir = XMVector3TransformCoord(vecDir, matX * matY * matZ);
 
-					float spd = (float)((*emitterCount)->data.speedErr == 0 ? 0 : (int)((*emitterCount)->data.speedErr * 201) - ((*emitterCount)->data.speedErr * 100)) / 100.0f;
+					float spd = (float)((*emitterCount)->data.speedErr == 0 ? 0 : (int)((*emitterCount)->data.speedErr * 201) - ((*emitterCount)->data.speedErr * 100)) / 100.0f+1.0f;
 		
-					vecDir = XMVector3Normalize(vecDir) * (*emitterCount)->data.speed * spd;
+					vecDir = XMVector3Normalize(vecDir) * (*emitterCount)->data.firstSpeed * spd;
 					XMStoreFloat3(&pParticle->deltaData.position, vecDir);
 
 					pParticle->deltaData.scale = (*emitterCount)->data.scale;		//パーティクルの拡大率
@@ -138,6 +142,8 @@ void Particle::UpdateEmitter()
 					pParticle->gravity = (*emitterCount)->data.gravity;				//パーティクルのにかかる重力
 					pParticle->acceleration = (*emitterCount)->data.acceleration;	//パーティクルの加速度
 					
+					pParticle->pEmitter = *emitterCount;
+
 					//作成したパーティクルをリストに入れる
 					particleList_.push_back(pParticle);
 
@@ -184,8 +190,21 @@ void Particle::FixedUpdate()
 void Particle::Draw()
 {
 	Direct3D::SetShader(SHADER_EFF);
+	Direct3D::SetBlendMode(BLEND_ADD);
 
+	for (auto i = particleList_.begin(); i != particleList_.end(); i++)
+	{
+		XMMATRIX matW;
 
+		//移動行列
+		XMMATRIX matTrans = XMMatrixTranslation((*i)->nowData.position.x, (*i)->nowData.position.y, (*i)->nowData.position.z);
+		
+		//拡大行列
+		XMMATRIX matScale = XMMatrixScaling((*i)->nowData.scale.x, (*i)->nowData.scale.y, 1.0f);
+
+		matW = matScale * Camera::GetBillBoardMatrix() * matTrans;
+		(*i)->pEmitter->pBillBoard->Draw(matW, (*i)->nowData.color);
+	}
 }
 
 //開放

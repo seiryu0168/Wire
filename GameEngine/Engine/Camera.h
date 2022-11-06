@@ -26,8 +26,12 @@ namespace Camera
 
 	//視点(見える位置)を取得
 	XMFLOAT3 GetPosition();
+
 	//ビュー行列を取得
 	XMMATRIX GetViewMatrix();
+
+	//ビルボード用回転行列
+	XMMATRIX GetBillBoardMatrix();
 
 	//プロジェクション行列を取得
 	XMMATRIX GetProjectionMatrix();
