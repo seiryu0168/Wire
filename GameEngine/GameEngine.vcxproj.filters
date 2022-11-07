@@ -126,11 +126,11 @@
     <ClCompile Include="Enemy_normal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\BillBoard.cpp">
+      <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="BillBoard.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\Particle.cpp">
+      <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,11 +239,11 @@
     <ClInclude Include="Enemy_normal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\BillBoard.h">
+      <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="BillBoard.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\Particle.h">
+      <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

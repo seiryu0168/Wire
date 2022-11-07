@@ -1,7 +1,7 @@
 #pragma once
 #include<string>
-#include"Engine/Direct3D.h"
-#include"Engine/Texture.h"
+#include"Direct3D.h"
+#include"Texture.h"
 struct CONSTANT_BUFFER
 {
 	XMMATRIX matWVP;

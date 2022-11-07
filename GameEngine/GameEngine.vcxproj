@@ -157,10 +157,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BillBoard.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy_normal.cpp" />
+    <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Collider.cpp" />
@@ -170,6 +170,7 @@
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="Engine\Math.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
+    <ClCompile Include="Engine\Particle.cpp" />
     <ClCompile Include="Engine\Quad.cpp" />
     <ClCompile Include="Engine\RootJob.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
@@ -184,7 +185,6 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
@@ -194,10 +194,10 @@
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BillBoard.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy_normal.h" />
+    <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Collider.h" />
@@ -207,6 +207,7 @@
     <ClInclude Include="Engine\Input.h" />
     <ClInclude Include="Engine\Math.h" />
     <ClInclude Include="Engine\Model.h" />
+    <ClInclude Include="Engine\Particle.h" />
     <ClInclude Include="Engine\Quad.h" />
     <ClInclude Include="Engine\RootJob.h" />
     <ClInclude Include="Engine\SAFE_DELETE_RELEASE.h" />
@@ -223,7 +224,6 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="Particle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />

@@ -39,7 +39,7 @@ void Test::Initialize()
     data.acceleration = 0.98f;
     data.gravity = 0.1f;
     data.dir = XMFLOAT3(0, 1, 0);
-    data.dirErr = XMFLOAT3(1.0f, 0.3, 1.0f);
+    data.dirErr = XMFLOAT3(360.0f, 1.0f, 360.0f);
     data.firstSpeed = 1.0f;
     data.speedErr = 0.0f;
     data.size = XMFLOAT2(1.5f,1.5f);

@@ -1,5 +1,5 @@
 #pragma once
-#include"Engine/GameObject.h"
+#include"GameObject.h"
 #include"BillBoard.h"
 #include<list>
 //エミッター作成時のデータ
