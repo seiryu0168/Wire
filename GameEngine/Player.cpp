@@ -187,7 +187,7 @@ void Player::Update()
     vPlayerMove_ = vMove;
     //vPlayerMove_ = XMVector3Normalize(vPlayerMove_);
     //vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vPlayerMove_, moveTime_);
-    
+    velocity_ = max(velocity_, -2);
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, flyTime_);
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
@@ -264,6 +264,38 @@ void Player::CameraMove(RayCastData ray)
 
 void Player::CharactorControll(XMVECTOR &moveVector)
 {
+
+    XMFLOAT3 move;
+
+    XMVECTOR f = XMVector3TransformCoord(rayDir_[DIR_FRONT],matCamY_);
+    XMVECTOR b = XMVector3TransformCoord(f, XMMatrixRotationY(M_PI));
+    XMVECTOR r = XMVector3TransformCoord(f, XMMatrixRotationY(M_PI * 0.5f));
+    XMVECTOR l = XMVector3TransformCoord(f, XMMatrixRotationY(-(M_PI * 0.5f)));
+
+    RayCastData front;
+    RayCastData back;
+    RayCastData right;
+    RayCastData left;
+    XMStoreFloat3(&front.dir, f);
+    XMStoreFloat3(&back.dir, b);
+    XMStoreFloat3(&right.dir, r);
+    XMStoreFloat3(&left.dir, l);
+
+    Model::RayCast(stageNum_, front);
+    Model::RayCast(stageNum_, back);
+    Model::RayCast(stageNum_, right);
+    Model::RayCast(stageNum_, left);
+
+    float mV = XMVectorGetX(XMVector3Length(moveVector)) + 1.0f;
+
+    if (mV > XMVectorGetX(XMVector3Length(front.hitPos-vPlayerPos_)))
+    {
+        
+    }
+
+
+
+
     RayCastData FRay;
     RayCastData BRay;
     RayCastData LRay;
@@ -351,13 +383,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         XMStoreFloat3(&pos, DRay.hitPos);
         pos.y += transform_.scale_.y;
         transform_.position_ = pos;
-
+        vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist.y = 0;
         flyFlag_ = false;
         airFlag_ = false;
         jumpFlag_ = false;
         //vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-        velocity_ = 0;
+        //velocity_ = 0;
     }
 
     moveVector = XMLoadFloat3(&moveDist);
