@@ -31,20 +31,20 @@ void Test::Initialize()
 
     EmitterData data;
     data.textureFileName = "Assets\\Effect01.png";
-    data.position = XMFLOAT3(0, 0, 0);
+    data.position = XMFLOAT3(0, 3.0f, 0);
     data.positionErr = XMFLOAT3(1.4f, 0, 1.4f);
     data.delay = 20;
-    data.number = 5;
+    data.number = 1;
     data.lifTime = 100.0f;
     data.acceleration = 0.98f;
-    data.gravity = 0.1f;
+    data.gravity = 0.0f;
     data.dir = XMFLOAT3(0, 1, 0);
-    data.dirErr = XMFLOAT3(360.0f, 1.0f, 360.0f);
-    data.firstSpeed = 1.0f;
+    data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+    data.firstSpeed = 0.3f;
     data.speedErr = 0.0f;
     data.size = XMFLOAT2(1.5f,1.5f);
     data.sizeErr = XMFLOAT2(0.3, 0.3);
-    data.scale = XMFLOAT2(1.01f, 1.01f);
+    data.scale = XMFLOAT2(0.98f, 0.98f);
     data.color = XMFLOAT4(1, 1, 1, 1);
     data.deltaColor = XMFLOAT4(0, 0, 0, -0.02);
     pParticle_->ParticleStart(data);

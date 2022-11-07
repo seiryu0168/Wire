@@ -124,8 +124,8 @@ void Particle::UpdateEmitter()
 					deltaZ = (float)((*emitterCount)->data.dirErr.z == 0 ? 0 : rand() % (int)((*emitterCount)->data.dirErr.z * 201) - ((*emitterCount)->data.dirErr.z * 100)) / 100.0f;
 
 					XMMATRIX matX = XMMatrixRotationX(XMConvertToRadians(deltaX));
-					XMMATRIX matY = XMMatrixRotationX(XMConvertToRadians(deltaY));
-					XMMATRIX matZ = XMMatrixRotationX(XMConvertToRadians(deltaZ));
+					XMMATRIX matY = XMMatrixRotationY(XMConvertToRadians(deltaY));
+					XMMATRIX matZ = XMMatrixRotationZ(XMConvertToRadians(deltaZ));
 
 					vecDir = XMVector3TransformCoord(vecDir, matX * matY * matZ);
 
