@@ -345,9 +345,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //‰ºƒŒƒC‚Ì‹——£(dist)‚ª1ˆÈ‰º‚É‚È‚Á‚½‚çŽ²‚ÌÀ•W‚ð–ß‚·
-    if (abs(moveDist.y-transform_.scale_.y) >= DRay.dist)
+    if (abs(moveDist.y-transform_.scale_.y) > DRay.dist)
     {
-        transform_.position_.y -= DRay.dist + transform_.scale_.y;
+        XMFLOAT3 pos;
+        XMStoreFloat3(&pos, DRay.hitPos);
+        pos.y += transform_.scale_.y;
+        transform_.position_ = pos;
+
         moveDist.y = 0;
         flyFlag_ = false;
         airFlag_ = false;
