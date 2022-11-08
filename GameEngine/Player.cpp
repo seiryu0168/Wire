@@ -368,7 +368,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //後方レイの距離(dist)が1以下になったらz軸の座標を戻す
     if (abs(moveDist.z-transform_.scale_.z) >= BRay.dist || BRay.dist < 1.5f)
     {
-        transform_.position_.z -= BRay.dist + transform_.scale_.z;
+        //transform_.position_.z -= BRay.dist + transform_.scale_.z;
         moveDist.z = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         //airFlag_ = false;
@@ -383,7 +383,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //右レイの距離(dist)が1以下になったらx軸の座標を戻す
     if (moveDist.x+transform_.scale_.x >= RRay.dist || RRay.dist < 1.5f)
     {
-        transform_.position_.x += RRay.dist - transform_.scale_.x;
+        //transform_.position_.x += RRay.dist - transform_.scale_.x;
         moveDist.x = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         //airFlag_ = false;
@@ -398,7 +398,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //左レイの距離(dist)が1以下になったらx軸の座標を戻す
     if (abs(moveDist.x-transform_.scale_.x) >= LRay.dist || LRay.dist < 1.5f)
     {
-        transform_.position_.x -= LRay.dist + transform_.scale_.x;
+        //transform_.position_.x -= LRay.dist + transform_.scale_.x;
         moveDist.x = 0;
         vFlyMove_ = XMVectorSet(0, 0, 0, 0);
         //airFlag_ = false;

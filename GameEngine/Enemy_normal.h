@@ -4,15 +4,17 @@
 
 class Enemy_normal : public Enemy
 {
-public:
+private:
     int hModel_;
 
-    XMVECTOR moveVec_;
     XMMATRIX matX_;
     XMMATRIX matY_;
+    
 
+    XMVECTOR frontVec_;
+    XMVECTOR vPosition_;
     Player* pPlayer_;
-private:
+public:
     //コンストラクタ
     Enemy_normal(GameObject* parent);
 
@@ -29,8 +31,10 @@ private:
     //描画
     void Draw() override;
 
-    //
-    void EnemyRotate(XMVECTOR toVec);
+    //エネミーが動く
+    void EnemyMove(XMVECTOR toVec);
+
+    bool IsVisible(XMVECTOR vFront, XMVECTOR vTarget,float angle1,float angle2);
 
     //開放
     void Release() override;

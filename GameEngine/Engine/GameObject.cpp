@@ -220,6 +220,23 @@ GameObject* GameObject::FindChild(std::string name)
 	return nullptr;
 }
 
+Transform GameObject::GetTransform()
+{
+	return this->transform_;
+}
+XMFLOAT3  GameObject::GetPosition()
+{
+	return this->transform_.position_;
+}
+XMFLOAT3  GameObject::GetRotate()
+{
+	return this->transform_.rotate_;
+}
+XMFLOAT3  GameObject::GetScale()
+{
+	return this->transform_.scale_;
+}
+
 //ワールド行列取得
 //親の影響込みの最終的な行列
 XMMATRIX GameObject::GetWorldMatrix()

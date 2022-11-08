@@ -50,13 +50,19 @@ public:
 		killFlag = true;
 	}
 
-	///////////////////////////追加分////////////////////////
+	///////////////////////////衝突関連の関数////////////////////////
 	virtual void OnCollision(GameObject* pTarget) {};
 			void Collision(GameObject* pTarget);
 			void AddCollider(Collider* collider);
 			void KillAllChildren();
 			void KillObjectSub(GameObject* pTarget);
 			void PushBackChild(GameObject* pTarget);
+			
+			
+			Transform GetTransform();
+			XMFLOAT3  GetPosition();
+			XMFLOAT3  GetRotate();
+			XMFLOAT3  GetScale();
 
 	//親オブジェクト取得
 	GameObject* GetParent();
