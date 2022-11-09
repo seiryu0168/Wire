@@ -21,7 +21,7 @@ void TitleScene::Initialize()
 	//feild‚Á‚Ä–¼‘O‚É‚µ‚Æ‚¢‚½‚Ù‚¤‚ª‚¢‚¢
 	Instantiate<Stage1>(this);
 	Instantiate<Player>(this);
-	Instantiate<Enemy_normal>(this);
+	Instantiate<Enemy_Normal>(this);
 	Instantiate<Test>(this);
 }
 

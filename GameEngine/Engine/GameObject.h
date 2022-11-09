@@ -63,6 +63,7 @@ public:
 			XMFLOAT3  GetPosition();
 			XMFLOAT3  GetRotate();
 			XMFLOAT3  GetScale();
+			std::string GetObjectName() { return objectName_; }
 
 	//親オブジェクト取得
 	GameObject* GetParent();

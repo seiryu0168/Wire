@@ -159,7 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Enemy_normal.cpp" />
+    <ClCompile Include="Enemy_Normal.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -196,7 +196,7 @@
   <ItemGroup>
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Enemy_normal.h" />
+    <ClInclude Include="Enemy_Normal.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
     <ClInclude Include="Engine\Camera.h" />

@@ -2,7 +2,7 @@
 #include"Enemy.h"
 #include"Player.h"
 
-class Enemy_normal : public Enemy
+class Enemy_Normal : public Enemy
 {
 private:
     int hModel_;
@@ -10,7 +10,6 @@ private:
     XMMATRIX matX_;
     XMMATRIX matY_; 
     bool visibleFlag_;
-    
 
     XMVECTOR frontVec_;
     XMVECTOR upVec_;
@@ -18,10 +17,10 @@ private:
     Player* pPlayer_;
 public:
     //コンストラクタ
-    Enemy_normal(GameObject* parent);
+    Enemy_Normal(GameObject* parent);
 
     //デストラクタ
-    ~Enemy_normal();
+    ~Enemy_Normal();
 
     //初期化
     void Initialize() override;
@@ -43,4 +42,7 @@ public:
 
     //開放
     void Release() override;
+
+    //衝突
+    void OnCollision(GameObject* pTarget) override;
 };

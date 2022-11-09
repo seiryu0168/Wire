@@ -42,7 +42,7 @@ void Player::Initialize()
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
    
-    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 4, 1));
+    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     

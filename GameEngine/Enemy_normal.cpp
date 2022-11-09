@@ -1,8 +1,9 @@
-#include "Enemy_normal.h"
+#include "Enemy_Normal.h"
 #include"Engine/Model.h"
+#include"Engine/BoxCollider.h"
 #include"Pointer.h"
 //コンストラクタ
-Enemy_normal::Enemy_normal(GameObject* parent)
+Enemy_Normal::Enemy_Normal(GameObject* parent)
 	:Enemy(parent, "Enemy_normal"),
 	hModel_(-1),
 	frontVec_(XMVectorSet(0, 0, 1, 0)),
@@ -17,21 +18,24 @@ Enemy_normal::Enemy_normal(GameObject* parent)
 }
 
 //デストラクタ
-Enemy_normal::~Enemy_normal()
+Enemy_Normal::~Enemy_Normal()
 {
 	Release();
 }
 
 //初期化
-void Enemy_normal::Initialize()
+void Enemy_Normal::Initialize()
 {
 	hModel_ = Model::Load("Assets\\TestBox.fbx");
 	pPlayer_ = (Player*)FindObject("Player"); //確認用オブジェクト
+	BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	
+	AddCollider(pCollider);
 	Instantiate<Pointer>(this);
 }
 
 //更新
-void Enemy_normal::Update()
+void Enemy_Normal::Update()
 {
 	vPosition_ =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
 
@@ -54,18 +58,18 @@ void Enemy_normal::Update()
 	}
 }
 
-void Enemy_normal::FixedUpdate()
+void Enemy_Normal::FixedUpdate()
 {
 
 }
 //描画
-void Enemy_normal::Draw()
+void Enemy_Normal::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 }
 
-void Enemy_normal::EnemyMove(XMVECTOR toVec)
+void Enemy_Normal::EnemyMove(XMVECTOR toVec)
 {
 	
 	vPosition_ = XMLoadFloat3(&transform_.position_);			//vPositionに今の座標を入れる
@@ -78,7 +82,7 @@ void Enemy_normal::EnemyMove(XMVECTOR toVec)
 	XMStoreFloat3(&transform_.position_, vPosition_);
 }
 
-bool Enemy_normal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngle,float range)
+bool Enemy_Normal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngle,float range)
 {
 	vFront = XMVector3Normalize(vFront);								//正規化
 	XMVECTOR toVector = vTarget - XMLoadFloat3(&transform_.position_);	//目標に向かうベクトル
@@ -97,8 +101,15 @@ bool Enemy_normal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAng
 
 	return false;
 }
+void Enemy_Normal::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "Player")
+	{
+		KillMe();
+	}
+}
 
 //開放
-void Enemy_normal::Release()
+void Enemy_Normal::Release()
 {
 }
