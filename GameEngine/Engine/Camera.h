@@ -24,6 +24,13 @@ namespace Camera
 	//カメラの上方向ベクトルを設定
 	void SetUpVector(XMVECTOR upVector);
 
+	//プロジェクション行列を設定
+	//第一引数:画角(radian)
+	//第二引数:アスペクト比
+	//第三引数:ニアクリッピング
+	//第四引数:ファークリッピング
+	void SetProjection(float aov, float aspectRadio, float nearZ, float farZ);
+
 	//視点(見える位置)を取得
 	XMFLOAT3 GetPosition();
 
