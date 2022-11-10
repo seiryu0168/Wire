@@ -2,7 +2,7 @@
 #include"Enemy.h"
 #include"Player.h"
 
-class Enemy_Normal : public Enemy
+class EnemyNormal : public Enemy
 {
 private:
     int hModel_;
@@ -17,10 +17,10 @@ private:
     Player* pPlayer_;
 public:
     //コンストラクタ
-    Enemy_Normal(GameObject* parent);
+    EnemyNormal(GameObject* parent);
 
     //デストラクタ
-    ~Enemy_Normal();
+    ~EnemyNormal();
 
     //初期化
     void Initialize() override;

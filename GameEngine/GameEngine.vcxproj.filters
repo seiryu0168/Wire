@@ -123,7 +123,7 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy_Normal.cpp">
+    <ClCompile Include="EnemyNormal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\BillBoard.cpp">
@@ -242,7 +242,7 @@
     <ClInclude Include="Engine\Particle.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy_Normal.h">
+    <ClInclude Include="EnemyNormal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include"Engine/Model.h"
 #include"Engine/Fbx.h"
 #include"Player.h"
-#include"Enemy_normal.h"
+#include"EnemyNormal.h"
 #include"Test.h"
 #include"Stage1.h"
 
@@ -21,7 +21,7 @@ void TitleScene::Initialize()
 	//feild‚Á‚Ä–¼‘O‚É‚µ‚Æ‚¢‚½‚Ù‚¤‚ª‚¢‚¢
 	Instantiate<Stage1>(this);
 	Instantiate<Player>(this);
-	Instantiate<Enemy_Normal>(this);
+	Instantiate<EnemyNormal>(this);
 	Instantiate<Test>(this);
 }
 

@@ -13,6 +13,7 @@ class Player : public GameObject
         DIR_UP,
         DIR_DOWN
     };
+
     XMVECTOR rayDir_[6];
 
     const float gravity_;

@@ -72,6 +72,9 @@ public:
 	GameObject* FindChild(std::string name);
 	XMMATRIX    GetWorldMatrix();
 
+	float Easing(int frameCount);
+	float Easing(float time);
+
 
 
 	//ƒ[ƒ‹ƒhÀ•Wæ“¾

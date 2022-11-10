@@ -187,8 +187,6 @@ void Player::Update()
 
 
     vPlayerMove_ = vMove;
-    //vPlayerMove_ = XMVector3Normalize(vPlayerMove_);
-    //vPlayerMove_ = XMVectorLerp(XMVectorSet(0, 0, 0, 0), vPlayerMove_, moveTime_);
     velocity_ = max(velocity_, -2);
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, flyTime_);
     vPlayerMove_ += vFly;
@@ -227,12 +225,11 @@ void Player::CameraMove(RayCastData ray)
         aimTime_ += 0.05f;
         aimTime_ = min(aimTime_, 1);
     }
-    else
+    else if(!flyFlag_)
     {
         aimTime_ -= 0.07f;
         aimTime_ = max(aimTime_, 0.5);
     }
-
     angleX_ += -Input::GetRStick_Y() * speed_;
     angleY_ += Input::GetRStick_X() * speed_;
     transform_.rotate_.y = angleY_;
