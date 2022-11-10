@@ -237,14 +237,6 @@ XMFLOAT3  GameObject::GetScale()
 	return this->transform_.scale_;
 }
 
-float GameObject::Easing(int frameCount)
-{
-
-}
-float GameObject::Easing(float time)
-{
-}
-
 //ワールド行列取得
 //親の影響込みの最終的な行列
 XMMATRIX GameObject::GetWorldMatrix()

@@ -7,6 +7,7 @@
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
 #include"Engine/Math.h"
+#include"Easing.h"
 
 //コンストラクタ
 Player::Player(GameObject* parent)
@@ -173,7 +174,7 @@ void Player::Update()
     //ワイヤーで飛んでいれば徐々に加速し、飛んでなければ徐々に減速
     if (flyFlag_)
     {
-        flyTime_ += 0.1f;
+        flyTime_ += 0.01f;
         flyTime_=min(flyTime_, 1);
     }
     else
@@ -188,7 +189,7 @@ void Player::Update()
 
     vPlayerMove_ = vMove;
     velocity_ = max(velocity_, -2);
-    vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, flyTime_);
+    vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
