@@ -135,6 +135,9 @@
     <ClCompile Include="Easing.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="SetObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imstb_truetype.h">
@@ -251,10 +254,21 @@
     <ClInclude Include="Easing.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="SetObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Simple3D.hlsl" />
     <FxCompile Include="Simple2D.hlsl" />
     <FxCompile Include="BillBoard.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Dialog.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

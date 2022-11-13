@@ -189,6 +189,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
+    <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
@@ -229,6 +230,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SetObject.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
@@ -257,6 +260,9 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Dialog.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

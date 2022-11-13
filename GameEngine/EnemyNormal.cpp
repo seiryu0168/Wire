@@ -70,7 +70,6 @@ void EnemyNormal::Draw()
 
 void EnemyNormal::EnemyMove(XMVECTOR toVec)
 {
-	
 	vPosition_ = XMLoadFloat3(&transform_.position_);			//vPositionに今の座標を入れる
 	toVec = XMVector3Normalize(toVec);							//引数の正規化
 	float angle = XMVectorGetX(XMVector3Dot(frontVec_, toVec)); //角度計算(ラジアン)

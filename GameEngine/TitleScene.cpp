@@ -3,6 +3,7 @@
 #include"Engine/Fbx.h"
 #include"Player.h"
 #include"EnemyNormal.h"
+#include"SetObject.h"
 #include"Test.h"
 #include"Stage1.h"
 
@@ -19,6 +20,7 @@ void TitleScene::Initialize()
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	 
 	//feildって名前にしといたほうがいい
+	Instantiate<SetObject>(this);
 	Instantiate<Stage1>(this);
 	Instantiate<Player>(this);
 	Instantiate<EnemyNormal>(this);

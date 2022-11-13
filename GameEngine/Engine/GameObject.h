@@ -24,7 +24,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update() {};
 	virtual void FixedUpdate() {};
-	virtual void Draw()       = 0;
+	virtual void Draw() {};
 	virtual void Release()    = 0;
 
 	void UpdateSub();
