@@ -6,6 +6,7 @@ class Pointer : public GameObject
 private:
     int hModel_;
     bool drawFlag_;
+    short objectType_;
 public:
     Pointer(GameObject* parent);
 
@@ -22,10 +23,14 @@ public:
     //ï`âÊ
     void Draw() override;
 
+    //è’ìÀ
+    void OnCollision(GameObject* pTarget);
+
     //äJï˙
-    void Release() override;
-    bool IsDraw() { return drawFlag_; }
-    void SetDraw(bool flag) { drawFlag_ = flag; }
-    void SetPointerPos(XMFLOAT3 position);
+    void  Release() override;
+    bool  IsDraw() { return drawFlag_; }
+    void  SetDraw(bool flag) { drawFlag_ = flag; }
+    short GetObjectType();
+    void  SetPointerPos(XMFLOAT3 position);
 };
 

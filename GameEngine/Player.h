@@ -14,6 +14,16 @@ class Player : public GameObject
         DIR_DOWN
     };
 
+    enum ACTIONTYPE
+    {
+        ATC_DEFAULT=0,
+        ATC_ATTACK,
+        ATC_TOWALL,
+        ATC_MAX
+    };
+
+
+
     XMVECTOR rayDir_[6];
 
     const float gravity_;
@@ -68,6 +78,8 @@ public:
     void CharactorControll(XMVECTOR &moveVector);
 
     void CameraMove(RayCastData ray);
+
+    void SetColor(short type);
 
     void OnCollision(GameObject* pTarget) override; 
 };

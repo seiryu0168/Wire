@@ -1,5 +1,6 @@
 #include "Pointer.h"
 #include"Engine/Model.h"
+#include"Engine/SphereCollider.h"
 Pointer::Pointer(GameObject* parent)
 	:GameObject(parent,"Pointer"),
 	drawFlag_(false)
@@ -16,6 +17,8 @@ Pointer::~Pointer()
 //‰Šú‰»
 void Pointer::Initialize()
 {
+	SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 1);
+	AddCollider(pCollision);
 	hModel_ = Model::Load("Assets\\Mark.fbx");
 	assert(hModel_ >= 0);
 }
@@ -23,7 +26,7 @@ void Pointer::Initialize()
 //XV
 void Pointer::Update()
 {
-
+	objectType_ = -1;
 }
 
 void Pointer::FixedUpdate()
@@ -41,9 +44,22 @@ void Pointer::Draw()
 	}
 }
 
+short Pointer::GetObjectType()
+{
+	return objectType_;
+}
+
+
 void Pointer::SetPointerPos(XMFLOAT3 position)
 {
 	transform_.position_ = position;
+}
+void Pointer::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "EnemyNormal")
+	{
+		objectType_ = 1;
+	}
 }
 
 //ŠJ•ú

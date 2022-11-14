@@ -25,6 +25,7 @@ cbuffer global
 	float4		g_cameraPosition;	//カメラの位置
 	float		g_shininess;		//ハイライトの強さ
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
+	bool		g_isUseCustomClor; //プログラム側で変える色
 	float4      g_customColor;		//プログラム側で色を変える場合の変数
 };
 
@@ -106,8 +107,13 @@ float4 light = float4(0, -1, 0, 0);
 		float4 vecReflect = reflect(light, inData.normal);
 		speculer =float4(1,1,1,0)*pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) *g_speculer;
 	}
-
-	return diffuse * shade + diffuse * ambient + speculer;
+	if (isUseCustomColor)
+	{
+		return g_customcolor;
+	}
+	float4 outColor;
+	outColor = diffuse * shade + diffuse * ambient + speculer;
+	return outColor;
 }
 
 

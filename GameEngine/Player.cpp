@@ -108,6 +108,7 @@ void Player::Update()
     {
         if (ray.hit)
         {
+            pPointer->GetObjectType();
             airFlag_ = false;
             flyFlag_ = true;
             flyTime_ = 1;
@@ -440,6 +441,18 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     
 }
+
+void Player::SetColor(short type)
+{
+    switch (type)
+    {
+    case ATC_ATTACK:
+
+        break;
+    case ATC_TOWALL:
+    }
+}
+
 
 void Player::OnCollision(GameObject* pTarget)
 {
