@@ -286,6 +286,7 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
+		cb.customColor = { 0,0,0,0 };
 
 			D3D11_MAPPED_SUBRESOURCE pdata;
 			Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める

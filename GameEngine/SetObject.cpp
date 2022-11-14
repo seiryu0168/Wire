@@ -77,7 +77,7 @@ void SetObject::Load()
 	{
 		objectData obj;
 		std::string parameter = "";
-		for (int j = i; commaCount<10; j++)
+		for (int j = i; commaCount<10||j<fileSize; j++)
 		{
 			if (data[j] != ',')
 			{

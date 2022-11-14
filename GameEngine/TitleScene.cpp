@@ -18,9 +18,9 @@ void TitleScene::Initialize()
 	//オブジェクト設置するクラスを作り、そのクラスの中で各オブジェクトを生成する
 	//生成時にここのクラスを親に設定すればOK
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
-	 
+	
 	//feildって名前にしといたほうがいい
-	Instantiate<SetObject>(this);
+	//Instantiate<SetObject>(this);
 	Instantiate<Stage1>(this);
 	Instantiate<Player>(this);
 	Instantiate<EnemyNormal>(this);

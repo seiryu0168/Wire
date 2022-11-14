@@ -24,7 +24,8 @@ Player::Player(GameObject* parent)
     aimTime_(0),
     flyTime_(0),
     velocity_(2),
-    speed_(4.0f),
+    rotateSpeed_(4.0f),
+    maxSpeed_(1.5f),
     angleY_(0),
     angleX_(0),
     flyFlag_(false),
@@ -112,7 +113,7 @@ void Player::Update()
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
             velocity_ = 0;
-            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)*1.2f;
+            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* rotateSpeed_;
         }
     }
     //“–‚½‚Á‚Ä‚È‚©‚Á‚½‚çƒWƒƒƒ“ƒv
@@ -231,8 +232,8 @@ void Player::CameraMove(RayCastData ray)
         aimTime_ -= 0.07f;
         aimTime_ = max(aimTime_, 0.5);
     }
-    angleX_ += -Input::GetRStick_Y() * speed_;
-    angleY_ += Input::GetRStick_X() * speed_;
+    angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
+    angleY_ += Input::GetRStick_X() * rotateSpeed_;
     transform_.rotate_.y = angleY_;
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     XMVECTOR vMoveCam;
@@ -442,5 +443,8 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
 void Player::OnCollision(GameObject* pTarget)
 {
-    //KillMe();
+    if (pTarget->GetObjectName() == "EnemyNormal")
+    {
+       // if()
+    }
 }

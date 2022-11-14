@@ -20,6 +20,7 @@ class Player : public GameObject
 
     int hModel_;
     int stageNum_;
+
     bool flyFlag_;
     bool airFlag_;
     bool aimFlag_;
@@ -39,7 +40,8 @@ class Player : public GameObject
     float aimTime_;
     float flyTime_;
     float velocity_;
-    float speed_;
+    float rotateSpeed_;
+    float maxSpeed_;
     float angleY_;
     float angleX_;
 

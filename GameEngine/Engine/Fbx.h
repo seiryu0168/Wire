@@ -50,6 +50,7 @@ class Fbx
 		XMFLOAT4 cameraPosition;	//カメラの位置
 		FLOAT	 shininess;			//ハイライトの強さ
 		BOOL	 isTexture;			//テクスチャ
+		XMFLOAT4 customColor;       //プログラム側で色を変えたい場合
 	};
 
 	//頂点に格納される情報
