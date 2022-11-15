@@ -26,6 +26,7 @@ void Pointer::Initialize()
 //XV
 void Pointer::Update()
 {
+
 	objectType_ = -1;
 }
 
@@ -54,11 +55,15 @@ void Pointer::SetPointerPos(XMFLOAT3 position)
 {
 	transform_.position_ = position;
 }
+
 void Pointer::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "EnemyNormal")
+	if (drawFlag_)
 	{
-		objectType_ = 1;
+		if (pTarget->GetObjectName() == "EnemyNormal")
+		{
+			objectType_ = ATC_ATTACK;
+		}
 	}
 }
 

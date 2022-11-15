@@ -29,9 +29,9 @@ void EnemyNormal::Initialize()
 	hModel_ = Model::Load("Assets\\TestBox.fbx");
 	pPlayer_ = (Player*)FindObject("Player"); //確認用オブジェクト
 	BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-	
 	AddCollider(pCollider);
-	Instantiate<Pointer>(this);
+	Model::SetModelNum(hModel_);
+	//Instantiate<Pointer>(this);
 }
 
 //更新
@@ -40,11 +40,11 @@ void EnemyNormal::Update()
 	vPosition_ =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
 
 	////////////////確認用オブジェクト表示////////////
-	Pointer* pPointer = (Pointer*)FindChild("Pointer");
+	/*Pointer* pPointer = (Pointer*)FindChild("Pointer");
 	XMFLOAT3 po;
 	XMStoreFloat3(&po, vPosition_+frontVec_);
-	pPointer->SetPointerPos(po);
-	pPointer->SetDraw(true);
+	pPointer->SetPointerPos(po);*/
+	//pPointer->SetDraw(true);
 	
 	////////////////エネミーの処理/////////////
 	XMVECTOR toPlayer;
@@ -61,6 +61,7 @@ void EnemyNormal::FixedUpdate()
 {
 
 }
+
 //描画
 void EnemyNormal::Draw()
 {
@@ -98,12 +99,10 @@ bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngl
 
 	return false;
 }
+
 void EnemyNormal::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Player")
-	{
-		KillMe();
-	}
+
 }
 
 //開放

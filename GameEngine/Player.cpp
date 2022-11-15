@@ -12,6 +12,7 @@
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
+    playerLife_(10),
     gravity_(-0.06),
     hModel_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
@@ -44,8 +45,8 @@ void Player::Initialize()
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
    
-    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-    AddCollider(pCollider);
+    //BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+    //AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
     Instantiate<Pointer>(this);
@@ -63,6 +64,7 @@ void Player::Initialize()
     
     XMStoreFloat3(&firstRay.dir,rayDir_[DIR_DOWN]);
     Model::RayCast(stageNum_, firstRay);
+    Model::SetModelNum(stageNum_);
 
     if (firstRay.hit)
     {
@@ -91,7 +93,7 @@ void Player::Update()
         //レイキャストの始点と方向を入力
         XMStoreFloat3(&ray.start, vPlayerPos_);
         XMStoreFloat3(&ray.dir, vPtrBack);
-        Model::RayCast(stageNum_, ray);
+        Model::RayCast(ray);
         
         //当たった位置にマーカー表示
         if (ray.hit)
@@ -121,12 +123,7 @@ void Player::Update()
     else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
     {
         //ワイヤーで飛んでたらjumpFlag_はfalseにし、そうでなければtrue
-        if (flyFlag_ == true)
-        {
-            jumpFlag_ = false;
-        }
-        else
-            jumpFlag_ = true;
+        jumpFlag_ = flyFlag_ == true ? false : true;
         //ジャンプするとワイヤーアクションは中断されるのでflyFlag_はfalse
         flyFlag_ = false;
         //空中にいるのでairFlag_はtrue
@@ -438,26 +435,22 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
     //vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     moveVector = XMLoadFloat3(&moveDist);
-
-    
 }
 
-void Player::SetColor(short type)
+void Player::SetStatus(int type)
 {
-    switch (type)
-    {
-    case ATC_ATTACK:
-
-        break;
-    case ATC_TOWALL:
-    }
+    status_ |= type;
 }
 
-
-void Player::OnCollision(GameObject* pTarget)
-{
-    if (pTarget->GetObjectName() == "EnemyNormal")
-    {
-       // if()
-    }
-}
+//void Player::OnCollision(GameObject* pTarget)
+//{
+//    if (pTarget->GetObjectName() == "EnemyNormal")
+//    {
+//        if (status_ & ATC_ATTACK)
+//        {
+//            pTarget->KillMe();
+//        }
+//        else
+//            playerLife_--;
+//    }
+//}

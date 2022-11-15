@@ -14,13 +14,7 @@ class Player : public GameObject
         DIR_DOWN
     };
 
-    enum ACTIONTYPE
-    {
-        ATC_DEFAULT=0,
-        ATC_ATTACK,
-        ATC_TOWALL,
-        ATC_MAX
-    };
+    int playerLife_;
 
 
 
@@ -55,6 +49,8 @@ class Player : public GameObject
     float angleY_;
     float angleX_;
 
+    char status_;
+
 public:
     //コンストラクタ
     Player(GameObject* parent);
@@ -79,8 +75,8 @@ public:
 
     void CameraMove(RayCastData ray);
 
-    void SetColor(short type);
+    void SetStatus(int type);
 
-    void OnCollision(GameObject* pTarget) override; 
+    //void OnCollision(GameObject* pTarget) override; 
 };
 

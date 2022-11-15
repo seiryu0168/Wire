@@ -107,10 +107,10 @@ float4 light = float4(0, -1, 0, 0);
 		float4 vecReflect = reflect(light, inData.normal);
 		speculer =float4(1,1,1,0)*pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) *g_speculer;
 	}
-	if (isUseCustomColor)
+	/*if (isUseCustomColor)
 	{
 		return g_customcolor;
-	}
+	}*/
 	float4 outColor;
 	outColor = diffuse * shade + diffuse * ambient + speculer;
 	return outColor;

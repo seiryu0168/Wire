@@ -286,7 +286,7 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
-		cb.isUseCustomColor=
+		cb.isUseCustomColor = false;
 		cb.customColor = XMFLOAT4( 1.0f,1.0f,1.0f,0.0f );
 
 			D3D11_MAPPED_SUBRESOURCE pdata;

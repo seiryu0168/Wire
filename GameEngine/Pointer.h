@@ -1,5 +1,13 @@
 #pragma once
 #include"Engine/GameObject.h"
+    enum ACTIONTYPE
+    {
+        ATC_DEFAULT = 0x00,
+        ATC_ATTACK  = 0x01,
+        ATC_TOWALL  = 0x02,
+        ATC_MAX
+    };
+
 class Pointer : public GameObject
 {
 
@@ -8,6 +16,8 @@ private:
     bool drawFlag_;
     short objectType_;
 public:
+
+
     Pointer(GameObject* parent);
 
     //デストラクタ
@@ -24,7 +34,7 @@ public:
     void Draw() override;
 
     //衝突
-    void OnCollision(GameObject* pTarget);
+    void OnCollision(GameObject* pTarget) override;
 
     //開放
     void  Release() override;
