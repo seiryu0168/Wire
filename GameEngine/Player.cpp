@@ -45,11 +45,11 @@ void Player::Initialize()
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
    
-    //BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
-    //AddCollider(pCollider);
+    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+    AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
-    Instantiate<Pointer>(this);
+    Instantiate<Pointer>(GetParent());
 
     transform_.position_ = XMFLOAT3(0, 20,0);
     RayCastData firstRay;
@@ -78,7 +78,7 @@ void Player::Update()
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
 
-    Pointer* pPointer = (Pointer*)FindChild("Pointer");
+    Pointer* pPointer = (Pointer*)FindObject("Pointer");
     pPointer->SetDraw(false);
     RayCastData ray;
 
@@ -116,7 +116,8 @@ void Player::Update()
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
             velocity_ = 0;
-            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* rotateSpeed_;
+            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
+            SetStatus(pPointer->GetObjectType());
         }
     }
     //“–‚½‚Á‚Ä‚È‚©‚Á‚½‚çƒWƒƒƒ“ƒv
@@ -442,15 +443,13 @@ void Player::SetStatus(int type)
     status_ |= type;
 }
 
-//void Player::OnCollision(GameObject* pTarget)
-//{
-//    if (pTarget->GetObjectName() == "EnemyNormal")
-//    {
-//        if (status_ & ATC_ATTACK)
-//        {
-//            pTarget->KillMe();
-//        }
-//        else
-//            playerLife_--;
-//    }
-//}
+void Player::OnCollision(GameObject* pTarget)
+{
+    if (pTarget->GetObjectName() == "EnemyNormal")
+    {
+        if (status_ & ATC_ATTACK)
+        {
+            pTarget->KillMe();
+        }
+    }
+}

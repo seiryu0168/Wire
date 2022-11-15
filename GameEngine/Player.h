@@ -77,6 +77,6 @@ public:
 
     void SetStatus(int type);
 
-    //void OnCollision(GameObject* pTarget) override; 
+    void OnCollision(GameObject* pTarget) override; 
 };
 
