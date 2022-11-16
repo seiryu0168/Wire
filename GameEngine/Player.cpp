@@ -379,10 +379,8 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         flyFlag_ = false;
         airFlag_ = false;
         jumpFlag_ = false;
-        //vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-        //velocity_ = 0;
     }
-    //vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+
     moveVector = XMLoadFloat3(&moveDist);
 }
 
