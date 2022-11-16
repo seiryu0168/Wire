@@ -1,8 +1,6 @@
 #include "RootJob.h"
 #include"SceneManager.h"
-#include<Windows.h>
 #include"SAFE_DELETE_RELEASE.h"
-#include"../EngineTime.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -24,7 +22,6 @@ void RootJob::Initialize()
 
 void RootJob::Update()
 {
-	EngineTime::SetTime();
 }
 
 void RootJob::Draw()

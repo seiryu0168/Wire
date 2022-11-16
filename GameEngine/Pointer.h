@@ -3,8 +3,9 @@
     enum ACTIONTYPE
     {
         ATC_DEFAULT = 0x00,
-        ATC_ATTACK  = 0x01,
-        ATC_TOWALL  = 0x02,
+        ATC_MOVE    = 0x01,
+        ATC_ATTACK  = 0x02,
+        ATC_TOWALL  = 0x04,
         ATC_MAX
     };
 

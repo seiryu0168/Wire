@@ -46,6 +46,7 @@ class Player : public GameObject
     float velocity_;
     float rotateSpeed_;
     float maxSpeed_;
+    float wireLength_;
     float angleY_;
     float angleX_;
 
@@ -68,15 +69,21 @@ public:
     //描画
     void Draw() override;
 
-    //開放
-    void Release() override;
 
     void CharactorControll(XMVECTOR &moveVector);
 
     void CameraMove(RayCastData ray);
 
+    //プレイヤーのワイヤーアクション時のステータスを設定
     void SetStatus(int type);
 
     void OnCollision(GameObject* pTarget) override; 
+
+    void AimAssist();
+
+    //開放
+    void Release() override;
+
+
 };
 

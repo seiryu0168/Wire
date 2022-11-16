@@ -27,6 +27,7 @@ Player::Player(GameObject* parent)
     velocity_(2),
     rotateSpeed_(4.0f),
     maxSpeed_(1.5f),
+    wireLength_(100.0f),
     angleY_(0),
     angleX_(0),
     flyFlag_(false),
@@ -96,7 +97,7 @@ void Player::Update()
         Model::RayCast(ray);
         
         //当たった位置にマーカー表示
-        if (ray.hit)
+        if (ray.hit && !flyFlag_)
         {
             XMFLOAT3 pointerPos;
             XMStoreFloat3(&pointerPos, ray.hitPos);
@@ -155,10 +156,9 @@ void Player::Update()
         }
     }
 
-
-
     //L,Rスティックで移動
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
+    
     //スティックが傾いてれば徐々に加速し、傾いてなければ徐々に減速
     if (abs(moveX) > 0 || abs(moveZ)>0)
     {
@@ -187,8 +187,8 @@ void Player::Update()
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
 
-    vPlayerMove_ = vMove;
-    velocity_ = max(velocity_, -2);
+    vPlayerMove_  = vMove;
+    velocity_     = max(velocity_, -2);
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
@@ -230,6 +230,7 @@ void Player::CameraMove(RayCastData ray)
     {
         aimTime_ -= 0.07f;
         aimTime_ = max(aimTime_, 0.5);
+        flyMove_ = { 0, 0, 0 };
     }
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
@@ -264,54 +265,6 @@ void Player::CameraMove(RayCastData ray)
 
 void Player::CharactorControll(XMVECTOR &moveVector)
 {
-
-    //XMFLOAT3 move;
-    //XMStoreFloat3(&move, moveVector);
-    //move.y = 0;
-    //XMVECTOR da = XMLoadFloat3(&move);
-    //XMVECTOR f = XMVector3TransformCoord(da,matCamX_);
-    //XMVECTOR b = XMVector3TransformCoord(f, XMMatrixRotationY(M_PI));
-    //XMVECTOR r = XMVector3TransformCoord(f, XMMatrixRotationY(M_PI * 0.5f));
-    //XMVECTOR l = XMVector3TransformCoord(f, XMMatrixRotationY(-(M_PI * 0.5f)));
-
-    //RayCastData front;
-    ////RayCastData back;
-    //RayCastData right;
-    //RayCastData left;
-    //XMStoreFloat3(&front.dir, f);
-    ////MStoreFloat3(&back.dir, b);
-    //XMStoreFloat3(&right.dir, r);
-    //XMStoreFloat3(&left.dir, l);
-
-    //Model::RayCast(stageNum_, front);
-    ////Model::RayCast(stageNum_, back);
-    //Model::RayCast(stageNum_, right);
-    //Model::RayCast(stageNum_, left);
-
-
-    //if (Math::IsFrontSurface(front.normal,front.hitPos-(vPlayerPos_+da)))
-    //{
-    //   XMStoreFloat3(&transform_.position_,vPlayerPos_+front.hitPos+front.normal);
-    //}
-
-   /* if (mV > XMVectorGetX(XMVector3Length(back.hitPos - vPlayerPos_)))
-    {
-        XMStoreFloat3(&transform_.position_, back.hitPos + back.normal);
-    }
-
-    if (mV > XMVectorGetX(XMVector3Length(right.hitPos - vPlayerPos_)))
-    {
-        XMStoreFloat3(&transform_.position_, right.hitPos + right.normal);
-    }
-
-    if (mV > XMVectorGetX(XMVector3Length(left.hitPos - vPlayerPos_)))
-    {
-        XMStoreFloat3(&transform_.position_, left.hitPos + left.normal);
-    }*/
-
-
-
-
     RayCastData FRay;
     RayCastData BRay;
     RayCastData LRay;
@@ -324,11 +277,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RRay.start = transform_.position_;
     URay.start = transform_.position_;
     DRay.start = transform_.position_;
-
-   /* FRay.start.z -= 0.5f;
-    BRay.start.z += 0.5f;
-    LRay.start.x += 0.5f;
-    RRay.start.x -= 0.5f;*/
     
     XMStoreFloat3(&FRay.dir, rayDir_[DIR_FRONT]);
     XMStoreFloat3(&BRay.dir, rayDir_[DIR_BACK]);
@@ -449,7 +397,14 @@ void Player::OnCollision(GameObject* pTarget)
     {
         if (status_ & ATC_ATTACK)
         {
-            pTarget->KillMe();
+            flyFlag_ = false;
+            vFlyMove_ = XMVector3TransformCoord(XMVector3Normalize(XMVectorSet(0, 1, -1, 0)), matCamX_) * 1.5;
+            //pTarget->KillMe();
         }
     }
+}
+
+void Player::AimAssist()
+{
+
 }

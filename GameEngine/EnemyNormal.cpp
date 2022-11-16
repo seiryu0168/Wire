@@ -102,7 +102,10 @@ bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngl
 
 void EnemyNormal::OnCollision(GameObject* pTarget)
 {
-
+	if (pTarget->GetObjectName() == "Player")
+	{
+		
+	}
 }
 
 //ŠJ•ú

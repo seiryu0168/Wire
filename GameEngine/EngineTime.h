@@ -12,14 +12,3 @@ namespace EngineTime
 	void SetTimeScale(float scale);
 	void SetTime();
 };
-
-//class Timer
-//{
-//	Timer();
-//	~Timer();
-//
-//	void SetTime(float time);
-//	
-//
-//};
-

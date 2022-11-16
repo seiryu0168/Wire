@@ -1,4 +1,5 @@
 #include <d3dcompiler.h>
+#include"../EngineTime.h"
 #include "Direct3D.h"
 #include<array>
 
@@ -407,6 +408,7 @@ void Direct3D::SetBlendMode(BLEND_MODE mode)
 //描画開始
 void Direct3D::BeginDraw()
 {
+	EngineTime::SetTime();
 	//画面をクリア
 		//背景色
 		float clearColor[4] = { 0.1,0.5,0.5,1.0 };
@@ -435,6 +437,7 @@ void Direct3D::Release()
 		SAFE_RELEASE(shaderBundle[releaseShader].pPixelShader);
 		SAFE_RELEASE(shaderBundle[releaseShader].pVertexShader);
 	}
+
 	for (int i = 0; i < BLEND_MAX; i++)
 	{
 		SAFE_RELEASE(pDepthStencilState[i]);
@@ -447,109 +450,3 @@ void Direct3D::Release()
 	SAFE_RELEASE(pContext);			//デバイスコンテキスト
 	SAFE_RELEASE(pDevice);			//デバイス
 }
-
-
-//ID3D11BlendState* Direct3D::GetBlendState()
-//{
-//	return pBlendState[];
-//}
-
-//void Direct3D::SetRenderTargetView(int renderTarget)
-//{
-//	pContext->OMSetRenderTargets(1, &pRenderTargetView[renderTarget], pDepthStencilView);
-//}
-//RenderTarget::RenderTarget()
-//	:pLayerBuffer(nullptr),pRenderTargetView(nullptr),pShaderResourceView(nullptr)
-//{
-//
-//}
-//RenderTarget::~RenderTarget()
-//{
-//	SAFE_DELETE(pShaderResourceView);
-//	SAFE_DELETE(pRenderTargetView);
-//	SAFE_DELETE(pLayerBuffer);
-//}
-//
-//HRESULT RenderTarget::Init(int renderType,int winW,int winH)
-//{
-//	HRESULT hr;
-//	switch(renderType)
-//	{
-//	case BACK_BUFFER:
-//	
-//		Direct3D::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pLayerBuffer);
-//		Direct3D::pDevice->CreateRenderTargetView(pLayerBuffer, NULL, &pRenderTargetView);
-//		break;
-//	
-//	case RENDER_TARGET:
-//		D3D11_TEXTURE2D_DESC rtDesc;
-//		ZeroMemory(&rtDesc, sizeof(rtDesc));
-//		rtDesc.Width = winW;
-//		rtDesc.Height = winH;
-//		rtDesc.MipLevels = 1;
-//		rtDesc.ArraySize = 1;
-//		rtDesc.Format = DXGI_FORMAT_D32_FLOAT;
-//		rtDesc.SampleDesc.Count = 1;
-//		rtDesc.SampleDesc.Quality = 0;
-//		rtDesc.Usage = D3D11_USAGE_DEFAULT;
-//		rtDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-//		rtDesc.CPUAccessFlags = 0;
-//		rtDesc.MiscFlags = 0;
-//		hr = Direct3D::pDevice->CreateTexture2D(&rtDesc, NULL, &pLayerBuffer);
-//		if (FAILED(hr))
-//		{
-//			MessageBox(nullptr, L"レンダーターゲットの作成に失敗",L"エラー", MB_OK);
-//			return hr;
-//		}
-//
-//		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-//		ZeroMemory(&rtvDesc, sizeof(rtvDesc));
-//		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-//
-//		hr = Direct3D::pDevice->CreateRenderTargetView(pLayerBuffer, &rtvDesc, &pRenderTargetView);
-//		if (FAILED(hr))
-//		{
-//			MessageBox(nullptr, L"レンダーターゲットビューの作成に失敗", L"エラー", MB_OK);
-//			return hr;
-//		}
-//		D3D11_SHADER_RESOURCE_VIEW_DESC srv = {};
-//		srv.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//		srv.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-//		srv.Texture2D.MipLevels = 1;
-//		hr = Direct3D::pDevice->CreateShaderResourceView(pLayerBuffer, &srv, &pShaderResourceView);
-//		if (FAILED(hr))
-//		{
-//			MessageBox(nullptr, L"シェーダーリソースビューの作成に失敗", L"エラー", MB_OK);
-//			return hr;
-//		}
-//		return S_OK;
-//	}
-//
-//	
-//}
-//void RenderTarget::SetShaderResource()
-//{
-//}
-//void RenderTarget::SetRenderTarget()
-//{
-//	Direct3D::pContext->OMSetRenderTargets(1, &pRenderTargetView, Direct3D::pDepthStencilView);
-//}
-//void RenderTarget::ClearRenderTarget()
-//{
-//	//背景色
-//	float clearColor[4]={ 0.5,0.5,0.5,1.0 };
-//	//レンダーターゲットビューをクリア
-//	Direct3D::pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
-//}
-//ID3D11ShaderResourceView** RenderTarget::GetSRV()
-//{
-//	return &pShaderResourceView;
-//}
-//
-//void RenderTarget::Release()
-//{
-//	SAFE_DELETE(pShaderResourceView);
-//	SAFE_DELETE(pRenderTargetView);
-//	SAFE_DELETE(pLayerBuffer);
-//}
