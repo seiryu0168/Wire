@@ -5,7 +5,10 @@ GameObject::GameObject() : GameObject(nullptr,"")
 
 }
 GameObject::GameObject(GameObject* parent, const std::string& name)
-	: pParent_(parent),objectName_(name),killFlag(0)
+	: pParent_(parent),
+	objectName_(name),
+	killFlag_(0),
+	drawFlag_(true)
 {
 
 }
@@ -17,19 +20,21 @@ GameObject::~GameObject()
 void GameObject::UpdateSub()
 {
 	/////////アップデート/////////
+
 	Update();
-	for (auto itr = childList_.begin(); itr != childList_.end();itr++)
+
+	for (auto itr = childList_.begin(); itr != childList_.end(); itr++)
 	{
 		(*itr)->UpdateSub();
 	}
 	////////当たり判定///////////
 	for (auto itr = childList_.begin(); itr != childList_.end();)
 	{
-		if ((*itr)->killFlag==true)
+		if ((*itr)->killFlag_ == true)
 		{
 			(*itr)->ReleaseSub();
-			delete *itr;
-			itr=childList_.erase(itr);
+			delete* itr;
+			itr = childList_.erase(itr);
 		}
 		else
 		{
@@ -49,7 +54,7 @@ void GameObject::FixedUpdateSub()
 
 	for (auto itr = childList_.begin(); itr != childList_.end();)
 	{
-		if ((*itr)->killFlag == true)
+		if ((*itr)->killFlag_ == true)
 		{
 			(*itr)->ReleaseSub();
 			delete* itr;
@@ -65,7 +70,10 @@ void GameObject::FixedUpdateSub()
 
 void GameObject::DrawSub()
 {
-	Draw();
+	if (drawFlag_ == true)
+	{
+		Draw();
+	}
 	for (auto i = childList_.begin(); i != childList_.end(); i++)
 	{
 		(*i)->DrawSub();

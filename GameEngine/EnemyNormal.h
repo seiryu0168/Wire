@@ -11,10 +11,12 @@ private:
     XMMATRIX matY_; 
     bool visibleFlag_;
 
+    XMVECTOR toPlayerVec_;
     XMVECTOR frontVec_;
     XMVECTOR upVec_;
     XMVECTOR vPosition_;
     Player* pPlayer_;
+
 public:
     //コンストラクタ
     EnemyNormal(GameObject* parent);
@@ -39,6 +41,8 @@ public:
     //視界内にプレイヤーがいるかどうか
     //エネミーの前方向ベクトル、ターゲットの座標、視野、感知距離
     bool IsVisible(XMVECTOR vFront, XMVECTOR vTarget,float visibleAngle,float range);
+
+    XMVECTOR GetToPlayerVector();
 
     //開放
     void Release() override;

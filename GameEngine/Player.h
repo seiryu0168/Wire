@@ -2,6 +2,7 @@
 #include "Engine/GameObject.h"
 #include"Engine/Fbx.h"
 
+
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -16,6 +17,7 @@ class Player : public GameObject
 
     int playerLife_;
 
+    XMVECTOR baseUpVec_;
 
 
     XMVECTOR rayDir_[6];
@@ -52,6 +54,9 @@ class Player : public GameObject
 
     char status_;
 
+    //std::list<EnemyNormal*> enemyList_;
+
+
 public:
     //コンストラクタ
     Player(GameObject* parent);
@@ -77,9 +82,11 @@ public:
     //プレイヤーのワイヤーアクション時のステータスを設定
     void SetStatus(int type);
 
-    void OnCollision(GameObject* pTarget) override; 
+    void OnCollision(GameObject* pTarget) override;
 
-    void AimAssist();
+    bool IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/);
+
+    void AimAssist(XMVECTOR dirVec);
 
     //開放
     void Release() override;

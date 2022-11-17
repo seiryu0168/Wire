@@ -6,6 +6,7 @@
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
 	hModel_(-1),
+	toPlayerVec_(XMVectorSet(0,0,0,0)),
 	frontVec_(XMVectorSet(0, 0, 1, 0)),
 	upVec_(XMVectorSet(0,1,0,0)),
 	matX_(XMMatrixIdentity()),
@@ -31,7 +32,6 @@ void EnemyNormal::Initialize()
 	BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	AddCollider(pCollider);
 	Model::SetModelNum(hModel_);
-	//Instantiate<Pointer>(this);
 }
 
 //更新
@@ -84,12 +84,12 @@ void EnemyNormal::EnemyMove(XMVECTOR toVec)
 bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngle,float range)
 {
 	vFront = XMVector3Normalize(vFront);								//正規化
-	XMVECTOR toVector = vTarget - XMLoadFloat3(&transform_.position_);	//目標に向かうベクトル
+	 toPlayerVec_ = vTarget - XMLoadFloat3(&transform_.position_);	//目標に向かうベクトル
 	float rangeToPlayer;
-	rangeToPlayer = XMVectorGetX(XMVector3Length(toVector));			//視界判定用の視界の長さ取得
-	toVector = XMVector3Normalize(toVector);							//正規化
+	rangeToPlayer = XMVectorGetX(XMVector3Length(toPlayerVec_));			//視界判定用の視界の長さ取得
+	toPlayerVec_ = XMVector3Normalize(toPlayerVec_);							//正規化
 
-	XMVECTOR dot = XMVector3Dot(vFront, toVector);						//内積を計算
+	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//内積を計算
 	float angle = acos(min(XMVectorGetX(dot),1));						//角度計算(1以上にならないようmin関数つけた)
 
 	if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
@@ -98,6 +98,11 @@ bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngl
 	}
 
 	return false;
+}
+
+XMVECTOR EnemyNormal::GetToPlayerVector()
+{
+	return toPlayerVec_;
 }
 
 void EnemyNormal::OnCollision(GameObject* pTarget)

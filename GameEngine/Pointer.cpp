@@ -67,6 +67,8 @@ void Pointer::OnCollision(GameObject* pTarget)
 	}
 }
 
+	
+
 //ŠJ•ú
 void Pointer::Release()
 {

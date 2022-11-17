@@ -14,7 +14,8 @@ protected:
 	Transform	transform_;				//オブジェクトの情報
 	GameObject* pParent_;				//親オブジェクトの情報
 	std::string	objectName_;			//名前
-	bool killFlag;						//キルするかどうか
+	bool killFlag_;						//キルするかどうか
+	bool drawFlag_;						//描画するかどうか
 
 public:
 	GameObject();
@@ -45,10 +46,8 @@ public:
 		return p;
 	}
 
-	void KillMe()
-	{
-		killFlag = true;
-	}
+	void KillMe() { killFlag_ = true; }
+	void IsDraw(bool flag) { drawFlag_ = flag; }
 
 	///////////////////////////衝突関連の関数////////////////////////
 	virtual void OnCollision(GameObject* pTarget) {};

@@ -7,11 +7,16 @@
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
 #include"Engine/Math.h"
+#include"EnemyNormal.h"
 #include"Easing.h"
+#include<list>
+
+std::vector<EnemyNormal*> enemyList_;
 
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
+    baseUpVec_(XMVectorSet(0,1,0,0)),
     playerLife_(10),
     gravity_(-0.06),
     hModel_(-1),
@@ -402,7 +407,51 @@ void Player::OnCollision(GameObject* pTarget)
     }
 }
 
-void Player::AimAssist()
+bool Player::IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/)
 {
+    XMVECTOR targetVec = XMVectorSet(999, 999, 999, 0);
+    float length = XMVectorGetX(XMVector3Length(targetVec));
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    {
+        float nowlength = XMVectorGetX(XMVector3Length((*itr)->GetToPlayerVector()));
 
+        if (nowlength < length)
+        {
+            length = nowlength;
+        }
+    }
+    dirVec = XMVector3Normalize(dirVec);
+   // targetVec = XMVector3Normalize(targetVec);
+    float dot = XMVectorGetX(XMVector3Dot(dirVec, targetVec));
+    float angle = acosf(dot);
+    if (angle<0.5 && angle>-0.5&&length<100.0f)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Player::AimAssist(XMVECTOR dirVec)
+{
+    XMVECTOR targetVec = XMVectorSet(999, 999, 999, 0);
+    float length = XMVectorGetX(XMVector3Length(targetVec));
+    EnemyNormal* pEnemy = nullptr;
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    {
+        float nowlength = XMVectorGetX(XMVector3Length((*itr)->GetToPlayerVector()));
+
+        if (nowlength < length)
+        {
+            length = nowlength;
+            pEnemy = (*itr);
+        }
+    }
+    dirVec = XMVector3Normalize(dirVec);
+    // targetVec = XMVector3Normalize(targetVec);
+    float dot = XMVectorGetX(XMVector3Dot(dirVec, targetVec));
+    float angle = acosf(dot);
+    if (angle<0.5 && angle>-0.5 && length < 100.0f)
+    {
+        //ここから敵の方向を向く行列作る
+    }
 }
