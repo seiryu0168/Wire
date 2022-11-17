@@ -422,6 +422,7 @@ void Direct3D::BeginDraw()
 //描画終了
 void Direct3D::EndDraw()
 {
+	EngineTime::SetTime();
 	//スワップ（バックバッファを表に表示する）
 	pSwapChain->Present(0, 0);
 }

@@ -22,9 +22,22 @@
 namespace EngineTime
 {
 	double time;
-	float deltaTime;
-	float timeScale;
+	double fixedTime;
+	float  deltaTime;
+	float  fixedDeltaTime;
+	float  timeScale;
+	float maxmumDeltaTime;
 };
+
+void EngineTime::Initialize()
+{
+	time = 0;
+	fixedDeltaTime = 0;
+	deltaTime = 0;
+	fixedDeltaTime = 0;
+	timeScale = 1;
+	maxmumDeltaTime = 0.0167f;
+}
 
 unsigned long EngineTime::GetTime()
 {
@@ -44,9 +57,15 @@ void EngineTime::SetTimeScale(float scale)
 }
 void EngineTime::SetTime()
 {
+
 	unsigned long nowTime = timeGetTime();
 	static unsigned long prevTime = nowTime;
 	deltaTime = (float)(nowTime - prevTime)/1000.0f;
 	time += deltaTime;
 	prevTime = nowTime;
+}
+
+void EngineTime::Update()
+{
+	
 }
