@@ -81,6 +81,7 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
+    EnemyNormal* pEnemy = (EnemyNormal*)FindObject("EnemyNormal");
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
 
@@ -199,6 +200,8 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
+    XMMATRIX aa = LookAtMatrix(pEnemy->GetTransform().position_, vBaseTarget_);
+    transform_.rotate_.y = XMConvertToDegrees(acosf(aa.r->m128_f32[1]));
 }
 
 void Player::FixedUpdate()
@@ -239,7 +242,7 @@ void Player::CameraMove(RayCastData ray)
     }
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
-    transform_.rotate_.y = angleY_;
+
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     XMVECTOR vMoveCam;
     XMVECTOR vTarCam;
@@ -431,27 +434,25 @@ bool Player::IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/)
     return false;
 }
 
-void Player::AimAssist(XMVECTOR dirVec)
+XMMATRIX Player::AimAssist(XMFLOAT3 target,XMVECTOR frontVec,XMVECTOR upVector)
 {
-    XMVECTOR targetVec = XMVectorSet(999, 999, 999, 0);
-    float length = XMVectorGetX(XMVector3Length(targetVec));
-    EnemyNormal* pEnemy = nullptr;
-    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
-    {
-        float nowlength = XMVectorGetX(XMVector3Length((*itr)->GetToPlayerVector()));
+    frontVec = XMVector3Normalize(frontVec);
+    XMVECTOR targetVec = XMVectorSet(0, 0, 1, 0);
+    
+    XMVECTOR Z = XMLoadFloat3(&target) - XMLoadFloat3(&transform_.position_); //自分から目標へのベクトル　=　Z軸
+    Z = XMVector3Normalize(Z);
+    float angle = acos(XMVector3Dot(Z, frontVec).m128_f32[0]);
+    XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
+    X = XMVector3Normalize(X);
+    
+    XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
+    Y = XMVector3Normalize(Y);
 
-        if (nowlength < length)
-        {
-            length = nowlength;
-            pEnemy = (*itr);
-        }
-    }
-    dirVec = XMVector3Normalize(dirVec);
-    // targetVec = XMVector3Normalize(targetVec);
-    float dot = XMVectorGetX(XMVector3Dot(dirVec, targetVec));
-    float angle = acosf(dot);
-    if (angle<0.5 && angle>-0.5 && length < 100.0f)
-    {
-        //ここから敵の方向を向く行列作る
-    }
+
+    XMVECTOR quo = XMQuaternionRotationNormal(X, angle);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
+                                                            //XMQuaternionRotationAxisだとエラー吐いた
+
+    XMMATRIX rotateMatrix = XMMatrixRotationQuaternion(quo);
+
+    return rotateMatrix;
 }

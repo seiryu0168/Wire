@@ -86,7 +86,7 @@ public:
 
     bool IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/);
 
-    void AimAssist(XMVECTOR dirVec);
+    XMMATRIX AimAssist(XMFLOAT3 target, XMVECTOR frontVec=XMVectorSet(0,0,1,0),XMVECTOR upVector = XMVectorSet(0, 1, 0, 0));
 
     //ŠJ•ú
     void Release() override;

@@ -64,6 +64,9 @@ public:
 			XMFLOAT3  GetScale();
 			std::string GetObjectName() { return objectName_; }
 
+			//指定した座標に回転させる行列を作る関数
+			XMMATRIX LookAtMatrix(XMFLOAT3 target, XMVECTOR frontVec, XMVECTOR upVec = XMVectorSet(0, 1, 0, 0));
+
 	//親オブジェクト取得
 	GameObject* GetParent();
 	GameObject* GetRootJob();
