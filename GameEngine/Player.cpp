@@ -425,7 +425,7 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos)
     dirVec = XMVector3Normalize(dirVec);
     float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
     if (angle > -0.4f && angle < 0.4f)
-        rotateSpeed_ = rotateSpeed_ * angle + 0.5f;
+        rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
 
     if (angle>-lockOnAngleLimit_ &&angle < lockOnAngleLimit_)
     {
