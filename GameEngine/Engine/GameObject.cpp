@@ -250,17 +250,23 @@ XMMATRIX GameObject::LookAtMatrix(XMFLOAT3 target, XMVECTOR frontVec, XMVECTOR u
 	XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
 	X = XMVector3Normalize(X);
 
+	XMVECTOR AAA = XMVector3Cross(Z, frontVec);
+	AAA= XMVector3Normalize(AAA);
+
+
 	XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
 	Y = XMVector3Normalize(Y);
 
-	float angle=0;
-	angle= XMVector3Dot(frontVec,Z).m128_f32[1];
-	angle = acosf(angle);
-	
-	
+	float angleY=0;
+	float angleX=0;
+	angleX= XMVectorGetX(XMVector3Dot(frontVec,Z));
+	angleX = acosf(angleX);
 
-	XMVECTOR quo = XMQuaternionRotationNormal(X, angle);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
-															//XMQuaternionRotationAxisだとエラー吐いた
+
+	XMVECTOR quo = XMQuaternionRotationNormal(AAA, -angleX);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
+															   //XMQuaternionRotationAxisだとエラー吐いた
+	/*XMVECTOR quoY= XMQuaternionRotationNormal(Y, angle);
+	XMVECTOR quoZ= XMQuaternionRotationNormal(Z, angle);*/
 
 	XMMATRIX rotateMatrix = XMMatrixRotationQuaternion(quo);
 

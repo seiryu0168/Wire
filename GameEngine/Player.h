@@ -51,6 +51,7 @@ class Player : public GameObject
     float wireLength_;
     float angleY_;
     float angleX_;
+    float lockOnAngleLimit_;
 
     char status_;
 
@@ -84,7 +85,7 @@ public:
 
     void OnCollision(GameObject* pTarget) override;
 
-    bool IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/);
+    bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec);
 
     XMMATRIX AimAssist(XMFLOAT3 target, XMVECTOR frontVec=XMVectorSet(0,0,1,0),XMVECTOR upVector = XMVectorSet(0, 1, 0, 0));
 

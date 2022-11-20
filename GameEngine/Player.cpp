@@ -16,7 +16,7 @@ std::vector<EnemyNormal*> enemyList_;
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
-    baseUpVec_(XMVectorSet(0,1,0,0)),
+    baseUpVec_(XMVectorSet(0, 1, 0, 0)),
     playerLife_(10),
     gravity_(-0.06),
     hModel_(-1),
@@ -35,6 +35,7 @@ Player::Player(GameObject* parent)
     wireLength_(100.0f),
     angleY_(0),
     angleX_(0),
+    lockOnAngleLimit_(0.2f),
     flyFlag_(false),
     aimFlag_(false)
 {
@@ -81,6 +82,7 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
+    rotateSpeed_ = 4.0f;
     EnemyNormal* pEnemy = (EnemyNormal*)FindObject("EnemyNormal");
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
@@ -95,13 +97,18 @@ void Player::Update()
     {
         aimFlag_ = true;
         //当たる位置の計算
-        XMVECTOR vPtrBack = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
+        XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
+        XMVECTOR vPtrDir = vPlayerDir;
 
+        if (IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_))
+        {
+           vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+        }
+        
         //レイキャストの始点と方向を入力
         XMStoreFloat3(&ray.start, vPlayerPos_);
-        XMStoreFloat3(&ray.dir, vPtrBack);
+        XMStoreFloat3(&ray.dir, vPtrDir);
         Model::RayCast(ray);
-        
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
         {
@@ -200,8 +207,8 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
-    XMMATRIX aa = LookAtMatrix(pEnemy->GetTransform().position_, vBaseTarget_);
-    transform_.rotate_.y = XMConvertToDegrees(acosf(aa.r->m128_f32[1]));
+    
+    
 }
 
 void Player::FixedUpdate()
@@ -410,24 +417,17 @@ void Player::OnCollision(GameObject* pTarget)
     }
 }
 
-bool Player::IsAssistRange(XMVECTOR dirVec/*,XMVECTOR targetVec*/)
+bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos)
 {
-    XMVECTOR targetVec = XMVectorSet(999, 999, 999, 0);
-    float length = XMVectorGetX(XMVector3Length(targetVec));
-    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
-    {
-        float nowlength = XMVectorGetX(XMVector3Length((*itr)->GetToPlayerVector()));
 
-        if (nowlength < length)
-        {
-            length = nowlength;
-        }
-    }
+    XMVECTOR targetVec = XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_);
+    targetVec = XMVector3Normalize(targetVec);
     dirVec = XMVector3Normalize(dirVec);
-   // targetVec = XMVector3Normalize(targetVec);
-    float dot = XMVectorGetX(XMVector3Dot(dirVec, targetVec));
-    float angle = acosf(dot);
-    if (angle<0.5 && angle>-0.5&&length<100.0f)
+    float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
+    if (angle > -0.4f && angle < 0.4f)
+        rotateSpeed_ = rotateSpeed_ * angle + 0.5f;
+
+    if (angle>-lockOnAngleLimit_ &&angle < lockOnAngleLimit_)
     {
         return true;
     }
