@@ -27,7 +27,7 @@ EnemyNormal::~EnemyNormal()
 //初期化
 void EnemyNormal::Initialize()
 {
-	hModel_ = Model::Load("Assets\\TestBox.fbx");
+	hModel_ = Model::Load("Assets\\Enemy2.fbx");
 	pPlayer_ = (Player*)FindObject("Player"); //確認用オブジェクト
 	BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
 	AddCollider(pCollider);
