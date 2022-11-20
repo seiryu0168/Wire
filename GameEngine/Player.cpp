@@ -100,6 +100,7 @@ void Player::Update()
         XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
         XMVECTOR vPtrDir = vPlayerDir;
 
+        //エイムアシスト範囲内かどうか判定
         if (IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_))
         {
            vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
@@ -109,6 +110,7 @@ void Player::Update()
         XMStoreFloat3(&ray.start, vPlayerPos_);
         XMStoreFloat3(&ray.dir, vPtrDir);
         Model::RayCast(ray);
+
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
         {
@@ -419,14 +421,17 @@ void Player::OnCollision(GameObject* pTarget)
 
 bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos)
 {
-
-    XMVECTOR targetVec = XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_);
+    
+    XMVECTOR targetVec = XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_);  //自分からtargetPosまでのベクトル
     targetVec = XMVector3Normalize(targetVec);
     dirVec = XMVector3Normalize(dirVec);
-    float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
+    float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));          //自分からtargetPosまでのベクトルとdirVecの内積を求める
+
+    //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
     if (angle > -0.4f && angle < 0.4f)
         rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
 
+    //angle(ラジアン)がlockOnAngleLimit_いないだったらロックオン
     if (angle>-lockOnAngleLimit_ &&angle < lockOnAngleLimit_)
     {
         return true;
