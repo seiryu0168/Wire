@@ -20,8 +20,15 @@ struct RayCastData
 	XMVECTOR hitPos;
 	XMVECTOR normal;
 	BOOL hit;
+	float distLimit;
 
-	RayCastData():start(XMFLOAT3(0,0,0)),dir(XMFLOAT3(0,0,0)),dist(9999.0f),hit(false),hitPos(XMVectorSet(0,0,0,0)),normal(XMVectorSet(0,0,0,0)) {}
+	RayCastData():start(XMFLOAT3(0,0,0)),
+		dir(XMFLOAT3(0,0,0)),
+		dist(9999.0f),
+		hit(false),
+		hitPos(XMVectorSet(0,0,0,0)),
+		normal(XMVectorSet(0,0,0,0)),
+		distLimit(9999.0f) {}
 };
 class Fbx
 {

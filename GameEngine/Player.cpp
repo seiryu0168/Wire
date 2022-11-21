@@ -29,7 +29,7 @@ Player::Player(GameObject* parent)
     moveTime_(0),
     aimTime_(0),
     flyTime_(0),
-    velocity_(2),
+    velocity_(0),
     rotateSpeed_(4.0f),
     maxSpeed_(1.5f),
     wireLength_(100.0f),
@@ -95,13 +95,14 @@ void Player::Update()
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
+        ray.distLimit = 100.0f;
         aimFlag_ = true;
         //当たる位置の計算
         XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
         XMVECTOR vPtrDir = vPlayerDir;
 
         //エイムアシスト範囲内かどうか判定
-        if (IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_))
+        if (IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
         {
            vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
         }
@@ -114,6 +115,7 @@ void Player::Update()
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
         {
+            rotateSpeed_ = 2.0f;
             XMFLOAT3 pointerPos;
             XMStoreFloat3(&pointerPos, ray.hitPos);
             pPointer->SetPointerPos(pointerPos);
@@ -419,45 +421,49 @@ void Player::OnCollision(GameObject* pTarget)
     }
 }
 
-bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos)
+bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 {
     
     XMVECTOR targetVec = XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_);  //自分からtargetPosまでのベクトル
-    targetVec = XMVector3Normalize(targetVec);
-    dirVec = XMVector3Normalize(dirVec);
-    float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));          //自分からtargetPosまでのベクトルとdirVecの内積を求める
-
-    //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
-    if (angle > -0.4f && angle < 0.4f)
-        rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
-
-    //angle(ラジアン)がlockOnAngleLimit_いないだったらロックオン
-    if (angle>-lockOnAngleLimit_ &&angle < lockOnAngleLimit_)
+    if (XMVectorGetX(XMVector3Length(targetVec)) < length)
     {
-        return true;
+        targetVec = XMVector3Normalize(targetVec);
+        dirVec = XMVector3Normalize(dirVec);
+        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));          //自分からtargetPosまでのベクトルとdirVecの内積を求める
+
+
+            //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
+        if (angle > -0.4f && angle < 0.4f)
+            rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
+
+        //angle(ラジアン)がlockOnAngleLimit_いないだったらロックオン
+        if (angle > -lockOnAngleLimit_ && angle < lockOnAngleLimit_)
+        {
+            return true;
+        }
     }
     return false;
 }
 
-XMMATRIX Player::AimAssist(XMFLOAT3 target,XMVECTOR frontVec,XMVECTOR upVector)
-{
-    frontVec = XMVector3Normalize(frontVec);
-    XMVECTOR targetVec = XMVectorSet(0, 0, 1, 0);
-    
-    XMVECTOR Z = XMLoadFloat3(&target) - XMLoadFloat3(&transform_.position_); //自分から目標へのベクトル　=　Z軸
-    Z = XMVector3Normalize(Z);
-    float angle = acos(XMVector3Dot(Z, frontVec).m128_f32[0]);
-    XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
-    X = XMVector3Normalize(X);
-    
-    XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
-    Y = XMVector3Normalize(Y);
-
-
-    XMVECTOR quo = XMQuaternionRotationNormal(X, angle);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
-                                                            //XMQuaternionRotationAxisだとエラー吐いた
-
-    XMMATRIX rotateMatrix = XMMatrixRotationQuaternion(quo);
-
-    return rotateMatrix;
-}
+//XMMATRIX Player::AimAssist(XMFLOAT3 target,XMVECTOR frontVec,XMVECTOR upVector)
+//{
+//    frontVec = XMVector3Normalize(frontVec);
+//    XMVECTOR targetVec = XMVectorSet(0, 0, 1, 0);
+//    
+//    XMVECTOR Z = XMLoadFloat3(&target) - XMLoadFloat3(&transform_.position_); //自分から目標へのベクトル　=　Z軸
+//    Z = XMVector3Normalize(Z);
+//    float angle = acos(XMVector3Dot(Z, frontVec).m128_f32[0]);
+//    XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
+//    X = XMVector3Normalize(X);
+//    
+//    XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
+//    Y = XMVector3Normalize(Y);
+//
+//
+//    XMVECTOR quo = XMQuaternionRotationNormal(X, angle);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
+//                                                            //XMQuaternionRotationAxisだとエラー吐いた
+//
+//    XMMATRIX rotateMatrix = XMMatrixRotationQuaternion(quo);
+//
+//    return rotateMatrix;
+//}

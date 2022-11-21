@@ -85,7 +85,7 @@ public:
 
     void OnCollision(GameObject* pTarget) override;
 
-    bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec);
+    bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
 
     XMMATRIX AimAssist(XMFLOAT3 target, XMVECTOR frontVec=XMVectorSet(0,0,1,0),XMVECTOR upVector = XMVectorSet(0, 1, 0, 0));
 
