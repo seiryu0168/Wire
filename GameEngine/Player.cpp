@@ -95,6 +95,7 @@ void Player::Update()
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
+        //レイキャストの判定距離の上限
         ray.distLimit = 100.0f;
         aimFlag_ = true;
         //当たる位置の計算
@@ -415,7 +416,7 @@ void Player::OnCollision(GameObject* pTarget)
         if (status_ & ATC_ATTACK)
         {
             flyFlag_ = false;
-            vFlyMove_ = XMVector3TransformCoord(XMVector3Normalize(XMVectorSet(0, 1, -1, 0)), matCamX_) * 1.5;
+            vFlyMove_ = XMVector3TransformCoord(XMVector3Normalize(XMVectorSet(0, 1, -1, 0)), matCamX_) * 1.5f;
             //pTarget->KillMe();
         }
     }
@@ -424,17 +425,23 @@ void Player::OnCollision(GameObject* pTarget)
 bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 {
     
-    XMVECTOR targetVec = XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_);  //自分からtargetPosまでのベクトル
+    XMVECTOR targetVec = XMLoadFloat3(&targetPos) -
+                         XMLoadFloat3(&transform_.position_); //自分からtargetPosまでのベクトル
+    
+    //targetVecがlength以下だったら
     if (XMVectorGetX(XMVector3Length(targetVec)) < length)
     {
         targetVec = XMVector3Normalize(targetVec);
         dirVec = XMVector3Normalize(dirVec);
-        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));          //自分からtargetPosまでのベクトルとdirVecの内積を求める
+        float angle = 
+            XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));     //targetVecとdirVecの内積を求める
 
 
             //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
         if (angle > -0.4f && angle < 0.4f)
-            rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
+        {
+            rotateSpeed_ = rotateSpeed_ * angle + 0.6f;
+        }
 
         //angle(ラジアン)がlockOnAngleLimit_いないだったらロックオン
         if (angle > -lockOnAngleLimit_ && angle < lockOnAngleLimit_)

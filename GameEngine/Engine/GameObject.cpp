@@ -246,11 +246,6 @@ XMMATRIX GameObject::LookAtMatrix(XMFLOAT3 target, XMVECTOR frontVec, XMVECTOR u
 
 	XMVECTOR Z = XMLoadFloat3(&target) - XMLoadFloat3(&this->transform_.position_); //自分から目標へのベクトル　=　Z軸
 	Z = XMVector3Normalize(Z);
-	
-	//XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
-	//X = XMVector3Normalize(X);
-	//XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
-	//Y = XMVector3Normalize(Y);
 
 	float angleX=0;
 	XMVECTOR AAA = XMVector3Cross(Z, frontVec);					//Z軸と向いてる方向のベクトルの外積計算(この外積が回転の軸になる)
