@@ -8,11 +8,13 @@ using namespace DirectX;
 class GameObject;
 class BoxCollider;
 class SphereCollider;
+class OBBCollider;
 
 enum ColliderType
 {
 	BOX_COLLIDER,
 	SPHERE_COLLIDER,
+	OBB_COLLIDER
 };
 
 //当たり判定
@@ -49,7 +51,8 @@ public:
 	//引数はSphereCollider型とSphereCollider型
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
-	bool IsHitBox_Mesh(BoxCollider* Box, int modelNum);
+	//OBB同士の衝突判定
+	bool IsHitOBB();
 
 	//オブジェクトをセット
 	void SetGemaObject(GameObject* gameObject) { pColObject_ = gameObject; }

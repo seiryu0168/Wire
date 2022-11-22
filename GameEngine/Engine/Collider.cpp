@@ -75,7 +75,7 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 
 }
 
-bool Collider::IsHitBox_Mesh(BoxCollider* Box, int modelNum)
+bool Collider::IsHitOBB()
 {
 
 }
