@@ -2,6 +2,7 @@
 #include"BoxCollider.h"
 #include"SphereCollider.h"
 #include"GameObject.h"
+#include"Fbx.h"
 
 Collider::Collider()
 {
@@ -71,5 +72,10 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 		return true;
 	}
 	return false;
+
+}
+
+bool Collider::IsHitBox_Mesh(BoxCollider* Box, int modelNum)
+{
 
 }

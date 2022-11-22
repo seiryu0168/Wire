@@ -49,6 +49,8 @@ public:
 	//引数はSphereCollider型とSphereCollider型
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
+	bool IsHitBox_Mesh(BoxCollider* Box, int modelNum);
+
 	//オブジェクトをセット
 	void SetGemaObject(GameObject* gameObject) { pColObject_ = gameObject; }
 
