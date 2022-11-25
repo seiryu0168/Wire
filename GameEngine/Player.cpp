@@ -292,10 +292,20 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData URay;
     RayCastData DRay;
 
-    RayCastData moveRay;
-    moveRay.start = transform_.position_;
-    XMStoreFloat3(&moveRay.dir, moveVector);
-    Model::RayCast(stageNum_, moveRay);
+    RayCastData fMoveRay;
+    fMoveRay.start = transform_.position_;
+    XMStoreFloat3(&fMoveRay.dir, moveVector);
+    Model::RayCast(stageNum_, fMoveRay);
+
+    RayCastData lMoveRay;
+    lMoveRay.start = transform_.position_;
+    XMStoreFloat3(&lMoveRay.dir, XMVector3TransformCoord(moveVector,XMMatrixRotationY(XMConvertToRadians(90))));
+    Model::RayCast(stageNum_, lMoveRay);
+
+    RayCastData rMoveRay;
+    rMoveRay.start = transform_.position_;
+    XMStoreFloat3(&rMoveRay.dir, XMVector3TransformCoord(moveVector, XMMatrixRotationY(XMConvertToRadians(-90))));
+    Model::RayCast(stageNum_, rMoveRay);
 
     FRay.start = transform_.position_;  
     BRay.start = transform_.position_;
@@ -320,13 +330,33 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     XMFLOAT3 moveDist;
     XMStoreFloat3(&moveDist,moveVector);
+    moveDist.y = 0;
+    XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
     XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
-    if (moveRay.dist < 1.0f)
+    float moveLength = XMVectorGetX(XMVector3Length(moveHolizon));
+    if (fMoveRay.dist < moveLength)
     {
         
-        wallzuri = moveVector + (moveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveVector, moveRay.normal))));
-        XMStoreFloat3(&transform_.position_,vPlayerPos_ + moveRay.normal * XMVectorGetX(XMVector3Dot(-moveVector, moveRay.normal)));
+
+        wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
+        XMStoreFloat3(&transform_.position_,vPlayerPos_ + fMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal)));
     }
+
+    if(lMoveRay.dist < 1.0f)
+    {
+
+        wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + lMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal)));
+    }
+
+    if(rMoveRay.dist < 1.0f)
+    {
+
+        wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + rMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal)));
+    }
+
+
 
     ////‘O•ûƒŒƒC‚Ì‹——£(dist)‚ª1ˆÈ‰º‚É‚È‚Á‚½‚çzŽ²‚ÌÀ•W‚ð–ß‚·
     //if (moveDist.z+transform_.scale_.z >= FRay.dist)
