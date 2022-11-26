@@ -292,20 +292,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData URay;
     RayCastData DRay;
 
-    RayCastData fMoveRay;
-    fMoveRay.start = transform_.position_;
-    XMStoreFloat3(&fMoveRay.dir, moveVector);
-    Model::RayCast(stageNum_, fMoveRay);
-
-    RayCastData lMoveRay;
-    lMoveRay.start = transform_.position_;
-    XMStoreFloat3(&lMoveRay.dir, XMVector3TransformCoord(moveVector,XMMatrixRotationY(XMConvertToRadians(90))));
-    Model::RayCast(stageNum_, lMoveRay);
-
-    RayCastData rMoveRay;
-    rMoveRay.start = transform_.position_;
-    XMStoreFloat3(&rMoveRay.dir, XMVector3TransformCoord(moveVector, XMMatrixRotationY(XMConvertToRadians(-90))));
-    Model::RayCast(stageNum_, rMoveRay);
 
     FRay.start = transform_.position_;  
     BRay.start = transform_.position_;
@@ -330,30 +316,55 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     XMFLOAT3 moveDist;
     XMStoreFloat3(&moveDist,moveVector);
-    moveDist.y = 0;
+    moveDist.y = 0;                         //ベクトルのy軸を0にする
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
+    XMVECTOR startVec[3] = { 0 };
+    startVec[0] = -XMVector3Normalize(moveHolizon);                                                     //進行方向
+    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, 0.5 * M_PI));   //進行方向に見て右
+    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -0.5f * M_PI));//進行方向に見て左
     XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
-    float moveLength = XMVectorGetX(XMVector3Length(moveHolizon));
-    if (fMoveRay.dist < moveLength)
+   
+    //進行方向のレイ
+    RayCastData fMoveRay;
+    XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[0]);
+    XMStoreFloat3(&fMoveRay.dir, moveVector);
+    Model::RayCast(stageNum_, fMoveRay);
+
+    //進行方向に見て右のベクトル
+    RayCastData lMoveRay;
+    XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
+    XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveVector,XMQuaternionRotationNormal(-baseUpVec_,-0.5*M_PI)));
+    Model::RayCast(stageNum_, lMoveRay);
+
+    //進行方向に見て左ベクトル
+    RayCastData rMoveRay;
+    XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
+    XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveVector, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
+    Model::RayCast(stageNum_, rMoveRay);
+
+    float da = XMVectorGetX(XMVector3Length(moveHolizon));
+    if (fMoveRay.dist < 2.0f)
     {
         
-
+        //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
         wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_,vPlayerPos_ + fMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal)));
+        XMStoreFloat3(&transform_.position_,vPlayerPos_ + (-(vPlayerPos_+XMLoadFloat3(&fMoveRay.dir) - fMoveRay.hitPos)));
+
+        int a = 10;
     }
 
-    if(lMoveRay.dist < 1.0f)
+    if(lMoveRay.dist < 2.0f)
     {
 
         wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + lMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal)));
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-(vPlayerPos_+ XMLoadFloat3(&lMoveRay.dir) - lMoveRay.hitPos)));
     }
 
-    if(rMoveRay.dist < 1.0f)
+    if(rMoveRay.dist < 2.0f)
     {
 
         wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + rMoveRay.normal * XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal)));
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-(vPlayerPos_+ XMLoadFloat3(&rMoveRay.dir) - rMoveRay.hitPos)));
     }
 
 
