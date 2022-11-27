@@ -37,7 +37,8 @@ Player::Player(GameObject* parent)
     angleX_(0),
     lockOnAngleLimit_(0.2f),
     flyFlag_(false),
-    aimFlag_(false)
+    aimFlag_(false),
+    groundFlag_(true)
 {
 }
 
@@ -164,13 +165,16 @@ void Player::Update()
     //ワイヤーで飛んでなければ移動と落下が出来る
     if (flyFlag_ == false)
     {
-        //velocity_ += gravity_;
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
-        if (airFlag_ == true&&jumpFlag_==false)
+        if (airFlag_ == true && jumpFlag_ == false)
         {
             moveX *= 0.3f;
             moveZ *= 0.3f;
+        }
+        if (groundFlag_ != true)
+        {
+            velocity_ += gravity_;
         }
     }
 
@@ -285,41 +289,44 @@ void Player::CameraMove(RayCastData ray)
 
 void Player::CharactorControll(XMVECTOR &moveVector)
 {
-    RayCastData FRay;
+   /* RayCastData FRay;
     RayCastData BRay;
     RayCastData LRay;
-    RayCastData RRay;
+    RayCastData RRay;*/
     RayCastData URay;
     RayCastData DRay;
 
 
-    FRay.start = transform_.position_;  
+    /*FRay.start = transform_.position_;  
     BRay.start = transform_.position_;
     LRay.start = transform_.position_;
-    RRay.start = transform_.position_;
+    RRay.start = transform_.position_;*/
     URay.start = transform_.position_;
     DRay.start = transform_.position_;
     
-    XMStoreFloat3(&FRay.dir, rayDir_[DIR_FRONT]);
+    /*XMStoreFloat3(&FRay.dir, rayDir_[DIR_FRONT]);
     XMStoreFloat3(&BRay.dir, rayDir_[DIR_BACK]);
     XMStoreFloat3(&LRay.dir, rayDir_[DIR_LEFT]);
-    XMStoreFloat3(&RRay.dir, rayDir_[DIR_RIGHT]);    
+    XMStoreFloat3(&RRay.dir, rayDir_[DIR_RIGHT]);    */
     XMStoreFloat3(&URay.dir, rayDir_[DIR_UP]);    
     XMStoreFloat3(&DRay.dir, rayDir_[DIR_DOWN]);    
 
-    Model::RayCast(stageNum_, FRay);
+    /*Model::RayCast(stageNum_, FRay);
     Model::RayCast(stageNum_, BRay);
     Model::RayCast(stageNum_, LRay);
-    Model::RayCast(stageNum_, RRay);
+    Model::RayCast(stageNum_, RRay);*/
     Model::RayCast(stageNum_, URay);
     Model::RayCast(stageNum_, DRay);
 
     XMFLOAT3 moveDist;
+    float moveY;
+
     XMStoreFloat3(&moveDist,moveVector);
+    moveY = moveDist.y;
     moveDist.y = 0;                         //ベクトルのy軸を0にする
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
     XMVECTOR startVec[3] = { 0 };
-    startVec[0] = -XMVector3Normalize(moveHolizon);                                                     //進行方向
+    startVec[0] = -XMVector3Normalize(moveHolizon);                                                    //進行方向
     startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, 0.5 * M_PI));   //進行方向に見て右
     startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -0.5f * M_PI));//進行方向に見て左
     XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
@@ -341,98 +348,37 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveVector, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
     Model::RayCast(stageNum_, rMoveRay);
-
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     if (fMoveRay.dist < 2.0f)
     {
-        
+        vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+        moveDist = { 0,0,0 };
         //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
         wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_,vPlayerPos_ + (-(vPlayerPos_+XMLoadFloat3(&fMoveRay.dir) - fMoveRay.hitPos)));
+        XMVECTOR back = (XMLoadFloat3(&fMoveRay.start) + (XMLoadFloat3(&fMoveRay.dir) * 2)) -fMoveRay.hitPos;
+        XMStoreFloat3(&transform_.position_, vPlayerPos_+(-back));
 
         int a = 10;
     }
 
     if(lMoveRay.dist < 2.0f)
     {
-
+        moveDist = { 0,0,0 };
         wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-(vPlayerPos_+ XMLoadFloat3(&lMoveRay.dir) - lMoveRay.hitPos)));
+        XMVECTOR back = (XMLoadFloat3(&lMoveRay.start) + (XMLoadFloat3(&lMoveRay.dir) * 2)) - lMoveRay.hitPos;
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
     }
 
     if(rMoveRay.dist < 2.0f)
     {
-
+        moveDist = { 0,0,0 };
         wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-(vPlayerPos_+ XMLoadFloat3(&rMoveRay.dir) - rMoveRay.hitPos)));
+        XMVECTOR back = (XMLoadFloat3(&rMoveRay.start) + (XMLoadFloat3(&rMoveRay.dir) * 2)) - rMoveRay.hitPos;
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
     }
 
-
-
-    ////前方レイの距離(dist)が1以下になったらz軸の座標を戻す
-    //if (moveDist.z+transform_.scale_.z >= FRay.dist)
-    //{
-    //    //transform_.position_.z -= 1.51f - FRay.dist;// -transform_.scale_.z;
-    //    //XMStoreFloat3(&transform_.position_, FRay.hitPos);
-    //    //transform_.position_.z -= 1.6f;
-    //    moveDist.z = 0;
-    //    vFlyMove_ = XMVectorSet(0,0,0,0);
-    //    //airFlag_ = false;
-    //    flyFlag_ = false;
-    //}
-    //    if (FRay.dist < 1.0f)
-    //    {
-    //        transform_.position_.z -= 1.0f-FRay.dist;
-    //    }
-    //    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
-    ////後方レイの距離(dist)が1以下になったらz軸の座標を戻す
-    //if (abs(moveDist.z-transform_.scale_.z) >= BRay.dist || BRay.dist < 1.5f)
-    //{
-    //    //transform_.position_.z -= BRay.dist + transform_.scale_.z;
-    //    moveDist.z = 0;
-    //    vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-    //    //airFlag_ = false;
-    //    flyFlag_ = false;
-    //}
-
-    //if (BRay.dist < 1.0f)
-    //{
-    //    transform_.position_.z += 1.0f - BRay.dist;
-    //}
-
-    ////右レイの距離(dist)が1以下になったらx軸の座標を戻す
-    //if (moveDist.x+transform_.scale_.x >= RRay.dist || RRay.dist < 1.5f)
-    //{
-    //    //transform_.position_.x += RRay.dist - transform_.scale_.x;
-    //    moveDist.x = 0;
-    //    vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-    //    //airFlag_ = false;
-    //    flyFlag_ = false;
-    //}
-
-    //if (RRay.dist < 1.0f)
-    //{
-    //    transform_.position_.x -= 1.0f - RRay.dist;
-    //}
-
-    ////左レイの距離(dist)が1以下になったらx軸の座標を戻す
-    //if (abs(moveDist.x-transform_.scale_.x) >= LRay.dist || LRay.dist < 1.5f)
-    //{
-    //    //transform_.position_.x -= LRay.dist + transform_.scale_.x;
-    //    moveDist.x = 0;
-    //    vFlyMove_ = XMVectorSet(0, 0, 0, 0);
-    //    //airFlag_ = false;
-    //    flyFlag_ = false;
-    //}
-
-    //if (LRay.dist < 1.0f)
-    //{
-    //    transform_.position_.x += 1.0f - LRay.dist;
-    //}
-
-
-
-    //上レイの距離(dist)が1以下になったらx軸の座標を戻す
+    moveDist.y = moveY;
+    //上レイの距離(dist)が1以下になったらy軸の座標を戻す
     if (moveDist.y + transform_.scale_.y >= URay.dist)
     {
         transform_.position_.y += URay.dist - transform_.scale_.y;
@@ -442,22 +388,29 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         //airFlag_ = false;
         flyFlag_ = false;
     }
-
-    //下レイの距離(dist)が1以下になったら軸の座標を戻す
-    if (abs(moveDist.y-transform_.scale_.y) > DRay.dist)
+    //下レイの距離(dist)が1以下になったらy軸の座標を戻す
+    if (abs(moveDist.y - transform_.scale_.y) > DRay.dist)
     {
         XMFLOAT3 pos;
         XMStoreFloat3(&pos, DRay.hitPos);
         pos.y += transform_.scale_.y;
         transform_.position_ = pos;
-        vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+        //vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist.y = 0;
         flyFlag_ = false;
         airFlag_ = false;
         jumpFlag_ = false;
+        groundFlag_ = true;
+    }
+    else
+    {
+        groundFlag_ = false;
+        //velocity_ = 0;
     }
 
+    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     moveVector = XMLoadFloat3(&moveDist);
+    
     moveVector += wallzuri;
 }
 
