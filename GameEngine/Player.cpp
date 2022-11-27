@@ -377,9 +377,9 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
     }
 
-    moveDist.y = moveY;
+    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     //上レイの距離(dist)が1以下になったらy軸の座標を戻す
-    if (moveDist.y + transform_.scale_.y >= URay.dist)
+    if (moveY + transform_.scale_.y >= URay.dist)
     {
         transform_.position_.y += URay.dist - transform_.scale_.y;
         moveDist.y = 0;
@@ -389,12 +389,12 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         flyFlag_ = false;
     }
     //下レイの距離(dist)が1以下になったらy軸の座標を戻す
-    if (abs(moveDist.y - transform_.scale_.y) > DRay.dist)
+    if (abs(moveY - transform_.scale_.y) > DRay.dist)
     {
         XMFLOAT3 pos;
         XMStoreFloat3(&pos, DRay.hitPos);
-        pos.y += transform_.scale_.y;
-        transform_.position_ = pos;
+        //pos.y += transform_.scale_.y;
+        transform_.position_.y += DRay.dist-transform_.scale_.y;
         //vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist.y = 0;
         flyFlag_ = false;
@@ -408,7 +408,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         //velocity_ = 0;
     }
 
-    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+    moveDist.y = moveY;
     moveVector = XMLoadFloat3(&moveDist);
     
     moveVector += wallzuri;
@@ -461,26 +461,3 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
     }
     return false;
 }
-
-//XMMATRIX Player::AimAssist(XMFLOAT3 target,XMVECTOR frontVec,XMVECTOR upVector)
-//{
-//    frontVec = XMVector3Normalize(frontVec);
-//    XMVECTOR targetVec = XMVectorSet(0, 0, 1, 0);
-//    
-//    XMVECTOR Z = XMLoadFloat3(&target) - XMLoadFloat3(&transform_.position_); //自分から目標へのベクトル　=　Z軸
-//    Z = XMVector3Normalize(Z);
-//    float angle = acos(XMVector3Dot(Z, frontVec).m128_f32[0]);
-//    XMVECTOR X = XMVector3Cross(upVector, Z);                  //upVector(上方向ベクトル)とZ軸方向ベクトルの外積 = X軸
-//    X = XMVector3Normalize(X);
-//    
-//    XMVECTOR Y = XMVector3Cross(Z, X);                         //Z軸とX軸ベクトルの外積 = Y軸
-//    Y = XMVector3Normalize(Y);
-//
-//
-//    XMVECTOR quo = XMQuaternionRotationNormal(X, angle);    //軸が正規化されてるベクトルの場合XMQuaternionRotationNormalの方が良い
-//                                                            //XMQuaternionRotationAxisだとエラー吐いた
-//
-//    XMMATRIX rotateMatrix = XMMatrixRotationQuaternion(quo);
-//
-//    return rotateMatrix;
-//}
