@@ -138,8 +138,8 @@
     <ClCompile Include="SetObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="OBBCollider.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\OBBCollider.cpp">
+      <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,7 +263,7 @@
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="OBBCollider.h">
+    <ClInclude Include="Engine\OBBCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

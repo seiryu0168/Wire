@@ -14,10 +14,12 @@ BoxCollider::BoxCollider(XMFLOAT3 basePos, XMFLOAT3 size)
 //当たったオブジェクトの当たり判定がtargetに入る
 bool BoxCollider::IsHit(Collider* target)
 {
-	if (target->type_ == BOX_COLLIDER)
+	switch (target->type_)
 	{
+	case BOX_COLLIDER:
 		return IsHitBox_Box((BoxCollider*)target, this);
-	}
-	else
+
+	case SPHERE_COLLIDER:
 		return IsHitBox_Sphere(this, (SphereCollider*)target);
+	}
 }

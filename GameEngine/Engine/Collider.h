@@ -23,6 +23,7 @@ class Collider
 
 	friend class BoxCollider;
 	friend class SphereCollider;
+	friend class OBBCollider;
 
 	GameObject*  pColObject_;	//当たり判定を付けるオブジェクト
 	ColliderType type_;		//コライダータイプ
@@ -52,7 +53,7 @@ public:
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
 	//OBB同士の衝突判定
-	bool IsHitOBB();
+	bool IsHitOBB_OBB(OBBCollider* obbA,OBBCollider* obbB);
 
 	//オブジェクトをセット
 	void SetGemaObject(GameObject* gameObject) { pColObject_ = gameObject; }

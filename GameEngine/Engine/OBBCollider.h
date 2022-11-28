@@ -1,5 +1,5 @@
 #pragma once
-#include"Engine/Collider.h"
+#include"Collider.h"
 class OBBCollider : public Collider
 {
 private:
@@ -9,7 +9,7 @@ private:
 	XMVECTOR OBB_Z;
 public:
 	OBBCollider(XMFLOAT3 size, XMFLOAT3 basePos = {0,0,0}, bool isRotate = true, bool isScale = true);
-	bool isHit(Collider* target);
+	bool IsHit(Collider* target) override;
 
 
 };

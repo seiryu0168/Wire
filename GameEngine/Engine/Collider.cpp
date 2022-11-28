@@ -75,7 +75,7 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 
 }
 
-//bool Collider::IsHitOBB()
-//{
-//
-//}
+bool IsHitOBB_OBB(OBBCollider* obbA, OBBCollider* obbB)
+{
+
+}
