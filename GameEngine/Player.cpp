@@ -169,7 +169,7 @@ void Player::Update()
     {
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
-        if (airFlag_ == true && jumpFlag_ == false)
+        if (airFlag_ == true && jumpFlag_ == false&& groundFlag_==false)
         {
             moveX *= 0.3f;
             moveZ *= 0.3f;
@@ -394,16 +394,23 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //‰ºƒŒƒC‚Ì‹——£(dist)‚ªmoveYˆÈ‰º‚É‚È‚Á‚½‚çy²‚ÌÀ•W‚ğ–ß‚·
-    if (DRay.dist < moveY && groundFlag_!=true)
+    if (DRay.dist < 2.1f)
     {
-        moveDist = { 0,0,0 };
+        //moveDist = { 0,0,0 };
         //wallzuri = moveVector + (DRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, DRay.normal))));
-        transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;
+        if (signbit(velocity_))
+        {
+            transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;
+            moveY = 0;
+            velocity_ = 0;
+            airFlag_ = false;
+            groundFlag_ = true;
+        }
     }
     else
     {
-        groundFlag_ = true;
-        velocity_ = 0;
+
+        groundFlag_ = false;
     }
 
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
