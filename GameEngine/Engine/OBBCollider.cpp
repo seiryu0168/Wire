@@ -7,9 +7,12 @@ OBBCollider::OBBCollider(XMFLOAT3 size, bool isRotate, bool isScale)
 
 	center_ = { 0,0,0 };
 	size_ = size;
-	OBB_X = XMVectorSet(1, 0, 0, 0) * size.x;
-	OBB_Y = XMVectorSet(0, 1, 0, 0) * size.y;
-	OBB_Z = XMVectorSet(0, 0, 1, 0) * size.z;
+	nX = XMVectorSet(1, 0, 0, 0);
+	nY = XMVectorSet(0, 1, 0, 0);
+	nZ = XMVectorSet(0, 0, 1, 0);
+	OBB_X = nX * size.x;
+	OBB_Y = nY * size.y;
+	OBB_Z = nZ * size.z;
 }
 
 bool OBBCollider::IsHit(Collider* target)

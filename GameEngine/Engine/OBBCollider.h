@@ -5,6 +5,11 @@ class OBBCollider : public Collider
 	friend class Collider;
 	bool rotateFlag_;
 	bool scaleFlag_;
+
+	XMVECTOR nX;
+	XMVECTOR nY;
+	XMVECTOR nZ;
+
 	XMVECTOR OBB_X;
 	XMVECTOR OBB_Y;
 	XMVECTOR OBB_Z;
@@ -19,7 +24,7 @@ public:
 	//sep : •ª—£²
 	//e1  : ²1
 	//e2  : ²2
-	//e3  : ²3(²3‚Í‚È‚¢ê‡‚ª‚ ‚é)
+	//e3  : ²3(²3‚ÍŠ„ˆ¤‚Å‚«‚éê‡‚ª‚ ‚é)
 	float prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3 = nullptr);
 };
 
