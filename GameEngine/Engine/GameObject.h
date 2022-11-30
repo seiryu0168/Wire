@@ -3,6 +3,7 @@
 #include<list>
 #include"BoxCollider.h"
 #include"SphereCollider.h"
+#include"OBBCollider.h"
 #include"Transform.h"
 
 class GameObject

@@ -26,5 +26,7 @@ public:
 	//e2  : Ž²2
 	//e3  : Ž²3(Ž²3‚ÍŠ„ˆ¤‚Å‚«‚éê‡‚ª‚ ‚é)
 	float prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3 = nullptr);
+
+	XMVECTOR CalcAxisVec();
 };
 

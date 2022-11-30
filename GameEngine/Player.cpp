@@ -53,7 +53,7 @@ void Player::Initialize()
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
    
-    BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+    OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
@@ -294,8 +294,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData URay;
     RayCastData DRay;
 
-    URay.start = transform_.position_;
-    DRay.start = transform_.position_;
 
     XMFLOAT3 moveDist;
     float moveY;
@@ -330,6 +328,8 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
     Model::RayCast(stageNum_, rMoveRay);
    
+    XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
+    XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
     
     XMStoreFloat3(&URay.dir, startVec[3]);    
     XMStoreFloat3(&DRay.dir, startVec[4]);    
@@ -394,10 +394,8 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //â∫ÉåÉCÇÃãóó£(dist)Ç™moveYà»â∫Ç…Ç»Ç¡ÇΩÇÁyé≤ÇÃç¿ïWÇñﬂÇ∑
-    if (DRay.dist < 2.1f)
+    if (DRay.dist < 2.001f)
     {
-        //moveDist = { 0,0,0 };
-        //wallzuri = moveVector + (DRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, DRay.normal))));
         if (signbit(moveY))
         {
             transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;

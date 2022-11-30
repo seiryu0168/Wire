@@ -1,5 +1,5 @@
 #include "OBBCollider.h"
-
+#include"GameObject.h"
 OBBCollider::OBBCollider(XMFLOAT3 size, bool isRotate, bool isScale)
 {
 	rotateFlag_ = isRotate;
@@ -13,6 +13,7 @@ OBBCollider::OBBCollider(XMFLOAT3 size, bool isRotate, bool isScale)
 	OBB_X = nX * size.x;
 	OBB_Y = nY * size.y;
 	OBB_Z = nZ * size.z;
+	type_ = OBB_COLLIDER;
 }
 
 bool OBBCollider::IsHit(Collider* target)
@@ -31,7 +32,7 @@ XMVECTOR OBBCollider::calcDistance(XMFLOAT3 posA, XMFLOAT3 posB)
 	return distance;
 }
 
-float prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3 = nullptr)
+float OBBCollider:: prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3)
 {
 	*sep = XMVector3Normalize(*sep);
 	float r1 = fabs(XMVectorGetX(XMVector3Dot(*sep, *e1)));
@@ -39,4 +40,11 @@ float prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3 = nullptr)
 	float r3 = e3 ? fabs(XMVectorGetX(XMVector3Dot(*sep, *e3))) : 0;
 
 	return r1 + r2 + r3;
+}
+
+XMVECTOR OBBCollider::CalcAxisVec()
+{
+	XMVECTOR rotateQua = XMQuaternionRotationMatrix(GetpColObject()->GetTransform()->GetRotateMatrix());
+
+
 }

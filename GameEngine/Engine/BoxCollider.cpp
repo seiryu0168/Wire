@@ -4,9 +4,6 @@ BoxCollider::BoxCollider(XMFLOAT3 basePos, XMFLOAT3 size)
 {
 	center_ = basePos;
 	size_ = size;
-	/*scaleX_ = XMVectorSet(size.x, 0, 0, 0);
-	scaleY_ = XMVectorSet(0, size.y, 0, 0);
-	scaleZ_ = XMVectorSet(0, 0, size.z, 0);*/
 	type_ = BOX_COLLIDER;
 }
 

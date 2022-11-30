@@ -55,6 +55,9 @@ public:
 	//OBB同士の衝突判定
 	bool IsHitOBB_OBB(OBBCollider* obbA,OBBCollider* obbB);
 
+	//コライダーを付けたオブジェクトを返す
+	GameObject* GetpColObject() { return pColObject_; }
+	
 	//オブジェクトをセット
 	void SetGemaObject(GameObject* gameObject) { pColObject_ = gameObject; }
 

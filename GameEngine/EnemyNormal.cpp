@@ -29,7 +29,7 @@ void EnemyNormal::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Enemy2.fbx");
 	pPlayer_ = (Player*)FindObject("Player"); //確認用オブジェクト
-	BoxCollider* pCollider = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1));
+	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
 	Model::SetModelNum(hModel_);
 }

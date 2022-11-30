@@ -79,8 +79,12 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 
 bool Collider::IsHitOBB_OBB(OBBCollider* obbA, OBBCollider* obbB)
 {
+	XMFLOAT3 obbAPos = obbA->pColObject_->GetTransform().position_;
+	XMFLOAT3 obbBPos = obbB->pColObject_->GetTransform().position_;
+	
+	XMVECTOR betweenCenterPoint = XMLoadFloat3(&obbBPos) - XMLoadFloat3(&obbAPos);
 
-	XMVECTOR betweenCenterPoint = obbA->calcDistance(obbA->center_, obbB->center_);
+	
 	float L;
 	double rA = XMVectorGetX(XMVector3Length(obbA->OBB_X));								    //obbAの中心点からの長さ
 	double rB = obbA->prjLine(&obbA->OBB_X, &obbB->OBB_X, &obbB->OBB_Y, &obbB->OBB_Z);		//obbBの中心点からの長さ
