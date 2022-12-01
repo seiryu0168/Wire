@@ -84,6 +84,9 @@ bool Collider::IsHitOBB_OBB(OBBCollider* obbA, OBBCollider* obbB)
 	
 	XMVECTOR betweenCenterPoint = XMLoadFloat3(&obbBPos) - XMLoadFloat3(&obbAPos);
 
+	obbA->CalcAxisVec();
+	obbB->CalcAxisVec();
+
 	
 	float L;
 	double rA = XMVectorGetX(XMVector3Length(obbA->OBB_X));								    //obbA‚Ì’†S“_‚©‚ç‚Ì’·‚³
