@@ -6,6 +6,7 @@ class EnemyNormal : public Enemy
 {
 private:
     int hModel_;
+    int life_;
 
     XMMATRIX matX_;
     XMMATRIX matY_; 

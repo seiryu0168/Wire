@@ -241,22 +241,26 @@ void Player::Release()
 
 void Player::CameraMove(RayCastData ray)
 {
-    if (flyFlag_ == true)
-    {
-        aimFlag_ = false;
-        aimTime_ += -0.1;
-        aimTime_ = max(aimTime_, 0);
-    }
-    if (aimFlag_)
+    
+    //照準を定めている時
+    if (aimFlag_ == true)
     {
         aimTime_ += 0.05f;
         aimTime_ = min(aimTime_, 1);
     }
-    else if(!flyFlag_)
+    else//(aimFlag_==false)
     {
-        aimTime_ -= 0.07f;
+        aimTime_ += -0.07f;
         aimTime_ = max(aimTime_, 0.5);
         flyMove_ = { 0, 0, 0 };
+    }
+
+    //ワイヤーで飛んでいる時
+    if (flyFlag_ == true)
+    {
+        aimFlag_ = false;
+        aimTime_ += -0.08f;
+        aimTime_ = max(aimTime_, 0);
     }
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
@@ -341,6 +345,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist = { 0,0,0 };
+
         //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
         wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
         XMVECTOR back = (XMLoadFloat3(&fMoveRay.start) + (XMLoadFloat3(&fMoveRay.dir) * 2)) -fMoveRay.hitPos;
@@ -433,9 +438,10 @@ void Player::OnCollision(GameObject* pTarget)
     {
         if (status_ & ATC_ATTACK)
         {
+            
             flyFlag_ = false;
-            vFlyMove_ = XMVector3TransformCoord(XMVector3Normalize(XMVectorSet(0, 1, -1, 0)), matCamX_) * 1.5f;
-            //pTarget->KillMe();
+            vFlyMove_ = -vFlyMove_;
+            status_ = ATC_DEFAULT;
         }
     }
 }

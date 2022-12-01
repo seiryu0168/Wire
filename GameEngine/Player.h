@@ -83,13 +83,14 @@ public:
 
     //プレイヤーのワイヤーアクション時のステータスを設定
     void SetStatus(int type);
-
+    //衝突判定
     void OnCollision(GameObject* pTarget) override;
-
+    //エイムアシスト
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
 
-    XMMATRIX AimAssist(XMFLOAT3 target, XMVECTOR frontVec=XMVectorSet(0,0,1,0),XMVECTOR upVector = XMVectorSet(0, 1, 0, 0));
+    char GetSatatus() { return status_; }
 
+    XMVECTOR GetPlayerMove() { return vPlayerMove_; }
     //開放
     void Release() override;
 

@@ -6,6 +6,7 @@
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
 	hModel_(-1),
+	life_(5),
 	toPlayerVec_(XMVectorSet(0,0,0,0)),
 	frontVec_(XMVectorSet(0, 0, 1, 0)),
 	upVec_(XMVectorSet(0,1,0,0)),
@@ -109,6 +110,11 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Player")
 	{
+		if (pPlayer_->GetSatatus() & ATC_ATTACK)
+		{
+			EnemyMove(pPlayer_->GetPlayerMove());
+
+		}
 		
 	}
 }

@@ -42,9 +42,9 @@ float OBBCollider:: prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR*
 	return r1 + r2 + r3;
 }
 
-XMVECTOR OBBCollider::CalcAxisVec()
-{
-	XMVECTOR rotateQua = XMQuaternionRotationMatrix(GetpColObject()->GetTransform()->GetRotateMatrix());
-
-
-}
+//XMVECTOR OBBCollider::CalcAxisVec()
+//{
+//	XMVECTOR rotateQua = XMQuaternionRotationMatrix(GetpColObject()->GetTransform()->GetRotateMatrix());
+//
+//
+//}
