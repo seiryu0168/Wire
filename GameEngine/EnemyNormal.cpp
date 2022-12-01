@@ -52,7 +52,7 @@ void EnemyNormal::Update()
 	XMFLOAT3 aa = pPlayer_->GetPosition();		//プレイヤーの座標取得
 	toPlayer = XMLoadFloat3(&aa) - vPosition_;	//エネミーからプレイヤーに向かうベクトルを作成
 
-	if (IsVisible(frontVec_,XMLoadFloat3(&aa),0.5,50.0f)/*&&visibleFlag_*/)
+	if (IsVisible(frontVec_,XMLoadFloat3(&aa),0.5,50.0f))
 	{
 		EnemyMove(toPlayer);
 	}
