@@ -2,7 +2,10 @@
 #include"Camera.h"
 BillBoard::BillBoard()
 {
-
+	pConstantBuffer_ = nullptr;
+	pIndexBuffer_ = nullptr;
+	pTexture_ = nullptr;
+	pVertexBuffer_ = nullptr;
 }
 
 BillBoard::~BillBoard()

@@ -355,8 +355,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         {
             flyFlag_ = false;
         }
-
-        int a = 10;
     }
 
     if(lMoveRay.dist < 2.0f)
@@ -415,10 +413,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
     else
-    {
-
         groundFlag_ = false;
-    }
 
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     moveDist.y = moveY;
@@ -467,7 +462,7 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
             rotateSpeed_ = rotateSpeed_ * angle + 0.6f;
         }
 
-        //angle(ラジアン)がlockOnAngleLimit_いないだったらロックオン
+        //angle(ラジアン)がlockOnAngleLimit_以内だったらロックオン
         if (angle > -lockOnAngleLimit_ && angle < lockOnAngleLimit_)
         {
             return true;

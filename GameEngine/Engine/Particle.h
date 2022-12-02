@@ -93,6 +93,7 @@ public:
     //エミッターのアップデート
     void UpdateEmitter();
 
+    //パーティクル発生
     int ParticleStart(EmitterData data);
 
     void FixedUpdate() override;

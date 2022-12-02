@@ -22,8 +22,6 @@ void Test::Initialize()
     transform_.position_ = XMFLOAT3(2.0f, 0.0f, 10.0f);
     
     hModel_=Model::Load("Assets\\TestBox.fbx");
-    //hModel_=Model::Load("Assets\\BlueBall.fbx");
-    //hModel_=Model::Load("Assets\\BlueBall.fbx");
     assert(hModel_ >= 0);
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
     AddCollider(pCollider);
@@ -72,6 +70,7 @@ void Test::Update()
     if (Input::IsKey(DIK_D))
     {
         transform_.position_.x += 0.1;
+
 
     }
 
