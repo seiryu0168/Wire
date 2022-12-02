@@ -8,6 +8,7 @@
 #include"EngineTime.h"
 #include"Engine/Math.h"
 #include"EnemyNormal.h"
+#include"Engine/Particle.h"
 #include"Easing.h"
 #include<list>
 
@@ -52,6 +53,7 @@ void Player::Initialize()
 {
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
+    pParticle_ = Instantiate<Particle>(this);
    
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
@@ -427,16 +429,47 @@ void Player::SetStatus(int type)
     status_ |= type;
 }
 
+void Player::OccurParticle()
+{
+    EmitterData data;
+    if (status_ & ATC_ATTACK)
+    {
+        data.textureFileName = "Assets\\Effect01.png";
+        data.position = transform_.position_;
+        data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+        data.delay = 0;
+        data.number = 30;
+        data.lifTime = 100.0f;
+        data.acceleration = 0.98f;
+        data.gravity = 0.0f;
+
+        XMFLOAT3 particleDir;
+        XMStoreFloat3(&particleDir, -XMVector3Normalize(vPlayerMove_));
+        data.dir = particleDir;
+        data.dirErr = XMFLOAT3(0.9f, 0, 0.9f);
+        data.firstSpeed = 1.0f;
+        data.speedErr = 0.0f;
+        data.size = XMFLOAT2(1.5f, 1.5f);
+        data.sizeErr = XMFLOAT2(0.3, 0.3);
+        data.scale = XMFLOAT2(0.98f, 0.98f);
+        data.color = XMFLOAT4(1, 1, 1, 1);
+        data.deltaColor = XMFLOAT4(0, 0, 0, -0.02);
+        pParticle_->ParticleStart(data);
+    }
+
+}
+
 void Player::OnCollision(GameObject* pTarget)
 {
     if (pTarget->GetObjectName() == "EnemyNormal")
     {
         if (status_ & ATC_ATTACK)
         {
-            
+            OccurParticle();
             flyFlag_ = false;
             vFlyMove_ = -vFlyMove_;
             status_ = ATC_DEFAULT;
+
         }
     }
 }
@@ -445,18 +478,16 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 {
     
     XMVECTOR targetVec = XMLoadFloat3(&targetPos) -
-                         XMLoadFloat3(&transform_.position_); //自分からtargetPosまでのベクトル
+                         XMLoadFloat3(&transform_.position_);                       //自分からtargetPosまでのベクトル
     
     //targetVecがlength以下だったら
     if (XMVectorGetX(XMVector3Length(targetVec)) < length)
     {
         targetVec = XMVector3Normalize(targetVec);
         dirVec = XMVector3Normalize(dirVec);
-        float angle = 
-            XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));     //targetVecとdirVecの内積を求める
+        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));//targetVecとdirVecの内積を求める
 
-
-            //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
+        //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
         if (angle > -0.4f && angle < 0.4f)
         {
             rotateSpeed_ = rotateSpeed_ * angle + 0.6f;

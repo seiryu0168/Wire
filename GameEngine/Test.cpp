@@ -31,7 +31,7 @@ void Test::Initialize()
     data.textureFileName = "Assets\\Effect01.png";
     data.position = XMFLOAT3(0, 3.0f, 0);
     data.positionErr = XMFLOAT3(1.4f, 0, 1.4f);
-    data.delay = 20;
+    data.delay = 0;
     data.number = 1;
     data.lifTime = 100.0f;
     data.acceleration = 0.98f;

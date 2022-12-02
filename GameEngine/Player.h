@@ -3,6 +3,7 @@
 #include"Engine/Fbx.h"
 
 
+class Particle;
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -18,8 +19,6 @@ class Player : public GameObject
     int playerLife_;
 
     XMVECTOR baseUpVec_;
-
-
     XMVECTOR rayDir_[6];
 
     const float gravity_;
@@ -56,6 +55,7 @@ class Player : public GameObject
 
     char status_;
 
+    Particle* pParticle_;
     //std::list<EnemyNormal*> enemyList_;
 
 
@@ -76,21 +76,28 @@ public:
     //描画
     void Draw() override;
 
-
+    //キャラが壁をすり抜けないようにする
     void CharactorControll(XMVECTOR &moveVector);
-
+    
+    //カメラの挙動を制御
     void CameraMove(RayCastData ray);
 
     //プレイヤーのワイヤーアクション時のステータスを設定
     void SetStatus(int type);
+    
     //衝突判定
     void OnCollision(GameObject* pTarget) override;
+    
     //エイムアシスト
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
-
+    
+    //プレイヤーのステータス取得
     char GetSatatus() { return status_; }
-
+    
+    //プレイヤーの移動ベクトル取得
     XMVECTOR GetPlayerMove() { return vPlayerMove_; }
+
+    void OccurParticle();
     //開放
     void Release() override;
 

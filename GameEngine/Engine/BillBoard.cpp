@@ -10,7 +10,7 @@ BillBoard::BillBoard()
 
 BillBoard::~BillBoard()
 {
-
+	SAFE_DELETE(pTexture_);
 }
 
 HRESULT BillBoard::Load(std::string fileName)
