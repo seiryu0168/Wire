@@ -105,6 +105,20 @@ void Model::SetModelNum(int modelNum)
 	polygonTestList_.push_back(modelNum);
 }
 
+void Model::DeleteModelNum(int modelNum)
+{
+		auto itr = polygonTestList_.begin();
+	for (int i = 0; i <  polygonTestList_.size(); i++)
+	{
+		if (polygonTestList_[i] == modelNum)
+		{
+			polygonTestList_.erase(itr);
+			return;
+			
+		}
+		itr++;
+	}
+}
 
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない
 void Model::Release()

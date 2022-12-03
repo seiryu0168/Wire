@@ -8,6 +8,5 @@ namespace Effect
 	void Draw(int effNum);
 	void SetTransform(int effNum, Transform transform);
 	void Release();
-	
 };
 

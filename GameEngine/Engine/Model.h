@@ -12,6 +12,7 @@ namespace Model
 	void RayCast(int modelNum, RayCastData& ray);
 	void RayCast(RayCastData& ray);
 	void SetModelNum(int modelNum);
+	void DeleteModelNum(int modelNum);
 	void Release();
 };
 

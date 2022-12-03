@@ -77,7 +77,6 @@ void EnemyNormal::EnemyMove(XMVECTOR toVec)
 	float angle = XMVectorGetX(XMVector3Dot(frontVec_, toVec)); //Šp“xŒvŽZ(ƒ‰ƒWƒAƒ“)
 	matY_ = XMMatrixRotationY(1-angle);							//Šp“x‚ð‰ñ“]s—ñ‚É•ÏŠ·
 	frontVec_ = XMVector3TransformCoord(toVec, matY_);			//‘O•ûŒüƒxƒNƒgƒ‹‚ð‰ñ“]
-	
 	vPosition_ += toVec*0.3f;
 	XMStoreFloat3(&transform_.position_, vPosition_);
 }
@@ -112,8 +111,13 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 	{
 		if (pPlayer_->GetSatatus() & ATC_ATTACK)
 		{
-			EnemyMove(pPlayer_->GetPlayerMove());
-
+			life_--;
+			pPlayer_->SetStatus(ATC_DEFAULT);
+			if (life_ < 0)
+			{
+				Model::DeleteModelNum(hModel_);
+				KillMe();
+			}
 		}
 		
 	}

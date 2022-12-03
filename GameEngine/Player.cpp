@@ -106,7 +106,7 @@ void Player::Update()
         XMVECTOR vPtrDir = vPlayerDir;
 
         //エイムアシスト範囲内かどうか判定
-        if (IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
+        if (pEnemy != nullptr&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
         {
            vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
         }
@@ -132,7 +132,6 @@ void Player::Update()
     {
         if (ray.hit)
         {
-            pPointer->GetObjectType();
             groundFlag_ = false;
             airFlag_ = false;
             flyFlag_ = true;
@@ -426,7 +425,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
 void Player::SetStatus(int type)
 {
-    status_ |= type;
+    status_ = type;
 }
 
 void Player::OccurParticle()
@@ -434,26 +433,29 @@ void Player::OccurParticle()
     EmitterData data;
     if (status_ & ATC_ATTACK)
     {
+        XMVECTOR pos = XMLoadFloat3(&transform_.position_);
         data.textureFileName = "Assets\\Effect01.png";
-        data.position = transform_.position_;
+        XMFLOAT3 particlePos;
+        XMStoreFloat3(&particlePos, pos + (XMVector3Normalize(vPlayerMove_)));
+        data.position = particlePos;
         data.positionErr = XMFLOAT3(0.2, 0, 0.2);
         data.delay = 0;
         data.number = 30;
-        data.lifTime = 100.0f;
+        data.lifTime = 50.0f;
         data.acceleration = 0.98f;
         data.gravity = 0.0f;
 
         XMFLOAT3 particleDir;
         XMStoreFloat3(&particleDir, -XMVector3Normalize(vPlayerMove_));
         data.dir = particleDir;
-        data.dirErr = XMFLOAT3(0.9f, 0, 0.9f);
-        data.firstSpeed = 1.0f;
-        data.speedErr = 0.0f;
+        data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+        data.firstSpeed = 0.9f;
+        data.speedErr = 0.2f;
         data.size = XMFLOAT2(1.5f, 1.5f);
-        data.sizeErr = XMFLOAT2(0.3, 0.3);
+        data.sizeErr = XMFLOAT2(0.3f, 0.3f);
         data.scale = XMFLOAT2(0.98f, 0.98f);
         data.color = XMFLOAT4(1, 1, 1, 1);
-        data.deltaColor = XMFLOAT4(0, 0, 0, -0.02);
+        data.deltaColor = XMFLOAT4(0, 0, 0, -0.08);
         pParticle_->ParticleStart(data);
     }
 
@@ -467,9 +469,8 @@ void Player::OnCollision(GameObject* pTarget)
         {
             OccurParticle();
             flyFlag_ = false;
+            XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             vFlyMove_ = -vFlyMove_;
-            status_ = ATC_DEFAULT;
-
         }
     }
 }
