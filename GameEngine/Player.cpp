@@ -461,6 +461,11 @@ void Player::OccurParticle()
 
 }
 
+
+void Player::AddTargetList(EnemyNormal* target)
+{
+    enemyList_.push_back(target);
+}
 void Player::OnCollision(GameObject* pTarget)
 {
     if (pTarget->GetObjectName() == "EnemyNormal")
@@ -471,6 +476,17 @@ void Player::OnCollision(GameObject* pTarget)
             flyFlag_ = false;
             XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             vFlyMove_ = -vFlyMove_;
+        }
+    }
+}
+
+void Player::DeleteTargetList(EnemyNormal* target)
+{
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    {
+        if ((*itr) == target)
+        {
+            itr = enemyList_.erase(itr);
         }
     }
 }

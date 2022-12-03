@@ -4,6 +4,7 @@
 
 
 class Particle;
+class EnemyNormal;
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -56,7 +57,7 @@ class Player : public GameObject
     char status_;
 
     Particle* pParticle_;
-    //std::list<EnemyNormal*> enemyList_;
+    std::list<EnemyNormal*> enemyList_;
 
 
 public:
@@ -96,8 +97,15 @@ public:
     
     //プレイヤーの移動ベクトル取得
     XMVECTOR GetPlayerMove() { return vPlayerMove_; }
-
+    
+    //パーティクル
     void OccurParticle();
+
+    //敵をプレイヤーの認識リストに入れる(エイムアシストの対象を減らすため)
+    void AddTargetList(EnemyNormal* target);
+
+    //敵をプレイヤーの認識リストから外す
+    void DeleteTargetList(EnemyNormal* target);
     //開放
     void Release() override;
 

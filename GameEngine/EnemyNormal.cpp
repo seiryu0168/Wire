@@ -115,11 +115,12 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 			pPlayer_->SetStatus(ATC_DEFAULT);
 			if (life_ < 0)
 			{
-				Model::DeleteModelNum(hModel_);
+				Transform pos;
+				pos.position_= { 9999,9999,9999 };
+				Model::SetTransform(hModel_,pos);
 				KillMe();
 			}
 		}
-		
 	}
 }
 
