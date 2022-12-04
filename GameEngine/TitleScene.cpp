@@ -23,7 +23,10 @@ void TitleScene::Initialize()
 	//Instantiate<SetObject>(this);
 	Instantiate<Stage1>(this);
 	Instantiate<Player>(this);
-	Instantiate<EnemyNormal>(this);
+	for (int i = 0; i < 11; i++)
+	{
+		Instantiate<EnemyNormal>(this);
+	}
 	Instantiate<Test>(this);
 }
 

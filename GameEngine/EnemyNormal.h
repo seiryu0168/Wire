@@ -5,18 +5,18 @@
 class EnemyNormal : public Enemy
 {
 private:
-    int hModel_;
-    int life_;
+    bool     visibleFlag_;  //プレイヤーを見つけているかどうか
+    bool     isTargetList_; //プレイヤーのターゲットリストに入ってるかどうか
+    int      hModel_;       //モデル番号
+    int      life_;         //敵の体力
 
-    XMMATRIX matX_;
-    XMMATRIX matY_; 
-    bool visibleFlag_;
-
-    XMVECTOR toPlayerVec_;
-    XMVECTOR frontVec_;
-    XMVECTOR upVec_;
-    XMVECTOR vPosition_;
-    Player* pPlayer_;
+    XMMATRIX matX_;         //X軸の回転行列
+    XMMATRIX matY_;         //Y軸の回転行列
+    XMVECTOR toPlayerVec_;  //プレイヤーに向かうベクトル
+    XMVECTOR frontVec_;     //前方向ベクトル(このベクトルを基準にして視界が決まる)
+    XMVECTOR upVec_;        //上方向ベクトル(プレイヤーとの位置関係を求める時に使ったりする)
+    XMVECTOR vPosition_;    //現在位置のベクトル
+    Player*  pPlayer_;      //プレイヤーのポインタ
 
 public:
     //コンストラクタ
@@ -43,7 +43,11 @@ public:
     //エネミーの前方向ベクトル、ターゲットの座標、視野、感知距離
     bool IsVisible(XMVECTOR vFront, XMVECTOR vTarget,float visibleAngle,float range);
 
+    //プレイヤーへ向かうベクトルの取得
     XMVECTOR GetToPlayerVector();
+
+    //isTargetListのフラグ取得
+    bool GetIsList() { return isTargetList_; }
 
     //開放
     void Release() override;

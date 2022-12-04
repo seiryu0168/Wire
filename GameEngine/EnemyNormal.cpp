@@ -13,6 +13,7 @@ EnemyNormal::EnemyNormal(GameObject* parent)
 	matX_(XMMatrixIdentity()),
 	matY_(XMMatrixIdentity()),
 	visibleFlag_(false),
+	isTargetList_(false),
 	vPosition_(XMVectorSet(0,0,0,0)),
 	pPlayer_(nullptr)
 {
@@ -33,6 +34,10 @@ void EnemyNormal::Initialize()
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
 	Model::SetModelNum(hModel_);
+
+	transform_.position_.x = std::rand() % 100;
+	transform_.position_.y = std::rand() % 100;
+	transform_.position_.z = std::rand() % 100;
 }
 
 //更新
@@ -91,10 +96,18 @@ bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngl
 
 	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//内積を計算
 	float angle = acos(min(XMVectorGetX(dot),1));						//角度計算(1以上にならないようmin関数つけた)
-
-	if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
+	if (rangeToPlayer <= 2 * range)
 	{
-		return true;
+		pPlayer_->AddTargetList(this);
+		isTargetList_ = true;
+		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		isTargetList_ = false;
 	}
 
 	return false;

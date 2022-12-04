@@ -23,25 +23,15 @@ class Player : public GameObject
     XMVECTOR rayDir_[6];
 
     const float gravity_;
-
-    int hModel_;
-    int stageNum_;
-
+    
     bool flyFlag_;
     bool airFlag_;
     bool aimFlag_;
     bool jumpFlag_;
     bool groundFlag_;
 
-    XMVECTOR vCamPos_;
-    XMVECTOR vPlayerPos_;
-    XMVECTOR vPlayerMove_;
-    XMVECTOR vBaseTarget_;
-    XMVECTOR vFlyMove_;
-    XMVECTOR vBaseAim_;
-    XMFLOAT3 flyMove_;
-    XMMATRIX matCamX_;
-    XMMATRIX matCamY_;
+    int hModel_;
+    int stageNum_;
 
     float moveTime_;
     float aimTime_;
@@ -53,6 +43,18 @@ class Player : public GameObject
     float angleY_;
     float angleX_;
     float lockOnAngleLimit_;
+
+
+    XMVECTOR vCamPos_;
+    XMVECTOR vPlayerPos_;
+    XMVECTOR vPlayerMove_;
+    XMVECTOR vBaseTarget_;
+    XMVECTOR vFlyMove_;
+    XMVECTOR vBaseAim_;
+    XMFLOAT3 flyMove_;
+    XMMATRIX matCamX_;
+    XMMATRIX matCamY_;
+
 
     char status_;
 
@@ -103,6 +105,9 @@ public:
 
     //敵をプレイヤーの認識リストに入れる(エイムアシストの対象を減らすため)
     void AddTargetList(EnemyNormal* target);
+
+    //認識リストにいるかどうかチェック
+    void CheckTargetList();
 
     //敵をプレイヤーの認識リストから外す
     void DeleteTargetList(EnemyNormal* target);

@@ -93,7 +93,7 @@ void Player::Update()
     Pointer* pPointer = (Pointer*)FindObject("Pointer");
     pPointer->SetDraw(false);
     RayCastData ray;
-
+    CheckTargetList();
     aimFlag_ = false;
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
@@ -464,7 +464,14 @@ void Player::OccurParticle()
 
 void Player::AddTargetList(EnemyNormal* target)
 {
-    enemyList_.push_back(target);
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    {
+        if ((*itr) == target)
+        {
+            return;
+        }
+    }
+        enemyList_.push_back(target);
 }
 void Player::OnCollision(GameObject* pTarget)
 {
@@ -480,6 +487,26 @@ void Player::OnCollision(GameObject* pTarget)
     }
 }
 
+void Player::CheckTargetList()
+{
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end();)
+    {
+        if ((*itr)->GetIsList() == false)
+        {
+            itr = enemyList_.erase(itr);
+            
+        }
+        else
+        {
+            itr++;
+        }
+        if (enemyList_.empty())
+        {
+            return;
+        }
+    }
+}
+
 void Player::DeleteTargetList(EnemyNormal* target)
 {
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
@@ -487,6 +514,10 @@ void Player::DeleteTargetList(EnemyNormal* target)
         if ((*itr) == target)
         {
             itr = enemyList_.erase(itr);
+        }
+        if (enemyList_.empty())
+        {
+            return;
         }
     }
 }
