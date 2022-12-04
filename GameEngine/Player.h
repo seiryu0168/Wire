@@ -91,9 +91,12 @@ public:
     //衝突判定
     void OnCollision(GameObject* pTarget) override;
     
-    //エイムアシスト
+    //エイムアシスト範囲内にあるかどうか
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
     
+    //認識リスト内でエイムアシスト可能なやつをアシストする
+    XMVECTOR AimAssist(RayCastData* rey);
+ 
     //プレイヤーのステータス取得
     char GetSatatus() { return status_; }
     

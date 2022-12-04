@@ -104,16 +104,18 @@ void Player::Update()
         //当たる位置の計算
         XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
         XMVECTOR vPtrDir = vPlayerDir;
+        XMStoreFloat3(&ray.start, vPlayerPos_);
+        XMStoreFloat3(&ray.dir, vPtrDir);
 
         //エイムアシスト範囲内かどうか判定
-        if (pEnemy != nullptr&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
+        if (enemyList_.size() >0&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
         {
+
            vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+           XMStoreFloat3(&ray.dir, vPtrDir);
         }
         
         //レイキャストの始点と方向を入力
-        XMStoreFloat3(&ray.start, vPlayerPos_);
-        XMStoreFloat3(&ray.dir, vPtrDir);
         Model::RayCast(ray);
 
         //当たった位置にマーカー表示
@@ -461,7 +463,6 @@ void Player::OccurParticle()
 
 }
 
-
 void Player::AddTargetList(EnemyNormal* target)
 {
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
@@ -548,4 +549,18 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
         }
     }
     return false;
+}
+
+XMVECTOR Player::AimAssist(RayCastData* ray)
+{
+    if (enemyList_.empty())
+        return XMVectorSet(0,0,0,0);
+
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    {
+        if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))
+        {
+            
+        }
+    }
 }
