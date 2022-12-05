@@ -5,6 +5,7 @@
 
 class Particle;
 class EnemyNormal;
+class Wire;
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -60,6 +61,7 @@ class Player : public GameObject
     char status_;
 
     Particle* pParticle_;
+    Wire* pWire_;
     std::list<EnemyNormal*> enemyList_;
 
 

@@ -2,7 +2,8 @@
 #include"Engine/Model.h"
 
 Wire::Wire(GameObject* parent)
-	:hModel_(-1)
+	:GameObject(parent,"Wire"),
+	hModel_(-1)
 {
 
 }
@@ -31,10 +32,19 @@ void Wire::FixedUpdate()
 //•`‰æ
 void Wire::Draw()
 {
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
+}
+
+void Wire::Release()
+{
 
 }
 
-void Wire::ExtendWire(XMVECTOR scale)
+void Wire::ExtendWire(const float& extendLength, XMMATRIX rotateMat)
 {
+	transform_.scale_.y = extendLength;
+
+	transform_.Rotation(rotateMat);
 
 }

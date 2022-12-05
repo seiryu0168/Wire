@@ -54,11 +54,13 @@ public:
 	virtual void OnCollision(GameObject* pTarget) {};
 			void Collision(GameObject* pTarget);
 			void AddCollider(Collider* collider);
+
+
+
 			void KillAllChildren();
 			void KillObjectSub(GameObject* pTarget);
 			void PushBackChild(GameObject* pTarget);
-			
-			
+
 			Transform GetTransform();
 			XMFLOAT3  GetPosition();
 			XMFLOAT3  GetRotate();

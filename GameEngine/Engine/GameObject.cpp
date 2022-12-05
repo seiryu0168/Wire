@@ -10,7 +10,8 @@ GameObject::GameObject(GameObject* parent, const std::string& name)
 	killFlag_(0),
 	drawFlag_(true)
 {
-
+	if(parent)
+	transform_.pParent_ = &parent->transform_;
 }
 GameObject::~GameObject()
 {

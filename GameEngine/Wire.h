@@ -21,6 +21,8 @@ public:
     //•`‰æ
     void Draw() override;
 
-    void ExtendWire(XMVECTOR scale);
+    void Release() override;
+
+    void ExtendWire(const float& extendLength,XMMATRIX rotateMat);
 };
 

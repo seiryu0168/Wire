@@ -2,14 +2,15 @@
 #include"Engine/Input.h"
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
-#include"Stage1.h"
-#include"Pointer.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
 #include"Engine/Math.h"
 #include"EnemyNormal.h"
 #include"Engine/Particle.h"
 #include"Easing.h"
+#include"Stage1.h"
+#include"Pointer.h"
+#include"Wire.h"
 #include<list>
 
 std::vector<EnemyNormal*> enemyList_;
@@ -58,7 +59,7 @@ void Player::Initialize()
     assert(hModel_Handle_ > 0);
     
     pParticle_ = Instantiate<Particle>(this);
-   
+    pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
@@ -127,6 +128,7 @@ void Player::Update()
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
         {
+            pWire_->ExtendWire(ray.dist, LookAtMatrix(pPointer->GetPosition(), XMVectorSet(0, 0, 1, 0)));
             rotateSpeed_ = 2.0f;
             XMFLOAT3 pointerPos;
             XMStoreFloat3(&pointerPos, ray.hitPos);
@@ -237,9 +239,7 @@ void Player::FixedUpdate()
 void Player::Draw()
 {
     Model::SetTransform(hModel_, transform_);
-   // Model::Draw(hModel_);
-    Model::SetTransform(hModel_Handle_, transform_);
-    Model::Draw(hModel_Handle_);
+    Model::Draw(hModel_);
 }
 
 //開放
@@ -251,17 +251,17 @@ void Player::CameraMove(RayCastData ray)
 {
     
     //照準を定めている時
-    if (aimFlag_ == true)
-    {
-        aimTime_ += 0.05f;
-        aimTime_ = min(aimTime_, 1);
-    }
-    else//(aimFlag_==false)
-    {
-        aimTime_ += -0.07f;
-        aimTime_ = max(aimTime_, 0.5);
-        flyMove_ = { 0, 0, 0 };
-    }
+    //if (aimFlag_ == true)
+    //{
+    //    aimTime_ += 0.05f;
+    //    aimTime_ = min(aimTime_, 1);
+    //}
+    //else//(aimFlag_==false)
+    //{
+    //    aimTime_ += -0.07f;
+    //    aimTime_ = max(aimTime_, 0.5);
+    //    flyMove_ = { 0, 0, 0 };
+    //}
 
     //ワイヤーで飛んでいる時
     if (flyFlag_ == true)

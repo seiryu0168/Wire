@@ -31,6 +31,8 @@ public:
 	XMMATRIX GetRotateMatrix();
 	XMMATRIX GetScaleMatrix();
 	
+	void Rotation(const XMMATRIX& rotateMat) { matRotate_ = rotateMat; }
+
 	static XMFLOAT3 Float3Add(XMFLOAT3 add1, XMFLOAT3 add2)
 	{
 		return XMFLOAT3(add1.x + add2.x, add1.y + add2.y, add1.z + add2.z);
