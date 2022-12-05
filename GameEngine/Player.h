@@ -31,6 +31,7 @@ class Player : public GameObject
     bool groundFlag_;
 
     int hModel_;
+    int hModel_Handle_;
     int stageNum_;
 
     float moveTime_;

@@ -21,6 +21,7 @@ Player::Player(GameObject* parent)
     playerLife_(10),
     gravity_(-0.06),
     hModel_(-1),
+    hModel_Handle_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
@@ -53,6 +54,9 @@ void Player::Initialize()
 {
     hModel_ = Model::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
+    hModel_Handle_ = Model::Load("Assets\\wire.fbx");
+    assert(hModel_Handle_ > 0);
+    
     pParticle_ = Instantiate<Particle>(this);
    
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
@@ -215,7 +219,6 @@ void Player::Update()
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
-
     vPlayerMove_  = vMove;
     velocity_     = max(velocity_, -2);
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
@@ -223,8 +226,6 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
-    
-    
 }
 
 void Player::FixedUpdate()
@@ -236,7 +237,9 @@ void Player::FixedUpdate()
 void Player::Draw()
 {
     Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
+   // Model::Draw(hModel_);
+    Model::SetTransform(hModel_Handle_, transform_);
+    Model::Draw(hModel_Handle_);
 }
 
 //開放
