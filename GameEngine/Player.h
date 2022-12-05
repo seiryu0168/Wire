@@ -95,7 +95,7 @@ public:
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
     
     //認識リスト内でエイムアシスト可能なやつをアシストする
-    XMVECTOR AimAssist(RayCastData* rey);
+    EnemyNormal* AimAssist(RayCastData* rey);
  
     //プレイヤーのステータス取得
     char GetSatatus() { return status_; }

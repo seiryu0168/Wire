@@ -73,12 +73,16 @@ void Model::RayCast(RayCastData& ray)
 	float length = 9999;
 	XMVECTOR hitPos = XMVectorSet( 0,0,0,0 );
 	XMVECTOR normal= XMVectorSet(0, 0, 0, 0);
+
+	XMFLOAT3 start = ray.start;
+	XMFLOAT3 dir = ray.dir;
+
 	for (int i = 0; i < polygonTestList_.size(); i++)
 	{
 
 		XMMATRIX invW = XMMatrixInverse(nullptr, modelData_[polygonTestList_[i]]->transform_.GetWorldMatrix());
-		XMVECTOR vStart = XMLoadFloat3(&ray.start);
-		XMVECTOR vPass = XMVectorSet(ray.start.x + ray.dir.x, ray.start.y + ray.dir.y, ray.start.z + ray.dir.z, 0);
+		XMVECTOR vStart = XMLoadFloat3(&start);
+		XMVECTOR vPass = XMVectorSet(start.x + dir.x, start.y + dir.y, start.z + dir.z, 0);
 
 		vStart = XMVector3TransformCoord(vStart, invW);
 		vPass = XMVector3TransformCoord(vPass, invW);

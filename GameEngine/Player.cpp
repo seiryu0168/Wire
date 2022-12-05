@@ -86,7 +86,6 @@ void Player::Initialize()
 void Player::Update()
 {
     rotateSpeed_ = 4.0f;
-    EnemyNormal* pEnemy = (EnemyNormal*)FindObject("EnemyNormal");
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
 
@@ -108,11 +107,14 @@ void Player::Update()
         XMStoreFloat3(&ray.dir, vPtrDir);
 
         //エイムアシスト範囲内かどうか判定
-        if (enemyList_.size() >0&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit))
+        if (enemyList_.size() > 0/*&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit)*/)
         {
-
-           vPtrDir=XMVector3TransformCoord(vPtrDir,LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
-           XMStoreFloat3(&ray.dir, vPtrDir);
+            EnemyNormal* pEnemy = AimAssist(&ray);
+            if (pEnemy != nullptr)
+            {
+                vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+                XMStoreFloat3(&ray.dir, vPtrDir);
+            }
         }
         
         //レイキャストの始点と方向を入力
@@ -551,16 +553,27 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
     return false;
 }
 
-XMVECTOR Player::AimAssist(RayCastData* ray)
+EnemyNormal* Player::AimAssist(RayCastData* ray)
 {
     if (enemyList_.empty())
-        return XMVectorSet(0,0,0,0);
+        return nullptr;
 
+    float minRange = 9999.0f;
+    EnemyNormal* pEnemy=nullptr;
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
         if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))
         {
-            
+            XMFLOAT3 targetPos = (*itr)->GetPosition();
+            float range = XMVectorGetX(XMVector3Length(XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_)));
+            if (range < minRange)
+            {
+                minRange = range;
+                pEnemy = (*itr);
+            }
+
         }
     }
+
+    return pEnemy;
 }
