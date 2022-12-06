@@ -189,6 +189,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerEnemyState.cpp" />
+    <ClCompile Include="PlayerStateFly.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="SetObject.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerEnemyState.h" />
+    <ClInclude Include="PlayerStateFly.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="resource.h" />

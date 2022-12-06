@@ -3,10 +3,12 @@
 #include"Engine/Fbx.h"
 
 
+
 class Particle;
 class EnemyNormal;
 class Wire;
 class Pointer;
+class PlayerStatus;
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -18,7 +20,12 @@ class Player : public GameObject
         DIR_UP,
         DIR_DOWN
     };
-
+    enum STATUS
+    {
+        STATE_GROUND=0,
+        STATE_AIR,
+        STATE_FLY,
+    };
     int playerLife_;
 
     XMVECTOR baseUpVec_;
@@ -66,6 +73,7 @@ class Player : public GameObject
     Wire* pWire_;
     std::list<EnemyNormal*> enemyList_;
 
+    PlayerStatus* PlayerState_;
 
 public:
     //コンストラクタ
@@ -121,6 +129,24 @@ public:
     void DeleteTargetList(EnemyNormal* target);
     //開放
     void Release() override;
+
+
+
+
+/////////////////////////////////セッター、ゲッター//////////////////////////////////
+    XMVECTOR GetvBaseTarget() { return vBaseTarget_; }
+    XMVECTOR GetvPlayerPos() { return vPlayerPos_; }
+    XMMATRIX GetCameraMatrixX() { return matCamX_; }
+    XMMATRIX GetCameraMatrixY() { return matCamY_; }
+    XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
+    Pointer* GetPointer() { return pPointer_; }
+    std::list<EnemyNormal*> GetEnemyList() { return enemyList_; }
+
+    void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
+
+
+
+
 
 
 };
