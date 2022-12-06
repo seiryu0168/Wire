@@ -264,7 +264,6 @@ XMMATRIX GameObject::LookAtMatrix(XMFLOAT3 target, XMVECTOR frontVec, XMVECTOR u
 	return rotateMatrix;
 }
 
-
 //ワールド行列取得
 //親の影響込みの最終的な行列
 XMMATRIX GameObject::GetWorldMatrix()

@@ -59,12 +59,13 @@ void Player::Initialize()
     assert(hModel_Handle_ > 0);
     
     pParticle_ = Instantiate<Particle>(this);
-    pWire_ = Instantiate<Wire>(this);
+    //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
     Instantiate<Pointer>(GetParent());
+    pPointer_ = (Pointer*)FindObject("Pointer");
 
     transform_.position_ = XMFLOAT3(0, 20,0);
     RayCastData firstRay;
@@ -94,8 +95,7 @@ void Player::Update()
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
 
-    Pointer* pPointer = (Pointer*)FindObject("Pointer");
-    pPointer->SetDraw(false);
+    pPointer_->SetDraw(false);
     RayCastData ray;
     CheckTargetList();
     aimFlag_ = false;
@@ -128,17 +128,16 @@ void Player::Update()
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
         {
-            pWire_->ExtendWire(ray.dist, LookAtMatrix(pPointer->GetPosition(), XMVectorSet(0, 0, 1, 0)));
             rotateSpeed_ = 2.0f;
             XMFLOAT3 pointerPos;
             XMStoreFloat3(&pointerPos, ray.hitPos);
-            pPointer->SetPointerPos(pointerPos);
-            pPointer->SetDraw(ray.hit);
+            pPointer_->SetPointerPos(pointerPos);
+            pPointer_->SetDraw(ray.hit);
         }
     }
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
-    if (Input::GetRTrigger() && pPointer->IsDraw())
+    if (Input::GetRTrigger() && pPointer_->IsDraw())
     {
         if (ray.hit)
         {
@@ -149,7 +148,7 @@ void Player::Update()
             transform_.position_.y += 0.2f;
             velocity_ = 0;
             vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
-            SetStatus(pPointer->GetObjectType());
+            SetStatus(pPointer_->GetObjectType());
         }
     }
     //当たってなかったらジャンプ
@@ -251,17 +250,17 @@ void Player::CameraMove(RayCastData ray)
 {
     
     //照準を定めている時
-    //if (aimFlag_ == true)
-    //{
-    //    aimTime_ += 0.05f;
-    //    aimTime_ = min(aimTime_, 1);
-    //}
-    //else//(aimFlag_==false)
-    //{
-    //    aimTime_ += -0.07f;
-    //    aimTime_ = max(aimTime_, 0.5);
-    //    flyMove_ = { 0, 0, 0 };
-    //}
+    if (aimFlag_ == true)
+    {
+        aimTime_ += 0.05f;
+        aimTime_ = min(aimTime_, 1);
+    }
+    else//(aimFlag_==false)
+    {
+        aimTime_ += -0.07f;
+        aimTime_ = max(aimTime_, 0.5);
+        flyMove_ = { 0, 0, 0 };
+    }
 
     //ワイヤーで飛んでいる時
     if (flyFlag_ == true)
