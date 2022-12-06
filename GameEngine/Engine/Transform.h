@@ -12,6 +12,8 @@ public:
 	XMFLOAT3 position_;	//位置
 	XMFLOAT3 rotate_;	//向き
 	XMFLOAT3 scale_;	//拡大率
+	XMVECTOR baseVec_;	//基準となるベクトル
+
 	Transform* pParent_;//親の情報
 
 	//コンストラクタ
@@ -30,8 +32,6 @@ public:
 	XMMATRIX GetWorldMatrix();
 	XMMATRIX GetRotateMatrix();
 	XMMATRIX GetScaleMatrix();
-	
-	void Rotation(const XMMATRIX& rotateMat) { matRotate_ = rotateMat; }
 
 	static XMFLOAT3 Float3Add(XMFLOAT3 add1, XMFLOAT3 add2)
 	{

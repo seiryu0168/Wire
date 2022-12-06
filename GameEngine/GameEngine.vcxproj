@@ -188,10 +188,12 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerEnemyState.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="Stage1.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -231,11 +233,13 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerEnemyState.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SetObject.h" />
     <ClInclude Include="Stage1.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TitleScene.h" />

@@ -45,6 +45,4 @@ void Wire::ExtendWire(const float& extendLength, XMMATRIX rotateMat)
 {
 	transform_.scale_.y = extendLength;
 
-	transform_.Rotation(rotateMat);
-
 }
