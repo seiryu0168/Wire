@@ -5,7 +5,7 @@
 
 
 class Particle;
-class EnemyNormal;
+class Enemy;
 class Wire;
 class Pointer;
 class PlayerStatus;
@@ -71,7 +71,7 @@ class Player : public GameObject
     Pointer* pPointer_;
     Particle* pParticle_;
     Wire* pWire_;
-    std::list<EnemyNormal*> enemyList_;
+    std::list<Enemy*> enemyList_;
 
     PlayerStatus* PlayerState_;
 
@@ -108,7 +108,7 @@ public:
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
     
     //認識リスト内でエイムアシスト可能なやつをアシストする
-    EnemyNormal* AimAssist(RayCastData* rey);
+    Enemy* AimAssist(RayCastData* rey);
  
     //プレイヤーのステータス取得
     char GetSatatus() { return status_; }
@@ -120,13 +120,13 @@ public:
     void OccurParticle();
 
     //敵をプレイヤーの認識リストに入れる(エイムアシストの対象を減らすため)
-    void AddTargetList(EnemyNormal* target);
+    void AddTargetList(Enemy* target);
 
     //認識リストにいるかどうかチェック
     void CheckTargetList();
 
     //敵をプレイヤーの認識リストから外す
-    void DeleteTargetList(EnemyNormal* target);
+    void DeleteTargetList(Enemy* target);
     //開放
     void Release() override;
 
@@ -140,7 +140,7 @@ public:
     XMMATRIX GetCameraMatrixY() { return matCamY_; }
     XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
     Pointer* GetPointer() { return pPointer_; }
-    std::list<EnemyNormal*> GetEnemyList() { return enemyList_; }
+    std::list<Enemy*> GetEnemyList() { return enemyList_; }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

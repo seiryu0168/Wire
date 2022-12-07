@@ -5,17 +5,7 @@
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
-	hModel_(-1),
-	life_(5),
-	toPlayerVec_(XMVectorSet(0,0,0,0)),
-	frontVec_(XMVectorSet(0, 0, 1, 0)),
-	upVec_(XMVectorSet(0,1,0,0)),
-	matX_(XMMatrixIdentity()),
-	matY_(XMMatrixIdentity()),
-	visibleFlag_(false),
-	isTargetList_(false),
-	vPosition_(XMVectorSet(0,0,0,0)),
-	pPlayer_(nullptr)
+	hModel_(-1)
 {
 
 }
@@ -46,13 +36,13 @@ void EnemyNormal::Update()
 	vPosition_ =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
 	
 	////////////////エネミーの処理/////////////
-	XMVECTOR toPlayer;
 	XMFLOAT3 aa = pPlayer_->GetPosition();		//プレイヤーの座標取得
-	toPlayer = XMLoadFloat3(&aa) - vPosition_;	//エネミーからプレイヤーに向かうベクトルを作成
+	toPlayerVec_ = XMLoadFloat3(&aa) - vPosition_;	//エネミーからプレイヤーに向かうベクトルを作成
 
-	if (IsVisible(frontVec_,XMLoadFloat3(&aa),0.5,50.0f))
+	if (IsVisible(frontVec_,0.5,50.0f))
 	{
-		EnemyMove(toPlayer);
+		EnemyMove(toPlayerVec_);
+
 	}
 }
 
@@ -79,36 +69,35 @@ void EnemyNormal::EnemyMove(XMVECTOR toVec)
 	XMStoreFloat3(&transform_.position_, vPosition_);
 }
 
-bool EnemyNormal::IsVisible(XMVECTOR vFront, XMVECTOR vTarget, float visibleAngle,float range)
+//bool EnemyNormal::IsVisible(XMVECTOR vFront, float visibleAngle,float range)
+//{
+//
+//	XMVECTOR toPlayer;
+//	float rangeToPlayer;
+//	rangeToPlayer = XMVectorGetX(XMVector3Length(toPlayerVec_));			//視界判定用の視界の長さ取得
+//	toPlayer = XMVector3Normalize(toPlayerVec_);							//正規化
+//
+//	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//内積を計算
+//	float angle = acos(min(XMVectorGetX(dot),1));						//角度計算(1以上にならないようmin関数つけた)
+//	if (rangeToPlayer <= 2 * range)
+//	{
+//		pPlayer_->AddTargetList(this);
+//		isTargetList_ = true;
+//		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
+//		{
+//			return true;
+//		}
+//	}
+//	else
+//	{
+//		isTargetList_ = false;
+//	}
+//
+//	return false;
+//}
+void EnemyNormal::Attack()
 {
-	vFront = XMVector3Normalize(vFront);								//正規化
-	 toPlayerVec_ = vTarget - XMLoadFloat3(&transform_.position_);	//目標に向かうベクトル
-	float rangeToPlayer;
-	rangeToPlayer = XMVectorGetX(XMVector3Length(toPlayerVec_));			//視界判定用の視界の長さ取得
-	toPlayerVec_ = XMVector3Normalize(toPlayerVec_);							//正規化
 
-	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//内積を計算
-	float angle = acos(min(XMVectorGetX(dot),1));						//角度計算(1以上にならないようmin関数つけた)
-	if (rangeToPlayer <= 2 * range)
-	{
-		pPlayer_->AddTargetList(this);
-		isTargetList_ = true;
-		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
-		{
-			return true;
-		}
-	}
-	else
-	{
-		isTargetList_ = false;
-	}
-
-	return false;
-}
-
-XMVECTOR EnemyNormal::GetToPlayerVector()
-{
-	return toPlayerVec_;
 }
 
 void EnemyNormal::OnCollision(GameObject* pTarget)

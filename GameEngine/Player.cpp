@@ -114,7 +114,7 @@ void Player::Update()
         //エイムアシスト範囲内かどうか判定
         if (enemyList_.size() > 0/*&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit)*/)
         {
-            EnemyNormal* pEnemy = AimAssist(&ray);
+            Enemy* pEnemy = AimAssist(&ray);
             if (pEnemy != nullptr)
             {
                 vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
@@ -467,7 +467,7 @@ void Player::OccurParticle()
 
 }
 
-void Player::AddTargetList(EnemyNormal* target)
+void Player::AddTargetList(Enemy* target)
 {
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
@@ -512,7 +512,7 @@ void Player::CheckTargetList()
     }
 }
 
-void Player::DeleteTargetList(EnemyNormal* target)
+void Player::DeleteTargetList(Enemy* target)
 {
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
@@ -555,13 +555,13 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
     return false;
 }
 
-EnemyNormal* Player::AimAssist(RayCastData* ray)
+Enemy* Player::AimAssist(RayCastData* ray)
 {
     if (enemyList_.empty())
         return nullptr;
 
     float minRange = 9999.0f;
-    EnemyNormal* pEnemy=nullptr;
+    Enemy* pEnemy=nullptr;
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
         if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))

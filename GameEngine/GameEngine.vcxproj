@@ -161,6 +161,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
+    <ClCompile Include="EnemyStateDef.cpp" />
     <ClCompile Include="EnemyTurret.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -189,8 +190,6 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerEnemyState.cpp" />
-    <ClCompile Include="PlayerStateFly.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="SetObject.cpp" />
@@ -206,6 +205,8 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyNormal.h" />
+    <ClInclude Include="EnemyState.h" />
+    <ClInclude Include="EnemyStateDef.h" />
     <ClInclude Include="EnemyTurret.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -236,8 +237,6 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerEnemyState.h" />
-    <ClInclude Include="PlayerStateFly.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="resource.h" />
