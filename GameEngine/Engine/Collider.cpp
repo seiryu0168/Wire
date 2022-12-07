@@ -45,12 +45,12 @@ bool Collider::IsHitBox_Sphere(BoxCollider* box, SphereCollider* sphere)
 	XMFLOAT3 boxPos = Transform::Float3Add(box->pColObject_->GetWorldPosition(), box->center_);
 	XMFLOAT3 spherePos= Transform::Float3Add(sphere->pColObject_->GetWorldPosition(), sphere->center_);
 
-	if (spherePos.x > boxPos.x - box->size_.x - sphere->size_.x &&
-		spherePos.x < boxPos.x + box->size_.x + sphere->size_.x &&
-		spherePos.y > boxPos.y - box->size_.y - sphere->size_.x &&
-		spherePos.y < boxPos.y + box->size_.y + sphere->size_.x &&
-		spherePos.z > boxPos.z - box->size_.z - sphere->size_.x &&
-		spherePos.z < boxPos.z + box->size_.z + sphere->size_.x)
+	if (spherePos.x > boxPos.x - box->size_.x/2 - sphere->size_.x &&
+		spherePos.x < boxPos.x + box->size_.x/2 + sphere->size_.x &&
+		spherePos.y > boxPos.y - box->size_.y/2 - sphere->size_.x &&
+		spherePos.y < boxPos.y + box->size_.y/2 + sphere->size_.x &&
+		spherePos.z > boxPos.z - box->size_.z/2 - sphere->size_.x &&
+		spherePos.z < boxPos.z + box->size_.z/2 + sphere->size_.x)
 	{
 		return true;
 	}

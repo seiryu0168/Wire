@@ -7,6 +7,7 @@ class EnemyNormal : public Enemy
 private:
     bool     visibleFlag_;  //プレイヤーを見つけているかどうか
     bool     isTargetList_; //プレイヤーのターゲットリストに入ってるかどうか
+   
     int      hModel_;       //モデル番号
     int      life_;         //敵の体力
 

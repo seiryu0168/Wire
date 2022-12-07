@@ -44,13 +44,6 @@ void EnemyNormal::Initialize()
 void EnemyNormal::Update()
 {
 	vPosition_ =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
-
-	////////////////確認用オブジェクト表示////////////
-	/*Pointer* pPointer = (Pointer*)FindChild("Pointer");
-	XMFLOAT3 po;
-	XMStoreFloat3(&po, vPosition_+frontVec_);
-	pPointer->SetPointerPos(po);*/
-	//pPointer->SetDraw(true);
 	
 	////////////////エネミーの処理/////////////
 	XMVECTOR toPlayer;

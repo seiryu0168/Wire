@@ -161,6 +161,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
+    <ClCompile Include="EnemyTurret.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyNormal.h" />
+    <ClInclude Include="EnemyTurret.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
     <ClInclude Include="Engine\Camera.h" />
