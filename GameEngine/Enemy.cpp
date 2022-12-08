@@ -1,11 +1,13 @@
 #include "Enemy.h"
-
+#include"StateList.h"
 //コンストラクタ
 Enemy::Enemy(GameObject* parent, std::string name)
 	:GameObject(parent, name)
 {
 	
 	enemyParameter_.life = 5;
+	enemyParameter_.viewRange = 50.0f;
+	enemyParameter_.viewAngle = 0.5f;
 	enemyParameter_.toPlayerVec = XMVectorSet(0, 0, 0, 0);
 	enemyParameter_.frontVec = XMVectorSet(0, 0, 1, 0);
 	enemyParameter_.upVec = XMVectorSet(0, 1, 0, 0);
@@ -13,9 +15,9 @@ Enemy::Enemy(GameObject* parent, std::string name)
 	enemyParameter_.matY; XMMatrixIdentity();
 	enemyParameter_.visibleFlag = false;
 	enemyParameter_.isTargetList = false;
-	enemyParameter_.vPosition = XMVectorSet(0, 0, 0, 0);
+	enemyParameter_.vPosition = XMLoadFloat3(&transform_.position_);
 	enemyParameter_.pPlayer = nullptr;
-
+	ChangeState(State::search->GetInstance());
 }
 
 //デストラクタ
@@ -25,15 +27,17 @@ Enemy::~Enemy()
 }
 
 
-bool Enemy::IsVisible(XMVECTOR vFront, float visibleAngle, float range)
+bool Enemy::IsVisible( float visibleAngle, float range)
 {
 
 	XMVECTOR toPlayer;
+	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
+	enemyParameter_.toPlayerVec = XMLoadFloat3(&playerPos) - enemyParameter_.vPosition;
 	float rangeToPlayer;
 	rangeToPlayer = XMVectorGetX(XMVector3Length(enemyParameter_.toPlayerVec));			//視界判定用の視界の長さ取得
 	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);							//正規化
 
-	XMVECTOR dot = XMVector3Dot(vFront, enemyParameter_.toPlayerVec);						//内積を計算
+	XMVECTOR dot = XMVector3Dot(GetFrontVec(), toPlayer);						//内積を計算
 	float angle = acos(min(XMVectorGetX(dot), 1));						//角度計算(1以上にならないようmin関数つけた)
 	if (rangeToPlayer <= 2 * range)
 	{
@@ -41,6 +45,7 @@ bool Enemy::IsVisible(XMVECTOR vFront, float visibleAngle, float range)
 		enemyParameter_.isTargetList = true;
 		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
 		{
+			enemyParameter_.frontVec = toPlayer;
 			return true;
 		}
 	}

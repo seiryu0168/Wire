@@ -195,6 +195,7 @@
     <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="StateList.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="SetObject.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="StateList.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TitleScene.h" />

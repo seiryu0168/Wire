@@ -1,6 +1,7 @@
 #include "EnemyNormal.h"
 #include"Engine/Model.h"
 #include"Engine/BoxCollider.h"
+#include"StateList.h"
 #include"Pointer.h"
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
@@ -20,7 +21,6 @@ EnemyNormal::~EnemyNormal()
 void EnemyNormal::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Enemy2.fbx");
-	SetPlayerPointer((Player*)FindObject("Player"));
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
 	Model::SetModelNum(hModel_);
@@ -33,17 +33,20 @@ void EnemyNormal::Initialize()
 //更新
 void EnemyNormal::Update()
 {
-	GetPositionVec() =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
-	
-	////////////////エネミーの処理/////////////
-	XMFLOAT3 aa = GetPlayerPointer()->GetPosition();		//プレイヤーの座標取得
-	SetToPlayerVec(XMLoadFloat3(&aa) - GetPositionVec());	//エネミーからプレイヤーに向かうベクトルを作成
+	SetPositionVec(XMLoadFloat3(&transform_.position_));
+	SetPlayerPointer((Player*)FindObject("Player"));
+	GetEnemyState()->Update(this);
+	//GetPositionVec() =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
+	//
+	//////////////////エネミーの処理/////////////
+	//XMFLOAT3 aa = GetPlayerPointer()->GetPosition();		//プレイヤーの座標取得
+	//SetToPlayerVec(XMLoadFloat3(&aa) - GetPositionVec());	//エネミーからプレイヤーに向かうベクトルを作成
 
-	if (IsVisible(GetFrontVec(),0.5,50.0f))
-	{
-		EnemyMove();
+	//if (IsVisible(0.5,50.0f))
+	//{
+	//	EnemyMove();
 
-	}
+	//}
 }
 
 void EnemyNormal::FixedUpdate()
@@ -77,7 +80,7 @@ void EnemyNormal::EnemyMove()
 
 void EnemyNormal::Attack()
 {
-
+	EnemyMove();
 }
 
 void EnemyNormal::OnCollision(GameObject* pTarget)

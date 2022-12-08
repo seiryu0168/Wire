@@ -61,6 +61,22 @@ public:
 			void KillObjectSub(GameObject* pTarget);
 			void PushBackChild(GameObject* pTarget);
 
+	///////////////////////////各セッターゲッター//////////////////////////////////////
+			void SetPositionX(float x) { transform_.position_.x = x; }
+			void SetPositionY(float y) { transform_.position_.y = y; }
+			void SetPositionZ(float z) { transform_.position_.z = z; }
+			void SetPosition(XMFLOAT3 pos) { transform_.position_ = pos; }
+
+			void SetRotateX(float x) { transform_.rotate_.x = x; }
+			void SetRotateY(float y) { transform_.rotate_.y = y; }
+			void SetRotateZ(float z) { transform_.rotate_.z = z; }
+			void SetRotate(XMFLOAT3 rotate) { transform_.rotate_ = rotate; }
+
+			void SetScaleX(float x) { transform_.scale_.x = x; }
+			void SetScaleY(float y) { transform_.scale_.y = y; }
+			void SetScaleZ(float z) { transform_.scale_.z = z; }
+			void SetScale(XMFLOAT3 scale) { transform_.rotate_ = scale; }
+
 			Transform GetTransform();
 			XMFLOAT3  GetPosition();
 			XMFLOAT3  GetRotate();
