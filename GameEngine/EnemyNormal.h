@@ -39,7 +39,7 @@ public:
 
     //エネミーの動き
     //動く方向ベクトル
-    void EnemyMove(XMVECTOR toVec);
+    void EnemyMove();
 
     //開放
     void Release() override;

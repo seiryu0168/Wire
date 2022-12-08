@@ -1,19 +1,20 @@
 #include "Enemy.h"
 
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-Enemy::Enemy(GameObject* parent,std::string name)
-	:GameObject(parent,name),
-	life_(5),
-	toPlayerVec_(XMVectorSet(0, 0, 0, 0)),
-	frontVec_(XMVectorSet(0, 0, 1, 0)),
-	upVec_(XMVectorSet(0, 1, 0, 0)),
-	matX_(XMMatrixIdentity()),
-	matY_(XMMatrixIdentity()),
-	visibleFlag_(false),
-	isTargetList_(false),
-	vPosition_(XMVectorSet(0, 0, 0, 0)),
-	pPlayer_(nullptr)
+Enemy::Enemy(GameObject* parent, std::string name)
+	:GameObject(parent, name)
 {
+	
+	enemyParameter_.life = 5;
+	enemyParameter_.toPlayerVec = XMVectorSet(0, 0, 0, 0);
+	enemyParameter_.frontVec = XMVectorSet(0, 0, 1, 0);
+	enemyParameter_.upVec = XMVectorSet(0, 1, 0, 0);
+	enemyParameter_.matX = XMMatrixIdentity();
+	enemyParameter_.matY; XMMatrixIdentity();
+	enemyParameter_.visibleFlag = false;
+	enemyParameter_.isTargetList = false;
+	enemyParameter_.vPosition = XMVectorSet(0, 0, 0, 0);
+	enemyParameter_.pPlayer = nullptr;
 
 }
 
@@ -29,15 +30,15 @@ bool Enemy::IsVisible(XMVECTOR vFront, float visibleAngle, float range)
 
 	XMVECTOR toPlayer;
 	float rangeToPlayer;
-	rangeToPlayer = XMVectorGetX(XMVector3Length(toPlayerVec_));			//‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
-	toPlayer = XMVector3Normalize(toPlayerVec_);							//³‹K‰»
+	rangeToPlayer = XMVectorGetX(XMVector3Length(enemyParameter_.toPlayerVec));			//‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
+	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);							//³‹K‰»
 
-	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//“àÏ‚ğŒvZ
+	XMVECTOR dot = XMVector3Dot(vFront, enemyParameter_.toPlayerVec);						//“àÏ‚ğŒvZ
 	float angle = acos(min(XMVectorGetX(dot), 1));						//Šp“xŒvZ(1ˆÈã‚É‚È‚ç‚È‚¢‚æ‚¤minŠÖ”‚Â‚¯‚½)
 	if (rangeToPlayer <= 2 * range)
 	{
-		pPlayer_->AddTargetList(this);
-		isTargetList_ = true;
+		enemyParameter_.pPlayer->AddTargetList(this);
+		enemyParameter_.isTargetList = true;
 		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
 		{
 			return true;
@@ -45,7 +46,7 @@ bool Enemy::IsVisible(XMVECTOR vFront, float visibleAngle, float range)
 	}
 	else
 	{
-		isTargetList_ = false;
+		enemyParameter_.isTargetList = false;
 	}
 
 	return false;

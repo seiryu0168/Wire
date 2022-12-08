@@ -9,11 +9,11 @@ StateSearch::~StateSearch()
 
 void StateSearch::Init(Enemy* enemy)
 {
-	//enemy->IsVisible();
+	
 }
 void StateSearch::Update(Enemy* enemy)
 {
-
+	enemy->IsVisible(enemy->frontVec_,)
 }
 
 ////////////////////////////////////////////í«ê’èÛë‘//////////////////////////////////////////

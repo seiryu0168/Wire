@@ -2,39 +2,53 @@
 #include"Engine/GameObject.h"
 #include"EnemyState.h"
 #include"Player.h"
+struct parameter
+{
+    bool     visibleFlag;  //プレイヤーを見つけているかどうか
+    bool     isTargetList; //プレイヤーのターゲットリストに入ってるかどうか
+
+    int      life;         //敵の体力
+
+    XMMATRIX matX;         //X軸の回転行列
+    XMMATRIX matY;         //Y軸の回転行列
+    XMVECTOR frontVec;     //前方向ベクトル(このベクトルを基準にして視界が決まる)
+    XMVECTOR toPlayerVec;  //プレイヤーに向かうベクトル
+    XMVECTOR upVec;        //上方向ベクトル(プレイヤーとの位置関係を求める時に使ったりする)
+    XMVECTOR vPosition;    //現在位置のベクトル
+    Player* pPlayer;      //プレイヤーのポインタ
+};
+
 class Enemy : public GameObject
 {
-protected:
+private:
+    parameter enemyParameter_;
     EnemyState* pEnemyState_;
-
-    bool     visibleFlag_;  //プレイヤーを見つけているかどうか
-    bool     isTargetList_; //プレイヤーのターゲットリストに入ってるかどうか
-
-    int      life_;         //敵の体力
-
-    XMMATRIX matX_;         //X軸の回転行列
-    XMMATRIX matY_;         //Y軸の回転行列
-    XMVECTOR toPlayerVec_;  //プレイヤーに向かうベクトル
-    XMVECTOR upVec_;        //上方向ベクトル(プレイヤーとの位置関係を求める時に使ったりする)
-    XMVECTOR vPosition_;    //現在位置のベクトル
-    Player* pPlayer_;      //プレイヤーのポインタ
     //コンストラクタ
     Enemy(GameObject* parent,std::string name);
 
     //デストラクタ
     ~Enemy();
 public:
-    XMVECTOR frontVec_;     //前方向ベクトル(このベクトルを基準にして視界が決まる)
     void ChangeState(EnemyState* state);
     bool IsVisible(XMVECTOR front,float angle,float range);
     virtual void Attack()=0;
-    XMMATRIX GetMatrixX() { return matX_; }
-    XMMATRIX GetMatrixY() { return matY_; }
-    XMVECTOR GetToPlayerVec() { return toPlayerVec_; }
-    XMVECTOR GetUpVec() { return upVec_; }
-    Player* GetPlayerPointer() { return pPlayer_; }
+    void SetToPlayerVec(XMVECTOR vec) { enemyParameter_.toPlayerVec = vec; }
+    void SetPositionVec(XMVECTOR vec) { enemyParameter_.vPosition = vec; }
+    void SetFrontVec(XMVECTOR vec) { enemyParameter_.frontVec = vec; }
+    void SetMatrixX(XMMATRIX mat) { enemyParameter_.matX = mat; }
+    void SetMatrixY(XMMATRIX mat) { enemyParameter_.matY = mat; }
+
+
+
+    XMMATRIX GetMatrixX() { return enemyParameter_.matX; }
+    XMMATRIX GetMatrixY() { return enemyParameter_.matY; }
+    XMVECTOR GetToPlayerVec() { return enemyParameter_.toPlayerVec; }
+    XMVECTOR GetPositionVec() { return enemyParameter_.vPosition; }
+    XMVECTOR GetUpVec() { return enemyParameter_.upVec; }
+    XMVECTOR GetFrontVec() { return enemyParameter_.frontVec; }
+    Player* GetPlayerPointer() { return enemyParameter_.pPlayer; }
     //isTargetListのフラグ取得
-    bool GetIsList() { return isTargetList_; }
+    bool GetIsList() { return enemyParameter_.isTargetList; }
 
 };
 

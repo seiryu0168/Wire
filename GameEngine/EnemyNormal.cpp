@@ -33,15 +33,15 @@ void EnemyNormal::Initialize()
 //更新
 void EnemyNormal::Update()
 {
-	vPosition_ =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
+	GetPositionVec() =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
 	
 	////////////////エネミーの処理/////////////
-	XMFLOAT3 aa = pPlayer_->GetPosition();		//プレイヤーの座標取得
-	toPlayerVec_ = XMLoadFloat3(&aa) - vPosition_;	//エネミーからプレイヤーに向かうベクトルを作成
+	XMFLOAT3 aa = GetPlayerPointer()->GetPosition();		//プレイヤーの座標取得
+	SetToPlayerVec(XMLoadFloat3(&aa) - GetPositionVec());	//エネミーからプレイヤーに向かうベクトルを作成
 
 	if (IsVisible(frontVec_,0.5,50.0f))
 	{
-		EnemyMove(toPlayerVec_);
+		EnemyMove();
 
 	}
 }
@@ -58,12 +58,15 @@ void EnemyNormal::Draw()
 	Model::Draw(hModel_);
 }
 
-void EnemyNormal::EnemyMove(XMVECTOR toVec)
+void EnemyNormal::EnemyMove()
 {
-	vPosition_ = XMLoadFloat3(&transform_.position_);			//vPositionに今の座標を入れる
+	SetPositionVec(XMLoadFloat3(&transform_.position_));//vPositionに今の座標を入れる
+	XMVECTOR toTargetVec = XMLoadFloat3(&GetPlayerPointer()->GetPosition());
+	XMVECTOR toVec = toTargetVec - GetPositionVec();
 	toVec = XMVector3Normalize(toVec);							//引数の正規化
-	float angle = XMVectorGetX(XMVector3Dot(frontVec_, toVec)); //角度計算(ラジアン)
-	matY_ = XMMatrixRotationY(1-angle);							//角度を回転行列に変換
+	float angle = XMVectorGetX(XMVector3Dot(GetFrontVec(), toVec)); //角度計算(ラジアン)
+	transform_.rotate_.y = 1-angle;
+	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//角度を回転行列に変換
 	frontVec_ = XMVector3TransformCoord(toVec, matY_);			//前方向ベクトルを回転
 	vPosition_ += toVec*0.3f;
 	XMStoreFloat3(&transform_.position_, vPosition_);
