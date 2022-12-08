@@ -20,7 +20,7 @@ EnemyNormal::~EnemyNormal()
 void EnemyNormal::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Enemy2.fbx");
-	pPlayer_ = (Player*)FindObject("Player"); //確認用オブジェクト
+	SetPlayerPointer((Player*)FindObject("Player"));
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
 	Model::SetModelNum(hModel_);
@@ -39,7 +39,7 @@ void EnemyNormal::Update()
 	XMFLOAT3 aa = GetPlayerPointer()->GetPosition();		//プレイヤーの座標取得
 	SetToPlayerVec(XMLoadFloat3(&aa) - GetPositionVec());	//エネミーからプレイヤーに向かうベクトルを作成
 
-	if (IsVisible(frontVec_,0.5,50.0f))
+	if (IsVisible(GetFrontVec(),0.5,50.0f))
 	{
 		EnemyMove();
 
@@ -61,43 +61,20 @@ void EnemyNormal::Draw()
 void EnemyNormal::EnemyMove()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));//vPositionに今の座標を入れる
-	XMVECTOR toTargetVec = XMLoadFloat3(&GetPlayerPointer()->GetPosition());
+	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
+	XMVECTOR toTargetVec = XMLoadFloat3(&playerPos);
 	XMVECTOR toVec = toTargetVec - GetPositionVec();
 	toVec = XMVector3Normalize(toVec);							//引数の正規化
 	float angle = XMVectorGetX(XMVector3Dot(GetFrontVec(), toVec)); //角度計算(ラジアン)
 	transform_.rotate_.y = 1-angle;
 	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//角度を回転行列に変換
-	frontVec_ = XMVector3TransformCoord(toVec, matY_);			//前方向ベクトルを回転
-	vPosition_ += toVec*0.3f;
-	XMStoreFloat3(&transform_.position_, vPosition_);
+	SetFrontVec(XMVector3TransformCoord(toVec, GetMatrixY()));			//前方向ベクトルを回転
+	toVec *= 0.6f;
+	toVec += GetPositionVec();
+	SetPositionVec(toVec);
+	XMStoreFloat3(&transform_.position_, toVec);
 }
 
-//bool EnemyNormal::IsVisible(XMVECTOR vFront, float visibleAngle,float range)
-//{
-//
-//	XMVECTOR toPlayer;
-//	float rangeToPlayer;
-//	rangeToPlayer = XMVectorGetX(XMVector3Length(toPlayerVec_));			//視界判定用の視界の長さ取得
-//	toPlayer = XMVector3Normalize(toPlayerVec_);							//正規化
-//
-//	XMVECTOR dot = XMVector3Dot(vFront, toPlayerVec_);						//内積を計算
-//	float angle = acos(min(XMVectorGetX(dot),1));						//角度計算(1以上にならないようmin関数つけた)
-//	if (rangeToPlayer <= 2 * range)
-//	{
-//		pPlayer_->AddTargetList(this);
-//		isTargetList_ = true;
-//		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
-//		{
-//			return true;
-//		}
-//	}
-//	else
-//	{
-//		isTargetList_ = false;
-//	}
-//
-//	return false;
-//}
 void EnemyNormal::Attack()
 {
 
@@ -107,11 +84,11 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Player")
 	{
-		if (pPlayer_->GetSatatus() & ATC_ATTACK)
+		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
-			life_--;
-			pPlayer_->SetStatus(ATC_DEFAULT);
-			if (life_ < 0)
+			DecreaseLife(1);
+			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
+			if (GetLife() < 0)
 			{
 				Transform pos;
 				pos.position_= { 9999,9999,9999 };

@@ -23,12 +23,12 @@ class Enemy : public GameObject
 private:
     parameter enemyParameter_;
     EnemyState* pEnemyState_;
+public:
     //コンストラクタ
     Enemy(GameObject* parent,std::string name);
 
     //デストラクタ
     ~Enemy();
-public:
     void ChangeState(EnemyState* state);
     bool IsVisible(XMVECTOR front,float angle,float range);
     virtual void Attack()=0;
@@ -37,7 +37,10 @@ public:
     void SetFrontVec(XMVECTOR vec) { enemyParameter_.frontVec = vec; }
     void SetMatrixX(XMMATRIX mat) { enemyParameter_.matX = mat; }
     void SetMatrixY(XMMATRIX mat) { enemyParameter_.matY = mat; }
-
+    void SetPlayerPointer(Player* pointer) { enemyParameter_.pPlayer = pointer; }
+    void SetLife(int life) { enemyParameter_.life = life; }
+    void DecreaseLife(int decRate) { enemyParameter_.life -= decRate; }
+    void IncreaseLife(int incRate) { enemyParameter_.life += incRate; }
 
 
     XMMATRIX GetMatrixX() { return enemyParameter_.matX; }
@@ -49,6 +52,7 @@ public:
     Player* GetPlayerPointer() { return enemyParameter_.pPlayer; }
     //isTargetListのフラグ取得
     bool GetIsList() { return enemyParameter_.isTargetList; }
+    int GetLife() { return enemyParameter_.life; }
 
 };
 
