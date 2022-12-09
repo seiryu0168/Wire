@@ -31,6 +31,11 @@ void EnemyTurret::Update()
 
 }
 
+void EnemyTurret::Attack()
+{
+
+}
+
 void EnemyTurret::FixedUpdate()
 {
 

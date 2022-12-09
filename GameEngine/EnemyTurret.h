@@ -21,8 +21,10 @@ public:
     //XV
     void Update() override;
 
+    void Attack() override;
     void FixedUpdate() override;
 
+    void Shot();
     //•`‰æ
     void Draw() override;
 
