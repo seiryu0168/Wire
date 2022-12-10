@@ -1,12 +1,14 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include"Engine/BillBoard.h"
 class Bullet : public GameObject
 {
 private:
     int hModel_;
+    int life_;
     float speed_;
 
-    int life_;
+    BillBoard* pBill_;
     XMVECTOR dir_;
 
 public:

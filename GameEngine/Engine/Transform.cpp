@@ -51,11 +51,46 @@ XMMATRIX Transform::GetWorldMatrix()
 
 }
 
-XMMATRIX Transform::GetRotateMatrix()
+XMMATRIX Transform::GetLocalTranslateMatrix()
+{
+	return matTranslate_;
+}
+
+XMMATRIX Transform::GetLocalRotateMatrix()
 {
 	return matRotate_;
 }
-XMMATRIX Transform::GetScaleMatrix()
+XMMATRIX Transform::GetLocalScaleMatrix()
 {
+	return matScale_;
+}
+
+
+XMMATRIX Transform::GetWorldTranslateMatrix()
+{
+	Calclation();
+	if (pParent_)
+	{
+		return matTranslate_ * pParent_->GetLocalTranslateMatrix();
+	}
+	return matTranslate_;
+}
+
+XMMATRIX Transform::GetWorldRotateMatrix()
+{
+	Calclation();
+	if (pParent_)
+	{
+		return matRotate_ * pParent_->GetLocalRotateMatrix();
+	}
+	return matRotate_;
+}
+XMMATRIX Transform::GetWorldScaleMatrix()
+{
+	Calclation();
+	if (pParent_)
+	{
+		return matScale_ * pParent_->GetLocalScaleMatrix();
+	}
 	return matScale_;
 }

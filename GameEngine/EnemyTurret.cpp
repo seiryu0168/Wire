@@ -7,7 +7,7 @@ EnemyTurret::EnemyTurret(GameObject* parent)
 	:Enemy(parent,"EnemyTurret"),
 	hModel_(-1),
 	shotTime_(0),
-	rpm_(0)
+	rpm_(300)
 
 {
 
@@ -42,7 +42,9 @@ void EnemyTurret::Initialize()
 //XV
 void EnemyTurret::Update()
 {
-
+	SetPositionVec(XMLoadFloat3(&transform_.position_));
+	SetPlayerPointer((Player*)FindObject("Player"));
+	GetEnemyState()->Update(this);
 }
 
 void EnemyTurret::Attack()
@@ -53,8 +55,8 @@ void EnemyTurret::Attack()
 void EnemyTurret::Shot()
 {
 	shotTime_++;
-	float isShot = shotTime_ / rpm_;
-	if (shotTime_ >= isShot)
+	float isShot = 3600.0f / rpm_;
+	if (isShot<=(float)shotTime_)
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
 		Bullet* pBullet = Instantiate<Bullet>(GetParent());

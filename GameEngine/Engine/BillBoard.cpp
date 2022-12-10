@@ -10,7 +10,7 @@ BillBoard::BillBoard()
 
 BillBoard::~BillBoard()
 {
-	SAFE_DELETE(pTexture_);
+
 }
 
 HRESULT BillBoard::Load(std::string fileName)
@@ -136,5 +136,5 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 
 void BillBoard::Release()
 {
-
+	SAFE_RELEASE(pTexture_);
 }

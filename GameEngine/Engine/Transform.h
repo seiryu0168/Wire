@@ -30,8 +30,13 @@ public:
 	
 	//ƒ[ƒ‹ƒhs—ñ‚ğæ“¾
 	XMMATRIX GetWorldMatrix();
-	XMMATRIX GetRotateMatrix();
-	XMMATRIX GetScaleMatrix();
+	XMMATRIX GetLocalTranslateMatrix();
+	XMMATRIX GetLocalRotateMatrix();
+	XMMATRIX GetLocalScaleMatrix();
+
+	XMMATRIX GetWorldTranslateMatrix();
+	XMMATRIX GetWorldRotateMatrix();
+	XMMATRIX GetWorldScaleMatrix();
 
 	static XMFLOAT3 Float3Add(XMFLOAT3 add1, XMFLOAT3 add2)
 	{
