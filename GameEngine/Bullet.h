@@ -1,18 +1,20 @@
 #pragma once
-#include "Enemy.h"
-class EnemyTurret : public Enemy
+#include "Engine/GameObject.h"
+class Bullet : public GameObject
 {
 private:
     int hModel_;
-    int shotTime_;
-    float rpm_;//連射速度 Rounds Per Minute
+    float speed_;
+
+    int life_;
+    XMVECTOR dir_;
 
 public:
     //コンストラクタ
-    EnemyTurret(GameObject* parent);
+    Bullet(GameObject* parent);
 
     //デストラクタ
-    ~EnemyTurret();
+    ~Bullet();
 
     //初期化
     void Initialize() override;
@@ -20,14 +22,14 @@ public:
     //更新
     void Update() override;
 
-    void Attack() override;
     void FixedUpdate() override;
 
-    void Shot();
+    void SetDir(XMVECTOR dir) { dir_ = dir; }
     //描画
     void Draw() override;
+    
+    void OnCollision(GameObject* target) override;
 
-    //解放
     void Release() override;
 };
 

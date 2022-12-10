@@ -3,6 +3,7 @@
 #include"Engine/Fbx.h"
 #include"Player.h"
 #include"EnemyNormal.h"
+#include"EnemyTurret.h"
 #include"SetObject.h"
 #include"Test.h"
 #include"Stage1.h"
@@ -28,6 +29,7 @@ void TitleScene::Initialize()
 	for (int i = 0; i < 11; i++)
 	{
 		Instantiate<EnemyNormal>(this);
+		Instantiate<EnemyTurret>(this);
 	}
 	Instantiate<Test>(this);
 }

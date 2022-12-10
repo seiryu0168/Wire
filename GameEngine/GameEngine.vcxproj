@@ -157,8 +157,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Easing.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="EnemyStateDef.cpp" />
@@ -202,8 +202,8 @@
     <ClCompile Include="Wire.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Easing.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="EnemyState.h" />
