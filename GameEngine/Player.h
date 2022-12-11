@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include"Engine/Fbx.h"
-
+#include"LineParticle.h"
 
 
 class Particle;
@@ -68,12 +68,13 @@ class Player : public GameObject
 
     char status_;
 
-    Pointer* pPointer_;
+    PlayerStatus* PlayerState_;
     Particle* pParticle_;
+    LineParticle* pLine_;
+    Pointer* pPointer_;
     Wire* pWire_;
     std::list<Enemy*> enemyList_;
 
-    PlayerStatus* PlayerState_;
 
 public:
     //コンストラクタ

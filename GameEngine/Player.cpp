@@ -59,6 +59,8 @@ void Player::Initialize()
     assert(hModel_Handle_ > 0);
     
     pParticle_ = Instantiate<Particle>(this);
+    pLine_ = new LineParticle;
+    pLine_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
@@ -216,7 +218,7 @@ void Player::Update()
         flyTime_ -= 0.01f;
         flyTime_=max(flyTime_, 0);
     }
-
+    pLine_->AddPosition(transform_.position_);
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
@@ -239,6 +241,8 @@ void Player::Draw()
 {
     Model::SetTransform(hModel_, transform_);
     Model::Draw(hModel_);
+
+    pLine_->Draw();
 }
 
 //開放
