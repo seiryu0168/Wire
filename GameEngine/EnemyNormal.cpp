@@ -36,17 +36,6 @@ void EnemyNormal::Update()
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
 	SetPlayerPointer((Player*)FindObject("Player"));
 	GetEnemyState()->Update(this);
-	//GetPositionVec() =XMLoadFloat3(&transform_.position_);    //今の座標をvPositionに入れる
-	//
-	//////////////////エネミーの処理/////////////
-	//XMFLOAT3 aa = GetPlayerPointer()->GetPosition();		//プレイヤーの座標取得
-	//SetToPlayerVec(XMLoadFloat3(&aa) - GetPositionVec());	//エネミーからプレイヤーに向かうベクトルを作成
-
-	//if (IsVisible(0.5,50.0f))
-	//{
-	//	EnemyMove();
-
-	//}
 }
 
 void EnemyNormal::FixedUpdate()
