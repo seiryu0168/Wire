@@ -60,7 +60,9 @@ void Player::Initialize()
     
     pParticle_ = Instantiate<Particle>(this);
     pLine_ = new LineParticle;
+    pWire_ = new LineParticle;
     pLine_->Load("Assets\\Effect01.png");
+    pWire_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
@@ -135,6 +137,8 @@ void Player::Update()
             XMStoreFloat3(&pointerPos, ray.hitPos);
             pPointer_->SetPointerPos(pointerPos);
             pPointer_->SetDraw(ray.hit);
+            pWire_->AddPosition(transform_.position_);
+            pWire_->AddPosition(pointerPos);
         }
     }
 
@@ -243,6 +247,7 @@ void Player::Draw()
     Model::Draw(hModel_);
 
     pLine_->Draw();
+    pWire_->Draw();
 }
 
 //ŠJ•ú

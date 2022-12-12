@@ -2,6 +2,7 @@
 #include"Engine/Direct3D.h"
 #include"Engine/Texture.h"
 #include"DirectXMath.h"
+#include"Engine/BillBoard.h"
 #include<list>
 
 
@@ -9,19 +10,8 @@
 class LineParticle
 {
 private:
-struct CONSTANT_BUFFER
-{
-	XMMATRIX matWVP;
-	XMFLOAT4 color;
-};
-
-struct VERTEX
-{
-	XMFLOAT3 position;
-	XMFLOAT3 uv;
-};
 	float WIDTH_;
-	float LENGTH_;
+	int LENGTH_;
 
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;

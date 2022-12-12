@@ -71,8 +71,8 @@ class Player : public GameObject
     PlayerStatus* PlayerState_;
     Particle* pParticle_;
     LineParticle* pLine_;
+    LineParticle* pWire_;
     Pointer* pPointer_;
-    Wire* pWire_;
     std::list<Enemy*> enemyList_;
 
 

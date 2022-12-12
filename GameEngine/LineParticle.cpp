@@ -1,10 +1,11 @@
 #include "LineParticle.h"
 #include"Engine/Camera.h"
 LineParticle::LineParticle()
-	:WIDTH_(0.1),
+	:WIDTH_(0.5),
 	LENGTH_(30),
 	pVertexBuffer_(nullptr),
-	pConstantBuffer_(nullptr)
+	pConstantBuffer_(nullptr),
+	pTexture_(nullptr)
 {
 	
 }
@@ -79,9 +80,6 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 
 	delete[] vertices;
-
-
-
 }
 
 HRESULT LineParticle::Load(std::string fileName)
@@ -110,6 +108,7 @@ HRESULT LineParticle::Load(std::string fileName)
 
 
 }
+
 void LineParticle::Draw()
 {
 	Direct3D::SetShader(SHADER_EFF);
@@ -122,8 +121,10 @@ void LineParticle::Draw()
 	//GPUからのデータアクセスを止める
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
 	
+	errno_t res;
 	//データを送る
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
+	res = memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
+	
 	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
 	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
@@ -146,12 +147,11 @@ void LineParticle::Draw()
 	//頂点の並び方を指定
 	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	
-	Direct3D::pContext->Draw(positionList_.size()-1*2,0);
+	Direct3D::pContext->Draw(positionList_.size() - 1 * 2, 0);
 
 	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
 }
+
 void LineParticle::Release()
 {
 	SAFE_RELEASE(pTexture_);
