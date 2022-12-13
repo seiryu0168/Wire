@@ -65,7 +65,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		nullptr,						// どのビデオアダプタを使用するか？既定ならばnullptrで
 		D3D_DRIVER_TYPE_HARDWARE,		// ドライバのタイプを渡す。ふつうはHARDWARE
 		nullptr,						// 上記をD3D_DRIVER_TYPE_SOFTWAREに設定しないかぎりnullptr
-		0,								// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
+		D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT,								// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
 		nullptr,						// デバイス、コンテキストのレベルを設定。nullptrにしとけばOK
 		0,								// 上の引数でレベルを何個指定したか
 		D3D11_SDK_VERSION,				// SDKのバージョン。必ずこの値
@@ -425,13 +425,12 @@ void Direct3D::EndDraw()
 	EngineTime::SetTime();
 	//スワップ（バックバッファを表に表示する）
 	HRESULT hr = pSwapChain->Present(0, 0);
-	if (FALSE(hr))
+	if (hr== DXGI_ERROR_DEVICE_REMOVED || hr== DXGI_ERROR_DEVICE_RESET)
 	{
-		if (FALSE(hr))
-		{
-			MessageBox(nullptr, L"ラインパーティクルのテクスチャのロードに失敗", L"エラー", MB_OK);
+		
+			MessageBox(nullptr, L"スワップチェイン失敗", L"エラー", MB_OK);
 			//return hr;
-		}
+		
 	}
 }
 

@@ -1,5 +1,8 @@
 #include "LineParticle.h"
+#include"Engine/Direct3D.h"
+#include"DirectXMath.h"
 #include"Engine/Camera.h"
+#include<vector>
 LineParticle::LineParticle()
 	:WIDTH_(0.5),
 	LENGTH_(30),
@@ -157,7 +160,7 @@ void LineParticle::Draw()
 	D3D11_PRIMITIVE_TOPOLOGY pt;
 	Direct3D::pContext->IAGetPrimitiveTopology(&pt);									//¡‚ÌD3D11_PRIMITIVE_TOPOROGY‚Ì’l‚ð•Û‘¶
 	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //Ý’è‚ð•Ï‚¦‚é
-	Direct3D::pContext->Draw(positionList_.size() - 1 * 2, 0);
+	Direct3D::pContext->Draw((positionList_.size() - 1) * 2, 0);
 
 	Direct3D::pContext->IASetPrimitiveTopology(pt);										//•Û‘¶‚µ‚Ä‚¨‚¢‚½’l‚ð–ß‚·
 }

@@ -10,8 +10,8 @@
 class LineParticle
 {
 private:
-	float WIDTH_;
-	int LENGTH_;
+	const float WIDTH_;
+	const int LENGTH_;
 
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
