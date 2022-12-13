@@ -12,6 +12,15 @@ LineParticle::LineParticle()
 {
 	
 }
+LineParticle::LineParticle(float width, int length)
+	:WIDTH_(width),
+	LENGTH_(length),
+	pVertexBuffer_(nullptr),
+	pConstantBuffer_(nullptr),
+	pTexture_(nullptr)
+{
+
+}
 
 //現在位置を記憶 : pos
 void LineParticle::AddPosition(XMFLOAT3 pos)
@@ -81,10 +90,10 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	D3D11_SUBRESOURCE_DATA data_vertex;
 	data_vertex.pSysMem = vertices;
 	HRESULT hr= Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
-	//hr = Direct3D::pDevice->GetDeviceRemovedReason();
+	hr = Direct3D::pDevice->GetDeviceRemovedReason();
 	
 	
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
 	}
@@ -103,18 +112,18 @@ HRESULT LineParticle::Load(std::string fileName)
 	bd_constant.StructureByteStride = 0;
 
 	hr = Direct3D::pDevice->CreateBuffer(&bd_constant, nullptr, &pConstantBuffer_);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラインパーティクル用コンスタントバッファの作成に失敗", L"エラー", MB_OK);
 		return hr;
 	}
-	pTexture_ = new Texture;
+	pTexture_ = new Texture();
 	wchar_t name[FILENAME_MAX];
 	size_t ret;
 	mbstowcs_s(&ret, name, fileName.c_str(), fileName.length());
 
 	hr = pTexture_->Load(name);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラインパーティクルのテクスチャのロードに失敗", L"エラー", MB_OK);
 		return hr;
@@ -131,38 +140,43 @@ void LineParticle::Draw()
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 
-	//GPUからのデータアクセスを止める
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
-	
-	//データを送る
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
-	
-	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
-	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+	////GPUからのデータアクセスを止める
+	//Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
+	//
+	////データを送る
+	//memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
+	//
+	//ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+	//Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
-	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
-	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+	//ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
+	//Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
-	//データアクセス再開
-	Direct3D::pContext->Unmap(pConstantBuffer_, 0);
+	////データアクセス再開
+	//Direct3D::pContext->Unmap(pConstantBuffer_, 0);
 
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 
 	//頂点バッファ
-	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	//Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
 	//コンスタントバッファ
-	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
-	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
+	//Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
+	//Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
 
 	//頂点の並び方を指定
-	D3D11_PRIMITIVE_TOPOLOGY pt;
-	Direct3D::pContext->IAGetPrimitiveTopology(&pt);									//今のD3D11_PRIMITIVE_TOPOROGYの値を保存
+	int vertexCount = (positionList_.size() - 1) * 2;
 	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->Draw((positionList_.size() - 1) * 2, 0);
+	Direct3D::pContext->Draw(vertexCount, 0);
+	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
 
-	Direct3D::pContext->IASetPrimitiveTopology(pt);										//保存しておいた値を戻す
+void LineParticle::SetLineParameter(float width, int length)
+{
+	WIDTH_ = width;
+	LENGTH_ = length;
+
 }
 
 void LineParticle::Release()

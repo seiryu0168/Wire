@@ -110,8 +110,8 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	
 		ID3D11SamplerState* pSampler = pTexture_->GetSampler();
 		Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
-		ID3D11ShaderResourceView* pSRV1 = pTexture_->GetSRV();
 
+		ID3D11ShaderResourceView* pSRV1 = pTexture_->GetSRV();
 		Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
 
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//ÄŠJ

@@ -61,6 +61,7 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(this);
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
+    pWire_->SetLineParameter(0.3f, 2);
     pLine_->Load("Assets\\Effect01.png");
     pWire_->Load("Assets\\Effect01.png");
     //pLine_->AddPosition(transform_.position_);
