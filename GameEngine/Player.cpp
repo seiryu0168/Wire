@@ -63,6 +63,8 @@ void Player::Initialize()
     pWire_ = new LineParticle;
     pLine_->Load("Assets\\Effect01.png");
     pWire_->Load("Assets\\Effect01.png");
+    //pLine_->AddPosition(transform_.position_);
+    //pWire_->AddPosition(transform_.position_);
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);

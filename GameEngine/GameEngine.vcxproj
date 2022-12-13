@@ -199,6 +199,7 @@
     <ClCompile Include="StateList.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Wire.cpp" />
   </ItemGroup>
@@ -249,6 +250,7 @@
     <ClInclude Include="StateList.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Wire.h" />
   </ItemGroup>

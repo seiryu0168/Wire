@@ -130,23 +130,22 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
-			}
 
-			if (((nowTime - lastFixedUpdateTime) * 60.0f) * 1.0f >= 1000.0f)
-			{
-				//ƒQ[ƒ€‚Ìˆ—
-				Input::Update();
-				Camera::Update();
-
-				lastFixedUpdateTime = nowTime;
-				pRootJob->FixedUpdateSub();
-			}
+			//if (((nowTime - lastFixedUpdateTime) * 60.0f) * 1.0f >= 1000.0f)
+			//{
+			//	//ƒQ[ƒ€‚Ìˆ—
+			//	Input::Update();
+			//	Camera::Update();
+			//	lastFixedUpdateTime = nowTime;
+			//	pRootJob->FixedUpdateSub();
+			//}
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
 
 
 				Direct3D::EndDraw();
+			}
 		}
 	}
 

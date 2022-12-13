@@ -27,6 +27,7 @@ public:
 
 	//ÉçÅ[Éh
 	HRESULT Load(std::string fileName);
+	
 	//ï`âÊ
 	void Draw(XMMATRIX matW,XMFLOAT4 col);
 	void Release();

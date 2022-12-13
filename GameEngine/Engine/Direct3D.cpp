@@ -424,7 +424,15 @@ void Direct3D::EndDraw()
 {
 	EngineTime::SetTime();
 	//スワップ（バックバッファを表に表示する）
-	pSwapChain->Present(0, 0);
+	HRESULT hr = pSwapChain->Present(0, 0);
+	if (FALSE(hr))
+	{
+		if (FALSE(hr))
+		{
+			MessageBox(nullptr, L"ラインパーティクルのテクスチャのロードに失敗", L"エラー", MB_OK);
+			//return hr;
+		}
+	}
 }
 
 //解放処理
