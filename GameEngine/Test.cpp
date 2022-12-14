@@ -6,8 +6,8 @@
 //コンストラクタ
 Test::Test(GameObject* parent)
     :GameObject(parent, "Test"),
-    hModel_(-1),
-    pParticle_(nullptr)
+    hModel_(-1)
+    //pParticle_(nullptr)
 {
 }
 
@@ -25,7 +25,7 @@ void Test::Initialize()
     assert(hModel_ >= 0);
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
     AddCollider(pCollider);
-    pParticle_ = Instantiate<Particle>(this);
+   /* pParticle_ = Instantiate<Particle>(this);
 
     EmitterData data;
     data.textureFileName = "Assets\\Effect01.png";
@@ -45,7 +45,7 @@ void Test::Initialize()
     data.scale = XMFLOAT2(0.98f, 0.98f);
     data.color = XMFLOAT4(1, 1, 1, 1);
     data.deltaColor = XMFLOAT4(0, 0, 0, -0.02);
-    pParticle_->ParticleStart(data);
+    pParticle_->ParticleStart(data);*/
 }
 
 //更新

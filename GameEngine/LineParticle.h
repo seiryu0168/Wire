@@ -9,6 +9,12 @@
 
 class LineParticle
 {
+	enum LineMode
+	{
+		DEFAULT=0,
+		BILLBOARD,
+	};
+
 private:
 	struct CONSTANT_BUFFER
 	{
@@ -38,9 +44,10 @@ public:
 	void AddPosition(XMFLOAT3 pos);
 
 	HRESULT Load(std::string fileName);
-	void Draw();
-	void Release();
+	void Draw(XMMATRIX matW = XMMatrixIdentity());
 	void SetLineParameter(float width, int length);
+	void DeleteLine();
+	void Release();
 
 
 

@@ -92,7 +92,6 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	HRESULT hr= Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	hr = Direct3D::pDevice->GetDeviceRemovedReason();
 	
-	
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
@@ -131,42 +130,55 @@ HRESULT LineParticle::Load(std::string fileName)
 	return S_OK;
 }
 
-void LineParticle::Draw()
+void LineParticle::Draw(XMMATRIX matW)
 {
+	HRESULT hr;
 	Direct3D::SetShader(SHADER_EFF);
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+		cb.matWVP = XMMatrixTranspose(matW*Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = XMFLOAT4(1, 1, 1, 1);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 
-	////GPUからのデータアクセスを止める
-	//Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
-	//
-	////データを送る
-	//memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
-	//
-	//ID3D11SamplerState* pSampler = pTexture_->GetSampler();
-	//Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+	//GPUからのデータアクセスを止める
+	hr = Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"デバイスコンテキスト失敗", L"エラー", MB_OK);
+	}
+	//データを送る
+	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));
+	
+	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
-	//ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
-	//Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
+	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
-	////データアクセス再開
-	//Direct3D::pContext->Unmap(pConstantBuffer_, 0);
+	//データアクセス再開
+	Direct3D::pContext->Unmap(pConstantBuffer_, 0);
 
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 
 	//頂点バッファ
-	//Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
 	//コンスタントバッファ
-	//Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
-	//Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
+	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
+	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
 
 	//頂点の並び方を指定
-	int vertexCount = (positionList_.size() - 1) * 2;
+	UINT vertexCount = 0;
+	if(positionList_.empty())
+	{
+		vertexCount = 0;
+	}
+	else
+	{
+		vertexCount = (positionList_.size() - 1) * 2;
+	}
+
 	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
 	Direct3D::pContext->Draw(vertexCount, 0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -176,7 +188,11 @@ void LineParticle::SetLineParameter(float width, int length)
 {
 	WIDTH_ = width;
 	LENGTH_ = length;
+}
 
+void LineParticle::DeleteLine()
+{
+	positionList_.clear();
 }
 
 void LineParticle::Release()

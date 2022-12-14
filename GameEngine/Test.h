@@ -6,7 +6,7 @@
 class Test : public GameObject
 {
     int hModel_;
-    Particle* pParticle_;
+    //Particle* pParticle_;
 public:
     //コンストラクタ
     Test(GameObject* parent);

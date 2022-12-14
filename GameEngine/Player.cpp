@@ -61,11 +61,9 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(this);
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
-    pWire_->SetLineParameter(0.3f, 2);
+    pWire_->SetLineParameter(0.3f, 4);
     pLine_->Load("Assets\\Effect01.png");
     pWire_->Load("Assets\\Effect01.png");
-    //pLine_->AddPosition(transform_.position_);
-    //pWire_->AddPosition(transform_.position_);
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
@@ -249,8 +247,9 @@ void Player::Draw()
     Model::SetTransform(hModel_, transform_);
     Model::Draw(hModel_);
 
-    pLine_->Draw();
-    pWire_->Draw();
+    pLine_->Draw(transform_.GetWorldMatrix());
+    pWire_->Draw(transform_.GetWorldMatrix());
+    pWire_->DeleteLine();
 }
 
 //ŠJ•ú
