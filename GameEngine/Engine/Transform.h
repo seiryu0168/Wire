@@ -30,6 +30,7 @@ public:
 	
 	//ƒ[ƒ‹ƒhs—ñ‚ğæ“¾
 	XMMATRIX GetWorldMatrix();
+	XMMATRIX GetLocalMatrix();
 	XMMATRIX GetLocalTranslateMatrix();
 	XMMATRIX GetLocalRotateMatrix();
 	XMMATRIX GetLocalScaleMatrix();

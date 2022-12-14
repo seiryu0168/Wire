@@ -31,6 +31,7 @@ private:
 
 	float WIDTH_;//ラインパーティクルの幅
 	int LENGTH_;//ラインパーティクルのポジションを記憶する量
+	float tipWidth_;
 
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
@@ -39,13 +40,13 @@ private:
 	std::list<XMFLOAT3> positionList_;
 public:
 	LineParticle();
-	LineParticle(float width,int length);
+	LineParticle(float width,int length,float tipWidth);
 	//現在位置を記憶 : pos
 	void AddPosition(XMFLOAT3 pos);
 
 	HRESULT Load(std::string fileName);
 	void Draw(XMMATRIX matW = XMMatrixIdentity());
-	void SetLineParameter(float width, int length);
+	void SetLineParameter(float width, int length,float tipWidth=0);
 	void DeleteLine();
 	void Release();
 

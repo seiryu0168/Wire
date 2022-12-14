@@ -6,20 +6,22 @@
 LineParticle::LineParticle()
 	:WIDTH_(0.5),
 	LENGTH_(30),
+	tipWidth_(0),
 	pVertexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
 	
 }
-LineParticle::LineParticle(float width, int length)
+LineParticle::LineParticle(float width, int length, float tipWidth)
 	:WIDTH_(width),
 	LENGTH_(length),
+	tipWidth_(tipWidth),
 	pVertexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
-
+	tipWidth_ = max(tipWidth_, 0);
 }
 
 //Œ»ÝˆÊ’u‚ð‹L‰¯ : pos
@@ -66,11 +68,11 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 		XMFLOAT3 pos;
 		XMStoreFloat3(&pos, vPos + vArm);
 
-		VERTEX vertex1 = { pos,XMFLOAT3((float)i / LENGTH_,0,0) };
+		VERTEX vertex1 = { pos,XMFLOAT3((float)i/LENGTH_ +tipWidth_,0,0) };
 
 		XMStoreFloat3(&pos, vPos - vArm);
 
-		VERTEX vertex2 = { pos,XMFLOAT3((float)i / LENGTH_,1,0) };
+		VERTEX vertex2 = { pos,XMFLOAT3((float)i / LENGTH_+tipWidth_,1,0) };
 
 		int s = sizeof(VERTEX);
 
@@ -184,10 +186,13 @@ void LineParticle::Draw(XMMATRIX matW)
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void LineParticle::SetLineParameter(float width, int length)
+void LineParticle::SetLineParameter(float width, int length, float tipWidth)
 {
 	WIDTH_ = width;
 	LENGTH_ = length;
+	tipWidth_ = tipWidth;
+	tipWidth_ = max(tipWidth_, 0);
+	
 }
 
 void LineParticle::DeleteLine()

@@ -61,6 +61,7 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(this);
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
+    pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.3f, 4);
     pLine_->Load("Assets\\Effect01.png");
     pWire_->Load("Assets\\Effect01.png");
@@ -247,8 +248,8 @@ void Player::Draw()
     Model::SetTransform(hModel_, transform_);
     Model::Draw(hModel_);
 
-    pLine_->Draw(transform_.GetWorldMatrix());
-    pWire_->Draw(transform_.GetWorldMatrix());
+    pLine_->Draw();
+    pWire_->Draw();
     pWire_->DeleteLine();
 }
 

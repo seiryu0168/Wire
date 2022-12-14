@@ -50,7 +50,10 @@ XMMATRIX Transform::GetWorldMatrix()
 	return matScale_ * matRotate_ * matTranslate_;
 
 }
-
+XMMATRIX Transform::GetLocalMatrix()
+{
+	return matScale_ * matRotate_ * matTranslate_;
+}
 XMMATRIX Transform::GetLocalTranslateMatrix()
 {
 	return matTranslate_;
