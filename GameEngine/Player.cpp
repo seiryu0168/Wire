@@ -62,7 +62,7 @@ void Player::Initialize()
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
     pLine_->SetLineParameter(0.5f, 30,0.4f);
-    pWire_->SetLineParameter(0.3f, 4);
+    pWire_->SetLineParameter(0.1f, 4);
     pLine_->Load("Assets\\Effect01.png");
     pWire_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
@@ -105,6 +105,7 @@ void Player::Update()
     RayCastData ray;
     CheckTargetList();
     aimFlag_ = false;
+    
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
@@ -118,7 +119,7 @@ void Player::Update()
         XMStoreFloat3(&ray.dir, vPtrDir);
 
         //エイムアシスト範囲内かどうか判定
-        if (enemyList_.size() > 0/*&&IsAssistRange(vPlayerDir, pEnemy->GetTransform().position_,ray.distLimit)*/)
+        if (enemyList_.size() > 0)
         {
             Enemy* pEnemy = AimAssist(&ray);
             if (pEnemy != nullptr)
@@ -225,6 +226,7 @@ void Player::Update()
         flyTime_=max(flyTime_, 0);
     }
     pLine_->AddPosition(transform_.position_);
+    
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
@@ -250,7 +252,7 @@ void Player::Draw()
 
     pLine_->Draw();
     pWire_->Draw();
-    pWire_->DeleteLine();
+    
 }
 
 //開放

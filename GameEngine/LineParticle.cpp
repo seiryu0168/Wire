@@ -43,11 +43,22 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	XMFLOAT3 camPos = Camera::GetPosition();
 	XMVECTOR vCamPos = XMLoadFloat3(&camPos);
 
-	//頂点データ作成
-	VERTEX* vertices = new VERTEX[LENGTH_ * 2];
 	int index = 0;
-
+	int split = 0;
 	auto itr = positionList_.begin();
+	for (auto it = positionList_.begin(); it != positionList_.end(); it++)
+	{
+		XMVECTOR vLength;
+		vLength = XMLoadFloat3(&(*it));
+		it++;
+		vLength = XMLoadFloat3(&(*it)) - vLength;
+
+		float length = XMVectorGetX(XMVector3Length(vLength));
+		split = length / 1.0f+1;
+	}
+
+	//頂点データ作成
+	VERTEX* vertices = new VERTEX[split * 2];
 	for (int i = 0; i < LENGTH_; i++)
 	{
 		//記憶している位置取得
@@ -61,25 +72,31 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 
 		//さっき取得した位置から次の位置に向かうベクトル
 		XMVECTOR vLine = XMLoadFloat3(&(*itr)) - vPos;
+		float splitCount = 0;
+		splitCount = XMVectorGetX(XMVector3Length(vLine))/1.0f;
 
 		XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 		vArm = XMVector3Normalize(vArm)*WIDTH_;
 
-		XMFLOAT3 pos;
-		XMStoreFloat3(&pos, vPos + vArm);
+		for (int count = 0; count > splitCount; count++)
+		{
+			XMFLOAT3 pos;
+			XMStoreFloat3(&pos, vPos + vArm);
 
-		VERTEX vertex1 = { pos,XMFLOAT3((float)i/LENGTH_ +tipWidth_,0,0) };
+			VERTEX vertex1 = { pos,XMFLOAT3((float)i / LENGTH_ + tipWidth_,0,0) };
 
-		XMStoreFloat3(&pos, vPos - vArm);
+			XMStoreFloat3(&pos, vPos - vArm);
 
-		VERTEX vertex2 = { pos,XMFLOAT3((float)i / LENGTH_+tipWidth_,1,0) };
+			VERTEX vertex2 = { pos,XMFLOAT3((float)i / LENGTH_ + tipWidth_,1,0) };
 
-		int s = sizeof(VERTEX);
+			int s = sizeof(VERTEX);
 
-		vertices[index] = vertex1;
-		index++;
-		vertices[index] = vertex2;
-		index++;
+			vertices[index] = vertex1;
+			index++;
+			vertices[index] = vertex2;
+			index++;
+
+		}
 	}
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 2;
@@ -132,12 +149,12 @@ HRESULT LineParticle::Load(std::string fileName)
 	return S_OK;
 }
 
-void LineParticle::Draw(XMMATRIX matW)
+void LineParticle::Draw()
 {
 	HRESULT hr;
 	Direct3D::SetShader(SHADER_EFF);
 	CONSTANT_BUFFER cb;
-		cb.matWVP = XMMatrixTranspose(matW*Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = XMFLOAT4(1, 1, 1, 1);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;

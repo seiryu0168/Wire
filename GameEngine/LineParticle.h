@@ -45,7 +45,7 @@ public:
 	void AddPosition(XMFLOAT3 pos);
 
 	HRESULT Load(std::string fileName);
-	void Draw(XMMATRIX matW = XMMatrixIdentity());
+	void Draw();
 	void SetLineParameter(float width, int length,float tipWidth=0);
 	void DeleteLine();
 	void Release();
