@@ -43,22 +43,32 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	XMFLOAT3 camPos = Camera::GetPosition();
 	XMVECTOR vCamPos = XMLoadFloat3(&camPos);
 
+	auto itr = positionList_.begin();
+	
 	int index = 0;
 	int split = 0;
-	auto itr = positionList_.begin();
-	for (auto it = positionList_.begin(); it != positionList_.end(); it++)
+	for (int i = 0; i<= LENGTH_; i++)
 	{
 		XMVECTOR vLength;
-		vLength = XMLoadFloat3(&(*it));
-		it++;
-		vLength = XMLoadFloat3(&(*it)) - vLength;
+		vLength = XMLoadFloat3(&(*itr));
+		itr++;
+		if (itr == positionList_.end())
+		{
+			break;
+		}
+		vLength = XMLoadFloat3(&(*itr)) - vLength;
 
 		float length = XMVectorGetX(XMVector3Length(vLength));
-		split = length / 1.0f+1;
+		split += length / 1.0f+1;
+	}
+	if (split <= 0)
+	{
+		return;
 	}
 
+	itr = positionList_.begin();
 	//頂点データ作成
-	VERTEX* vertices = new VERTEX[split * 2];
+	VERTEX* vertices = new VERTEX[(split+1) * 2];
 	for (int i = 0; i < LENGTH_; i++)
 	{
 		//記憶している位置取得
@@ -72,13 +82,13 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 
 		//さっき取得した位置から次の位置に向かうベクトル
 		XMVECTOR vLine = XMLoadFloat3(&(*itr)) - vPos;
-		float splitCount = 0;
-		splitCount = XMVectorGetX(XMVector3Length(vLine))/1.0f;
+		int splitCount = 0;
+		splitCount = XMVectorGetX(XMVector3Length(vLine))/1.0f+1;
 
 		XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 		vArm = XMVector3Normalize(vArm)*WIDTH_;
 
-		for (int count = 0; count > splitCount; count++)
+		for (int count = 0; count < splitCount; count++)
 		{
 			XMFLOAT3 pos;
 			XMStoreFloat3(&pos, vPos + vArm);
@@ -99,7 +109,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 		}
 	}
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 2;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * split * 2;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
