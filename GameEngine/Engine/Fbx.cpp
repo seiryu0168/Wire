@@ -103,11 +103,27 @@ HRESULT Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		
-			//接線
-			FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
-			FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
-			pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+			
 		}
+		//if (mesh->GetElementTangentCount() > 0)
+		//{
+		//	for (int vertex = 0; vertex < 3; vertex++)
+		//	{
+		//		int index = mesh->GetPolygonVertex(poly, vertex);
+		//			//接線
+		//			FbxGeometryElementTangent * t = mesh->GetElementTangent(0);
+		//		FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
+		//		pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+		//	}
+		//}
+		//else
+		//{
+		//	for (int vertex = 0; vertex < 3; vertex++)
+		//	{
+		//		int index = mesh->GetPolygonVertex(poly, vertex);
+		//		pVertices_[index].tangent = XMVectorSet(0.0f,0.0f,0.0f, 0.0f);
+		//	}
+		//}
 	}
 
 	D3D11_BUFFER_DESC bd_vertex;
