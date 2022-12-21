@@ -37,6 +37,7 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;    //テクスチャ
+		Texture* pNormalMap;  //ノーマルマップ
 		XMFLOAT4 diffuse;	  //ディフューズ(マテリアルの色)
 		XMFLOAT4 ambient;	  //アンビエント
 		XMFLOAT4 speculer;    //スペキュラー(ツルツルを表現する奴)
@@ -69,6 +70,7 @@ class Fbx
 		XMVECTOR position;
 		XMVECTOR uv;
 		XMVECTOR normal;//blenderではスムーズシェードにした上でノーマルの自動スムーズを切らないと法線のデータがおかしくなって正しく表示されない
+		XMVECTOR tangent;//接線
 	};
 
 	int vertexCount_;		//頂点数

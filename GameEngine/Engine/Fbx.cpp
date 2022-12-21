@@ -102,6 +102,11 @@ HRESULT Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 			FbxVector4 Normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
+		
+			//接線
+			FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
+			FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
+			pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
 		}
 	}
 
@@ -262,6 +267,37 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			FbxDouble3  diffuse = pMaterial->Diffuse;
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}
+
+		/////////////////////////////////ノーマルマップ//////////////////////////
+		{
+			FbxProperty IPropaty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
+			int normalMapCount = IPropaty.GetSrcObjectCount<FbxFileTexture>();
+
+			if (normalMapCount != 0)
+			{
+				FbxFileTexture* textureInfo = IPropaty.GetSrcObject<FbxFileTexture>(0);
+				const char* textureFilePath = textureInfo->GetRelativeFileName();
+
+				//ファイル名+拡張だけにする
+				char name[_MAX_FNAME];	//ファイル名
+				char ext[_MAX_EXT];	//拡張子
+				_splitpath_s(textureFilePath, nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);
+
+				sprintf_s(name, "%s%s", name, ext);
+
+				//ファイルからテクスチャ作成
+				wchar_t wtext[FILENAME_MAX];
+				size_t ret;
+				mbstowcs_s(&ret, wtext, name, strlen(name));
+
+				pMaterialList_[i].pNormalMap = new Texture;
+				pMaterialList_[i].pNormalMap->Load(wtext);
+			}
+			else
+			{
+				pMaterialList_[i].pNormalMap = nullptr;
+			}
+		}
 	}
 }
 
@@ -287,11 +323,11 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
 		cb.isUseCustomColor = false;
-		cb.customColor = XMFLOAT4( 1.0f,1.0f,1.0f,0.0f );
+		cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
 
-			D3D11_MAPPED_SUBRESOURCE pdata;
-			Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
-			memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
 		if (cb.isTexture)
 		{
 
@@ -303,29 +339,30 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 
 
 		}
-			Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
-			Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
-			//頂点バッファ
-			UINT stride = sizeof(VERTEX);
-			UINT offset = 0;
-			Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+		if (pMaterialList_[i].pNormalMap)
+		{
+			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
+		}
 
-			// インデックスバッファーをセット
-			stride = sizeof(int);
-			offset = 0;
-			Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
-			
-			//コンスタントバッファ
-			Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);							//頂点シェーダー用	
-			Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
-			Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
-			Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
+		Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
+		//頂点バッファ
+		UINT stride = sizeof(VERTEX);
+		UINT offset = 0;
+		Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+		// インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//コンスタントバッファ
+		Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);							//頂点シェーダー用	
+		Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
+		Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
-
-	//ToPipeLine(transform);
-
-	////頂点、インデックス、コンスタントバッファをセット
-	//bufferSet();
 }
 
 void Fbx::RayCast(RayCastData& ray,Transform& transform)
