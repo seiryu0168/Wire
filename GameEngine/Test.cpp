@@ -21,7 +21,7 @@ void Test::Initialize()
 {
     transform_.position_ = XMFLOAT3(2.0f, 0.0f, 10.0f);
     
-    hModel_=Model::Load("Assets\\TestBox.fbx");
+    hModel_=ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
     AddCollider(pCollider);
@@ -130,7 +130,7 @@ void Test::Update()
     ray.start = XMFLOAT3(0, 0, 0);
     ray.dir = XMFLOAT3(1, 0, 0);
 
-    Model::RayCast(hModel_,ray);
+    ModelManager::RayCast(hModel_,ray);
     if (ray.hit)
     {
         bool a = ray.hit;
@@ -149,8 +149,8 @@ void Test::FixedUpdate()
 //•`‰æ
 void Test::Draw()
 {
-    Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
+    ModelManager::SetTransform(hModel_, transform_);
+    ModelManager::Draw(hModel_);
 }
 
 //ŠJ•ú

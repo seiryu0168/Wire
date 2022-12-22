@@ -3,7 +3,7 @@
 #include"Fbx.h"
 #include"Transform.h"
 #include<vector>
-namespace Model
+namespace ModelManager
 {
 	//std::vector<int> polygonTestList_;
 	int Load(std::string fileName);

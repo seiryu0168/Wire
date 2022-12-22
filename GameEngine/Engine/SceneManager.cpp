@@ -24,7 +24,7 @@ void SceneManager::Update()
 	if (currentSceneID_ != nextSceneID_)
 	{
 		KillAllChildren();
-		Model::Release();
+		ModelManager::Release();
 
 
 		switch (nextSceneID_)

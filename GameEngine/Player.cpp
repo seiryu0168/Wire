@@ -53,9 +53,9 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
-    hModel_ = Model::Load("Assets\\TestBox.fbx");
+    hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
-    hModel_Handle_ = Model::Load("Assets\\wire.fbx");
+    hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
     assert(hModel_Handle_ > 0);
     
     pParticle_ = Instantiate<Particle>(this);
@@ -85,8 +85,8 @@ void Player::Initialize()
     rayDir_[5] = XMVectorSet( 0,-1, 0, 0);
     
     XMStoreFloat3(&firstRay.dir,rayDir_[DIR_DOWN]);
-    Model::RayCast(stageNum_, firstRay);
-    Model::SetModelNum(stageNum_);
+    ModelManager::RayCast(stageNum_, firstRay);
+    ModelManager::SetModelNum(stageNum_);
 
     if (firstRay.hit)
     {
@@ -130,7 +130,7 @@ void Player::Update()
         }
         
         //レイキャストの始点と方向を入力
-        Model::RayCast(ray);
+        ModelManager::RayCast(ray);
 
         //当たった位置にマーカー表示
         if (ray.hit && !flyFlag_)
@@ -247,8 +247,8 @@ void Player::FixedUpdate()
 //描画
 void Player::Draw()
 {
-    Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
+    ModelManager::SetTransform(hModel_, transform_);
+    ModelManager::Draw(hModel_);
 
     pLine_->Draw();
     pWire_->Draw();
@@ -339,27 +339,27 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData fMoveRay;
     XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[0]);
     XMStoreFloat3(&fMoveRay.dir, moveHolizon);
-    Model::RayCast(stageNum_, fMoveRay);
+    ModelManager::RayCast(stageNum_, fMoveRay);
 
     //進行方向に見て右のベクトル
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
     XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-0.5*M_PI)));
-    Model::RayCast(stageNum_, lMoveRay);
+    ModelManager::RayCast(stageNum_, lMoveRay);
 
     //進行方向に見て左ベクトル
     RayCastData rMoveRay;
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
-    Model::RayCast(stageNum_, rMoveRay);
+    ModelManager::RayCast(stageNum_, rMoveRay);
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
     XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
     
     XMStoreFloat3(&URay.dir, startVec[3]);    
     XMStoreFloat3(&DRay.dir, startVec[4]);    
-    Model::RayCast(stageNum_, URay);
-    Model::RayCast(stageNum_, DRay);
+    ModelManager::RayCast(stageNum_, URay);
+    ModelManager::RayCast(stageNum_, DRay);
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
     if (fMoveRay.dist < 2.0f)

@@ -19,7 +19,7 @@ void Pointer::Initialize()
 {
 	SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 1);
 	AddCollider(pCollision);
-	hModel_ = Model::Load("Assets\\Mark.fbx");
+	hModel_ = ModelManager::Load("Assets\\Mark.fbx");
 	assert(hModel_ >= 0);
 }
 
@@ -37,11 +37,11 @@ void Pointer::FixedUpdate()
 //•`‰æ
 void Pointer::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
+	ModelManager::SetTransform(hModel_, transform_);
 	
 	if (drawFlag_)
 	{
-		Model::Draw(hModel_);
+		ModelManager::Draw(hModel_);
 	}
 }
 

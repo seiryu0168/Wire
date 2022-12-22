@@ -20,10 +20,10 @@ EnemyNormal::~EnemyNormal()
 //èâä˙âª
 void EnemyNormal::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Enemy2.fbx");
+	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
-	Model::SetModelNum(hModel_);
+	ModelManager::SetModelNum(hModel_);
 
 	transform_.position_.x = std::rand() % 100;
 	transform_.position_.y = std::rand() % 100;
@@ -46,8 +46,8 @@ void EnemyNormal::FixedUpdate()
 //ï`âÊ
 void EnemyNormal::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::Draw(hModel_);
 }
 
 void EnemyNormal::EnemyMove()
@@ -84,7 +84,7 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_= { 9999,9999,9999 };
-				Model::SetTransform(hModel_,pos);
+				ModelManager::SetTransform(hModel_,pos);
 				KillMe();
 			}
 		}

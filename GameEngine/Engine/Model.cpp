@@ -1,7 +1,7 @@
 #include "Model.h"
 #include<vector>
 //#include"Direct3D.h"
-namespace Model
+namespace ModelManager
 {
 	struct ModelData
 	{
@@ -13,7 +13,7 @@ namespace Model
 	std::vector<int> polygonTestList_;
 };
 
-int Model::Load(std::string fileName)
+int ModelManager::Load(std::string fileName)
 {
 	ModelData* pModelData = new ModelData;
 	pModelData->fileName_ = fileName;
@@ -38,14 +38,14 @@ int Model::Load(std::string fileName)
 	return modelData_.size() - 1;
 }
 
-void Model::SetTransform(int modelNum, Transform transform)
+void ModelManager::SetTransform(int modelNum, Transform transform)
 {
 	if (modelData_[modelNum] != nullptr)
 	{
 		modelData_[modelNum]->transform_ = transform;
 	}
 }
-void Model::Draw(int modelNum)
+void ModelManager::Draw(int modelNum)
 {
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{
@@ -53,7 +53,7 @@ void Model::Draw(int modelNum)
 	}
 }
 
-void Model::RayCast(int modelNum, RayCastData& ray)
+void ModelManager::RayCast(int modelNum, RayCastData& ray)
 {
 	XMMATRIX invW = XMMatrixInverse(nullptr,modelData_[modelNum]->transform_.GetWorldMatrix());
 	XMVECTOR vStart = XMLoadFloat3(&ray.start);
@@ -67,7 +67,7 @@ void Model::RayCast(int modelNum, RayCastData& ray)
 	modelData_[modelNum]->pfbx_->RayCast(ray,modelData_[modelNum]->transform_);
 }
 
-void Model::RayCast(RayCastData& ray)
+void ModelManager::RayCast(RayCastData& ray)
 {
 	bool isHit = false;
 	float length = 9999;
@@ -104,12 +104,12 @@ void Model::RayCast(RayCastData& ray)
 	ray.normal = normal;
 }
 
-void Model::SetModelNum(int modelNum)
+void ModelManager::SetModelNum(int modelNum)
 {
 	polygonTestList_.push_back(modelNum);
 }
 
-void Model::DeleteModelNum(int modelNum)
+void ModelManager::DeleteModelNum(int modelNum)
 {
 		auto itr = polygonTestList_.begin();
 	for (int i = 0; i <  polygonTestList_.size(); i++)
@@ -125,7 +125,7 @@ void Model::DeleteModelNum(int modelNum)
 }
 
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない
-void Model::Release()
+void ModelManager::Release()
 {
 	for (int i = 0; i < modelData_.size(); i++)
 	{

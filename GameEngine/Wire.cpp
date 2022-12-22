@@ -14,7 +14,7 @@ Wire::~Wire()
 
 void Wire::Initialize()
 {
-	hModel_ = Model::Load("Assets\\wire.fbx");
+	hModel_ = ModelManager::Load("Assets\\wire.fbx");
 	assert(hModel_);
 }
 
@@ -32,8 +32,8 @@ void Wire::FixedUpdate()
 //•`‰æ
 void Wire::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::Draw(hModel_);
 }
 
 void Wire::Release()

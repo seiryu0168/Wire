@@ -72,10 +72,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	//PS_IN outData;
 	inData.normal = normalize(inData.normal);
-//ライトベクトル
-float4 light = float4(0, -1, 0, 0);
+	//ライトベクトル
+	float4 light = float4(0, -1, 0, 0);
 	light = normalize(light);
 	//拡散反射光(ディフューズ)
 	//法線とライトの方向の内積
@@ -91,6 +90,7 @@ float4 light = float4(0, -1, 0, 0);
 	{
 		diffuse = g_diffuseColor;
 	}
+
 	//環境光(アンビエント)
 	float4 ambient = float4(0.2, 0.2, 0.2, 1.0f);// g_ambient;
 	ambient.a = 1;
