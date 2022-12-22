@@ -22,7 +22,7 @@ EnemyTurret::~EnemyTurret()
 //‰Šú‰»
 void EnemyTurret::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Enemy2.fbx");
+	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
 	assert(hModel_ >= 0);
 	
 	XMFLOAT3 initPos = transform_.position_;
@@ -31,7 +31,7 @@ void EnemyTurret::Initialize()
 	RayCastData ray;
 	ray.start = { initPos.x, 999.0f, initPos.z };
 	ray.dir = { 0,1,0 };
-	Model::RayCast(hModel_, ray);
+	ModelManager::RayCast(hModel_, ray);
 	if (ray.hit)
 	{
 		initPos.y = 999 - ray.dist;
@@ -74,8 +74,8 @@ void EnemyTurret::FixedUpdate()
 //•`‰æ
 void EnemyTurret::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::Draw(hModel_);
 }
 
 void EnemyTurret::Release()

@@ -17,7 +17,7 @@ Stage1::~Stage1()
 //‰Šú‰»
 void Stage1::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Stage.fbx");
+	hModel_ = ModelManager::Load("Assets\\Stage.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_ = XMFLOAT3(0, 0, 0);
 	//transform_.scale_ = XMFLOAT3(5, 5, 5);
@@ -37,8 +37,8 @@ void Stage1::FixedUpdate()
 //•`‰æ
 void Stage1::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::Draw(hModel_);
 }
 
 //ŠJ•ú
