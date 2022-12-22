@@ -105,25 +105,27 @@ HRESULT Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 		
 			
 		}
-		//if (mesh->GetElementTangentCount() > 0)
-		//{
-		//	for (int vertex = 0; vertex < 3; vertex++)
-		//	{
-		//		int index = mesh->GetPolygonVertex(poly, vertex);
-		//			//接線
-		//			FbxGeometryElementTangent * t = mesh->GetElementTangent(0);
-		//		FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
-		//		pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
-		//	}
-		//}
-		//else
-		//{
-		//	for (int vertex = 0; vertex < 3; vertex++)
-		//	{
-		//		int index = mesh->GetPolygonVertex(poly, vertex);
-		//		pVertices_[index].tangent = XMVectorSet(0.0f,0.0f,0.0f, 0.0f);
-		//	}
-		//}
+#if 1
+		if (mesh->GetElementTangentCount() > 0)
+		{
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				int index = mesh->GetPolygonVertex(poly, vertex);
+					//接線
+					FbxGeometryElementTangent * t = mesh->GetElementTangent(0);
+				FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
+				pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+			}
+		}
+		else
+		{
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				int index = mesh->GetPolygonVertex(poly, vertex);
+				pVertices_[index].tangent = XMVectorSet(0.0f,0.0f,0.0f, 0.0f);
+			}
+		}
+#endif
 	}
 
 	D3D11_BUFFER_DESC bd_vertex;
@@ -254,6 +256,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
 		//テクスチャの枚数
 		//pMaterialList_[i].pTexture = lProperty.GetSrcObjectCount<FbxFileTexture>();
+		int count = lProperty.GetSrcObjectCount<FbxFileTexture>();
 		if(lProperty.GetSrcObjectCount<FbxFileTexture>()>0)
 		{
 			FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
@@ -334,11 +337,11 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 
 		cb.isTexture = pMaterialList_[i].pTexture != nullptr;
+		cb.isNormal = pMaterialList_[i].pNormalMap != nullptr;
 		cb.diffuseColor = pMaterialList_[i].diffuse;
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
-		cb.isUseCustomColor = false;
 		cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
@@ -352,10 +355,8 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType)
 			ID3D11ShaderResourceView* pSRV1 = pMaterialList_[i].pTexture->GetSRV();
 
 			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
-
-
 		}
-		if (pMaterialList_[i].pNormalMap)
+		if (cb.isNormal)
 		{
 			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
 			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);

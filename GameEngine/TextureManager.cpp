@@ -9,17 +9,18 @@ namespace TextureManager
 	};
 	std::vector<Texture*> textureList_;
 }
-int TextureManager::Load(std::string fileName)
-{
-	/*textureData* ptextureData = new textureData;
-	ptextureData->pTexture_ = nullptr;
-	
-	for (auto itr = textureList_.begin(); itr != textureList_.end(); ire++)
-	{
-		if(fileName==(*itr)->)
-	}
-	if(fileName)*/
-}
+//int TextureManager::Load(std::string fileName)
+//{
+//	/*textureData* ptextureData = new textureData;
+//	ptextureData->pTexture_ = nullptr;
+//	
+//	for (auto itr = textureList_.begin(); itr != textureList_.end(); ire++)
+//	{
+//		if(fileName==(*itr)->)
+//	}
+//	if(fileName)*/
+//	return 
+//}
 
 void TextureManager::Release()
 {
