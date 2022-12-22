@@ -1,5 +1,7 @@
 #pragma once
 class Enemy;
+
+//ステータスの親クラス
 class EnemyState
 {
 public:

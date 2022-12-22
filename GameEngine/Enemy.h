@@ -34,8 +34,13 @@ public:
     ~Enemy();
     
     virtual void Attack()=0;
-    
-    bool IsVisible(float angle,float range);//指定した視野内にプレイヤーがいるかどうか : 視角、見える距離
+    /// <summary>
+/// エネミーの視界内にプレイヤーがいるかどうか
+/// </summary>
+/// <param name="visibleAngle">視角</param>
+/// <param name="range">見える距離</param>
+/// <returns></returns>
+    bool IsVisible(float angle,float range);
     
     void ChangeState(EnemyState* state);                                         //エネミーの状態変更
     void SetviewRange(float range) { enemyParameter_.viewRange = range; }        //見える距離設定
