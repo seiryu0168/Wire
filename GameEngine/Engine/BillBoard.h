@@ -19,6 +19,7 @@ class BillBoard
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	ID3D11Buffer* pIndexBuffer_;
+	int hTexture_;
 
 	Texture* pTexture_;
 public:

@@ -1,6 +1,8 @@
 #include "BillBoard.h"
 #include"Camera.h"
+#include"../TextureManager.h"
 BillBoard::BillBoard()
+	:hTexture_(-1)
 {
 	pConstantBuffer_ = nullptr;
 	pIndexBuffer_ = nullptr;
@@ -82,14 +84,9 @@ HRESULT BillBoard::Load(std::string fileName)
 		MessageBox(nullptr, L"ビルボードインデックスバッファの作成に失敗", L"エラー", MB_OK);
 		return hr;
 	}
+	hTexture_ = TextureManager::Load(fileName);
 
-	pTexture_ = new Texture();
-	wchar_t name[FILENAME_MAX];
-	size_t ret;
-	mbstowcs_s(&ret, name, fileName.c_str(), fileName.length());
-
-	hr = pTexture_->Load(name);
-	if (FALSE(hr))
+	if (hTexture_<0)
 	{
 		MessageBox(nullptr, L"ビルボードテクスチャのロードに失敗", L"エラー", MB_OK);
 		return hr;
@@ -99,7 +96,8 @@ HRESULT BillBoard::Load(std::string fileName)
 
 void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 {
-	
+	Direct3D::SetBlendMode(BLEND_ADD);
+	Direct3D::SetShader(SHADER_EFF);
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(matW * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = col;
@@ -108,10 +106,10 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
 	
-		ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+		ID3D11SamplerState* pSampler = TextureManager::GetTexture(hTexture_)->GetSampler();
 		Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
-		ID3D11ShaderResourceView* pSRV1 = pTexture_->GetSRV();
+		ID3D11ShaderResourceView* pSRV1 = TextureManager::GetTexture(hTexture_)->GetSRV();
 		Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
 
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開

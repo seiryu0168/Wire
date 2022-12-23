@@ -37,13 +37,13 @@ void EnemyTurret::Initialize()
 		initPos.y = 999 - ray.dist;
 	}
 	transform_.position_ = initPos;
+	SetPlayerPointer((Player*)FindObject("Player"));
 }
 
 //XV
 void EnemyTurret::Update()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
-	SetPlayerPointer((Player*)FindObject("Player"));
 	GetEnemyState()->Update(this);
 }
 

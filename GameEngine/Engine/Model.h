@@ -5,7 +5,6 @@
 #include<vector>
 namespace ModelManager
 {
-	//std::vector<int> polygonTestList_;
 	int Load(std::string fileName);
 	void SetTransform(int modelNum, Transform transform);
 	void Draw(int modelName);

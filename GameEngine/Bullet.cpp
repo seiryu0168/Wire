@@ -23,8 +23,8 @@ void Bullet::Initialize()
 {
 	pBill_ = new BillBoard();
 	pBill_->Load("Assets\\Effect01.png");
-	/*hModel_ = Model::Load("Assets\\Mark.fbx");
-	assert(hModel_ >= 0);*/
+	//hModel_ = ModelManager::Load("Assets\\Mark.fbx");
+	//assert(hModel_ >= 0);
 }
 
 //çXêV
@@ -35,7 +35,6 @@ void Bullet::Update()
 	XMStoreFloat3(&transform_.position_, vPosition);
 	if (life_ <= 0)
 	{
-		SAFE_RELEASE(pBill_);
 		KillMe();
 	}
 	life_--;
@@ -48,11 +47,11 @@ void Bullet::FixedUpdate()
 //ï`âÊ
 void Bullet::Draw()
 {
-	XMMATRIX matW = transform_.GetLocalScaleMatrix() * Camera::GetBillBoardMatrix() * transform_.GetWorldTranslateMatrix();
+	XMMATRIX matW =XMMatrixScaling(transform_.scale_.x, transform_.scale_.y, transform_.scale_.z)*Camera::GetBillBoardMatrix()* XMMatrixTranslation(transform_.position_.x, transform_.position_.y, transform_.position_.z);
 	
 	pBill_->Draw(matW, { 1,1,1,1 });
-	//Model::SetTransform(hModel_, transform_);
-	//Model::Draw(hModel_);
+	//ModelManager::SetTransform(hModel_, transform_);
+	//ModelManager::Draw(hModel_);
 }
 
 void Bullet::OnCollision(GameObject* target)
@@ -65,5 +64,5 @@ void Bullet::OnCollision(GameObject* target)
 
 void Bullet::Release()
 {
-	//pBill_->Release();
+	pBill_->Release();
 }

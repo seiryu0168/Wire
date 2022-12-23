@@ -29,8 +29,12 @@ void TitleScene::Initialize()
 	for (int i = 0; i < 11; i++)
 	{
 		Instantiate<EnemyNormal>(this);
-		Instantiate<EnemyTurret>(this);
 	}
+	//for (int i = 0; i < 5; i++)
+	//{
+		Instantiate<EnemyTurret>(this);
+
+	//}
 	Instantiate<Test>(this);
 }
 

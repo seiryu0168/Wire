@@ -138,9 +138,6 @@
     <ClCompile Include="Engine\OBBCollider.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Wire.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -164,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Wire.cpp">
+      <Filter>ヘッダー ファイル\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
