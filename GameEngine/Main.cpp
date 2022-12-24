@@ -6,10 +6,12 @@
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"
 #include"Engine/Transform.h"
-#include"Engine/Fbx.h"
+//#include"Engine/Fbx.h"
+#include"EditUI.h"
 #include"Engine/Input.h"
 #include"Engine/RootJob.h"
-#include"Engine/Math.h"
+//#include"Engine/Math.h"
+#include"ImGui/imgui.h"
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
 
@@ -29,7 +31,6 @@ int pxelUnit;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 RootJob* pRootJob;
-
 
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -80,6 +81,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	{
 		PostQuitMessage(0);
 	}
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO();
+	//(void)io;
+	//ImGui::StyleColorsDark();
+	//ImGui_ImplWin32_Init(hWnd);
+	//ImGui_ImplDX11_Init(Direct3D::GetDevice(),Direct3D::GetContext());
+
+	EditUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
 	Input::Initialize(hWnd);
 	Camera::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -101,7 +111,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
-
 			//FPS制限
 			static DWORD countFps = 0;					 //画面更新回数
 			static DWORD startTime = timeGetTime();		 //起動時刻取得(ミリ秒)							//ミリ秒＝10^-3
@@ -123,6 +132,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//今の時刻と最後に更新した時刻の差*60が1000以上であれば
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
+			EditUI::StartImGui();
+			//ImGui_ImplDX11_NewFrame();
+			//ImGui_ImplWin32_NewFrame();
+			//ImGui::NewFrame();
 				//ゲームの処理
 				Input::Update();
 				Camera::Update();
@@ -140,8 +153,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//	pRootJob->FixedUpdateSub();
 			//}
 				//描画処理
+				ImGui::Begin("hello");
+				ImGui::Text("Hello");
+				ImGui::End();
+				ImGui::Render();
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
+				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 
 				Direct3D::EndDraw();
@@ -149,6 +167,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		}
 	}
 
+	//ImGui_ImplDX11_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
+	//ImGui::DestroyContext();
+	EditUI::CleanUp();
 	pRootJob->ReleaseSub();
 	Input::Release();
 	Direct3D::Release();

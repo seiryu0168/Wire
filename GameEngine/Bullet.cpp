@@ -23,8 +23,6 @@ void Bullet::Initialize()
 {
 	pBill_ = new BillBoard();
 	pBill_->Load("Assets\\Effect01.png");
-	//hModel_ = ModelManager::Load("Assets\\Mark.fbx");
-	//assert(hModel_ >= 0);
 }
 
 //XV
@@ -50,8 +48,6 @@ void Bullet::Draw()
 	XMMATRIX matW =XMMatrixScaling(transform_.scale_.x, transform_.scale_.y, transform_.scale_.z)*Camera::GetBillBoardMatrix()* XMMatrixTranslation(transform_.position_.x, transform_.position_.y, transform_.position_.z);
 	
 	pBill_->Draw(matW, { 1,1,1,1 });
-	//ModelManager::SetTransform(hModel_, transform_);
-	//ModelManager::Draw(hModel_);
 }
 
 void Bullet::OnCollision(GameObject* target)

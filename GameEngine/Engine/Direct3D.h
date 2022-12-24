@@ -64,14 +64,10 @@ namespace Direct3D
 	HRESULT InitShader3D();
 	HRESULT InitShaderEFF();
 
-	//ID3D11BlendState* GetBlendState();
-	//void SetRenderTargetView(int renderTarget);
 	void SetShader(SHADER_TYPE type);
 	void SetBlendMode(BLEND_MODE mode);
-	/*ID3D11ShaderResourceView** GetSRV(int srvNum);
-	IDXGISwapChain* GetSwapChain();
-	ID3D11DepthStencilView* GetDepthStencilView();*/
-
+	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetContext();
 	//•`‰æŠJŽn
 	void BeginDraw();
 

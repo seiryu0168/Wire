@@ -406,6 +406,15 @@ void Direct3D::SetBlendMode(BLEND_MODE mode)
 
 	pContext->OMSetDepthStencilState(pDepthStencilState[mode], 0);
 }
+ID3D11Device* Direct3D::GetDevice()
+{
+	return pDevice;
+}
+
+ID3D11DeviceContext* Direct3D::GetContext()
+{
+	 return pContext;
+}
 //•`‰æŠJŽn
 void Direct3D::BeginDraw()
 {
