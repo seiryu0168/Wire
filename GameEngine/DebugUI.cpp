@@ -1,7 +1,8 @@
 #include "DebugUI.h"
 #include"Engine/SceneManager.h"
-#include<iostream>
-//#include<string>
+
+
+
 namespace DebugData
 {
 	int objectCount_;
@@ -30,7 +31,7 @@ void DebugUI::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* 
 void DebugUI::Debug(GameObject* object)
 {
 	ImGui::Begin("Debug");
-	ObjectCount(object);
+	ObjectCount(*(object->GetChildList()->begin()));
 	std::string count = std::to_string(DebugData::objectCount_);
 	ImGui::Text(count.c_str());
 	ImGui::Text(object->GetObjectName().c_str());
@@ -62,7 +63,12 @@ void DebugUI::ObjectCount(GameObject* object)
 	DebugData::objectCount_++;
 	if (ImGui::TreeNode(object->GetObjectName().c_str()))
 	{
-
+		float pos[3] = { object->GetPosition().x,object->GetPosition().y ,object->GetPosition().z };
+		ImGui::DragFloat3("position", pos);
+		float rotate[3] = { object->GetRotate().x,object->GetRotate().y ,object->GetRotate().z };
+		ImGui::DragFloat3("rotation", rotate);
+		float scale[3] = { object->GetScale().x,object->GetScale().y ,object->GetScale().z };
+		ImGui::DragFloat3("scale", scale);
 		ImGui::TreePop();
 	}
 
