@@ -159,7 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Easing.cpp" />
-    <ClCompile Include="EditUI.cpp" />
+    <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="EnemyStateDef.cpp" />
@@ -208,7 +208,7 @@
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Easing.h" />
-    <ClInclude Include="EditUI.h" />
+    <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="EnemyState.h" />

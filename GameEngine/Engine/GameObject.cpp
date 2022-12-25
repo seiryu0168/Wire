@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include"SAFE_DELETE_RELEASE.h"
+
 GameObject::GameObject() : GameObject(nullptr,"")
 {
 
@@ -23,6 +24,8 @@ void GameObject::UpdateSub()
 	/////////アップデート/////////
 
 	Update();
+
+
 
 	for (auto itr = childList_.begin(); itr != childList_.end(); itr++)
 	{
@@ -193,7 +196,7 @@ GameObject* GameObject::GetRootJob()
 GameObject* GameObject::FindObject(std::string name)
 {
 	GameObject* obj= GetRootJob()->FindChild(name);
-	return obj;//GetRootJob()->FindChild(name);
+	return obj;
 }
 
 GameObject* GameObject::FindChild(std::string name)

@@ -165,7 +165,7 @@
     <ClCompile Include="Wire.cpp">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="EditUI.cpp">
+    <ClCompile Include="DebugUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -320,7 +320,7 @@
     <ClInclude Include="TextureManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EditUI.h">
+    <ClInclude Include="DebugUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

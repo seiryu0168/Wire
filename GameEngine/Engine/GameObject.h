@@ -27,7 +27,7 @@ public:
 	virtual void Update() {};
 	virtual void FixedUpdate() {};
 	virtual void Draw() {};
-	virtual void Release()    = 0;
+	virtual void Release() = 0;
 
 	void UpdateSub();
 	void FixedUpdateSub();
@@ -81,6 +81,7 @@ public:
 			XMFLOAT3  GetPosition();
 			XMFLOAT3  GetRotate();
 			XMFLOAT3  GetScale();
+			std::list<GameObject*>* GetChildList() { return &childList_; }
 			std::string GetObjectName() { return objectName_; }
 
 			//w’è‚µ‚½À•W‚É‰ñ“]‚³‚¹‚és—ñ‚ğì‚éŠÖ”

@@ -7,7 +7,7 @@
 #include"Engine/Sprite.h"
 #include"Engine/Transform.h"
 //#include"Engine/Fbx.h"
-#include"EditUI.h"
+#include"DebugUI.h"
 #include"Engine/Input.h"
 #include"Engine/RootJob.h"
 //#include"Engine/Math.h"
@@ -89,7 +89,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ImGui_ImplWin32_Init(hWnd);
 	//ImGui_ImplDX11_Init(Direct3D::GetDevice(),Direct3D::GetContext());
 
-	EditUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
+	DebugUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
 	Input::Initialize(hWnd);
 	Camera::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -132,7 +132,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//今の時刻と最後に更新した時刻の差*60が1000以上であれば
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
-			EditUI::StartImGui();
+			DebugUI::StartImGui();
 			//ImGui_ImplDX11_NewFrame();
 			//ImGui_ImplWin32_NewFrame();
 			//ImGui::NewFrame();
@@ -144,19 +144,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				countFps++;
 				pRootJob->UpdateSub();
 
-			//if (((nowTime - lastFixedUpdateTime) * 60.0f) * 1.0f >= 1000.0f)
-			//{
-			//	//ゲームの処理
-			//	Input::Update();
-			//	Camera::Update();
-			//	lastFixedUpdateTime = nowTime;
-			//	pRootJob->FixedUpdateSub();
-			//}
-				//描画処理
+				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
+#if 0
+				ImGui::Begin("aaa");
+				ImGui::BeginChild("aaaa");
+				ImGui::EndChild();
+				ImGui::End();
 				ImGui::Begin("hello");
 				ImGui::Text("Hello");
+				ImGui::SameLine();
 				ImGui::End();
+
+#endif 
 				ImGui::Render();
+				//描画処理
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -170,7 +171,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ImGui_ImplDX11_Shutdown();
 	//ImGui_ImplWin32_Shutdown();
 	//ImGui::DestroyContext();
-	EditUI::CleanUp();
+	DebugUI::CleanUp();
 	pRootJob->ReleaseSub();
 	Input::Release();
 	Direct3D::Release();
@@ -178,10 +179,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	CoUninitialize();
 	return 0;
 }
-
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 //ウィンドウプロシージャ(なんかあったら呼ばれる関数)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd,msg,wParam,lParam))
+	{
+		return true;
+	}
+
 	switch (msg)
 	{
 
