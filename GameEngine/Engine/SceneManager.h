@@ -21,5 +21,6 @@ public:
 	void Release() override;
 
 	void ChangeScene(int sceneID);
+	GameObject* CurrentScene();
 };
 

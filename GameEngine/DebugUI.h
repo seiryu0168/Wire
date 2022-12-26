@@ -12,5 +12,6 @@ namespace DebugUI
 	void CleanUp();
 
 	void ObjectCount(GameObject* object);
+	void CountSub(GameObject* object);
 };
 

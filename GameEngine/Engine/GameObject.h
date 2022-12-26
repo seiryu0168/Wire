@@ -75,7 +75,7 @@ public:
 			void SetScaleX(float x) { transform_.scale_.x = x; }
 			void SetScaleY(float y) { transform_.scale_.y = y; }
 			void SetScaleZ(float z) { transform_.scale_.z = z; }
-			void SetScale(XMFLOAT3 scale) { transform_.rotate_ = scale; }
+			void SetScale(XMFLOAT3 scale) { transform_.scale_ = scale; }
 
 			Transform GetTransform();
 			XMFLOAT3  GetPosition();

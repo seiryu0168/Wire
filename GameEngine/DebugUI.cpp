@@ -15,7 +15,6 @@ namespace DebugData
 
 }
 	
-
 void DebugUI::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	IMGUI_CHECKVERSION();
@@ -63,17 +62,45 @@ void DebugUI::ObjectCount(GameObject* object)
 	DebugData::objectCount_++;
 	if (ImGui::TreeNode(object->GetObjectName().c_str()))
 	{
+
 		float pos[3] = { object->GetPosition().x,object->GetPosition().y ,object->GetPosition().z };
 		ImGui::DragFloat3("position", pos);
+		object->SetPosition({ pos[0], pos[1], pos[2] });
 		float rotate[3] = { object->GetRotate().x,object->GetRotate().y ,object->GetRotate().z };
 		ImGui::DragFloat3("rotation", rotate);
+		object->SetRotate({ rotate[0],rotate[1],rotate[2] });
 		float scale[3] = { object->GetScale().x,object->GetScale().y ,object->GetScale().z };
 		ImGui::DragFloat3("scale", scale);
+		object->SetScale({ scale[0],scale[1],scale[2] });
 		ImGui::TreePop();
 	}
-
 	for (auto itr = object->GetChildList()->begin(); itr != object->GetChildList()->end(); itr++)
 	{
-		ObjectCount((*itr));
+		ObjectCount(*itr);
 	}
+}
+
+void DebugUI::CountSub(GameObject* object)
+{
+	if (object == nullptr)
+	{
+		return;
+	}
+
+	if (ImGui::TreeNode(object->GetObjectName().c_str()))
+	{
+
+		float pos[3] = { object->GetPosition().x,object->GetPosition().y ,object->GetPosition().z };
+		ImGui::DragFloat3("position", pos);
+		object->SetPosition({ pos[0], pos[1], pos[2] });
+		float rotate[3] = { object->GetRotate().x,object->GetRotate().y ,object->GetRotate().z };
+		ImGui::DragFloat3("rotation", rotate);
+		object->SetRotate({ rotate[0],rotate[1],rotate[2] });
+		float scale[3] = { object->GetScale().x,object->GetScale().y ,object->GetScale().z };
+		ImGui::DragFloat3("scale", scale);
+		object->SetScale({ scale[0],scale[1],scale[2] });
+		ImGui::TreePop();
+	ObjectCount(object);
+	}
+
 }
