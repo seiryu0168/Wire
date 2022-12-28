@@ -10,7 +10,7 @@ namespace DebugUI
 	void StartImGui();
 	void Debug(GameObject* object);
 	void CleanUp();
-
+	void GetProcess(DWORD processID);
 	void ObjectCount(GameObject* object);
 	void CountSub(GameObject* object);
 };

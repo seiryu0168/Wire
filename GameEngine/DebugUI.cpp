@@ -1,6 +1,6 @@
 #include "DebugUI.h"
 #include"Engine/SceneManager.h"
-
+#include<psapi.h>
 
 
 namespace DebugData
@@ -32,6 +32,7 @@ void DebugUI::Debug(GameObject* object)
 	ImGui::Begin("Debug");
 	ObjectCount(*(object->GetChildList()->begin()));
 	std::string count = std::to_string(DebugData::objectCount_);
+
 	ImGui::Text(count.c_str());
 	ImGui::Text(object->GetObjectName().c_str());
 	DebugData::objectCount_ = 0;
@@ -53,6 +54,13 @@ void DebugUI::CleanUp()
 	ImGui::DestroyContext();
 }
 
+void DebugUI::GetProcess(DWORD processID)
+{
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+}
+
 void DebugUI::ObjectCount(GameObject* object)
 {
 	if (object == nullptr)
@@ -72,11 +80,11 @@ void DebugUI::ObjectCount(GameObject* object)
 		float scale[3] = { object->GetScale().x,object->GetScale().y ,object->GetScale().z };
 		ImGui::DragFloat3("scale", scale);
 		object->SetScale({ scale[0],scale[1],scale[2] });
+		for (auto itr = object->GetChildList()->begin(); itr != object->GetChildList()->end(); itr++)
+		{
+			ObjectCount(*itr);
+		}
 		ImGui::TreePop();
-	}
-	for (auto itr = object->GetChildList()->begin(); itr != object->GetChildList()->end(); itr++)
-	{
-		ObjectCount(*itr);
 	}
 }
 
@@ -100,7 +108,6 @@ void DebugUI::CountSub(GameObject* object)
 		ImGui::DragFloat3("scale", scale);
 		object->SetScale({ scale[0],scale[1],scale[2] });
 		ImGui::TreePop();
-	ObjectCount(object);
 	}
 
 }
