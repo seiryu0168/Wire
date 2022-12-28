@@ -15,6 +15,7 @@ protected:
 	Transform	transform_;				//オブジェクトの情報
 	GameObject* pParent_;				//親オブジェクトの情報
 	std::string	objectName_;			//名前
+	int objectID_;						//オブジェクト固有の番号
 	bool killFlag_;						//キルするかどうか
 	bool drawFlag_;						//描画するかどうか
 
@@ -83,6 +84,7 @@ public:
 			XMFLOAT3  GetScale();
 			std::list<GameObject*>* GetChildList() { return &childList_; }
 			std::string GetObjectName() { return objectName_; }
+			int GetObjectID() { return objectID_; }
 
 			//指定した座標に回転させる行列を作る関数
 			XMMATRIX LookAtMatrix(XMFLOAT3 target, XMVECTOR frontVec, XMVECTOR upVec = XMVectorSet(0, 1, 0, 0));

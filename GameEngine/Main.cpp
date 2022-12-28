@@ -14,6 +14,7 @@
 #include"ImGui/imgui.h"
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
+#include"Audio.h"
 
 
 #pragma comment(lib, "winmm.lib")
@@ -81,17 +82,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	{
 		PostQuitMessage(0);
 	}
-	//IMGUI_CHECKVERSION();
-	//ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO();
-	//(void)io;
-	//ImGui::StyleColorsDark();
-	//ImGui_ImplWin32_Init(hWnd);
-	//ImGui_ImplDX11_Init(Direct3D::GetDevice(),Direct3D::GetContext());
+
 
 	DebugUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
 	Input::Initialize(hWnd);
 	Camera::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Audio::Initialize();
 
 	pRootJob = new RootJob;
 	pRootJob->Initialize();
@@ -170,6 +166,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ImGui_ImplDX11_Shutdown();
 	//ImGui_ImplWin32_Shutdown();
 	//ImGui::DestroyContext();
+	Audio::Releace();
 	DebugUI::CleanUp();
 	pRootJob->ReleaseSub();
 	Input::Release();

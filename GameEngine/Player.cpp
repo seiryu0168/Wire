@@ -9,6 +9,7 @@
 #include"Engine/Particle.h"
 #include"Easing.h"
 #include"Stage1.h"
+#include"Audio.h"
 #include"Pointer.h"
 #include"Wire.h"
 #include<list>
@@ -22,6 +23,7 @@ Player::Player(GameObject* parent)
     playerLife_(10),
     gravity_(-0.06),
     hModel_(-1),
+    hAudio_(-1),
     hModel_Handle_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
@@ -53,6 +55,7 @@ Player::~Player()
 //èâä˙âª
 void Player::Initialize()
 {
+    hAudio_ = Audio::Load("Assets\\loop1.wav");
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
@@ -97,6 +100,7 @@ void Player::Initialize()
 //çXêV
 void Player::Update()
 {
+    Audio::PlayLoop(hAudio_);
     rotateSpeed_ = 4.0f;
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);

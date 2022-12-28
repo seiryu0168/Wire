@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include"SAFE_DELETE_RELEASE.h"
-
+int objectcount = 0;
 GameObject::GameObject() : GameObject(nullptr,"")
 {
 
@@ -175,6 +175,7 @@ void GameObject::PushBackChild(GameObject* pTarget)
 {
 	assert(pTarget != nullptr);
 	pTarget->pParent_ = this;
+	pTarget->objectID_ = objectcount++;
 	childList_.push_back(pTarget);
 }
 

@@ -41,6 +41,7 @@ class Player : public GameObject
 
     int hModel_;
     int hModel_Handle_;
+    int hAudio_;
     int stageNum_;
 
     float moveTime_;

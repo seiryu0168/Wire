@@ -1,6 +1,7 @@
 #include "Audio.h"
 #include<xaudio2.h>
 #include<vector>
+#include"Engine/SAFE_DELETE_RELEASE.h"
 namespace Audio
 {
 	//XAudio本体
@@ -59,25 +60,29 @@ int Audio::Load(std::string fileName, int svNum)
 	hFile = CreateFile(wtext, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	DWORD dwBytes = 0;
-
+	BOOL success;
 	Chunk riffChunk;
-	ReadFile(hFile, &riffChunk, 8, &dwBytes, NULL);
+	success=ReadFile(hFile, &riffChunk, 8, &dwBytes, NULL);
 
 	char wave[4];
-	ReadFile(hFile, &wave, 4, &dwBytes, NULL);
+	success = ReadFile(hFile, &wave, 4, &dwBytes, NULL);
 	
 	Chunk formatChunk;
-	ReadFile(hFile, &formatChunk, 8, &dwBytes, NULL);
+	success = ReadFile(hFile, &formatChunk, 8, &dwBytes, NULL);
 	
 	WAVEFORMATEX fmt;
-	ReadFile(hFile, &fmt, formatChunk.size, &dwBytes, NULL);
+	success = ReadFile(hFile, &fmt, formatChunk.size, &dwBytes, NULL);
 	
 	Chunk data;
-	ReadFile(hFile, &data, 8, &dwBytes, NULL);
+	success = ReadFile(hFile, &data, 8, &dwBytes, NULL);
 
 	char* pBuffer = new char[data.size];
-	ReadFile(hFile, pBuffer, 8, &dwBytes, NULL);
+	success = ReadFile(hFile, pBuffer, data.size, &dwBytes, NULL);
 
+	if (success == false)
+	{
+		MessageBox(nullptr, L"wavファイルのロードに失敗しました", L"エラー", MB_OK);
+	}
 	CloseHandle(hFile);
 
 	AudioData ad;
@@ -97,12 +102,38 @@ int Audio::Load(std::string fileName, int svNum)
 
 }
 
-void Audio::Play(int ID)
+void Audio::PlayLoop(int ID)
 {
+	for (int i = 0; i < audioList_[ID].svNum; i++)
+	{
+		XAUDIO2_VOICE_STATE state;
+		audioList_[ID].pSourceVoice[i]->GetState(&state);
 
+		if (state.BuffersQueued == 0)
+		{
+			audioList_[ID].pSourceVoice[i]->SubmitSourceBuffer(&audioList_[ID].buf);
+			audioList_[ID].pSourceVoice[i]->Start();
+			break;
+		}
+	}
 }
 
 void Audio::Releace()
 {
+	for (int i = 0; i < audioList_.size(); i++)
+	{
+		for (int j = 0; j < audioList_[i].svNum; j++)
+		{
+			audioList_[i].pSourceVoice[j]->DestroyVoice();
+		}
+		SAFE_DELETE_ARRAY(audioList_[i].buf.pAudioData);
+	}
 
+	CoUninitialize();
+
+	if (pMastaringVoice_)
+	{
+		pMastaringVoice_->DestroyVoice();
+	}
+	pXAudio_->Release();
 }
