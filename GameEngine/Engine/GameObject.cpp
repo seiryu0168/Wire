@@ -74,7 +74,7 @@ void GameObject::FixedUpdateSub()
 
 void GameObject::DrawSub()
 {
-	if (drawFlag_ == true)
+	if (drawFlag_)
 	{
 		Draw();
 	}

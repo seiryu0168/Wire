@@ -18,7 +18,10 @@ protected:
 	int objectID_;						//オブジェクト固有の番号
 	bool killFlag_;						//キルするかどうか
 	bool drawFlag_;						//描画するかどうか
-
+#if _DEBUG
+	///////////////////デバッグ用変数///////////////////////
+	bool debugDrawFlag_;
+#endif
 public:
 	GameObject();
 	GameObject(GameObject* parent, const std::string& name);
@@ -50,6 +53,7 @@ public:
 
 	void KillMe() { killFlag_ = true; }
 	void IsDraw(bool flag) { drawFlag_ = flag; }
+	bool GetDrawFlag() { return drawFlag_; }
 
 	///////////////////////////衝突関連の関数////////////////////////
 	virtual void OnCollision(GameObject* pTarget) {};
