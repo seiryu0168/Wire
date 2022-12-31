@@ -162,6 +162,7 @@
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBoss.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="EnemyStateDef.cpp" />
     <ClCompile Include="EnemyTurret.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Easing.h" />
     <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBoss.h" />
     <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="EnemyStateDef.h" />
