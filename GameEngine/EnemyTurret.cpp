@@ -1,6 +1,7 @@
 #include "EnemyTurret.h"
 #include"Engine/Model.h"
 #include"Bullet.h"
+#include"HomingBullet.h"
 #include"Engine/SphereCollider.h"
 //コンストラクタ
 EnemyTurret::EnemyTurret(GameObject* parent)
@@ -59,9 +60,9 @@ void EnemyTurret::Shot()
 	if (isShot<=(float)shotTime_)
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		Bullet* pBullet = Instantiate<Bullet>(GetParent());
-		pBullet->SetPosition(this->transform_.position_);
-		pBullet->SetDir(shotDir);
+		HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
+		//pHBullet->SetPosition(this->transform_.position_);
+		pHBullet->SetDir(shotDir);
 		shotTime_ = 0;
 	}
 

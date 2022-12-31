@@ -22,6 +22,7 @@ Bullet::~Bullet()
 void Bullet::Initialize()
 {
 	pBill_ = new BillBoard();
+	pParent_ = FindObject("TitleScene");
 	pBill_->Load("Assets\\Effect01.png");
 }
 
@@ -45,7 +46,7 @@ void Bullet::FixedUpdate()
 //•`‰æ
 void Bullet::Draw()
 {
-	XMMATRIX matW =XMMatrixScaling(transform_.scale_.x, transform_.scale_.y, transform_.scale_.z)*Camera::GetBillBoardMatrix()* XMMatrixTranslation(transform_.position_.x, transform_.position_.y, transform_.position_.z);
+	XMMATRIX matW = transform_.GetLocalScaleMatrix() * Camera::GetBillBoardMatrix() * transform_.GetWorldTranslateMatrix();
 	
 	pBill_->Draw(matW, { 1,1,1,1 });
 }

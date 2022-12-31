@@ -28,6 +28,10 @@ void EnemyBoss::Update()
 	GetEnemyState()->Update(this);
 }
 
+void EnemyBoss::FixedUpdate()
+{
+}
+
 void EnemyBoss::Draw()
 {
 }
