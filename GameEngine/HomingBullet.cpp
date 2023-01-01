@@ -17,6 +17,7 @@ HomingBullet::~HomingBullet()
 void HomingBullet::Initialize()
 {
 	pBill_ = new BillBoard;
+	transform_.position_ = pParent_->GetPosition();
 	pBill_->Load("Assets\\Effect01.png");
 	pParent_ = FindObject("TitleScene");
 	pPlayer_ = (Player*)FindObject("Player");

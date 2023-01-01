@@ -22,6 +22,7 @@ Bullet::~Bullet()
 void Bullet::Initialize()
 {
 	pBill_ = new BillBoard();
+	transform_.position_ = pParent_->GetPosition();
 	pParent_ = FindObject("TitleScene");
 	pBill_->Load("Assets\\Effect01.png");
 }
