@@ -20,7 +20,7 @@ void HomingBullet::Initialize()
 	pBill_->Load("Assets\\Effect01.png");
 	pParent_ = FindObject("TitleScene");
 	pPlayer_ = (Player*)FindObject("Player");
-
+	position_ = XMLoadFloat3(&transform_.position_);
 }
 
 void HomingBullet::Update()
