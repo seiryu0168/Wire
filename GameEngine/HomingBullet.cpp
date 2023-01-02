@@ -83,29 +83,56 @@ void HomingBullet::OnCollision(GameObject* target)
 	if (target->GetObjectName() == "Player")
 	{
 		pParticle_ = Instantiate<Particle>(GetParent());
-		EmitterData data;
 		
-		XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-		data.textureFileName = "Assets\\Effect01.png";
-		data.position = transform_.position_;
-		data.positionErr = XMFLOAT3(0.2, 0, 0.2);
-		data.delay = 0;
-		data.number = 30;
-		data.lifTime = 50.0f;
-		data.acceleration = 0.98f;
-		data.gravity = 0.0f;
+		{
+			EmitterData data;
 
-		
-		data.dir = {0,0,0};
-		data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
-		data.firstSpeed = 0.9f;
-		data.speedErr = 0.2f;
-		data.size = XMFLOAT2(1.5f, 1.5f);
-		data.sizeErr = XMFLOAT2(0.3f, 0.3f);
-		data.scale = XMFLOAT2(0.98f, 0.98f);
-		data.color = XMFLOAT4(1, 1, 1, 1);
-		data.deltaColor = XMFLOAT4(0, 0, 0, -0.08);
-		pParticle_->ParticleStart(data);
+			data.textureFileName = "Assets\\Smoke.png";
+			data.position = transform_.position_;
+			data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+			data.delay = 0;
+			data.number = 30;
+			data.lifTime = 600.0f;
+			data.acceleration = 0.98f;
+			data.gravity = 0.0f;
+
+
+			data.dir = { 0,0,0 };
+			data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+			data.firstSpeed = 0.8f;
+			data.speedErr = 0.2f;
+			data.size = XMFLOAT2(0.3f, 0.3f);
+			data.sizeErr = XMFLOAT2(0, 0);
+			data.scale = XMFLOAT2(1.1f, 1.1f);
+			data.color = XMFLOAT4(1, 1, 1, 1);
+			data.deltaColor = XMFLOAT4(0, 0, 0, -0.03f);
+			pParticle_->ParticleStart(data);
+		}
+
+		{
+			EmitterData data;
+
+			data.textureFileName = "Assets\\Fire.png";
+			data.position = transform_.position_;
+			data.positionErr = XMFLOAT3(0.5f, 0.5f, 0.5f);
+			data.delay = 0;
+			data.number = 10;
+			data.lifTime = 50.0f;
+			data.acceleration = 0.98f;
+			data.gravity = 0.0f;
+
+
+			data.dir = { 0,0,0 };
+			data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+			data.firstSpeed = 0.6f;
+			data.speedErr = 0.2f;
+			data.size = XMFLOAT2(1.5f, 1.5f);
+			data.sizeErr = XMFLOAT2(0, 0);
+			data.scale = XMFLOAT2(1.2f, 1.2f);
+			data.color = XMFLOAT4(1, 1, 1, 1);
+			data.deltaColor = XMFLOAT4(0, 0, 0, -0.1);
+			pParticle_->ParticleStart(data);
+		}
 		KillMe();
 	}
 }
