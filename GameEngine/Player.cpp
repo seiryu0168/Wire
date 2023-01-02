@@ -61,7 +61,7 @@ void Player::Initialize()
     hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
     assert(hModel_Handle_ > 0);
     
-    pParticle_ = Instantiate<Particle>(this);
+    pParticle_ = Instantiate<Particle>(GetParent());
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
     pLine_->SetLineParameter(0.5f, 30,0.4f);

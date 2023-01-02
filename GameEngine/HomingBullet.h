@@ -2,16 +2,18 @@
 #include"Engine/GameObject.h"
 #include"Engine/BillBoard.h"
 class Player;
-
+class Particle;
 class HomingBullet : public GameObject
 {
     int hModel_;
     int life_;
+    int period_;
     float speed_;
     XMVECTOR position_;
     XMVECTOR velocity_;
     Player* pPlayer_;
     BillBoard* pBill_;
+    Particle* pParticle_;
     XMVECTOR dir_;
 
 public:
@@ -29,6 +31,7 @@ public:
 
     void FixedUpdate() override;
 
+    void Homing();
     void SetDir(XMVECTOR dir) { dir_ = dir; }
     //•`‰æ
     void Draw() override;

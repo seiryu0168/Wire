@@ -61,7 +61,6 @@ void EnemyTurret::Shot()
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
 		HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
-		//pHBullet->SetPosition(this->transform_.position_);
 		pHBullet->SetDir(shotDir);
 		shotTime_ = 0;
 	}
