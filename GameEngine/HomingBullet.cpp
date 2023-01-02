@@ -2,6 +2,7 @@
 #include"Player.h"
 #include"Engine/Camera.h"
 #include"Engine/Particle.h"
+#include"Engine/OBBCollider.h"
 HomingBullet::HomingBullet(GameObject* parent)
 	:GameObject(parent, "HomingBullet"),
 	hModel_(-1),
@@ -20,6 +21,8 @@ HomingBullet::~HomingBullet()
 
 void HomingBullet::Initialize()
 {
+	OBBCollider* pCollision = new OBBCollider(XMFLOAT3(0.3f, 0.3f, 0.3f), false, false);
+	AddCollider(pCollision);
 	pBill_ = new BillBoard;
 	transform_.position_ = pParent_->GetPosition();
 	pBill_->Load("Assets\\Effect01.png");
