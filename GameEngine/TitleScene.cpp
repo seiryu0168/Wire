@@ -4,6 +4,7 @@
 #include"Player.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
+#include"EnemyBoss.h"
 #include"SetObject.h"
 #include"Test.h"
 #include"Stage1.h"
@@ -30,10 +31,9 @@ void TitleScene::Initialize()
 	{
 		Instantiate<EnemyNormal>(this);
 	}
-	//for (int i = 0; i < 5; i++)
-	//{
-		Instantiate<EnemyTurret>(this);
-
+	
+	Instantiate<EnemyTurret>(this);
+	Instantiate<EnemyBoss>(this);
 	//}
 	Instantiate<Test>(this);
 }

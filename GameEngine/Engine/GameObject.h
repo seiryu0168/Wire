@@ -26,6 +26,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update() {};
 	virtual void FixedUpdate() {};
+	virtual void AfterDeath() {};
 	virtual void Draw() {};
 	virtual void Release() = 0;
 

@@ -498,7 +498,7 @@ void Player::AddTargetList(Enemy* target)
 }
 void Player::OnCollision(GameObject* pTarget)
 {
-    if (pTarget->GetObjectName() == "EnemyNormal")
+    if (pTarget->GetObjectName() == "EnemyNormal"|| pTarget->GetObjectName() == "EnemyTurret")
     {
         if (status_ & ATC_ATTACK)
         {

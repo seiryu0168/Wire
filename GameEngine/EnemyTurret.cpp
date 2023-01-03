@@ -2,7 +2,8 @@
 #include"Engine/Model.h"
 #include"Bullet.h"
 #include"HomingBullet.h"
-#include"Engine/SphereCollider.h"
+#include"Pointer.h"
+#include"Engine/OBBCollider.h"
 //コンストラクタ
 EnemyTurret::EnemyTurret(GameObject* parent)
 	:Enemy(parent,"EnemyTurret"),
@@ -23,8 +24,11 @@ EnemyTurret::~EnemyTurret()
 //初期化
 void EnemyTurret::Initialize()
 {
+	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
+	AddCollider(pCollider);
 	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
 	assert(hModel_ >= 0);
+	ModelManager::SetModelNum(hModel_);
 	
 	XMFLOAT3 initPos = transform_.position_;
 	initPos.x = rand() % 100;
@@ -81,4 +85,23 @@ void EnemyTurret::Draw()
 void EnemyTurret::Release()
 {
 
+}
+
+void EnemyTurret::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "Player")
+	{
+		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
+		{
+			DecreaseLife(1);
+			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
+			if (GetLife() <= 0)
+			{
+				Transform pos;
+				pos.position_ = { 9999,9999,9999 };
+				ModelManager::SetTransform(hModel_, pos);
+				KillMe();
+			}
+		}
+	}
 }
