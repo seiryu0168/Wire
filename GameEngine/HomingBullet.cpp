@@ -1,15 +1,18 @@
 #include "HomingBullet.h"
 #include"Player.h"
+#include"Audio.h"
 #include"Engine/Camera.h"
 #include"Engine/Particle.h"
-#include"Engine/OBBCollider.h"
+#include"Engine/SphereCollider.h"
 HomingBullet::HomingBullet(GameObject* parent)
 	:GameObject(parent, "HomingBullet"),
 	hModel_(-1),
+	hAudio_(-1),
 	life_(320),
 	period_(180),
 	position_(XMVectorSet(0, 0, 0, 0)),
 	velocity_(XMVectorSet(0, 0, 0, 0)),
+	pPlayer_(nullptr),
 	pBill_(nullptr),
 	pParticle_(nullptr)
 {
@@ -21,9 +24,18 @@ HomingBullet::~HomingBullet()
 
 void HomingBullet::Initialize()
 {
-	OBBCollider* pCollision = new OBBCollider(XMFLOAT3(0.3f, 0.3f, 0.3f), false, false);
+	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0),0.3f);
 	AddCollider(pCollision);
 
+	if (pParent_ != nullptr)
+	{
+		transform_.position_ = pParent_->GetPosition();
+	}
+	else
+		KillMe();
+
+	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
+	assert(hAudio_ >= 0);
 	SetTag("EnemyBullet");
 	pBill_ = new BillBoard;
 	transform_.position_ = pParent_->GetPosition();
@@ -83,6 +95,7 @@ void HomingBullet::Draw()
 
 void HomingBullet::BeforeDeath()
 {
+	
 	pParticle_ = Instantiate<Particle>(GetParent());
 
 	EmitterData data;
@@ -134,6 +147,7 @@ void HomingBullet::OnCollision(GameObject* target)
 {
 	if (target->GetObjectName() == "Player")
 	{
+		Audio::PlayLoop(hAudio_);
 		KillMe();
 	}
 }

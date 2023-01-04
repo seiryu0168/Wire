@@ -9,7 +9,6 @@
 #include"Engine/Particle.h"
 #include"Easing.h"
 #include"Stage1.h"
-#include"Audio.h"
 #include"Pointer.h"
 #include"Wire.h"
 #include<list>
@@ -56,7 +55,6 @@ Player::~Player()
 void Player::Initialize()
 {
     SetTag("Player");
-    hAudio_ = Audio::Load("Assets\\loop1.wav");
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
@@ -101,7 +99,6 @@ void Player::Initialize()
 //çXêV
 void Player::Update()
 {
-    Audio::PlayLoop(hAudio_);
     rotateSpeed_ = 4.0f;
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);

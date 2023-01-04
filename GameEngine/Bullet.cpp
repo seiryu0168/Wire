@@ -1,13 +1,19 @@
 #include "Bullet.h"
+#include"Engine/Particle.h"
+#include"Audio.h"
+#include"Engine/SphereCollider.h"
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
 //コンストラクタ
 Bullet::Bullet(GameObject* parent)
 	:GameObject(parent,"Bullet"),
 	hModel_(-1),
+	hAudio_(-1),
 	life_(600),
 	speed_(0.8f),
-	dir_(XMVectorSet(0,0,1,0))
+	dir_(XMVectorSet(0,0,1,0)),
+	pBill_(nullptr),
+	pParticle_(nullptr)
 {
 
 }
@@ -21,6 +27,9 @@ Bullet::~Bullet()
 //初期化
 void Bullet::Initialize()
 {
+
+	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0), 0.3f);
+	AddCollider(pCollision);
 	pBill_ = new BillBoard();
 	if (pParent_ != nullptr)
 	{
@@ -28,6 +37,8 @@ void Bullet::Initialize()
 	}
 	else
 		KillMe();
+	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
+	assert(hAudio_ >= 0);
 
 	pParent_ = FindObject("TitleScene");
 	pBill_->Load("Assets\\Effect01.png");
@@ -62,6 +73,52 @@ void Bullet::OnCollision(GameObject* target)
 {
 	if (target->GetObjectName() == "Player")
 	{
+		Audio::PlayLoop(hAudio_);
+		pParticle_ = Instantiate<Particle>(GetParent());
+
+		EmitterData data;
+
+		data.textureFileName = "Assets\\Smoke.png";
+		data.position = transform_.position_;
+		data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+		data.delay = 0;
+		data.number = 30;
+		data.lifTime = 600.0f;
+		data.acceleration = 0.98f;
+		data.gravity = 0.0f;
+
+
+		data.dir = { 0,0,0 };
+		data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+		data.firstSpeed = 0.8f;
+		data.speedErr = 0.2f;
+		data.size = XMFLOAT2(0.8f, 0.8f);
+		data.sizeErr = XMFLOAT2(0.4f, 0.4f);
+		data.scale = XMFLOAT2(1.1f, 1.1f);
+		data.color = XMFLOAT4(1, 1, 0.1, 1);
+		data.deltaColor = XMFLOAT4(0, -1.0 / 20, 0, -1.0 / 20);
+		pParticle_->ParticleStart(data);
+
+
+		data.position = transform_.position_;
+		data.positionErr = XMFLOAT3(0.5f, 0.5f, 0.5f);
+		data.delay = 0;
+		data.number = 10;
+		data.lifTime = 50.0f;
+		data.acceleration = 0.98f;
+		data.gravity = 0.0f;
+
+
+		data.dir = { 0,0,0 };
+		data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+		data.firstSpeed = 0.6f;
+		data.speedErr = 0.2f;
+		data.size = XMFLOAT2(0.1f, 0.1f);
+		data.sizeErr = XMFLOAT2(0, 0);
+		data.scale = XMFLOAT2(0.99f, 0.99f);
+		data.color = XMFLOAT4(1, 1, 0.1, 1);
+		data.deltaColor = XMFLOAT4(0, 0, 0, 0);
+		pParticle_->ParticleStart(data);
 		KillMe();
 	}
 }

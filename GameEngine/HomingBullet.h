@@ -6,15 +6,14 @@ class Particle;
 class HomingBullet : public GameObject
 {
     int hModel_;
+    int hAudio_;
     int life_;
     int period_;
-    float speed_;
     XMVECTOR position_;
     XMVECTOR velocity_;
     Player* pPlayer_;
     BillBoard* pBill_;
     Particle* pParticle_;
-    XMVECTOR dir_;
 
 public:
     //コンストラクタ
@@ -32,7 +31,6 @@ public:
     void FixedUpdate() override;
 
     void Homing();
-    void SetDir(XMVECTOR dir) { dir_ = dir; }
     //描画
     void Draw() override;
     void BeforeDeath() override;

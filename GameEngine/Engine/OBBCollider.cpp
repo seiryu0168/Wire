@@ -20,6 +20,9 @@ bool OBBCollider::IsHit(Collider* target)
 {
 	switch (target->type_)
 	{
+
+	case SPHERE_COLLIDER:
+		return IsHitOBB_Sphere(this, (SphereCollider*)target);
 	case OBB_COLLIDER:
 		return IsHitOBB_OBB(this, (OBBCollider*)target);
 	}

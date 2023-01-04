@@ -67,8 +67,8 @@ void EnemyTurret::Shot()
 	if ((3600.0f/(float)rpm_)<=(float)shotTime_)
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		Bullet* pBullet = Instantiate<Bullet>(this);
-		pBullet->SetDir(shotDir);
+		HomingBullet* pBullet = Instantiate<HomingBullet>(this);
+		//pBullet->SetDir(shotDir);
 		shotTime_ = 0;
 	}
 
