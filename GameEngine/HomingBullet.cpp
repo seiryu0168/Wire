@@ -23,6 +23,8 @@ void HomingBullet::Initialize()
 {
 	OBBCollider* pCollision = new OBBCollider(XMFLOAT3(0.3f, 0.3f, 0.3f), false, false);
 	AddCollider(pCollision);
+
+	SetTag("EnemyBullet");
 	pBill_ = new BillBoard;
 	transform_.position_ = pParent_->GetPosition();
 	pBill_->Load("Assets\\Effect01.png");
@@ -50,8 +52,9 @@ void HomingBullet::Homing()
 {
 	if (period_ < 0)
 	{
-		return;
+		KillMe();
 	}
+
 	XMVECTOR acceleration = XMVectorSet(0, 0, 0, 0);
 	XMFLOAT3 targetPos = pPlayer_->GetPosition();
 	XMVECTOR diff = XMLoadFloat3(&targetPos) - position_;
@@ -78,55 +81,59 @@ void HomingBullet::Draw()
 	pBill_->Draw(matW, { 1,1,1,1 });
 }
 
+void HomingBullet::BeforeDeath()
+{
+	pParticle_ = Instantiate<Particle>(GetParent());
+
+	EmitterData data;
+
+	data.textureFileName = "Assets\\Smoke.png";
+	data.position = transform_.position_;
+	data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+	data.delay = 0;
+	data.number = 30;
+	data.lifTime = 600.0f;
+	data.acceleration = 0.98f;
+	data.gravity = 0.0f;
+
+
+	data.dir = { 0,0,0 };
+	data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+	data.firstSpeed = 0.8f;
+	data.speedErr = 0.2f;
+	data.size = XMFLOAT2(0.8f, 0.8f);
+	data.sizeErr = XMFLOAT2(0.4f, 0.4f);
+	data.scale = XMFLOAT2(1.1f, 1.1f);
+	data.color = XMFLOAT4(1, 1, 0.1, 1);
+	data.deltaColor = XMFLOAT4(0, -1.0 / 20, 0, -1.0 / 20);
+	pParticle_->ParticleStart(data);
+
+
+	data.position = transform_.position_;
+	data.positionErr = XMFLOAT3(0.5f, 0.5f, 0.5f);
+	data.delay = 0;
+	data.number = 10;
+	data.lifTime = 50.0f;
+	data.acceleration = 0.98f;
+	data.gravity = 0.0f;
+
+
+	data.dir = { 0,0,0 };
+	data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
+	data.firstSpeed = 0.6f;
+	data.speedErr = 0.2f;
+	data.size = XMFLOAT2(0.1f, 0.1f);
+	data.sizeErr = XMFLOAT2(0, 0);
+	data.scale = XMFLOAT2(0.99f, 0.99f);
+	data.color = XMFLOAT4(1, 1, 0.1, 1);
+	data.deltaColor = XMFLOAT4(0, 0, 0, 0);
+	pParticle_->ParticleStart(data);
+}
+
 void HomingBullet::OnCollision(GameObject* target)
 {
 	if (target->GetObjectName() == "Player")
 	{
-		pParticle_ = Instantiate<Particle>(GetParent());
-		
-			EmitterData data;
-
-			data.textureFileName = "Assets\\Smoke.png";
-			data.position = transform_.position_;
-			data.positionErr = XMFLOAT3(0.2, 0, 0.2);
-			data.delay = 0;
-			data.number = 30;
-			data.lifTime = 600.0f;
-			data.acceleration = 0.98f;
-			data.gravity = 0.0f;
-
-
-			data.dir = { 0,0,0 };
-			data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
-			data.firstSpeed = 0.8f;
-			data.speedErr = 0.2f;
-			data.size = XMFLOAT2(0.8f, 0.8f);
-			data.sizeErr = XMFLOAT2(0.4f, 0.4f);
-			data.scale = XMFLOAT2(1.1f, 1.1f);
-			data.color = XMFLOAT4(1, 1, 0.1, 1);
-			data.deltaColor = XMFLOAT4(0, -1.0/20, 0, -1.0/20);
-			pParticle_->ParticleStart(data);
-
-		
-			data.position = transform_.position_;
-			data.positionErr = XMFLOAT3(0.5f, 0.5f, 0.5f);
-			data.delay = 0;
-			data.number = 10;
-			data.lifTime = 50.0f;
-			data.acceleration = 0.98f;
-			data.gravity = 0.0f;
-
-
-			data.dir = { 0,0,0 };
-			data.dirErr = XMFLOAT3(360.0f, 360.0f, 360.0f);
-			data.firstSpeed = 0.6f;
-			data.speedErr = 0.2f;
-			data.size = XMFLOAT2(0.1f, 0.1f);
-			data.sizeErr = XMFLOAT2(0, 0);
-			data.scale = XMFLOAT2(0.99f, 0.99f);
-			data.color = XMFLOAT4(1, 1, 0.1, 1);
-			data.deltaColor = XMFLOAT4(0, 0, 0, 0);
-			pParticle_->ParticleStart(data);
 		KillMe();
 	}
 }

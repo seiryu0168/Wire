@@ -8,6 +8,7 @@ GameObject::GameObject() : GameObject(nullptr,"")
 GameObject::GameObject(GameObject* parent, const std::string& name)
 	: pParent_(parent),
 	objectName_(name),
+	objectTag_(""),
 	killFlag_(0),
 	drawFlag_(true)
 {
@@ -22,7 +23,6 @@ GameObject::~GameObject()
 void GameObject::UpdateSub()
 {
 	/////////アップデート/////////
-
 	Update();
 
 
@@ -36,6 +36,7 @@ void GameObject::UpdateSub()
 	{
 		if ((*itr)->killFlag_ == true)
 		{
+			(*itr)->BeforeDeath();
 			(*itr)->ReleaseSub();
 			delete* itr;
 			itr = childList_.erase(itr);
@@ -163,7 +164,6 @@ void GameObject::KillObjectSub(GameObject* pTarget)
 	{
 		for (auto itr = pTarget->childList_.begin(); itr != pTarget->childList_.end(); itr++)
 		{
-			pTarget->AfterDeath();
 			KillObjectSub(*itr);
 			delete* itr;
 			itr = pTarget->childList_.erase(itr);

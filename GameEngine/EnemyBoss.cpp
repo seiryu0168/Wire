@@ -2,7 +2,11 @@
 #include"Engine/Model.h"
 #include"Bullet.h"
 #include"HomingBullet.h"
-
+namespace
+{
+	static const float nearRange = 75.0f;
+	static const float farRange = 125.0f;
+}
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
 	rpm_(200)
@@ -15,6 +19,7 @@ EnemyBoss::~EnemyBoss()
 
 void EnemyBoss::Initialize()
 {
+	SetTag("Enemy");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
@@ -46,14 +51,14 @@ void EnemyBoss::Draw()
 
 void EnemyBoss::Attack()
 {
-	if (XMVectorGetX(XMVector3Length(GetToPlayerVec()))<100)
+	if (XMVectorGetX(XMVector3Length(GetToPlayerVec()))<nearRange)
 	{
 		//UŒ‚1
 		//’¼i‚·‚é’e‚ÅUŒ‚
 
 		Shot();
 	}
-	else if(XMVectorGetX(XMVector3Length(GetToPlayerVec())) < 200)
+	else if(XMVectorGetX(XMVector3Length(GetToPlayerVec())) < farRange)
 	{
 		//UŒ‚2
 		//’Ç”ö’e‚ÅUŒ‚
@@ -61,7 +66,7 @@ void EnemyBoss::Attack()
 	}
 }
 
-void EnemyBoss::Shot()
+void EnemyBoss::HShot()
 {
 	shotTime_++;
 	float isShot = 3600.0f / rpm_;
@@ -73,7 +78,7 @@ void EnemyBoss::Shot()
 	}
 }
 
-void EnemyBoss::HShot()
+void EnemyBoss::Shot()
 {
 	shotTime_++;
 	float isShot = 3600.0f / rpm_;

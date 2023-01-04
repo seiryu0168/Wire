@@ -194,6 +194,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="LineParticle.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="LineParticle.h" />
+    <ClInclude Include="ObjectSetter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />

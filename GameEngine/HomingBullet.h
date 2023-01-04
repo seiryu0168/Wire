@@ -35,6 +35,7 @@ public:
     void SetDir(XMVECTOR dir) { dir_ = dir; }
     //•`‰æ
     void Draw() override;
+    void BeforeDeath() override;
 
     void OnCollision(GameObject* target) override;
 

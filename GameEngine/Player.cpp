@@ -55,6 +55,7 @@ Player::~Player()
 //‰Šú‰»
 void Player::Initialize()
 {
+    SetTag("Player");
     hAudio_ = Audio::Load("Assets\\loop1.wav");
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
@@ -498,7 +499,7 @@ void Player::AddTargetList(Enemy* target)
 }
 void Player::OnCollision(GameObject* pTarget)
 {
-    if (pTarget->GetObjectName() == "EnemyNormal"|| pTarget->GetObjectName() == "EnemyTurret")
+    if (pTarget->GetTag()=="Enemy")
     {
         if (status_ & ATC_ATTACK)
         {

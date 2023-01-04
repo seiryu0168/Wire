@@ -20,6 +20,7 @@ EnemyNormal::~EnemyNormal()
 //‰Šú‰»
 void EnemyNormal::Initialize()
 {
+	SetTag("Enemy");
 	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);

@@ -24,6 +24,7 @@ EnemyTurret::~EnemyTurret()
 //èâä˙âª
 void EnemyTurret::Initialize()
 {
+	SetTag("Enemy");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
 	AddCollider(pCollider);
 	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
@@ -59,13 +60,15 @@ void EnemyTurret::Attack()
 
 void EnemyTurret::Shot()
 {
+	
 	shotTime_++;
-	float isShot = 3600.0f / rpm_;
-	if (isShot<=(float)shotTime_)
+	
+	//shotTimeÇ™rpm_ÇégÇ¡ÇƒåvéZÇµÇΩílà»è„Ç…Ç»Ç¡ÇΩÇÁ
+	if ((3600.0f/(float)rpm_)<=(float)shotTime_)
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
-		pHBullet->SetDir(shotDir);
+		Bullet* pBullet = Instantiate<Bullet>(this);
+		pBullet->SetDir(shotDir);
 		shotTime_ = 0;
 	}
 

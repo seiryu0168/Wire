@@ -16,6 +16,7 @@ protected:
 	GameObject* pParent_;				//親オブジェクトの情報
 	std::string	objectName_;			//名前
 	int objectID_;						//オブジェクト固有の番号
+	std::string objectTag_;				//オブジェクトに任意でつけられる識別用の名前
 	bool killFlag_;						//キルするかどうか
 	bool drawFlag_;						//描画するかどうか
 public:
@@ -26,7 +27,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update() {};
 	virtual void FixedUpdate() {};
-	virtual void AfterDeath() {};
+	virtual void BeforeDeath() {};
 	virtual void Draw() {};
 	virtual void Release() = 0;
 
@@ -78,6 +79,9 @@ public:
 			void SetScaleY(float y) { transform_.scale_.y = y; }
 			void SetScaleZ(float z) { transform_.scale_.z = z; }
 			void SetScale(XMFLOAT3 scale) { transform_.scale_ = scale; }
+
+			void SetTag(std::string tagName) { objectTag_ = tagName; }
+			std::string GetTag() { return objectTag_; }
 
 			Transform GetTransform();
 			XMFLOAT3  GetPosition();
