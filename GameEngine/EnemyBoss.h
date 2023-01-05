@@ -28,7 +28,6 @@ public:
 
     //エネミーの動き
     //動く方向ベクトル
-    void EnemyMove();
     void Shot();
     void HShot();
 

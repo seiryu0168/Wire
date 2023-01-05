@@ -54,6 +54,7 @@ public:
     void SetLife(int life) { enemyParameter_.life = life; }                      //エネミーのライフ設定
     void DecreaseLife(int decRate) { enemyParameter_.life -= decRate; }          //ライフを減らす
     void IncreaseLife(int incRate) { enemyParameter_.life += incRate; }          //ライフを増やす
+    void SetIsList(bool isList) { enemyParameter_.isTargetList = isList; }       //プレイヤーの認識リストに入ってるかどうかを設定
 
     float    GetViewAngle() { return enemyParameter_.viewAngle; }       //見える距離取得
     float    GetViewRange() { return enemyParameter_.viewRange; }       //視角取得

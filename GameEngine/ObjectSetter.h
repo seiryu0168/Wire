@@ -6,7 +6,6 @@ class Enemy;
 class ObjectSetter : public GameObject
 {
 private:
-    Player* pPlayer_;
     std::list<Enemy*> enemys_;
 public:
         //コンストラクタ

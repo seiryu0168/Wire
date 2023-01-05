@@ -1,6 +1,7 @@
 #include "EnemyBoss.h"
 #include"Engine/Model.h"
 #include"Bullet.h"
+#include"Pointer.h"
 #include"HomingBullet.h"
 namespace
 {
@@ -9,6 +10,8 @@ namespace
 }
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
+	hModel_(-1),
+	shotTime_(0),
 	rpm_(200)
 {
 }
@@ -20,11 +23,11 @@ EnemyBoss::~EnemyBoss()
 void EnemyBoss::Initialize()
 {
 	SetTag("Enemy");
-	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
+	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(7, 11, 7), false, false);
 	AddCollider(pCollider);
-	ModelManager::SetModelNum(hModel_);
 
 	hModel_ = ModelManager::Load("Assets\\EnemyBoss.fbx");
+	ModelManager::SetModelNum(hModel_);
 	assert(hModel_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
 	SetviewAngle(M_PI);
@@ -97,5 +100,21 @@ void EnemyBoss::Release()
 
 void EnemyBoss::OnCollision(GameObject* pTarget)
 {
+	if (pTarget->GetTag() == "Player")
+	{
+		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
+		{
+			DecreaseLife(1);
+			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
+			if (GetLife() < 0)
+			{
+				Transform pos;
+				pos.position_ = { 9999,9999,9999 };
+				ModelManager::DeleteModelNum(hModel_);
+				SetIsList(false);
+				KillMe();
+			}
+		}
+	}
 }
 

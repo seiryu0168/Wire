@@ -75,7 +75,7 @@ void EnemyNormal::Attack()
 
 void EnemyNormal::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Player")
+	if (pTarget->GetTag() == "Player")
 	{
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
@@ -85,7 +85,8 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_= { 9999,9999,9999 };
-				ModelManager::SetTransform(hModel_,pos);
+				ModelManager::DeleteModelNum(hModel_);
+				SetIsList(false);
 				KillMe();
 			}
 		}

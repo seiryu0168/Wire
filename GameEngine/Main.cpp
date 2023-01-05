@@ -139,17 +139,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
+#if false
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
-#if 0
-				ImGui::Begin("aaa");
-				ImGui::BeginChild("aaaa");
-				ImGui::EndChild();
-				ImGui::End();
-				ImGui::Begin("hello");
-				ImGui::Text("Hello");
-				ImGui::SameLine();
-				ImGui::End();
-
 #endif 
 				ImGui::Render();
 				//•`‰æˆ—

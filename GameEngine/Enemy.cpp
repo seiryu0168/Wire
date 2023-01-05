@@ -5,7 +5,7 @@ Enemy::Enemy(GameObject* parent, std::string name)
 	:GameObject(parent, name)
 {
 	
-	enemyParameter_.life = 5;
+	enemyParameter_.life = 3;
 	enemyParameter_.viewRange = 50.0f;
 	enemyParameter_.viewAngle = 0.5f;
 	enemyParameter_.toPlayerVec = XMVectorSet(0, 0, 0, 0);
@@ -26,24 +26,23 @@ Enemy::~Enemy()
 
 }
 
-
 bool Enemy::IsVisible( float visibleAngle, float range)
 {
 
 	XMVECTOR toPlayer;
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	enemyParameter_.toPlayerVec = XMLoadFloat3(&playerPos) - enemyParameter_.vPosition;
-	float rangeToPlayer;
-	rangeToPlayer = XMVectorGetX(XMVector3Length(enemyParameter_.toPlayerVec));			//‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
+	float toPlayerRange;
+	toPlayerRange = XMVectorGetX(XMVector3Length(enemyParameter_.toPlayerVec));			//‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
 	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);							//³‹K‰»
 
-	XMVECTOR dot = XMVector3Dot(GetFrontVec(), toPlayer);						//“àÏ‚ğŒvZ
-	float angle = acos(min(XMVectorGetX(dot), 1));						//Šp“xŒvZ(1ˆÈã‚É‚È‚ç‚È‚¢‚æ‚¤minŠÖ”‚Â‚¯‚½)
-	if (rangeToPlayer <= 2 * range)
+	XMVECTOR dot = XMVector3Dot(GetFrontVec(), toPlayer);								//“àÏ‚ğŒvZ
+	float angle = acos(min(XMVectorGetX(dot), 1));										//Šp“xŒvZ(1ˆÈã‚É‚È‚ç‚È‚¢‚æ‚¤minŠÖ”‚Â‚¯‚½)
+	if (toPlayerRange <= 2 * range)
 	{
 		enemyParameter_.pPlayer->AddTargetList(this);
 		enemyParameter_.isTargetList = true;
-		if (angle<visibleAngle && angle>-visibleAngle && rangeToPlayer < range)
+		if (angle<visibleAngle && angle>-visibleAngle && toPlayerRange < range)
 		{
 			enemyParameter_.frontVec = toPlayer;
 			return true;

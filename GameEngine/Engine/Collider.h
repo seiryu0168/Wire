@@ -40,28 +40,56 @@ public:
 
 	//衝突範囲
 	
-	//箱型と箱型
-	//引数はBoxCollider型とBoxCollider型
+	/// <summary>
+	/// AABB同士の当たり判定
+	/// </summary>
+	/// <param name="box1">BoxCollider型</param>
+	/// <param name="box2">BoxCollider型</param>
+	/// <returns></returns>
 	bool IsHitBox_Box(BoxCollider* box1, BoxCollider* box2);
 
-	//箱型と球型
-	//引数はBoxCollider型とSphereCollider型
+	/// <summary>
+	/// AABBと球の当たり判定
+	/// </summary>
+	/// <param name="box">BoxCollider型</param>
+	/// <param name="sphere">SphereCollider型</param>
+	/// <returns></returns>
 	bool IsHitBox_Sphere(BoxCollider* box, SphereCollider* sphere);
 
-	//球型と球型
-	//引数はSphereCollider型とSphereCollider型
+	/// <summary>
+	/// 球と球の当たり判定
+	/// </summary>
+	/// <param name="sphereA">SphereCollider型</param>
+	/// <param name="sphereB">SphereCollider型</param>
+	/// <returns></returns>
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
-	//OBB同士の衝突判定
+	/// <summary>
+	/// OBB同士の当たり判定
+	/// </summary>
+	/// <param name="obbA">OBBCollider型</param>
+	/// <param name="obbB">OBBCollider型</param>
+	/// <returns></returns>
 	bool IsHitOBB_OBB(OBBCollider* obbA,OBBCollider* obbB);
 
-	//OBBと球型
+	/// <summary>
+	/// OBBと球の当たり判定
+	/// </summary>
+	/// <param name="obb">OBBCollider型</param>
+	/// <param name="sphere">SphereCollider型</param>
+	/// <returns></returns>
 	bool IsHitOBB_Sphere(OBBCollider* obb, SphereCollider* sphere);
 
-	//コライダーを付けたオブジェクトを返す
+	/// <summary>
+	/// 当たり判定を付けたオブジェクトを取得
+	/// </summary>
+	/// <returns>当たり判定を付けたオブジェクト</returns>
 	GameObject* GetpColObject() { return pColObject_; }
 	
-	//オブジェクトをセット
+	/// <summary>
+	/// 当たり判定をつけるオブジェクトを設定
+	/// </summary>
+	/// <param name="gameObject">任意のオブジェクト(GameObject型)</param>
 	void SetGemaObject(GameObject* gameObject) { pColObject_ = gameObject; }
 
 

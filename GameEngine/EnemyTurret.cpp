@@ -67,8 +67,8 @@ void EnemyTurret::Shot()
 	if ((3600.0f/(float)rpm_)<=(float)shotTime_)
 	{
 		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		HomingBullet* pBullet = Instantiate<HomingBullet>(this);
-		//pBullet->SetDir(shotDir);
+		Bullet* pBullet = Instantiate<Bullet>(this);
+		pBullet->SetDir(shotDir);
 		shotTime_ = 0;
 	}
 
@@ -92,7 +92,7 @@ void EnemyTurret::Release()
 
 void EnemyTurret::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Player")
+	if (pTarget->GetTag() == "Player")
 	{
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
@@ -103,6 +103,7 @@ void EnemyTurret::OnCollision(GameObject* pTarget)
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
 				ModelManager::SetTransform(hModel_, pos);
+				SetIsList(false);
 				KillMe();
 			}
 		}

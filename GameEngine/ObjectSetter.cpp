@@ -20,16 +20,13 @@ ObjectSetter::~ObjectSetter()
 
 void ObjectSetter::Initialize()
 {
-	//オブジェクト設置するクラスを作り、そのクラスの中で各オブジェクトを生成する
-	//生成時にここのクラスを親に設定すればOK
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 
 	//feildって名前にしといたほうがいい
-	//Instantiate<SetObject>(this);
 	State::StateCreate();
 	Instantiate<Stage1>(GetParent());
-	pPlayer_=Instantiate<Player>(GetParent());
-	for (int i = 0; i < 11; i++)
+	Instantiate<Player>(GetParent());
+	for (int i = 0; i < 3; i++)
 	{
 		enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));
 		

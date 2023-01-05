@@ -4,6 +4,10 @@
 #include"Engine/Camera.h"
 #include"Engine/Particle.h"
 #include"Engine/SphereCollider.h"
+namespace
+{
+	static const float frame = 60.0f;
+}
 HomingBullet::HomingBullet(GameObject* parent)
 	:GameObject(parent, "HomingBullet"),
 	hModel_(-1),
@@ -26,13 +30,6 @@ void HomingBullet::Initialize()
 {
 	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0),0.3f);
 	AddCollider(pCollision);
-
-	if (pParent_ != nullptr)
-	{
-		transform_.position_ = pParent_->GetPosition();
-	}
-	else
-		KillMe();
 
 	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
 	assert(hAudio_ >= 0);
@@ -70,7 +67,7 @@ void HomingBullet::Homing()
 	XMVECTOR acceleration = XMVectorSet(0, 0, 0, 0);
 	XMFLOAT3 targetPos = pPlayer_->GetPosition();
 	XMVECTOR diff = XMLoadFloat3(&targetPos) - position_;
-	acceleration += ((diff - velocity_ * (period_ / 60.0f)) * 2.0f) / (((float)period_ / 60.0f) * ((float)period_ / 60.0f));
+	acceleration += ((diff - velocity_ * (period_ / frame)) * 2.0f) / (((float)period_ / frame) * ((float)period_ / frame));
 	period_--;
 	if (period_ > 60)
 	{

@@ -26,7 +26,6 @@ public:
     void Attack() override;
 
     //エネミーの動き
-    //動く方向ベクトル
     void EnemyMove();
 
     //開放

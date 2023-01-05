@@ -4,7 +4,7 @@
 #include"Engine/Camera.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
-#include"Engine/Math.h"
+//#include"Engine/Math.h"
 #include"EnemyNormal.h"
 #include"Engine/Particle.h"
 #include"Easing.h"
@@ -343,13 +343,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMStoreFloat3(&fMoveRay.dir, moveHolizon);
     ModelManager::RayCast(stageNum_, fMoveRay);
 
-    //進行方向に見て右のベクトル
+    //進行方向に見て右のレイ
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
     XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-0.5*M_PI)));
     ModelManager::RayCast(stageNum_, lMoveRay);
 
-    //進行方向に見て左ベクトル
+    //進行方向に見て左のレイ
     RayCastData rMoveRay;
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
@@ -573,6 +573,7 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 
 Enemy* Player::AimAssist(RayCastData* ray)
 {
+    CheckTargetList();
     if (enemyList_.empty())
         return nullptr;
 
