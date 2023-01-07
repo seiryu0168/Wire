@@ -1,38 +1,15 @@
 #pragma once
+#include<DirectXMath.h>
+#include<fbxsdk.h>
+#include<d3d11.h>
+#include"Engine/Texture.h"
+#include"Engine/Transform.h"
 
-#include <d3d11.h>
-#include <fbxsdk.h>
-#include <string>
-#include"Direct3D.h"
-#include "Transform.h"
+class Fbx;
 
-#pragma comment(lib, "LibFbxSDK-MT.lib")
-#pragma comment(lib, "LibXml2-MT.lib")
-#pragma comment(lib, "zlib-MT.lib")
-
-class Texture;
-
-struct RayCastData
+class FbxParts
 {
-	XMFLOAT3 start;
-	XMFLOAT3 dir;
-	float dist;
-	XMVECTOR hitPos;
-	XMVECTOR normal;
-	BOOL hit;
-	float distLimit;
-
-	RayCastData():start(XMFLOAT3(0,0,0)),
-		dir(XMFLOAT3(0,0,0)),
-		dist(9999.0f),
-		hit(false),
-		hitPos(XMVectorSet(0,0,0,0)),
-		normal(XMVectorSet(0,0,0,0)),
-		distLimit(9999.0f) {}
-};
-class Fbx
-{
-	class FbxParts;
+private:
 	//マテリアル
 	//質感
 	struct MATERIAL
@@ -74,43 +51,58 @@ class Fbx
 		XMVECTOR tangent;//接線
 	};
 
-	std::vector<FbxParts*> parts_;
+	struct BONE
+	{
+		XMMATRIX bindPose;		//初期ポーズ時のボーン変換行列
+		XMMATRIX newPose;		//アニメーションで変化した時のボーン変換行列
+		XMMATRIX diffPose;		//mBindPoseに対するmNowPoseの変化量
+	};
+
+	struct WEIGHT
+	{
+		XMVECTOR originPos;			//元の頂点座標
+		XMVECTOR originNormal;		//元の法線ベクトル
+		int*	 pBoneIndex;		//関連するボーンのID
+		float*	 pBoneWeight;		//ボーンのウェイト
+	};
+
 	int vertexCount_;		//頂点数
 	int polygonCount_;		//ポリゴン数
 	int materialCount_;		//マテリアル数
+	int boneNum_;			//ボーンの数
 
-	FbxManager* pFbxManager_;
-	FbxScene* pFbxScene_;
-	FbxTime::EMode frameRate_;
-	float animSpeed_;
-	int startFrame_;
-	int endFrame_;
 
-	ID3D11Buffer* pVertexBuffer_; //頂点バッファ
-	ID3D11Buffer** pIndexBuffer_;//インデックスバッファ
-	ID3D11Buffer* pConstantBuffer_;//コンスタントバッファ
+	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
+	ID3D11Buffer** ppIndexBuffer_;	//インデックスバッファ
+	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
+
+	FbxSkin*	 pSkinInfo_;     //スキンメッシュの情報
+	FbxCluster** ppCluster_;	 //クラスタ情報
+	BONE*		 pBoneArray_;	 //各ボーンの情報
+	WEIGHT*		 pWeightArray_;	 //ウェイトの情報
 	
 	MATERIAL* pMaterialList_;//マテリアルリスト
-	int* indexCount_;
+	int*	  indexCount_;
 
-	int** ppIndex_;
+	int**	ppIndex_;
 	VERTEX* pVertices_;
 
-public:
-
-	Fbx();
-	~Fbx();
-	HRESULT Load(std::string fileName);
-	HRESULT CheckNode(Fbx* pNode, std::vector<FbxParts*>* pPartsList);
-	HRESULT InitVertex(fbxsdk::FbxMesh*mesh);
+	HRESULT InitVertex(fbxsdk::FbxMesh* mesh);
 	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);
 	HRESULT CreateConstantBuffer();
+	HRESULT InitSkelton(FbxMesh* pMesh);
 	void InitMaterial(fbxsdk::FbxNode* pNode);
-	void RayCast(RayCastData& ray,Transform& transform);
-	
+public:
+	FbxParts();
+	~FbxParts();
 
-	//void ToPipeLine(Transform& transform);
-	//void bufferSet();
-	void    Draw(Transform& transform, SHADER_TYPE shaderType);
-	void    Release();
+	HRESULT Init(FbxNode* pNode);
+	void Draw(Transform& transform);
+	void DrawSkinAnime(Transform& trnsform, FbxTime time);
+	void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
+
+
+
+
 };
+
