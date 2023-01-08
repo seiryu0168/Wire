@@ -1,5 +1,5 @@
 #include "FbxParts.h"
-
+#include"Engine/Camera.h"
 #include"Engine/Direct3D.h"
 
 FbxParts::FbxParts()
@@ -56,6 +56,138 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 	CreateConstantBuffer();
 	InitMaterial(pNode);
 	return E_NOTIMPL;
+}
+
+void FbxParts::Draw(Transform& transform)
+{
+	transform.Calclation();
+	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
+
+	
+	//コンスタントバッファに情報を渡す
+	for (int i = 0; i < materialCount_; i++)
+	{
+		CONSTANT_BUFFER cb;
+		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
+		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+		cb.lightDirection = XMFLOAT4(0, 1, 0, 0);
+		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
+
+		cb.isTexture = pMaterialList_[i].pTexture != nullptr;
+		cb.isNormal = pMaterialList_[i].pNormalMap != nullptr;
+		cb.diffuseColor = pMaterialList_[i].diffuse;
+		cb.ambient = pMaterialList_[i].ambient;
+		cb.speculer = pMaterialList_[i].speculer;
+		cb.shininess = pMaterialList_[i].shininess;
+		cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
+
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
+		if (cb.isTexture)
+		{
+
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
+			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+			ID3D11ShaderResourceView* pSRV1 = pMaterialList_[i].pTexture->GetSRV();
+
+			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
+		}
+		if (cb.isNormal)
+		{
+			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
+		}
+
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
+		Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
+		//頂点バッファ
+		UINT stride = sizeof(VERTEX);
+		UINT offset = 0;
+		Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+		// インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		Direct3D::pContext->IASetIndexBuffer(ppIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//コンスタントバッファ
+		Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);							//頂点シェーダー用	
+		Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
+		Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
+	}
+}
+
+void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
+{
+	for (int i = 0; i < boneNum_; i++)
+	{
+		//各ボーンの現在の行列を取得
+		FbxAnimEvaluator* evaluator = ppCluster_[i]->GetLink()->GetScene()->GetAnimationEvaluator();
+		FbxMatrix mCurrentOrentation = evaluator->GetNodeGlobalTransform(ppCluster_[i]->GetLink(), time);
+
+		//行列コピー
+		XMFLOAT4X4 pose;
+		for (int x = 0; x < 4; x++)
+		{
+			for (int y = 0; y < 4; y++) 
+			{
+				pose(x, y) = (float)mCurrentOrentation.Get(x, y);
+			}
+		}
+
+		//オフセット時とのポーズの差分を計算
+		pBoneArray_[i].newPose = XMLoadFloat4x4(&pose);
+		pBoneArray_[i].diffPose = XMMatrixInverse(nullptr, pBoneArray_[i].bindPose);
+		pBoneArray_[i].diffPose *= pBoneArray_[i].newPose;
+	}
+	//各ボーンに対応する頂点の変形を制御
+	for (int i = 0; i < vertexCount_; i++)
+	{
+		//各頂点ごとに影響するボーン×ウェイトを繁栄させた行列を作成
+		XMMATRIX matrix;
+		ZeroMemory(&matrix, sizeof(matrix));
+		for (int j = 0; j < boneNum_; j++)
+		{
+			if (pWeightArray_[i].pBoneIndex[j] < 0)
+				break;
+			matrix += pBoneArray_[pWeightArray_[i].pBoneIndex[j]].diffPose * pWeightArray_[i].pBoneWeight[j];
+		}
+		//作成した行列で頂点を変形
+		XMVECTOR pos = pWeightArray_[i].originPos;
+		XMVECTOR normal = pWeightArray_[i].originNormal;
+		pVertices_[i].position = XMVector3TransformCoord(pos, matrix);
+		pVertices_[i].normal = XMVector3TransformCoord(normal, matrix);
+	}
+
+	//頂点バッファをロックし、変形後の頂点情報で上書き
+	D3D11_MAPPED_SUBRESOURCE msr = {};
+	Direct3D::pContext->Map(pVertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	if (msr.pData)
+	{
+		memcpy_s(msr.pData, msr.RowPitch, pVertices_, sizeof(VERTEX) * vertexCount_);
+		Direct3D::pContext->Unmap(pVertexBuffer_, 0);
+	}
+	Draw(transform);
+}
+
+bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
+{
+	for (int i = 0; i < boneNum_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			FbxAMatrix matrix;
+			ppCluster_[i]->GetTransformLinkMatrix(matrix);
+			position->x = (float)matrix[3][0];
+			position->y = (float)matrix[3][1];
+			position->z = (float)matrix[3][2];
+			return true;
+		}
+	}
+	return false;
 }
 
 HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)

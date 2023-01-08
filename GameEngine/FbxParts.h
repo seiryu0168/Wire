@@ -98,9 +98,10 @@ public:
 
 	HRESULT Init(FbxNode* pNode);
 	void Draw(Transform& transform);
-	void DrawSkinAnime(Transform& trnsform, FbxTime time);
+	void DrawSkinAnime(Transform& transform, FbxTime time);
 	void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
 
+	bool GetBonePosition(std::string boneName, XMFLOAT3* position);
 
 
 
