@@ -1,4 +1,6 @@
 #include "FbxParts.h"
+//#include"Engine/Fbx.h"
+#include"Engine/Math.h"
 #include"Engine/Camera.h"
 #include"Engine/Direct3D.h"
 
@@ -38,7 +40,7 @@ FbxParts::~FbxParts()
 		SAFE_DELETE_ARRAY(ppIndex_);
 
 	}
-	int* indexCount_;
+	SAFE_DELETE(indexCount_);
 
 }
 
@@ -55,7 +57,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 	InitIndex(mesh);
 	CreateConstantBuffer();
 	InitMaterial(pNode);
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void FbxParts::Draw(Transform& transform)
@@ -173,22 +175,6 @@ void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
 	Draw(transform);
 }
 
-bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
-{
-	for (int i = 0; i < boneNum_; i++)
-	{
-		if (boneName == ppCluster_[i]->GetLink()->GetName())
-		{
-			FbxAMatrix matrix;
-			ppCluster_[i]->GetTransformLinkMatrix(matrix);
-			position->x = (float)matrix[3][0];
-			position->y = (float)matrix[3][1];
-			position->z = (float)matrix[3][2];
-			return true;
-		}
-	}
-	return false;
-}
 
 HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 {
@@ -339,7 +325,7 @@ HRESULT FbxParts::InitSkelton(FbxMesh* pMesh)
 	FbxDeformer* pDeformer = pMesh->GetDeformer(0);
 	if (pDeformer == nullptr)
 	{
-		return;
+		return S_OK;
 	}
 	pSkinInfo_ = (FbxSkin*)pDeformer;
 
@@ -551,6 +537,65 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			{
 				pMaterialList_[i].pNormalMap = nullptr;
 			}
+		}
+	}
+}
+
+bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
+{
+	for (int i = 0; i < boneNum_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			FbxAMatrix matrix;
+			ppCluster_[i]->GetTransformLinkMatrix(matrix);
+			position->x = (float)matrix[3][0];
+			position->y = (float)matrix[3][1];
+			position->z = (float)matrix[3][2];
+			return true;
+		}
+	}
+	return false;
+}
+
+void FbxParts::RayCast(RayCastData& rayData,Transform& transform)
+{
+
+	for (int material = 0; material < materialCount_; material++)
+	{
+		XMVECTOR vDir = XMLoadFloat3(&rayData.dir);
+		vDir = XMVector3Normalize(vDir);
+		XMStoreFloat3(&rayData.dir, vDir);
+		//float prev = 9999.0f;
+
+		XMVECTOR nmlVec1;
+		XMVECTOR nmlVec2;
+		for (int poly = 0; poly < indexCount_[material]; poly++)
+		{
+			XMFLOAT3 v0 = { 0,0,0 };
+			XMStoreFloat3(&v0, pVertices_[ppIndex_[material][poly]].position);
+
+			XMFLOAT3 v1 = { 0,0,0 };
+			XMStoreFloat3(&v1, pVertices_[ppIndex_[material][poly + 1]].position);
+
+			XMFLOAT3 v2 = { 0,0,0 };
+			XMStoreFloat3(&v2, pVertices_[ppIndex_[material][poly + 2]].position);
+
+			nmlVec1 = pVertices_[ppIndex_[material][poly + 1]].position - pVertices_[ppIndex_[material][poly]].position;
+			nmlVec2 = pVertices_[ppIndex_[material][poly + 2]].position - pVertices_[ppIndex_[material][poly]].position;
+			poly += 2;
+
+			XMVECTOR hitPosition;
+			float dist;
+			XMVECTOR normal = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
+			if (Math::Intersect(rayData.start, rayData.dir, v0, v1, v2, dist, hitPosition) && dist < rayData.dist && dist < rayData.distLimit && Math::IsFrontSurface(normal, XMLoadFloat3(&rayData.dir)))
+			{
+				rayData.normal = normal;
+				rayData.hitPos = XMVector3TransformCoord(hitPosition, transform.GetWorldMatrix());
+				rayData.dist = dist;
+				rayData.hit = true;
+			}
+
 		}
 	}
 }

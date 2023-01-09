@@ -8,6 +8,28 @@ namespace ModelManager
 		Fbx* pfbx_;
 		Transform transform_;
 		std::string fileName_;
+
+		//アニメーションのフレーム
+		float nowFrame_;
+		float animSpeed_;
+		int	  startFrame_;
+		int   endFrame_;
+
+		ModelData()
+		{
+			pfbx_ = nullptr;
+			nowFrame_ = 0;
+			animSpeed_ = 0;
+			startFrame_ = 0;
+			endFrame_ = 0;
+		}
+		void SetAnimFrame(int start, int end, float speed)
+		{
+			nowFrame_ = (float)start;
+			startFrame_ = start;
+			endFrame_ = end;
+			animSpeed_ = speed;
+		}
 	};
 	std::vector<ModelData*> modelData_;
 	std::vector<int> polygonTestList_;
@@ -47,9 +69,17 @@ void ModelManager::SetTransform(int modelNum, Transform transform)
 }
 void ModelManager::Draw(int modelNum)
 {
+	if (modelNum < 0 || modelNum >= modelData_.size() || modelData_[modelNum] == nullptr)
+	{
+		return;
+	}
+	modelData_[modelNum]->nowFrame_ += modelData_[modelNum]->animSpeed_;
+	if (modelData_[modelNum]->nowFrame_ > (float)modelData_[modelNum]->endFrame_)
+		modelData_[modelNum]->nowFrame_ = modelData_[modelNum]->startFrame_;
+	
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{
-		modelData_[modelNum]->pfbx_->Draw(modelData_[modelNum]->transform_, SHADER_3D);
+		modelData_[modelNum]->pfbx_->Draw(modelData_[modelNum]->transform_, SHADER_3D,(int)modelData_[modelNum]->nowFrame_);
 	}
 }
 

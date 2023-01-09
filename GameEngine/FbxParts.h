@@ -4,8 +4,8 @@
 #include<d3d11.h>
 #include"Engine/Texture.h"
 #include"Engine/Transform.h"
-
-class Fbx;
+#include"Engine/Fbx.h"
+//class Fbx;
 
 class FbxParts
 {
@@ -99,9 +99,10 @@ public:
 	HRESULT Init(FbxNode* pNode);
 	void Draw(Transform& transform);
 	void DrawSkinAnime(Transform& transform, FbxTime time);
-	void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
-
+	//void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
+	FbxSkin* GetSkinInfo() { return pSkinInfo_; }
 	bool GetBonePosition(std::string boneName, XMFLOAT3* position);
+	void RayCast(RayCastData& rayData, Transform& transform);
 
 
 
