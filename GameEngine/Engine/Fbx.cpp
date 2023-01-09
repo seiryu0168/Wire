@@ -377,66 +377,6 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 			parts_[i]->Draw(transform);
 		}
 	}
-
-
-	//transform.Calclation();
-	//float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
-
-	////コンスタントバッファに情報を渡す
-	//for (int i = 0; i < materialCount_; i++)
-	//{
-	//	Direct3D::SetShader(shaderType);
-	//	CONSTANT_BUFFER cb;
-	//	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	//	cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
-	//	cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-	//	cb.lightDirection = XMFLOAT4(0, 1, 0, 0);
-	//	cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
-
-	//	cb.isTexture = pMaterialList_[i].pTexture != nullptr;
-	//	cb.isNormal = pMaterialList_[i].pNormalMap != nullptr;
-	//	cb.diffuseColor = pMaterialList_[i].diffuse;
-	//	cb.ambient = pMaterialList_[i].ambient;
-	//	cb.speculer = pMaterialList_[i].speculer;
-	//	cb.shininess = pMaterialList_[i].shininess;
-	//	cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
-
-	//	D3D11_MAPPED_SUBRESOURCE pdata;
-	//	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
-	//	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
-	//	if (cb.isTexture)
-	//	{
-
-	//		ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
-	//		Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
-	//		ID3D11ShaderResourceView* pSRV1 = pMaterialList_[i].pTexture->GetSRV();
-
-	//		Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
-	//	}
-	//	if (cb.isNormal)
-	//	{
-	//		ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
-	//		Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
-	//	}
-
-	//	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
-	//	Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
-	//	//頂点バッファ
-	//	UINT stride = sizeof(VERTEX);
-	//	UINT offset = 0;
-	//	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-	//	// インデックスバッファーをセット
-	//	stride = sizeof(int);
-	//	offset = 0;
-	//	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
-
-	//	//コンスタントバッファ
-	//	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);							//頂点シェーダー用	
-	//	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
-	//	Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
-	//	Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
-	//}
 }
 
 void Fbx::RayCast(RayCastData& ray,Transform& transform)
@@ -477,6 +417,19 @@ void Fbx::RayCast(RayCastData& ray,Transform& transform)
 	//		}
 	//	}
 	//}
+}
+
+XMFLOAT3 Fbx::GetBonePosition(std::string boneName)
+{
+	XMFLOAT3 position = { 0,0,0 };
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		if (parts_[i]->GetBonePosition(boneName, &position))
+		{
+			break;
+		}
+	}
+	return position;
 }
 
 

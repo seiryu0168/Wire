@@ -102,15 +102,8 @@ public:
 	Fbx();
 	~Fbx();
 	HRESULT Load(std::string fileName);
-	/*HRESULT InitVertex(fbxsdk::FbxMesh*mesh);
-	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);
-	HRESULT CreateConstantBuffer();
-	void InitMaterial(fbxsdk::FbxNode* pNode);*/
 	void RayCast(RayCastData& ray,Transform& transform);
-	
-
-	//void ToPipeLine(Transform& transform);
-	//void bufferSet();
+	XMFLOAT3 GetBonePosition(std::string boneName);
 	void    Draw(Transform& transform, SHADER_TYPE shaderType,int frame);
 	void    Release();
 };
