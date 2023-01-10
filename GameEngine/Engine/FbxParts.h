@@ -2,9 +2,9 @@
 #include<DirectXMath.h>
 #include<fbxsdk.h>
 #include<d3d11.h>
-#include"Engine/Texture.h"
-#include"Engine/Transform.h"
-#include"Engine/Fbx.h"
+#include"Texture.h"
+#include"Transform.h"
+#include"Fbx.h"
 //class Fbx;
 
 class FbxParts

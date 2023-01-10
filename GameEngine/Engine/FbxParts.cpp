@@ -1,8 +1,8 @@
 #include "FbxParts.h"
 //#include"Engine/Fbx.h"
-#include"Engine/Math.h"
-#include"Engine/Camera.h"
-#include"Engine/Direct3D.h"
+#include"Math.h"
+#include"Camera.h"
+#include"Direct3D.h"
 
 FbxParts::FbxParts()
 {

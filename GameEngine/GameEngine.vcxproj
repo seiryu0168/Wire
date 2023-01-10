@@ -157,7 +157,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="DebugUI.cpp" />
@@ -166,14 +165,17 @@
     <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="EnemyStateDef.cpp" />
     <ClCompile Include="EnemyTurret.cpp" />
+    <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Collider.cpp" />
     <ClCompile Include="Engine\Direct3D.cpp" />
     <ClCompile Include="Engine\Fbx.cpp" />
+    <ClCompile Include="Engine\FbxParts.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
+    <ClCompile Include="Engine\LineParticle.cpp" />
     <ClCompile Include="Engine\Math.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\OBBCollider.cpp" />
@@ -184,8 +186,8 @@
     <ClCompile Include="Engine\SphereCollider.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
+    <ClCompile Include="Engine\TextureManager.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
-    <ClCompile Include="FbxParts.cpp" />
     <ClCompile Include="HomingBullet.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -193,7 +195,6 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="LineParticle.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -206,12 +207,9 @@
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="Wire.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="DebugUI.h" />
@@ -221,14 +219,17 @@
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="EnemyStateDef.h" />
     <ClInclude Include="EnemyTurret.h" />
+    <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Collider.h" />
     <ClInclude Include="Engine\Direct3D.h" />
     <ClInclude Include="Engine\Fbx.h" />
+    <ClInclude Include="Engine\FbxParts.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Input.h" />
+    <ClInclude Include="Engine\LineParticle.h" />
     <ClInclude Include="Engine\Math.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\OBBCollider.h" />
@@ -240,8 +241,8 @@
     <ClInclude Include="Engine\SphereCollider.h" />
     <ClInclude Include="Engine\Sprite.h" />
     <ClInclude Include="Engine\Texture.h" />
+    <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="Engine\Transform.h" />
-    <ClInclude Include="FbxParts.h" />
     <ClInclude Include="HomingBullet.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -251,7 +252,6 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="LineParticle.h" />
     <ClInclude Include="ObjectSetter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
@@ -264,7 +264,6 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TestScene.h" />
-    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Wire.h" />
   </ItemGroup>

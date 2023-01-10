@@ -25,16 +25,17 @@ namespace Direct3D
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
 
-	int screenWidth;
-	int screenHeight;
+	extern XMUINT2 screenSize_;
+	//int screenWidth;
+	//int screenHeight;
 }
 
 //èâä˙âª
 HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
 
-	screenWidth = winW;
-	screenHeight = winH;
+	screenSize_.x = winW;
+	screenSize_.y = winH;
 	///////////////////////////Ç¢ÇÎÇ¢ÇÎèÄîıÇ∑ÇÈÇΩÇﬂÇÃê›íË///////////////////////////////
 	//Ç¢ÇÎÇ¢ÇÎÇ»ê›íËçÄñ⁄ÇÇ‹Ç∆ÇﬂÇΩç\ë¢ëÃ
 	DXGI_SWAP_CHAIN_DESC scDesc;
@@ -153,7 +154,6 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 	pContext->OMSetBlendState(pBlendState[BLEND_DEFAULT], factor, 0xffffffff);
-
 	//â¡éZçáê¨
 	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;

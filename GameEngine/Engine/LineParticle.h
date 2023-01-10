@@ -1,11 +1,8 @@
 #pragma once
-#include"Engine/Direct3D.h"
-#include"Engine/Texture.h"
+#include"Direct3D.h"
+#include"Texture.h"
 #include"DirectXMath.h"
-//#include"Engine/BillBoard.h"
 #include<list>
-
-
 
 class LineParticle
 {

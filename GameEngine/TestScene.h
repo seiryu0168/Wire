@@ -1,6 +1,6 @@
 #pragma once
 #include"Engine/GameObject.h"
-#include"LineParticle.h"
+#include"Engine/LineParticle.h"
 class TestScene : public GameObject
 {
 	LineParticle* pLine_;

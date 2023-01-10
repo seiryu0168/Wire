@@ -8,6 +8,7 @@ class Texture
 	ID3D11SamplerState* pSampler_;		//サンプラー
 	ID3D11ShaderResourceView* pSRV_;	//シェーダーリソースビュー
 
+
 	UINT imgWidth_;
 	UINT imgHeight_;
 public:

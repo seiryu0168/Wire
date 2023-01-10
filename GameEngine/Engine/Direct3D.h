@@ -44,8 +44,10 @@ namespace Direct3D
 	};
 	extern ID3D11Device* pDevice;				//デバイス
 	extern ID3D11DeviceContext* pContext;		//デバイスコンテキスト
-	extern int screenWidth;
-	extern int screenHeight;
+	
+	extern XMUINT2 screenSize_;
+	//extern int screenWidth;
+	//extern int screenHeight;
 	/*std::vector<RenderTarget*> renderTargetList_;
 	int targetList[] =
 	{
@@ -68,6 +70,7 @@ namespace Direct3D
 	void SetBlendMode(BLEND_MODE mode);
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
+	XMUINT2& GetScreenSize() { return screenSize_; }
 	//描画開始
 	void BeginDraw();
 

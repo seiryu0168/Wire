@@ -1,5 +1,7 @@
 #include "TitleScene.h"
 #include"ObjectSetter.h"
+#include"Engine/Sprite.h"
+#include"Engine/Sprite.h"
 
 TitleScene::TitleScene(GameObject* parent)
 	: GameObject(parent, "TitleScene")
@@ -15,6 +17,7 @@ void TitleScene::Initialize()
 //çXêV
 void TitleScene::Update()
 {
+
 	
 }
 
@@ -26,6 +29,10 @@ void TitleScene::FixedUpdate()
 //ï`âÊ
 void TitleScene::Draw()
 {
+	Sprite a;
+	a.Initialize();
+	a.Draw(transform_);
+
 }
 
 //äJï˙
