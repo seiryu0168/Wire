@@ -1,5 +1,5 @@
 #include "Fbx.h"
-#include"../FbxParts.h"
+#include"FbxParts.h"
 #include"Camera.h"
 #include"Math.h"
 #include"Texture.h"
