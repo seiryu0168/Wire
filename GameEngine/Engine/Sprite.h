@@ -31,9 +31,8 @@ protected:
 	HRESULT CreateVertexBuffer();
 	HRESULT CreateIndexBuffer();
 	HRESULT CreateConstantBuffer();
-	HRESULT Load(std::string fileName);
 
-	void ToPipeLine(DirectX::XMMATRIX worldMatrix);
+	void ToPipeLine(Transform& transform);
 	void bufferSet();
 	void Release();
 
@@ -43,9 +42,10 @@ public:
 	virtual HRESULT Initialize();
 	virtual void InitVertex();
 	virtual void InitIndex();
+	HRESULT Load(std::string fileName);
+	
 	void SetSize(UINT width, UINT height) { imgSize_ = { width,height }; }
-	void SetSize(XMUINT2 size) { imgSize_ = size; }
 
-	void Draw(Transform& transform);
+	void Draw(Transform& transform,RECT rect,float alpha);
 };
 

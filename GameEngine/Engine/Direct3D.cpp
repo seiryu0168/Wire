@@ -25,17 +25,16 @@ namespace Direct3D
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
 
-	extern XMUINT2 screenSize_;
-	//int screenWidth;
-	//int screenHeight;
+	int screenWidth;
+	int screenHeight;
 }
 
 //‰Šú‰»
 HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
 
-	screenSize_.x = winW;
-	screenSize_.y = winH;
+	screenWidth = winW;
+	screenHeight = winH;
 	///////////////////////////‚¢‚ë‚¢‚ë€”õ‚·‚é‚½‚ß‚Ìİ’è///////////////////////////////
 	//‚¢‚ë‚¢‚ë‚Èİ’è€–Ú‚ğ‚Ü‚Æ‚ß‚½\‘¢‘Ì
 	DXGI_SWAP_CHAIN_DESC scDesc;
@@ -414,6 +413,14 @@ ID3D11Device* Direct3D::GetDevice()
 ID3D11DeviceContext* Direct3D::GetContext()
 {
 	 return pContext;
+}
+int Direct3D::GetScreenWidth()
+{
+	return screenWidth;
+}
+int Direct3D::GetScreenHeight()
+{
+	return screenHeight;
 }
 //•`‰æŠJn
 void Direct3D::BeginDraw()
