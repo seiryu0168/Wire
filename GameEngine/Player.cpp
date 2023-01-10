@@ -12,8 +12,11 @@
 #include"Pointer.h"
 #include"Wire.h"
 #include<list>
-
-std::vector<EnemyNormal*> enemyList_;
+namespace
+{
+    static const std::vector<EnemyNormal*> enemyList_;
+    static const float hitdist_=2.001f;
+}
 
 //コンストラクタ
 Player::Player(GameObject* parent)
@@ -330,11 +333,11 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     moveDist.y = 0;                         //ベクトルのy軸を0にする
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
     XMVECTOR startVec[5] = { 0 };
-    startVec[0] = -XMVector3Normalize(moveHolizon);                                                    //進行方向
-    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, 0.5 * M_PI));   //進行方向に見て右
-    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -0.5f * M_PI));//進行方向に見て左
-    startVec[3] = baseUpVec_;                                                                          //上ベクトル
-    startVec[4] = -baseUpVec_;                                                                         //下ベクトル
+    startVec[0] = -XMVector3Normalize(moveHolizon);                                                //進行方向
+    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, M_PI/2));   //進行方向に見て右
+    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -(M_PI/2)));  //進行方向に見て左
+    startVec[3] = baseUpVec_;                                                                      //上ベクトル
+    startVec[4] = -baseUpVec_;                                                                     //下ベクトル
     XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
    
     //進行方向のレイ
@@ -346,13 +349,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //進行方向に見て右のレイ
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
-    XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-0.5*M_PI)));
+    XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(M_PI/2))));
     ModelManager::RayCast(stageNum_, lMoveRay);
 
     //進行方向に見て左のレイ
     RayCastData rMoveRay;
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
-    XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(0.5f*M_PI))));
+    XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(M_PI/2))));
     ModelManager::RayCast(stageNum_, rMoveRay);
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
@@ -364,7 +367,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     ModelManager::RayCast(stageNum_, DRay);
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
-    if (fMoveRay.dist < 2.0f)
+    if (fMoveRay.dist < hitdist_)
     {
         vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist = { 0,0,0 };
@@ -380,7 +383,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
 
-    if(lMoveRay.dist < 2.0f)
+    if(lMoveRay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
         wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
@@ -393,7 +396,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
 
-    if(rMoveRay.dist < 2.0f)
+    if(rMoveRay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
         wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
@@ -407,7 +410,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //上レイの距離(dist)が1以下になったらy軸の座標を戻す
-    if (URay.dist < 2.0f)
+    if (URay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
         wallzuri = moveVector + (URay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, URay.normal))));
@@ -420,7 +423,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //下レイの距離(dist)がmoveY以下になったらy軸の座標を戻す
-    if (DRay.dist < 2.001f)
+    if (DRay.dist < hitdist_)
     {
         if (signbit(moveY))
         {

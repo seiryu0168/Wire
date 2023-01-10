@@ -1,7 +1,7 @@
 #include "LineParticle.h"
-#include"Engine/Direct3D.h"
+#include"Direct3D.h"
 #include"DirectXMath.h"
-#include"Engine/Camera.h"
+#include"Camera.h"
 #include<vector>
 LineParticle::LineParticle()
 	:WIDTH_(0.5),

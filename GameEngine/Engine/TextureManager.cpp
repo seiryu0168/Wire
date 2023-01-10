@@ -1,5 +1,5 @@
 #include "TextureManager.h"
-#include"Engine/SAFE_DELETE_RELEASE.h"
+#include"SAFE_DELETE_RELEASE.h"
 namespace TextureManager
 {
 	struct textureData
@@ -30,7 +30,7 @@ int TextureManager::Load(std::string fileName)
 		pTextureData->pTexture_->Load(pTextureData->fileName_);
 	}
 	textureList_.push_back(pTextureData);
-	return textureList_.size() - 1;
+	return (int)textureList_.size() - 1;
 }
 
 Texture* TextureManager::GetTexture(int textureHandle)

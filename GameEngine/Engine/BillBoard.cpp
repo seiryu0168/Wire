@@ -1,18 +1,17 @@
 #include "BillBoard.h"
 #include"Camera.h"
-#include"../TextureManager.h"
+#include"TextureManager.h"
 BillBoard::BillBoard()
 	:hTexture_(-1)
 {
 	pConstantBuffer_ = nullptr;
 	pIndexBuffer_ = nullptr;
-	pTexture_ = nullptr;
 	pVertexBuffer_ = nullptr;
 }
 
 BillBoard::~BillBoard()
 {
-
+	Release();
 }
 
 HRESULT BillBoard::Load(std::string fileName)
@@ -135,5 +134,12 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 
 void BillBoard::Release()
 {
-	SAFE_RELEASE(pTexture_);
+	SAFE_RELEASE(pIndexBuffer_);
+	SAFE_RELEASE(pConstantBuffer_);
+	SAFE_RELEASE(pVertexBuffer_);
+
+	SAFE_DELETE(pIndexBuffer_);
+	SAFE_DELETE(pConstantBuffer_);
+	SAFE_DELETE(pVertexBuffer_);
+
 }

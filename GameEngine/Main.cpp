@@ -6,15 +6,13 @@
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"
 #include"Engine/Transform.h"
-//#include"Engine/Fbx.h"
 #include"DebugUI.h"
 #include"Engine/Input.h"
 #include"Engine/RootJob.h"
-//#include"Engine/Math.h"
 #include"ImGui/imgui.h"
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
-#include"Audio.h"
+#include"Engine/Audio.h"
 
 
 #pragma comment(lib, "winmm.lib")

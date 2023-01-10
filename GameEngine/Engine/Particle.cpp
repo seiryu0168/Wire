@@ -1,6 +1,6 @@
 #include "Particle.h"
-//#include"Engine/Model.h"
 #include"Camera.h"
+
 Particle::Particle(GameObject* parent)
 	:GameObject(parent,"Particle")
 {
@@ -210,5 +210,6 @@ void Particle::Draw()
 //ŠJ•ú
 void Particle::Release()
 {
+
 
 }

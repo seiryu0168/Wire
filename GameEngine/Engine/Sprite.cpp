@@ -1,13 +1,13 @@
 #include "Sprite.h"
+#include"TextureManager.h"
 Sprite::Sprite()
 {
-	pVertexBuffer_ = nullptr;
-	pIndexBuffer_ = nullptr;
+	pVertexBuffer_	 = nullptr;
+	pIndexBuffer_	 = nullptr;
 	pConstantBuffer_ = nullptr;
-	pTexture_ = nullptr;
-
-	vertices_ = nullptr;
-	index_ = nullptr;
+	vertices_		 = nullptr;
+	index_			 = nullptr;
+	hPict_			 = -1;
 }
 
 Sprite::~Sprite()
@@ -30,37 +30,28 @@ HRESULT Sprite::Initialize()
 		return E_FAIL;
 	}
 
-
-
 	//コンスタントバッファ作成
 	if (FAILED(CreateConstantBuffer()))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(TextureSet(L"Assets\\dice.png")))
+
+	if (FAILED(Load("Assets\\dice.png")))
 	{
 		return E_FAIL;
 	}
-
+	SetSize(TextureManager::GetTexture(hPict_)->GetWidth(), TextureManager::GetTexture(hPict_)->GetHeight());
 	return S_OK;
 }
 
 void Sprite::Draw(Transform& transform)
 {
-
 	Direct3D::SetShader(SHADER_2D);
 	//コンスタントバッファに情報を渡す
 	transform.Calclation();
 	ToPipeLine(transform.GetWorldMatrix());
-
-
-
 	//頂点、インデックス、コンスタントバッファをセット
 	bufferSet();
-
-
-
-
 }
 
 // 頂点データ用バッファの設定
@@ -129,33 +120,33 @@ HRESULT Sprite::CreateConstantBuffer()
 	return S_OK;
 }
 
-HRESULT Sprite::TextureSet(LPCWSTR fileName)
+HRESULT Sprite::Load(std::string fileName)
 {
-	pTexture_ = new Texture;
-	if (FAILED(pTexture_->Load(fileName)))
+	hPict_ = TextureManager::Load(fileName.c_str());
+	if (hPict_<0)
 	{
 		MessageBox(nullptr, L"画像ロードに失敗しました", L"エラー", MB_OK);
 		return E_FAIL;
 	}
 	return S_OK;
-	imgWidth_=pTexture_->GetWidth();
-	imgHeight_ = pTexture_->GetHeight();
 }
+
 void Sprite::InitVertex()
 {
 	// 頂点情報
 	VERTEX vertices[] =
 	{
 		//1
-		XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(0.0f,0.0f,0.0f,0.0f),	// 四角形の頂点（左上）
-		XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f,0.0f,0.0f,0.0f),	// 四角形の頂点（右上）
-		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f,1.0f,0.0f,0.0f),	// 四角形の頂点（右下）
-		XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(0.0f,1.0f,0.0f,0.0f),   // 四角形の頂点（左下）
+		XMVectorSet( -1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(0.0f,0.0f,0.0f,0.0f),	// 四角形の頂点（左上）
+		XMVectorSet(  1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f,0.0f,0.0f,0.0f),	// 四角形の頂点（右上）
+		XMVectorSet(  1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f,1.0f,0.0f,0.0f),	// 四角形の頂点（右下）
+		XMVectorSet( -1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(0.0f,1.0f,0.0f,0.0f),   // 四角形の頂点（左下）
 	};
 	vertexNum_ = sizeof(vertices) / sizeof(VERTEX);
 	vertices_ = new VERTEX[vertexNum_];
 	memcpy(vertices_, vertices, sizeof(vertices));
 }
+
 void Sprite::InitIndex()
 {
 	//インデックス情報
@@ -164,21 +155,21 @@ void Sprite::InitIndex()
 	indexNum_ = sizeof(index) / sizeof(int);
 	index_ = new int[indexNum_];
 	memcpy(index_, index, sizeof(index));
-
 }
 
 //コンスタントバッファに情報を渡す
 void Sprite::ToPipeLine(DirectX::XMMATRIX worldMatrix)
 {
+	XMMATRIX matImageSize = XMMatrixScaling(imgSize_.x / Direct3D::GetScreenSize().x, imgSize_.y / Direct3D::GetScreenSize().y, 1.0f);
 	CONSTANT_BUFFER cb;
 	cb.matPosition = XMMatrixTranspose(worldMatrix);
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));					// データを値を送る
 
-	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+	ID3D11SamplerState* pSampler = TextureManager::GetTexture(hPict_)->GetSampler();
 	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
-	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
+	ID3D11ShaderResourceView* pSRV = TextureManager::GetTexture(hPict_)->GetSRV();
 	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
@@ -198,7 +189,7 @@ void Sprite::bufferSet()
 	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 
 	//コンスタントバッファ
-	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
 	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
@@ -206,11 +197,8 @@ void Sprite::bufferSet()
 
 void Sprite::Release()
 {
-	//->Release();
-	//SAFE_DELETE(pTexture_);
 	SAFE_DELETE_ARRAY(index_);
 	SAFE_DELETE_ARRAY(vertices_);
-	SAFE_RELEASE(pTexture_);
 	SAFE_RELEASE(pConstantBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pVertexBuffer_);
