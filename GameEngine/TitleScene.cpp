@@ -29,10 +29,6 @@ void TitleScene::FixedUpdate()
 //•`‰æ
 void TitleScene::Draw()
 {
-	Sprite a;
-	a.Initialize();
-	a.Draw(transform_);
-
 }
 
 //ŠJ•ú

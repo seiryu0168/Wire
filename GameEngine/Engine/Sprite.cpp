@@ -46,9 +46,21 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 	//コンスタントバッファに情報を渡す
 	transform.Calclation();
 
-	XMMATRIX matImageSize = XMMatrixScaling((float)((float)imgSize_.x / Direct3D::GetScreenWidth()), (float)((float)imgSize_.y / Direct3D::GetScreenHeight()), 1.0f);
+	//画面のサイズに合わせる行列
+	XMMATRIX matImageSize = XMMatrixScaling((float)(1.0f / Direct3D::GetScreenWidth()), (float)(1.0f / Direct3D::GetScreenHeight()), 1.0f);
+	//切り抜きサイズに合わせる行列
+	XMMATRIX matCut = XMMatrixScaling(rect.right, rect.bottom, 1.0f);
 	CONSTANT_BUFFER cb;
-	cb.matPosition = XMMatrixTranspose(transform.GetWorldScaleMatrix() * matImageSize * transform.GetWorldRotateMatrix() * transform.GetWorldTranslateMatrix());
+	
+	//最終的な行列
+	cb.matWorld = XMMatrixTranspose(matCut*transform.GetWorldScaleMatrix() * matImageSize * transform.GetWorldRotateMatrix() * transform.GetWorldTranslateMatrix());
+	
+	XMMATRIX matTexTrans = XMMatrixTranslation((float)rect.left / size_.x, (float)rect.top / size_.y, 1.0f);
+	XMMATRIX matTexScale = XMMatrixScaling((float)rect.right / size_.x, (float)rect.bottom / size_.y, 1.0f);
+
+	cb.matUVTrans = XMMatrixTranspose(matTexScale * matTexTrans);
+	cb.color = XMFLOAT4(1, 1, 1, alpha);
+
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));					// データを値を送る
@@ -153,7 +165,8 @@ HRESULT Sprite::Load(std::string fileName)
 		MessageBox(nullptr, L"画像ロードに失敗しました", L"エラー", MB_OK);
 		return E_FAIL;
 	}
-
+	size_ = { (float)TextureManager::GetTexture(hPict_)->GetWidth(),(float)TextureManager::GetTexture(hPict_)->GetHeight(),1.0f };
+	
 	InitVertex();
 	InitIndex();
 	if (FAILED(CreateVertexBuffer()))
@@ -202,42 +215,42 @@ void Sprite::InitIndex()
 }
 
 //コンスタントバッファに情報を渡す
-void Sprite::ToPipeLine(Transform& transform)
-{
-	XMMATRIX matImageSize = XMMatrixScaling((float)((float)imgSize_.x / Direct3D::GetScreenWidth()), (float)((float)imgSize_.y / Direct3D::GetScreenHeight()), 1.0f);
-	CONSTANT_BUFFER cb;
-	cb.matPosition = XMMatrixTranspose(transform.GetWorldScaleMatrix()*matImageSize*transform.GetWorldRotateMatrix()*transform.GetWorldTranslateMatrix());
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));					// データを値を送る
-
-	ID3D11SamplerState* pSampler = TextureManager::GetTexture(hPict_)->GetSampler();
-	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
-	ID3D11ShaderResourceView* pSRV = TextureManager::GetTexture(hPict_)->GetSRV();
-	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
-
-	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
-}
-
-//頂点、インデックス、コンスタントバッファをセット
-void Sprite::bufferSet()
-{
-	//頂点バッファ
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-	// インデックスバッファーをセット
-	stride = sizeof(int);
-	offset = 0;
-	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
-
-	//コンスタントバッファ
-	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用
-	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-
-	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
-}
+//void Sprite::ToPipeLine(Transform& transform)
+//{
+//	XMMATRIX matImageSize = XMMatrixScaling((float)(size_.x / Direct3D::GetScreenWidth()), (float)(size_.y / Direct3D::GetScreenHeight()), 1.0f);
+//	CONSTANT_BUFFER cb;
+//	cb.matPosition = XMMatrixTranspose(transform.GetWorldScaleMatrix()*matImageSize*transform.GetWorldRotateMatrix()*transform.GetWorldTranslateMatrix());
+//	D3D11_MAPPED_SUBRESOURCE pdata;
+//	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+//	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));					// データを値を送る
+//
+//	ID3D11SamplerState* pSampler = TextureManager::GetTexture(hPict_)->GetSampler();
+//	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+//	ID3D11ShaderResourceView* pSRV = TextureManager::GetTexture(hPict_)->GetSRV();
+//	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+//
+//	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
+//}
+//
+////頂点、インデックス、コンスタントバッファをセット
+//void Sprite::bufferSet()
+//{
+//	//頂点バッファ
+//	UINT stride = sizeof(VERTEX);
+//	UINT offset = 0;
+//	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+//
+//	// インデックスバッファーをセット
+//	stride = sizeof(int);
+//	offset = 0;
+//	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+//
+//	//コンスタントバッファ
+//	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用
+//	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+//
+//	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
+//}
 
 void Sprite::Release()
 {

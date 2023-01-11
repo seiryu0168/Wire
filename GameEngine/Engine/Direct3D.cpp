@@ -446,7 +446,6 @@ void Direct3D::EndDraw()
 	{
 		
 			MessageBox(nullptr, L"スワップチェイン失敗", L"エラー", MB_OK);
-			//return hr;
 		
 	}
 }

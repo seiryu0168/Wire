@@ -45,16 +45,9 @@ namespace Direct3D
 	extern ID3D11Device* pDevice;				//デバイス
 	extern ID3D11DeviceContext* pContext;		//デバイスコンテキスト
 	
+
 	extern int screenWidth;
 	extern int screenHeight;
-	/*std::vector<RenderTarget*> renderTargetList_;
-	int targetList[] =
-	{
-		BACK_BUFFER,
-		RENDER_TARGET,
-		RENDER_TARGET,
-		RENDER_TARGET,
-	};*/
 
 	//初期化
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
@@ -82,21 +75,3 @@ namespace Direct3D
 	void Release();
 
 };
-
-//class RenderTarget
-//{
-//private:
-//	ID3D11Texture2D* pLayerBuffer;
-//	ID3D11RenderTargetView* pRenderTargetView;
-//	ID3D11ShaderResourceView* pShaderResourceView;
-//public:
-//	RenderTarget();
-//	~RenderTarget();
-//
-//	HRESULT Init(int renderType,int winW,int winH);
-//	void SetShaderResource();
-//	void SetRenderTarget();
-//	void ClearRenderTarget();
-//	ID3D11ShaderResourceView** GetSRV();
-//	void Release();
-//};

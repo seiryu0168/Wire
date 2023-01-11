@@ -4,7 +4,7 @@
 #include"Engine/Camera.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
-//#include"Engine/Math.h"
+#include"ImageManager.h"
 #include"EnemyNormal.h"
 #include"Engine/Particle.h"
 #include"Easing.h"
@@ -68,7 +68,7 @@ void Player::Initialize()
     pWire_ = new LineParticle;
     pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
-    pLine_->Load("Assets\\Effect01.png");
+    pLine_->Load("Assets\\Effect01.png");//ギザギザ
     pWire_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
@@ -97,6 +97,12 @@ void Player::Initialize()
     {
         transform_.position_.y -= firstRay.dist-transform_.scale_.y;
     }
+
+    int hPict_ = ImageManager::Load("Assets\\Life.png");
+    ImageManager::SetImagePos(hPict_, { -500.0f, 400.0f, 0 });
+    ImageManager::SetImageSize(hPict_, { 1.0f,0.5f,1.0f });
+    hPict_= ImageManager::Load("Assets\\Fire.png");
+    ImageManager::SetImagePos(hPict_, { 500.0f,-400.0f,1.0f });
 }
 
 //更新
