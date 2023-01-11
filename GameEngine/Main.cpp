@@ -137,11 +137,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				pRootJob->UpdateSub();
 #if true
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
+				DebugUI::Log();
 #endif 
 				ImGui::Render();
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
+
 				ImageManager::Draw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 

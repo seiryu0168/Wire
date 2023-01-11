@@ -10,9 +10,6 @@ namespace DebugUI
 	{
 		std::string objectName_;
 		std::string message_;
-		int	  intLog_;
-		float floatLog_;
-		bool  isHit_;
 	};
 	std::vector<debugData*> debugLogs;
 
@@ -44,14 +41,11 @@ void DebugUI::Debug(GameObject* object)
 	
 }
 
-void DebugUI::DebugLog(GameObject* object, std::string message, int intvar, float floatvar, bool hit)
+void DebugUI::DebugLog(GameObject* object, std::string message)
 {
 	debugData* pData = new debugData;
 	pData->objectName_ = object->GetObjectName();
 	pData->message_ = message;
-	pData->intLog_ = intvar;
-	pData->floatLog_ = floatvar;
-	pData->isHit_ = hit;
 	debugLogs.push_back(pData);
 }
 
@@ -65,9 +59,10 @@ void DebugUI::StartImGui()
 void DebugUI::Log()
 {
 	ImGui::Begin("Log");
-	for (int i = 0; i < debugLogs.size(); i++)
+	for (int i = debugLogs.size()-1; i >=0; i--)
 	{
-		debugLogs[i]
+		std::string msg = debugLogs[i]->objectName_ + " : " + debugLogs[i]->message_;
+		ImGui::Text(msg.c_str());
 	}
 	ImGui::End();
 }
