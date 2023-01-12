@@ -9,6 +9,7 @@ namespace TextureManager
 	};
 	std::vector<textureData*> textureList_;
 }
+
 int TextureManager::Load(std::string fileName)
 {
 	textureData* pTextureData = new textureData;

@@ -25,17 +25,16 @@ namespace Direct3D
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
 
-	extern XMUINT2 screenSize_;
-	//int screenWidth;
-	//int screenHeight;
+	int screenWidth;
+	int screenHeight;
 }
 
 //初期化
 HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
 
-	screenSize_.x = winW;
-	screenSize_.y = winH;
+	screenWidth = winW;
+	screenHeight = winH;
 	///////////////////////////いろいろ準備するための設定///////////////////////////////
 	//いろいろな設定項目をまとめた構造体
 	DXGI_SWAP_CHAIN_DESC scDesc;
@@ -483,6 +482,14 @@ ID3D11DeviceContext* Direct3D::GetContext()
 {
 	 return pContext;
 }
+int Direct3D::GetScreenWidth()
+{
+	return screenWidth;
+}
+int Direct3D::GetScreenHeight()
+{
+	return screenHeight;
+}
 //描画開始
 void Direct3D::BeginDraw()
 {
@@ -507,7 +514,6 @@ void Direct3D::EndDraw()
 	{
 		
 			MessageBox(nullptr, L"スワップチェイン失敗", L"エラー", MB_OK);
-			//return hr;
 		
 	}
 }

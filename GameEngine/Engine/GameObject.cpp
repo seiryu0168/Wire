@@ -83,6 +83,7 @@ void GameObject::DrawSub()
 	{
 		(*i)->DrawSub();
 	}
+
 }
 
 void GameObject::ReleaseSub()

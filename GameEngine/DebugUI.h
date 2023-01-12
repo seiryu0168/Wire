@@ -1,6 +1,7 @@
 #pragma once
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
+#include<string>
 #include"Engine/Direct3D.h"
 
 class GameObject;
@@ -19,6 +20,8 @@ namespace DebugUI
 	/// </summary>
 	void StartImGui();
 	void Debug(GameObject* object);
+	void DebugLog(GameObject* object, std::string message);
+	void Log();
 	void CleanUp();
 	void PrintProcessMemory();
 	void GetProcess(DWORD processID);

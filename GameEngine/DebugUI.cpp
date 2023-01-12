@@ -3,15 +3,15 @@
 #include<psapi.h>
 
 
-namespace DebugData
+namespace DebugUI
 {
 	int objectCount_;
-	struct ObjectData
+	struct debugData
 	{
 		std::string objectName_;
-		Transform transform_;
-
+		std::string message_;
 	};
+	std::vector<debugData*> debugLogs;
 
 }
 	
@@ -31,14 +31,22 @@ void DebugUI::Debug(GameObject* object)
 {
 	ImGui::Begin("Debug");
 	ObjectCount(*(object->GetChildList()->begin()));
-	std::string count = std::to_string(DebugData::objectCount_);
+	std::string count = std::to_string(objectCount_);
 	PrintProcessMemory();
 	
 	ImGui::Text(count.c_str());
 	ImGui::Text(object->GetObjectName().c_str());
-	DebugData::objectCount_ = 0;
+	objectCount_ = 0;
 	ImGui::End();
 	
+}
+
+void DebugUI::DebugLog(GameObject* object, std::string message)
+{
+	debugData* pData = new debugData;
+	pData->objectName_ = object->GetObjectName();
+	pData->message_ = message;
+	debugLogs.push_back(pData);
 }
 
 void DebugUI::StartImGui()
@@ -46,6 +54,17 @@ void DebugUI::StartImGui()
 	ImGui_ImplWin32_NewFrame();
 	ImGui_ImplDX11_NewFrame();
 	ImGui::NewFrame();
+}
+
+void DebugUI::Log()
+{
+	ImGui::Begin("Log");
+	for (int i = debugLogs.size()-1; i >=0; i--)
+	{
+		std::string msg = debugLogs[i]->objectName_ + " : " + debugLogs[i]->message_;
+		ImGui::Text(msg.c_str());
+	}
+	ImGui::End();
 }
 
 void DebugUI::CleanUp()
@@ -93,7 +112,7 @@ void DebugUI::ObjectCount(GameObject* object)
 	{
 		return;
 	}
-	DebugData::objectCount_++;
+	objectCount_++;
 	if (ImGui::TreeNode(object->GetObjectName().c_str()))
 	{
 		//座標、回転、サイズの情報を表示

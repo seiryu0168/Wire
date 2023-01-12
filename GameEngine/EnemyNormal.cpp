@@ -3,6 +3,7 @@
 #include"Engine/BoxCollider.h"
 #include"StateList.h"
 #include"Pointer.h"
+
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),

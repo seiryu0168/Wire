@@ -1,6 +1,5 @@
 #include "Model.h"
 #include<vector>
-//#include"Direct3D.h"
 namespace ModelManager
 {
 	struct ModelData

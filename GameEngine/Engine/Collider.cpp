@@ -3,6 +3,7 @@
 #include"SphereCollider.h"
 #include"OBBCollider.h"
 #include"GameObject.h"
+#include"../DebugUI.h"
 #include"Fbx.h"
 
 Collider::Collider()

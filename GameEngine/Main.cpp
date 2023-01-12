@@ -6,6 +6,7 @@
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"
 #include"Engine/Transform.h"
+#include"ImageManager.h"
 #include"DebugUI.h"
 #include"Engine/Input.h"
 #include"Engine/RootJob.h"
@@ -126,10 +127,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//¡‚ÌŽž‚ÆÅŒã‚ÉXV‚µ‚½Žž‚Ì·*60‚ª1000ˆÈã‚Å‚ ‚ê‚Î
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
-			DebugUI::StartImGui();
-			//ImGui_ImplDX11_NewFrame();
-			//ImGui_ImplWin32_NewFrame();
-			//ImGui::NewFrame();
+				DebugUI::StartImGui();
 				//ƒQ[ƒ€‚Ìˆ—
 				Input::Update();
 				Camera::Update();
@@ -137,13 +135,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
-#if false
+#if true
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
+				DebugUI::Log();
 #endif 
 				ImGui::Render();
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
+
+				ImageManager::Draw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 
@@ -152,11 +153,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		}
 	}
 
-	//ImGui_ImplDX11_Shutdown();
-	//ImGui_ImplWin32_Shutdown();
-	//ImGui::DestroyContext();
 	Audio::Releace();
 	DebugUI::CleanUp();
+	ImageManager::AllRelease();
 	pRootJob->ReleaseSub();
 	Input::Release();
 	Direct3D::Release();
