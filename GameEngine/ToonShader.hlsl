@@ -56,6 +56,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	normal.w = 0;
 	outData.normal = mul(normal, g_matNormal);
 
+
 	//UV
 	outData.uv = uv;
 
@@ -100,5 +101,3 @@ float4 PS(VS_OUT inData) : SV_Target
 	outColor = diffuse * shade + diffuse * ambient + speculer;
 	return outColor;
 }
-
-

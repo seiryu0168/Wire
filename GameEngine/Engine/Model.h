@@ -11,6 +11,7 @@ namespace ModelManager
 	void RayCast(int modelNum, RayCastData& ray);
 	void RayCast(RayCastData& ray);
 	void SetModelNum(int modelNum);
+	void SetShader(std::string shaderName);
 	void DeleteModelNum(int modelNum);
 	void Release();
 };
