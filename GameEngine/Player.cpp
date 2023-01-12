@@ -257,11 +257,13 @@ void Player::FixedUpdate()
 void Player::Draw()
 {
     ModelManager::SetTransform(hModel_, transform_);
-    ModelManager::Draw(hModel_);
+    ModelManager::DrawOutLine(hModel_); 
+}
 
+void Player::SecondDraw()
+{
     pLine_->Draw();
     pWire_->Draw();
-    
 }
 
 //ŠJ•ú
@@ -278,7 +280,7 @@ void Player::CameraMove(RayCastData ray)
         aimTime_ += 0.05f;
         aimTime_ = min(aimTime_, 1);
     }
-    else//(aimFlag_==false)
+    else
     {
         aimTime_ += -0.07f;
         aimTime_ = max(aimTime_, 0.5);

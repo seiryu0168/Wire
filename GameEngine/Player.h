@@ -94,6 +94,8 @@ public:
     //•`‰æ
     void Draw() override;
 
+    void SecondDraw() override;
+
     //ƒLƒƒƒ‰‚ª•Ç‚ð‚·‚è”²‚¯‚È‚¢‚æ‚¤‚É‚·‚é
     void CharactorControll(XMVECTOR &moveVector);
     

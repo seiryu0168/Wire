@@ -363,10 +363,47 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 {
 	Direct3D::SetShader(shaderType);
+	Direct3D::SetBlendMode(BLEND_DEFAULT);
 	for (int i = 0; i<parts_.size(); i++)
 	{
 		FbxTime time;
 		time.SetTime(0, 0, 0, frame,0, 0, frameRate_);
+
+		if (parts_[i]->GetSkinInfo())
+		{
+			parts_[i]->DrawSkinAnime(transform, frame);
+		}
+		else
+		{
+			parts_[i]->Draw(transform);
+		}
+	}
+}
+
+void Fbx::DrawOutLine(Transform& transform, int frame)
+{
+	Direct3D::SetBlendMode(BLEND_DEFAULT);
+	Direct3D::SetShader(SHADER_TOON);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		FbxTime time;
+		time.SetTime(0, 0, 0, frame, 0, 0, frameRate_);
+
+		if (parts_[i]->GetSkinInfo())
+		{
+			parts_[i]->DrawSkinAnime(transform, frame);
+		}
+		else
+		{
+			parts_[i]->Draw(transform);
+		}
+	}
+
+	Direct3D::SetShader(SHADER_3D);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		FbxTime time;
+		time.SetTime(0, 0, 0, frame, 0, 0, frameRate_);
 
 		if (parts_[i]->GetSkinInfo())
 		{

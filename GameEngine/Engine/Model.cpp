@@ -82,6 +82,22 @@ void ModelManager::Draw(int modelNum)
 	}
 }
 
+void ModelManager::DrawOutLine(int modelNum)
+{
+	if (modelNum < 0 || modelNum >= modelData_.size() || modelData_[modelNum] == nullptr)
+	{
+		return;
+	}
+	modelData_[modelNum]->nowFrame_ += modelData_[modelNum]->animSpeed_;
+	if (modelData_[modelNum]->nowFrame_ > (float)modelData_[modelNum]->endFrame_)
+		modelData_[modelNum]->nowFrame_ = modelData_[modelNum]->startFrame_;
+
+	if (modelData_[modelNum]->pfbx_ != nullptr)
+	{
+		modelData_[modelNum]->pfbx_->DrawOutLine(modelData_[modelNum]->transform_, (int)modelData_[modelNum]->nowFrame_);
+	}
+}
+
 void ModelManager::RayCast(int modelNum, RayCastData& ray)
 {
 	XMMATRIX invW = XMMatrixInverse(nullptr,modelData_[modelNum]->transform_.GetWorldMatrix());

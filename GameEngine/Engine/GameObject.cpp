@@ -86,6 +86,19 @@ void GameObject::DrawSub()
 
 }
 
+void GameObject::SecondDrawSub()
+{
+	if (drawFlag_)
+	{
+		SecondDraw();
+	}
+
+	for (auto i = childList_.begin(); i != childList_.end(); i++)
+	{
+		(*i)->SecondDrawSub();
+	}
+}
+
 void GameObject::ReleaseSub()
 {
 	for (auto i = colliderList_.begin(); i != colliderList_.end(); i++)

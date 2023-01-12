@@ -47,7 +47,6 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	VS_OUT outData;
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
-	outData.pos = mul(pos, g_matWVP);
 	//視線ベクトル
 	float4 cameraPos = mul(pos, g_matW);
 	outData.eyeVector = normalize(g_cameraPosition - cameraPos);
@@ -55,10 +54,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//法線
 	normal.w = 0;
 	outData.normal = mul(normal, g_matNormal);
+	pos = pos + outData.normal * 0.1f;
+	outData.pos = mul(pos, g_matWVP);
 
-
-	//UV
-	outData.uv = uv;
 
 	//まとめて出力
 	return outData;
@@ -68,36 +66,5 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	inData.normal = normalize(inData.normal);
-	//ライトベクトル
-	float4 light = float4(0, -1, 0, 0);
-	light = normalize(light);
-	//拡散反射光(ディフューズ)
-	//法線とライトの方向の内積
-	float4 shade = saturate(dot(inData.normal, -light));
-	shade.a = 1;
-	//テクスチャ
-	float4 diffuse;
-	if (g_isTexture == true)
-	{
-		diffuse = g_texture.Sample(g_sampler, inData.uv);
-	}
-	else
-	{
-		diffuse = g_diffuseColor;
-	}
-
-	//環境光(アンビエント)
-	float4 ambient = float4(0.2, 0.2, 0.2, 1.0f);// g_ambient;
-	ambient.a = 1;
-	//鏡面反射光(スペキュラー)
-	float4 speculer = float4(0, 0, 0, 0);
-	if (g_speculer.a != 0)
-	{
-		float4 vecReflect = reflect(light, inData.normal);
-		speculer = float4(1,1,1,0) * pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) * g_speculer;
-	}
-	float4 outColor;
-	outColor = diffuse * shade + diffuse * ambient + speculer;
-	return outColor;
+	return float4(0,0,0,1);
 }

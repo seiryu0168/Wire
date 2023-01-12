@@ -103,7 +103,6 @@ void FbxParts::Draw(Transform& transform)
 		}
 
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
-		Direct3D::SetBlendMode(BLEND_DEFAULT);		//ブレンドステート
 		//頂点バッファ
 		UINT stride = sizeof(VERTEX);
 		UINT offset = 0;

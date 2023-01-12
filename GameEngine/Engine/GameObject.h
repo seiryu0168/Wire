@@ -29,11 +29,13 @@ public:
 	virtual void FixedUpdate() {};
 	virtual void BeforeDeath() {};
 	virtual void Draw() {};
+	virtual void SecondDraw() {};
 	virtual void Release() = 0;
 
 	void UpdateSub();
 	void FixedUpdateSub();
 	void DrawSub();
+	void SecondDrawSub();
 	void ReleaseSub();
 
 	template<class T>

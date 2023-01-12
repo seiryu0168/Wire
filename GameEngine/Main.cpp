@@ -143,6 +143,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
+				pRootJob->SecondDrawSub();
 
 				ImageManager::Draw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
