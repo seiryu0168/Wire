@@ -56,5 +56,6 @@ public:
 	XMFLOAT3 GetBonePosition(std::string boneName);
 	void    Draw(Transform& transform, SHADER_TYPE shaderType,int frame);
 	void	DrawOutLine(Transform& transform, int frame);
+	void	DrawToon(Transform& transform, bool isOutLine, int frame);
 	void    Release();
 };

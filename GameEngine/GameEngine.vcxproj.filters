@@ -358,9 +358,8 @@
     <FxCompile Include="Simple3D.hlsl" />
     <FxCompile Include="Simple2D.hlsl" />
     <FxCompile Include="BillBoard.hlsl" />
-    <FxCompile Include="OutLine.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
+    <FxCompile Include="OutLine.hlsl" />
+    <FxCompile Include="ToonShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dialog.rc">

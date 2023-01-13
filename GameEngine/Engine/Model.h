@@ -9,6 +9,7 @@ namespace ModelManager
 	void SetTransform(int modelNum, Transform transform);
 	void Draw(int modelNum);
 	void DrawOutLine(int modelNum);
+	void DrawToon(int modelNum);
 	void RayCast(int modelNum, RayCastData& ray);
 	void RayCast(RayCastData& ray);
 	void SetModelNum(int modelNum);

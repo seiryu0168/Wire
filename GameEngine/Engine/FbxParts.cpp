@@ -89,7 +89,6 @@ void FbxParts::Draw(Transform& transform)
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
 		if (cb.isTexture)
 		{
-
 			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
 			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 			ID3D11ShaderResourceView* pSRV1 = pMaterialList_[i].pTexture->GetSRV();
@@ -101,6 +100,20 @@ void FbxParts::Draw(Transform& transform)
 			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
 			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
 		}
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
+
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
+		Texture* pToonTexture = new Texture;
+		pToonTexture->Load("Assets\\ToonTexture.jpg");
+		ID3D11SamplerState* pToonSampler = pToonTexture->GetSampler();
+		Direct3D::pContext->PSSetSamplers(1, 1, &pToonSampler);
+		ID3D11ShaderResourceView* pToonSRV = pToonTexture->GetSRV();
+		Direct3D::pContext->PSSetShaderResources(1, 1, &pToonSRV);
+		
+
+
+
 
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
 		//頂点バッファ

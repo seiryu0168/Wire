@@ -416,6 +416,45 @@ void Fbx::DrawOutLine(Transform& transform, int frame)
 	}
 }
 
+void Fbx::DrawToon(Transform& transform, bool isOutLine, int frame)
+{
+	Direct3D::SetBlendMode(BLEND_DEFAULT);
+	if (isOutLine)
+	{
+	Direct3D::SetShader(SHADER_OUTLINE);
+
+		for (int i = 0; i < parts_.size(); i++)
+		{
+			FbxTime time;
+			time.SetTime(0, 0, 0, frame, 0, 0, frameRate_);
+
+			if (parts_[i]->GetSkinInfo())
+			{
+				parts_[i]->DrawSkinAnime(transform, frame);
+			}
+			else
+			{
+				parts_[i]->Draw(transform);
+			}
+		}
+	}
+	Direct3D::SetShader(SHADER_TOON);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		FbxTime time;
+		time.SetTime(0, 0, 0, frame, 0, 0, frameRate_);
+
+		if (parts_[i]->GetSkinInfo())
+		{
+			parts_[i]->DrawSkinAnime(transform, frame);
+		}
+		else
+		{
+			parts_[i]->Draw(transform);
+		}
+	}
+}
+
 void Fbx::RayCast(RayCastData& ray,Transform& transform)
 {
 	for (int i = 0; i < parts_.size(); i++)

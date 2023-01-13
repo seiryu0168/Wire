@@ -257,7 +257,7 @@ void Player::FixedUpdate()
 void Player::Draw()
 {
     ModelManager::SetTransform(hModel_, transform_);
-    ModelManager::DrawOutLine(hModel_); 
+    ModelManager::DrawToon(hModel_); 
 }
 
 void Player::SecondDraw()
