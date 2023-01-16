@@ -1,7 +1,7 @@
 #include "TitleScene.h"
+#include"Engine/Sprite.h"
 #include"ObjectSetter.h"
-#include"Engine/Sprite.h"
-#include"Engine/Sprite.h"
+#include"Engine/ImageManager.h"
 
 TitleScene::TitleScene(GameObject* parent)
 	: GameObject(parent, "TitleScene")

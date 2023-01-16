@@ -2,6 +2,7 @@
 #include"Engine/Model.h"
 #include"Engine/Fbx.h"
 #include"Player.h"
+#include"TitleUI.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
 #include"EnemyBoss.h"
@@ -21,26 +22,31 @@ ObjectSetter::~ObjectSetter()
 void ObjectSetter::Initialize()
 {
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
-
 	//feildって名前にしといたほうがいい
-	State::StateCreate();
-	Instantiate<Stage1>(GetParent());
-	Instantiate<Player>(GetParent());
-	for (int i = 0; i < 3; i++)
+	std::string parentName;
+	parentName = GetParent()->GetObjectName();
+	if (parentName == "PlayScene")
 	{
-		enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));
-		
+		State::StateCreate();
+		Instantiate<Stage1>(GetParent());
+		Instantiate<Player>(GetParent());
+		for (int i = 0; i < 3; i++)
+		{
+			enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));
+		}
+
+		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
 	}
 
-	enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
-
-	
-	Instantiate<Test>(GetParent());
+	if (parentName == "TitleScene")
+	{
+		Instantiate<TitleUI>(GetParent());
+	}
 }
 
 void ObjectSetter::Update()
 {
-	for (auto itr = enemys_.begin(); itr != enemys_.end(); )
+	/*for (auto itr = enemys_.begin(); itr != enemys_.end(); )
 	{
 		if ((*itr)->GetLife() < 0)
 		{
@@ -52,7 +58,7 @@ void ObjectSetter::Update()
 	if (enemys_.empty())
 	{
 		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));
-	}
+	}*/
 	
 }
 

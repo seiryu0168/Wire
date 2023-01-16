@@ -1,5 +1,6 @@
 #include "PlayScene.h"
 #include"Player.h"
+#include"ObjectSetter.h"
 #include"Test.h"
 // コンストラクタ
 PlayScene::PlayScene(GameObject * parent)
@@ -10,8 +11,7 @@ PlayScene::PlayScene(GameObject * parent)
 //初期化
 void PlayScene::Initialize()
 {
-	Instantiate<Player>(this);
-	Instantiate<Test>(this);
+	Instantiate<ObjectSetter>(this);
 }
 
 //更新

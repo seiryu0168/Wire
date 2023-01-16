@@ -1,5 +1,4 @@
 #include "FbxParts.h"
-//#include"Engine/Fbx.h"
 #include"Math.h"
 #include"Camera.h"
 #include"Direct3D.h"
@@ -9,12 +8,13 @@ FbxParts::FbxParts()
 	pVertexBuffer_ = nullptr;
 	ppIndexBuffer_ = nullptr;
 	pConstantBuffer_ = nullptr;
-
+	pToonTexture_ = nullptr;
 
 }
 
 FbxParts::~FbxParts()
 {
+	SAFE_RELEASE(pToonTexture_);
 	SAFE_DELETE(pVertices_);
 	SAFE_RELEASE(pVertexBuffer_);
 
@@ -29,7 +29,6 @@ FbxParts::~FbxParts()
 		{
 			SAFE_DELETE_ARRAY(pWeightArray_);
 			SAFE_DELETE_ARRAY(pBoneArray_);
-
 		}
 	}
 
@@ -41,13 +40,14 @@ FbxParts::~FbxParts()
 
 	}
 	SAFE_DELETE(indexCount_);
-
 }
 
 HRESULT FbxParts::Init(FbxNode* pNode)
 {
 	FbxMesh* mesh = pNode->GetMesh();
-
+	pToonTexture_ = new Texture;
+	pToonTexture_->Load("ToonTexture.jpg");
+	
 	//各情報の個数を取得
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
 	polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
@@ -85,8 +85,8 @@ void FbxParts::Draw(Transform& transform)
 		cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
-		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
-		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); //GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));			      //データを値を送る
 		if (cb.isTexture)
 		{
 			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
@@ -102,20 +102,15 @@ void FbxParts::Draw(Transform& transform)
 		}
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
 
-		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);			//GPUからのデータアクセスを止める
-		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));							//データを値を送る
-		Texture* pToonTexture = new Texture;
-		pToonTexture->Load("Assets\\ToonTexture.jpg");
-		ID3D11SamplerState* pToonSampler = pToonTexture->GetSampler();
-		Direct3D::pContext->PSSetSamplers(1, 1, &pToonSampler);
-		ID3D11ShaderResourceView* pToonSRV = pToonTexture->GetSRV();
-		Direct3D::pContext->PSSetShaderResources(1, 1, &pToonSRV);
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); //GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));			      //データを値を送る
 		
-
-
-
-
+		ID3D11SamplerState* pToonSampler = pToonTexture_->GetSampler();
+		Direct3D::pContext->PSSetSamplers(1, 1, &pToonSampler);
+		ID3D11ShaderResourceView* pToonSRV = pToonTexture_->GetSRV();
+		Direct3D::pContext->PSSetShaderResources(1, 1, &pToonSRV);
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
+
 		//頂点バッファ
 		UINT stride = sizeof(VERTEX);
 		UINT offset = 0;
@@ -194,7 +189,7 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 	pVertices_ = new VERTEX[vertexCount_];
 
 	//全ポリゴン
-	for (DWORD poly = 0; poly < polygonCount_; poly++)
+	for (DWORD poly = 0; poly < (DWORD)polygonCount_; poly++)
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
@@ -273,7 +268,7 @@ HRESULT FbxParts::InitIndex(fbxsdk::FbxMesh* mesh)
 		int count = 0;
 		ppIndex_[i] = new int[polygonCount_ * 3];
 		//全ポリゴン
-		for (DWORD poly = 0; poly < polygonCount_; poly++)
+		for (DWORD poly = 0; poly < (DWORD)polygonCount_; poly++)
 		{
 			FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
 			int mtlId = mtl->GetIndexArray().GetAt(poly);

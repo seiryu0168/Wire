@@ -1,5 +1,5 @@
 #include "ImageManager.h"
-#include"Engine/Sprite.h"
+#include"Sprite.h"
 
 namespace ImageManager
 {

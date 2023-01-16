@@ -6,7 +6,7 @@
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"
 #include"Engine/Transform.h"
-#include"ImageManager.h"
+#include"Engine/ImageManager.h"
 #include"DebugUI.h"
 #include"Engine/Input.h"
 #include"Engine/RootJob.h"
@@ -24,8 +24,8 @@ LPCWSTR WIN_CLASS_NAME = L"SampleGame";
 LPCWSTR WIN_TITLE_NAME = L"サンプルゲーム";
 
 
-const int WINDOW_WIDTH = 800;   //ウィンドウ幅
-const int WINDOW_HEIGHT = 600;	 //ウィンドウ高さ
+const int WINDOW_WIDTH = 1920;   //ウィンドウ幅
+const int WINDOW_HEIGHT = 1080;	 //ウィンドウ高さ
 int pxelUnit;
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

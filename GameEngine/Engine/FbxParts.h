@@ -5,7 +5,6 @@
 #include"Texture.h"
 #include"Transform.h"
 #include"Fbx.h"
-//class Fbx;
 
 class FbxParts
 {
@@ -86,6 +85,7 @@ private:
 
 	int**	ppIndex_;
 	VERTEX* pVertices_;
+	Texture* pToonTexture_;
 
 	HRESULT InitVertex(fbxsdk::FbxMesh* mesh);
 	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);

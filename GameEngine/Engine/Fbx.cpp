@@ -13,11 +13,6 @@ Fbx::Fbx()
 	vertexCount_ = 0;
 	polygonCount_ = 0;
 	materialCount_ = 0;
-	//pVertexBuffer_ = nullptr;
-	//pIndexBuffer_ = nullptr;
-	//pConstantBuffer_ = nullptr;
-	//pMaterialList_ = nullptr;
-	//indexCount_ = nullptr;	
 }
 Fbx::~Fbx()
 {
@@ -62,17 +57,8 @@ HRESULT Fbx::Load(std::string fileName)
 	//ディレクトリ変更
 	SetCurrentDirectory(dir);
 	
-	////各情報の個数を取得
-	//vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
-	//polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
-	//materialCount_ = pNode->GetMaterialCount();//マテリアルの数
-
-	//InitVertex(mesh);
-	//InitIndex(mesh);
-	//CreateConstantBuffer();
-	//InitMaterial(pNode);
 	CheckNode(pNode, &parts_);
-
+	
 	//ディレクトリを元に戻す
 	SetCurrentDirectory(defaultDirectory);
 
