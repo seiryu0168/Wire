@@ -2,6 +2,7 @@
 #include"Engine/Model.h"
 #include"Engine/Fbx.h"
 #include"Player.h"
+#include"Engine//SceneManager.h"
 #include"TitleUI.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
@@ -11,6 +12,7 @@
 #include"Stage1.h"
 
 ObjectSetter::ObjectSetter(GameObject* parent)
+	:GameObject(parent,"ObjectSetter")
 {
 }
 
@@ -44,19 +46,19 @@ void ObjectSetter::Initialize()
 
 void ObjectSetter::Update()
 {
-	/*for (auto itr = enemys_.begin(); itr != enemys_.end(); )
+	switch ((SCENE_ID)((SceneManager*)GetParent()->GetParent())->GetCurrentSceneID())
 	{
-		if ((*itr)->GetLife() < 0)
-		{
-			itr = enemys_.erase(itr);
-		}
-		else
-			itr++;
+	case SCENE_ID::SCENE_ID_TITLE:
+		TitleUpdate();
+		break;
+
+	case SCENE_ID::SCENE_ID_PLAY:
+		PlayUpdate();
+		break;
+	default:
+		break;
+
 	}
-	if (enemys_.empty())
-	{
-		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));
-	}*/
 	
 }
 
@@ -68,15 +70,40 @@ void ObjectSetter::Release()
 {
 }
 
-std::list<Enemy*>* ObjectSetter::GetEnemyList()
+void ObjectSetter::TitleUpdate()
 {
-	std::list<Enemy*> visibleEnemyList;
+}
+
+void ObjectSetter::PlayUpdate()
+{
+	for (auto itr = enemys_.begin(); itr != enemys_.end(); )
+	{
+		if ((*itr)->GetLife() < 0)
+		{
+			itr = enemys_.erase(itr);
+		}
+		else
+			itr++;
+	}
+	if (enemys_.empty() && bossSpawn_ == false)
+	{
+		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));
+		bossSpawn_ = true;
+	}
+	else if (bossSpawn_ && enemys_.empty())
+	{
+		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TEST);
+	}
+}
+
+void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
+{
+	
 	for (auto itr = enemys_.begin(); itr != enemys_.end(); itr++)
 	{
 		if ((*itr)->GetVisibleFrag())
 		{
-			visibleEnemyList.push_back(*itr);
+			list->push_back(*itr);
 		}
 	}
-	return &visibleEnemyList;
 }

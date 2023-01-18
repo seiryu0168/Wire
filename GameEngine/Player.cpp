@@ -130,6 +130,7 @@ void Player::Update()
         XMStoreFloat3(&ray.dir, vPtrDir);
 
         //エイムアシスト範囲内かどうか判定
+        pSetter_->GetEnemyList(&enemyList_);
         if (enemyList_.size() > 0)
         {
             Enemy* pEnemy = AimAssist(&ray);
@@ -584,12 +585,13 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 
 Enemy* Player::AimAssist(RayCastData* ray)
 {
-    if (pSetter_->GetEnemyList()->empty())
+    if (enemyList_.empty())
         return nullptr;
 
     float minRange = 9999.0f;
     Enemy* pEnemy=nullptr;
-    for (auto itr = pSetter_->GetEnemyList()->begin(); itr != pSetter_->GetEnemyList()->end(); itr++)
+    auto i = enemyList_.begin();
+    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
         if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))
         {

@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-enum SCENE_ID
+enum class SCENE_ID
 {
 	SCENE_ID_TITLE = 0,
 	SCENE_ID_PLAY,
@@ -21,6 +21,7 @@ public:
 	void Release() override;
 
 	void ChangeScene(int sceneID);
+	int GetCurrentSceneID() { return currentSceneID_; }
 	GameObject* CurrentScene();
 };
 

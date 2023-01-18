@@ -30,7 +30,7 @@ void TitleUI::Update()
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 	{
 		SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
-		pManager->ChangeScene(SCENE_ID_PLAY);
+		pManager->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
 	}
 }
 

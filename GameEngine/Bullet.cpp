@@ -27,7 +27,6 @@ Bullet::~Bullet()
 //‰Šú‰»
 void Bullet::Initialize()
 {
-
 	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0), 0.3f);
 	AddCollider(pCollision);
 	pBill_ = new BillBoard();
@@ -40,7 +39,7 @@ void Bullet::Initialize()
 	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
 	assert(hAudio_ >= 0);
 
-	pParent_ = FindObject("TitleScene");
+	pParent_ = GetParent()->GetParent();
 	pBill_->Load("Assets\\Effect01.png");
 }
 

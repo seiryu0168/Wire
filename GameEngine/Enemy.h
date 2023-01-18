@@ -91,7 +91,7 @@ protected:
 
         void SetRange(float range)
         {
-            assert(range <= 0.0f);
+            assert(range >= 0.0f);
             range_ = range;
         }
         void SetAngle(float angle)

@@ -115,6 +115,7 @@ void EnemyNormal::StateChase::Init(EnemyNormal& enemy)
 
 void EnemyNormal::StateChase::Update(EnemyNormal& enemy)
 {
+	enemy.EnemyMove();
 	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
 	{
 		enemy.ChangeState(StateSearch::GetInstance());
@@ -131,7 +132,7 @@ void EnemyNormal::StateSearch::Init(EnemyNormal& enemy)
 
 void EnemyNormal::StateSearch::Update(EnemyNormal& enemy)
 {
-	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	if (enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
 	{
 		enemy.ChangeState(StateChase::GetInstance());
 	}

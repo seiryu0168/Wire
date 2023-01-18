@@ -38,7 +38,7 @@ void EnemyBoss::Initialize()
 	ModelManager::SetModelNum(hModel_);
 	assert(hModel_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
-	sight.SetAngle(M_PI);
+	sight.SetAngle(M_PI*1.5);
 	sight.SetRange(200);
 	
 	transform_.position_ = { 110,0,110 };
@@ -135,6 +135,10 @@ void EnemyBoss::StateChase::Init(EnemyBoss& enemy)
 void EnemyBoss::StateChase::Update(EnemyBoss& enemy)
 {
 	enemy.Attack();
+	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeState(StateSearch::GetInstance());
+	}
 }
 
 void EnemyBoss::StateSearch::Init(EnemyBoss& enemy)

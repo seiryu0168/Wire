@@ -37,7 +37,7 @@ void HomingBullet::Initialize()
 	pBill_ = new BillBoard;
 	transform_.position_ = pParent_->GetPosition();
 	pBill_->Load("Assets\\Effect01.png");
-	pParent_ = FindObject("TitleScene");
+	pParent_ = FindObject("PlayScene");
 	pPlayer_ = (Player*)FindObject("Player");
 	position_ = XMLoadFloat3(&transform_.position_);
 	velocity_ = XMVectorSet(0, 2, 0, 0);

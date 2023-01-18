@@ -63,7 +63,7 @@ HRESULT Fbx::Load(std::string fileName)
 	SetCurrentDirectory(defaultDirectory);
 
 	//マネージャ解放
-	pFbxManager_->Destroy();
+	//pFbxManager_->Destroy();
 	return S_OK;
 }
 

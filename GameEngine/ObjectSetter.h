@@ -7,6 +7,7 @@ class ObjectSetter : public GameObject
 {
 private:
     std::list<Enemy*> enemys_;
+    bool bossSpawn_;
 public:
         //コンストラクタ
         ObjectSetter(GameObject* parent);
@@ -25,7 +26,11 @@ public:
 
         void Release() override;
 
-        std::list<Enemy*>* GetEnemyList();      //プレイヤーが認識してるエネミーのリストを返す
+        void TitleUpdate();
+
+        void PlayUpdate();
+
+        void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
 
 };
 

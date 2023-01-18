@@ -15,7 +15,7 @@ SceneManager::SceneManager(GameObject* parent)
 
 void SceneManager::Initialize()
 {
-	currentSceneID_ = SCENE_ID_TITLE;
+	currentSceneID_ = (int)SCENE_ID::SCENE_ID_TITLE;
 	nextSceneID_ = currentSceneID_;
 	Instantiate<TitleScene>(this);
 }
@@ -29,11 +29,11 @@ void SceneManager::Update()
 		ImageManager::AllRelease();
 
 
-		switch (nextSceneID_)
+		switch ((SCENE_ID)nextSceneID_)
 		{
-		case SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
-		case SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
-		case SCENE_ID_TEST: Instantiate<TestScene>(this); break;
+		case SCENE_ID::SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
+		case SCENE_ID::SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
+		case SCENE_ID::SCENE_ID_TEST: Instantiate<TestScene>(this); break;
 		}
 		currentSceneID_ = nextSceneID_;
 	}
