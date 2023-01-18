@@ -10,10 +10,15 @@ SphereCollider::SphereCollider(XMFLOAT3 basePos, float radius)
 
 bool SphereCollider::IsHit(Collider* target)
 {
-	if (target->type_ == BOX_COLLIDER)
+	switch (target->type_)
 	{
+	case BOX_COLLIDER:
 		return IsHitBox_Sphere((BoxCollider*)target, this);
-	}
-	else
+	case SPHERE_COLLIDER:
 		return IsHitSphere_Sphere((SphereCollider*)target, this);
+	case OBB_COLLIDER:
+		return IsHitOBB_Sphere((OBBCollider*)target, this);
+	default:
+		assert(false);
+	}
 }
