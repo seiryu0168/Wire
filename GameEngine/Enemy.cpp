@@ -1,13 +1,11 @@
 #include "Enemy.h"
-#include"StateList.h"
+#include"Engine/Model.h"
 //コンストラクタ
 Enemy::Enemy(GameObject* parent, std::string name)
 	:GameObject(parent, name)
 {
 	
 	enemyParameter_.life = 3;
-	enemyParameter_.viewRange = 50.0f;
-	enemyParameter_.viewAngle = 0.5f;
 	enemyParameter_.toPlayerVec = XMVectorSet(0, 0, 0, 0);
 	enemyParameter_.frontVec = XMVectorSet(0, 0, 1, 0);
 	enemyParameter_.upVec = XMVectorSet(0, 1, 0, 0);
@@ -17,7 +15,6 @@ Enemy::Enemy(GameObject* parent, std::string name)
 	enemyParameter_.isTargetList = false;
 	enemyParameter_.vPosition = XMLoadFloat3(&transform_.position_);
 	enemyParameter_.pPlayer = nullptr;
-	ChangeState(State::search->GetInstance());
 }
 
 //デストラクタ
@@ -41,7 +38,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	if (toPlayerRange <= 2 * range)
 	{
 		enemyParameter_.pPlayer->AddTargetList(this);
-		enemyParameter_.isTargetList = true;
+		enemyParameter_.visibleFlag = true;
 		if (angle<visibleAngle && angle>-visibleAngle && toPlayerRange < range)
 		{
 			enemyParameter_.frontVec = toPlayer;
@@ -50,13 +47,13 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	}
 	else
 	{
-		enemyParameter_.isTargetList = false;
+		enemyParameter_.visibleFlag = false;
 	}
 
 	return false;
 }
-void Enemy::ChangeState(EnemyState* state)
+
+void Enemy::LoadModel(std::string fileName)
 {
-	pEnemyState_ = state;
-	pEnemyState_->Init(this);
+	hModel_ = ModelManager::Load("Assets\\" + fileName);
 }

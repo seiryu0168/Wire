@@ -4,7 +4,8 @@
 #include"Engine/Camera.h"
 #include"Engine/SceneManager.h"
 #include"EngineTime.h"
-#include"ImageManager.h"
+#include"Engine/ImageManager.h"
+#include"ObjectSetter.h"
 #include"EnemyNormal.h"
 #include"Engine/Particle.h"
 #include"Easing.h"
@@ -14,7 +15,7 @@
 #include<list>
 namespace
 {
-    static const std::vector<EnemyNormal*> enemyList_;
+    static const std::vector<Enemy*> enemyList_;
     static const float hitdist_=2.001f;
 }
 
@@ -58,6 +59,7 @@ Player::~Player()
 void Player::Initialize()
 {
     SetTag("Player");
+    pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
@@ -582,13 +584,12 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 
 Enemy* Player::AimAssist(RayCastData* ray)
 {
-    CheckTargetList();
-    if (enemyList_.empty())
+    if (pSetter_->GetEnemyList()->empty())
         return nullptr;
 
     float minRange = 9999.0f;
     Enemy* pEnemy=nullptr;
-    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+    for (auto itr = pSetter_->GetEnemyList()->begin(); itr != pSetter_->GetEnemyList()->end(); itr++)
     {
         if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))
         {
@@ -599,7 +600,6 @@ Enemy* Player::AimAssist(RayCastData* ray)
                 minRange = range;
                 pEnemy = (*itr);
             }
-
         }
     }
 

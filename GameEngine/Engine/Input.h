@@ -41,4 +41,5 @@ namespace Input
 	XMVECTOR GetMousePosition();
 	void SetMousePosition(int x, int y);
 	void Release();
-};
+
+}

@@ -8,6 +8,14 @@ namespace
 	static const float nearRange = 75.0f;
 	static const float farRange = 125.0f;
 }
+void EnemyBoss::ChangeState(EnemyState<EnemyBoss>* state)
+{
+	if (state != pState_)
+	{
+		pState_ = state;
+		pState_->Init(*this);
+	}
+}
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
 	hModel_(-1),
@@ -30,16 +38,17 @@ void EnemyBoss::Initialize()
 	ModelManager::SetModelNum(hModel_);
 	assert(hModel_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
-	SetviewAngle(M_PI);
-	SetviewRange(200);
+	sight.SetAngle(M_PI);
+	sight.SetRange(200);
 	
 	transform_.position_ = { 110,0,110 };
+	ChangeState(StateSearch::GetInstance());
 }
 
 void EnemyBoss::Update()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
-	GetEnemyState()->Update(this);
+	pState_->Update(*this);
 }
 
 void EnemyBoss::FixedUpdate()
@@ -118,3 +127,24 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 	}
 }
 
+void EnemyBoss::StateChase::Init(EnemyBoss& enemy)
+{
+	enemy.shotTime_ = 0;
+}
+
+void EnemyBoss::StateChase::Update(EnemyBoss& enemy)
+{
+	enemy.Attack();
+}
+
+void EnemyBoss::StateSearch::Init(EnemyBoss& enemy)
+{
+}
+
+void EnemyBoss::StateSearch::Update(EnemyBoss& enemy)
+{
+	if (enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeState(StateChase::GetInstance());
+	}
+}

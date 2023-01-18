@@ -9,7 +9,6 @@
 #include"SetObject.h"
 #include"Test.h"
 #include"Stage1.h"
-#include"StateList.h"
 
 ObjectSetter::ObjectSetter(GameObject* parent)
 {
@@ -27,7 +26,6 @@ void ObjectSetter::Initialize()
 	parentName = GetParent()->GetObjectName();
 	if (parentName == "PlayScene")
 	{
-		State::StateCreate();
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
 		for (int i = 0; i < 3; i++)
@@ -68,4 +66,17 @@ void ObjectSetter::Draw()
 
 void ObjectSetter::Release()
 {
+}
+
+std::list<Enemy*>* ObjectSetter::GetEnemyList()
+{
+	std::list<Enemy*> visibleEnemyList;
+	for (auto itr = enemys_.begin(); itr != enemys_.end(); itr++)
+	{
+		if ((*itr)->GetVisibleFrag())
+		{
+			visibleEnemyList.push_back(*itr);
+		}
+	}
+	return &visibleEnemyList;
 }

@@ -1,8 +1,16 @@
 #include "EnemyNormal.h"
 #include"Engine/Model.h"
 #include"Engine/BoxCollider.h"
-#include"StateList.h"
 #include"Pointer.h"
+
+void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
+{
+	if (state != pState_)
+	{
+		pState_ = state;
+		pState_->Init(*this);
+	}
+}
 
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
@@ -31,13 +39,14 @@ void EnemyNormal::Initialize()
 	transform_.position_.y = std::rand() % 100;
 	transform_.position_.z = std::rand() % 100;
 	SetPlayerPointer((Player*)FindObject("Player"));
+	ChangeState(StateSearch::GetInstance());
 }
 
 //更新
 void EnemyNormal::Update()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
-	GetEnemyState()->Update(this);
+	pState_->Update(*this);
 }
 
 void EnemyNormal::FixedUpdate()
@@ -97,4 +106,33 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 //開放
 void EnemyNormal::Release()
 {
+}
+
+void EnemyNormal::StateChase::Init(EnemyNormal& enemy)
+{
+
+}
+
+void EnemyNormal::StateChase::Update(EnemyNormal& enemy)
+{
+	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeState(StateSearch::GetInstance());
+	}
+}
+
+EnemyNormal::StateSearch::~StateSearch()
+{
+}
+
+void EnemyNormal::StateSearch::Init(EnemyNormal& enemy)
+{
+}
+
+void EnemyNormal::StateSearch::Update(EnemyNormal& enemy)
+{
+	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeState(StateChase::GetInstance());
+	}
 }

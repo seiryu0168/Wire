@@ -4,12 +4,27 @@
 #include"HomingBullet.h"
 #include"Pointer.h"
 #include"Engine/OBBCollider.h"
+
+namespace
+{
+	static const int SHOT_COUNT = 10;
+}
+void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
+{
+	if (state != pState_)
+	{
+		pState_ = state;
+		pState_->Init(*this);
+	}
+	
+}
 //コンストラクタ
 EnemyTurret::EnemyTurret(GameObject* parent)
 	:Enemy(parent,"EnemyTurret"),
 	hModel_(-1),
 	shotTime_(0),
-	rpm_(300)
+	rpm_(300),
+	shotCount_(0)
 
 {
 
@@ -44,13 +59,14 @@ void EnemyTurret::Initialize()
 	}
 	transform_.position_ = initPos;
 	SetPlayerPointer((Player*)FindObject("Player"));
+	ChangeSatate(StateSearch::GetInstance());
 }
 
 //更新
 void EnemyTurret::Update()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
-	GetEnemyState()->Update(this);
+	pState_->Update(*this);
 }
 
 void EnemyTurret::Attack()
@@ -107,5 +123,31 @@ void EnemyTurret::OnCollision(GameObject* pTarget)
 				KillMe();
 			}
 		}
+	}
+}
+
+void EnemyTurret::StateChase::Init(EnemyTurret& enemy)
+{
+	enemy.shotTime_ = 0;
+}
+
+void EnemyTurret::StateChase::Update(EnemyTurret& enemy)
+{
+	enemy.Shot();
+	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeSatate(StateSearch::GetInstance());
+	}
+}
+
+void EnemyTurret::StateSearch::Init(EnemyTurret& enemy)
+{
+}
+
+void EnemyTurret::StateSearch::Update(EnemyTurret& enemy)
+{
+	if (enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
+	{
+		enemy.ChangeSatate(StateChase::GetInstance());
 	}
 }

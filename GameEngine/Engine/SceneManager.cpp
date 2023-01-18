@@ -4,6 +4,7 @@
 #include"../PlayScene.h"
 #include"../TitleScene.h"
 #include"Model.h"
+#include"ImageManager.h"
 
 
 SceneManager::SceneManager(GameObject* parent) 
@@ -25,6 +26,7 @@ void SceneManager::Update()
 	{
 		KillAllChildren();
 		ModelManager::Release();
+		ImageManager::AllRelease();
 
 
 		switch (nextSceneID_)

@@ -25,5 +25,7 @@ public:
 
         void Release() override;
 
+        std::list<Enemy*>* GetEnemyList();      //プレイヤーが認識してるエネミーのリストを返す
+
 };
 

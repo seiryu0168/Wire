@@ -1,5 +1,7 @@
 #include "TitleUI.h"
 #include"Engine/ImageManager.h"
+#include"Engine/Input.h"
+#include"Engine/SceneManager.h"
 
 TitleUI::TitleUI(GameObject* parent)
 	:GameObject(parent,"TitleUI"),
@@ -25,6 +27,11 @@ void TitleUI::Initialize()
 
 void TitleUI::Update()
 {
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	{
+		SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
+		pManager->ChangeScene(SCENE_ID_PLAY);
+	}
 }
 
 void TitleUI::Release()

@@ -164,7 +164,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBoss.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
-    <ClCompile Include="EnemyStateDef.cpp" />
+    <ClCompile Include="ENEMYSTATEDEF.CPP" />
     <ClCompile Include="EnemyTurret.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
@@ -206,7 +206,6 @@
     <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="State.cpp" />
-    <ClCompile Include="StateList.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
@@ -222,7 +221,6 @@
     <ClInclude Include="EnemyBoss.h" />
     <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="EnemyState.h" />
-    <ClInclude Include="EnemyStateDef.h" />
     <ClInclude Include="EnemyTurret.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
@@ -267,7 +265,6 @@
     <ClInclude Include="SetObject.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="StateList.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TestScene.h" />

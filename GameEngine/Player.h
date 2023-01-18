@@ -9,6 +9,7 @@ class Enemy;
 class Wire;
 class Pointer;
 class PlayerStatus;
+class ObjectSetter;
 class Player : public GameObject
 {
     enum DIR_NAME
@@ -74,6 +75,7 @@ class Player : public GameObject
     LineParticle* pLine_;
     LineParticle* pWire_;
     Pointer* pPointer_;
+    ObjectSetter* pSetter_;
     std::list<Enemy*> enemyList_;
 
 
