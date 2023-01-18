@@ -10,7 +10,7 @@ Particle::Particle(GameObject* parent)
 //デストラクタ
 Particle::~Particle()
 {
-
+	Release();
 }
 
 //初期化
@@ -210,6 +210,9 @@ void Particle::Draw()
 //開放
 void Particle::Release()
 {
-
+	for (auto itr = particleList_.begin(); itr != particleList_.end(); itr++)
+	{
+		SAFE_DELETE(*itr);
+	}
 
 }
