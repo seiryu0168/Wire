@@ -50,18 +50,6 @@ void Camera::SetUpVector(XMVECTOR upVector)
 	upVector_ = upVector;
 }
 
-//ˆÊ’u‚ğİ’è
-void Camera::SetPosition(XMVECTOR position)
-{
-	position_ = position;
-}
-
-//Å“_‚ğİ’è
-void Camera::SetTarget(XMVECTOR target)
-{
-	target_ = target;
-}
-
 void Camera::SetProjection(float aov, float aspectRadio, float nearZ, float farZ)
 {
 	projMatrix_ = XMMatrixPerspectiveFovLH(aov, aspectRadio, nearZ, farZ);

@@ -18,7 +18,8 @@ void EnemyBoss::ChangeState(EnemyState<EnemyBoss>* state)
 }
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
-	hModel_(-1),
+	hModelCore_(-1),
+	hModelShield_(-1),
 	shotTime_(0),
 	rpm_(200),
 	perShot_(false),
@@ -38,13 +39,17 @@ void EnemyBoss::Initialize()
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(7, 11, 7), false, false);
 	AddCollider(pCollider);
 
-	hModel_ = ModelManager::Load("Assets\\EnemyBoss.fbx");
-	ModelManager::SetModelNum(hModel_);
-	assert(hModel_ >= 0);
+	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
+	ModelManager::SetModelNum(hModelCore_);
+	assert(hModelCore_ >= 0);
+	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
+	ModelManager::SetModelNum(hModelShield_);
+	assert(hModelShield_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
 	sight.SetAngle(M_PI*1.5);
 	sight.SetRange(200);
 	
+	SetLife(5);
 	transform_.position_ = { 110,0,110 };
 	ChangeState(StateSearch::GetInstance());
 }
@@ -61,8 +66,14 @@ void EnemyBoss::FixedUpdate()
 
 void EnemyBoss::Draw()
 {
-	ModelManager::SetTransform(hModel_, transform_);
-	ModelManager::Draw(hModel_);
+	ModelManager::SetTransform(hModelCore_, transform_);
+	ModelManager::Draw(hModelCore_);
+	
+	if (GetLife() >= 3)
+	{
+		ModelManager::SetTransform(hModelShield_, transform_);
+		ModelManager::Draw(hModelShield_);
+	}
 }
 
 void EnemyBoss::Attack()
@@ -147,9 +158,15 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
-				ModelManager::DeleteModelNum(hModel_);
+				ModelManager::DeleteModelNum(hModelCore_);
 				SetIsList(false);
 				KillMe();
+			}
+			else if (GetLife() < 3)
+			{
+				ChangeState(StateSecondMode::GetInstance());
+				ModelManager::DeleteModelNum(hModelShield_);
+
 			}
 		}
 	}
@@ -184,7 +201,6 @@ void EnemyBoss::StateSearch::Update(EnemyBoss& enemy)
 void EnemyBoss::StateSecondMode::Init(EnemyBoss& enemy)
 {
 	enemy.shotTime_ = 0;
-	//hModel_=ModelManager::Load()
 }
 
 void EnemyBoss::StateSecondMode::Update(EnemyBoss& enemy)

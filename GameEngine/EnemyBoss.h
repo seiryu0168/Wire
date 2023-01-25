@@ -6,7 +6,8 @@ class EnemyBoss : public Enemy
 {
 private:
     bool perShot_;
-    int hModel_;
+    int hModelCore_;
+    int hModelShield_;
     int shotTime_;
     int shotCount_;
     int reLoadTime_;

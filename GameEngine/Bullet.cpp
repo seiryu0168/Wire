@@ -27,6 +27,7 @@ Bullet::~Bullet()
 //‰Šú‰»
 void Bullet::Initialize()
 {
+	SetTag("EnemyBullet");
 	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0), 0.3f);
 	AddCollider(pCollision);
 	pBill_ = new BillBoard();

@@ -17,13 +17,14 @@ namespace
 {
     static const std::vector<Enemy*> enemyList_;
     static const float hitdist_=2.001f;
+    static const int   MAX_LIFE = 10;
 }
 
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
-    playerLife_(10),
+    playerLife_(MAX_LIFE),
     gravity_(-0.06),
     hModel_(-1),
     hAudio_(-1),
@@ -46,7 +47,8 @@ Player::Player(GameObject* parent)
     lockOnAngleLimit_(0.2f),
     flyFlag_(false),
     aimFlag_(false),
-    groundFlag_(true)
+    groundFlag_(true),
+    godFlag_(false)
 {
 }
 
@@ -100,14 +102,29 @@ void Player::Initialize()
         transform_.position_.y -= firstRay.dist-transform_.scale_.y;
     }
 
-    int hPict_ = ImageManager::Load("Assets\\Life.png");
-    ImageManager::SetImagePos(hPict_, { -500.0f, 400.0f, 0 });
-    ImageManager::SetImageSize(hPict_, { 1.0f,0.5f,1.0f });
+    for (int i = 0; i < MAX_LIFE; i++)
+    {
+        int hPict_ = ImageManager::Load("Assets\\Life.png");
+        ImageManager::SetImagePos(hPict_, { -900.0f+300*i, -400.0f, 0 });
+        ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
+
+        life_.push_back(hPict_);
+
+    }
 }
 
 //更新
 void Player::Update()
 {
+    if (godFlag_)
+    {
+        godTime_--;
+        godTime_ = max(0, godTime_);
+    }
+    if(godTime_==0)
+    {
+        godFlag_ = false;
+    }
     rotateSpeed_ = 4.0f;
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
@@ -516,8 +533,39 @@ void Player::OnCollision(GameObject* pTarget)
             flyFlag_ = false;
             XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             vFlyMove_ = -vFlyMove_;
+            godFlag_ = true;
+            godTime_ = 30;
+        }
+
+        if(godFlag_==false)
+        {
+            playerLife_--;
+            playerLife_ = max(0, playerLife_);
+            godFlag_ = true;
+            godTime_ = 30;
         }
     }
+
+    if (pTarget->GetTag() == "EnemyBullet")
+    {
+        if (!(status_ & ATC_ATTACK))
+        {
+            if (godFlag_ == false)
+            {
+                playerLife_--;
+                playerLife_ = max(0, playerLife_);
+                godFlag_ = true;
+                godTime_ = 30;
+            }
+        }
+    }
+
+    if (playerLife_ == 0)
+    {
+        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TEST);
+    }
+
+    ImageManager::SetAlpha(life_[playerLife_ - 1], 0);
 }
 
 void Player::CheckTargetList()

@@ -27,10 +27,11 @@ class Player : public GameObject
         STATE_AIR,
         STATE_FLY,
     };
-    int playerLife_;
 
     XMVECTOR baseUpVec_;
     XMVECTOR rayDir_[6];
+
+    char status_;
 
     const float gravity_;
     
@@ -39,11 +40,15 @@ class Player : public GameObject
     bool aimFlag_;
     bool jumpFlag_;
     bool groundFlag_;
+    bool godFlag_;
 
     int hModel_;
     int hModel_Handle_;
     int hAudio_;
+    int playerLife_;
     int stageNum_;
+    int godTime_;
+    std::vector<int> life_;
 
     float moveTime_;
     float aimTime_;
@@ -68,7 +73,6 @@ class Player : public GameObject
     XMMATRIX matCamY_;
 
 
-    char status_;
 
     PlayerStatus* PlayerState_;
     Particle* pParticle_;
@@ -149,11 +153,6 @@ public:
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
-
-
-
-
-
 
 };
 
