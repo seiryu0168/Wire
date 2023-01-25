@@ -40,7 +40,8 @@ public:
 	LineParticle(float width,int length,float tipWidth);
 	//Œ»İˆÊ’u‚ğ‹L‰¯ : pos
 	void AddPosition(XMFLOAT3 pos);
-
+	HRESULT CreateMeshPype(std::list<XMFLOAT3>* pList,int splt);
+	HRESULT CreateMeshPlate(std::list<XMFLOAT3>* pList, int splt);
 	HRESULT Load(std::string fileName);
 	void Draw();
 	void SetLineParameter(float width, int length,float tipWidth=0);

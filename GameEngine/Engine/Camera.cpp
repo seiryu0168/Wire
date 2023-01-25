@@ -1,12 +1,16 @@
 #include "Camera.h"
 
 //変数
-XMVECTOR position_;	//カメラの位置（視点）
-XMVECTOR target_;	//見る位置（焦点）
-XMVECTOR upVector_;
-XMMATRIX viewMatrix_;	//ビュー行列
-XMMATRIX projMatrix_;	//プロジェクション行列
-XMMATRIX billBoardMatrix_;
+XMVECTOR position_;			//カメラの位置（視点）
+XMVECTOR target_;			//見る位置（焦点）
+XMVECTOR upVector_;			//上ベクトル
+XMMATRIX viewMatrix_;		//ビュー行列
+XMMATRIX projMatrix_;		//プロジェクション行列
+XMMATRIX billBoardMatrix_;	//ビルボード行列
+float	 angleOfView;		//視野角
+float	 aspectRadio;		//アスペクト比
+float	 nearClipping;		//ニアクリッピング
+float	 farClipping;		//ファークリッピング
 
 //初期化
 void Camera::Initialize(float width,float height)
@@ -46,10 +50,38 @@ void Camera::SetUpVector(XMVECTOR upVector)
 	upVector_ = upVector;
 }
 
+//位置を設定
+void Camera::SetPosition(XMVECTOR position)
+{
+	position_ = position;
+}
+
+//焦点を設定
+void Camera::SetTarget(XMVECTOR target)
+{
+	target_ = target;
+}
+
 void Camera::SetProjection(float aov, float aspectRadio, float nearZ, float farZ)
 {
 	projMatrix_ = XMMatrixPerspectiveFovLH(aov, aspectRadio, nearZ, farZ);
 }
+
+void Camera::SetAOV(float aov)
+{
+	projMatrix_ = XMMatrixPerspectiveFovLH(aov, aspectRadio, nearClipping, farClipping);
+}
+
+void Camera::SetAspectRadio(float aspect)
+{
+	projMatrix_ = XMMatrixPerspectiveFovLH(angleOfView, aspect, nearClipping, farClipping);
+}
+
+void Camera::SetClipping(float nearZ, float farZ)
+{
+	projMatrix_ = XMMatrixPerspectiveFovLH(angleOfView, aspectRadio, nearZ, farZ);
+}
+
 
 //視点(カメラの位置)を取得
 XMFLOAT3 Camera::GetPosition()

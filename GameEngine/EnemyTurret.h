@@ -6,13 +6,18 @@ class EnemyTurret : public Enemy
 private:
     int hModel_;
     int shotTime_;
+    int reLoadTime_;
     int shotCount_;
+    const int RELOAD;
     float rpm_;//˜AŽË‘¬“x Rounds Per Minute
 
     EnemyState<EnemyTurret>* pState_;
 
     class StateChase : public EnemyState<EnemyTurret>
     {
+    private:
+        bool perShot_;
+
     public:
         static StateChase* GetInstance()
         {
@@ -60,7 +65,7 @@ public:
     void Attack() override;
     void FixedUpdate() override;
 
-    void Shot();
+    void Shot(bool isShot);
     //•`‰æ
     void Draw() override;
 

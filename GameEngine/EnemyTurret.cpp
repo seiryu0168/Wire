@@ -22,10 +22,11 @@ void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
 EnemyTurret::EnemyTurret(GameObject* parent)
 	:Enemy(parent,"EnemyTurret"),
 	hModel_(-1),
-	shotTime_(0),
+	shotTime_(),
 	rpm_(300),
-	shotCount_(0)
-
+	shotCount_(0),
+	reLoadTime_(0),
+	RELOAD(90)
 {
 
 }
@@ -71,21 +72,24 @@ void EnemyTurret::Update()
 
 void EnemyTurret::Attack()
 {
-	Shot();
 }
 
-void EnemyTurret::Shot()
+void EnemyTurret::Shot(bool isShot)
 {
-	
-	shotTime_++;
-	
-	//shotTimeがrpm_を使って計算した値以上になったら
-	if ((3600.0f/(float)rpm_)<=(float)shotTime_)
+		shotTime_++;
+	//射撃が許可されてるか
+	if (isShot)
 	{
-		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		Bullet* pBullet = Instantiate<Bullet>(this);
-		pBullet->SetDir(shotDir);
-		shotTime_ = 0;
+
+		//shotTimeがrpm_を使って計算した値以上になったら
+		if ((3600.0f / (float)rpm_) <= (float)shotTime_)
+		{
+			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
+			Bullet* pBullet = Instantiate<Bullet>(this);
+			pBullet->SetDir(shotDir);
+			shotCount_++;
+			shotTime_ = 0;
+		}
 	}
 
 }
@@ -129,11 +133,29 @@ void EnemyTurret::OnCollision(GameObject* pTarget)
 void EnemyTurret::StateChase::Init(EnemyTurret& enemy)
 {
 	enemy.shotTime_ = 0;
+	enemy.reLoadTime_ = 0;
 }
 
 void EnemyTurret::StateChase::Update(EnemyTurret& enemy)
 {
-	enemy.Shot();
+	if (enemy.shotCount_ % 10 == 0 && perShot_)
+	{
+		enemy.reLoadTime_ = enemy.RELOAD;
+		perShot_ = false;
+	}
+	else
+	{
+		enemy.reLoadTime_--;
+		enemy.reLoadTime_ = max(enemy.reLoadTime_, 0);
+	}
+
+	if(enemy.reLoadTime_==0)
+	{
+		perShot_ = true;
+	}
+		enemy.Shot(perShot_);
+
+
 	if (!enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
 	{
 		enemy.ChangeSatate(StateSearch::GetInstance());

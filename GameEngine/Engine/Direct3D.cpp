@@ -566,6 +566,18 @@ int Direct3D::GetScreenHeight()
 {
 	return screenHeight;
 }
+void Direct3D::SetDepthBufferWriteEnable(bool isWrite)
+{
+	if (isWrite)
+	{
+		pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+	}
+
+	else
+	{
+		pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
+	}
+}
 //•`‰æŠJŽn
 void Direct3D::BeginDraw()
 {

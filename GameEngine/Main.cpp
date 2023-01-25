@@ -135,7 +135,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
-#if true
+#if false
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
 				DebugUI::Log();
 #endif 

@@ -43,6 +43,8 @@ HRESULT Sprite::Initialize()
 void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
 	Direct3D::SetShader(SHADER_2D);
+
+	Direct3D::SetDepthBufferWriteEnable(false);
 	//コンスタントバッファに情報を渡す
 	transform.Calclation();
 
@@ -89,6 +91,8 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
 	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
+
+	Direct3D::SetDepthBufferWriteEnable(true);
 }
 
 // 頂点データ用バッファの設定

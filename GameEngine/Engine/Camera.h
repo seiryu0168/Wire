@@ -24,12 +24,33 @@ namespace Camera
 	//カメラの上方向ベクトルを設定
 	void SetUpVector(XMVECTOR upVector);
 
-	//プロジェクション行列を設定
-	//第一引数:画角(radian)
-	//第二引数:アスペクト比
-	//第三引数:ニアクリッピング
-	//第四引数:ファークリッピング
+	/// <summary>
+	/// プロジェクション行列を設定
+	/// </summary>
+	/// <param name="aov">画角</param>
+	/// <param name="aspectRadio">アスペクト比</param>
+	/// <param name="nearZ">ニアクリッピング</param>
+	/// <param name="farZ">ファークリッピング</param>
 	void SetProjection(float aov, float aspectRadio, float nearZ, float farZ);
+
+	/// <summary>
+	/// 画角設定
+	/// </summary>
+	/// <param name="aov">画角</param>
+	void SetAOV(float aov);
+
+	/// <summary>
+	/// アスペクト比設定
+	/// </summary>
+	/// <param name="aspect">アスペクト比</param>
+	void SetAspectRadio(float aspect);
+
+	/// <summary>
+	/// クリッピング範囲設定
+	/// </summary>
+	/// <param name="nearZ">ニアクリッピング</param>
+	/// <param name="farZ">ファークリッピング</param>
+	void SetClipping(float nearZ, float farZ);
 
 	//視点(見える位置)を取得
 	XMFLOAT3 GetPosition();

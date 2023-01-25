@@ -5,9 +5,14 @@
 class EnemyBoss : public Enemy
 {
 private:
+    bool perShot_;
     int hModel_;
     int shotTime_;
+    int shotCount_;
+    int reLoadTime_;
     float rpm_;
+
+    const int RELOAD;
 
 
     EnemyState<EnemyBoss>* pState_;
@@ -43,6 +48,27 @@ private:
         void Init(EnemyBoss& enemy) override;
         void Update(EnemyBoss&enemy) override;
     };
+
+    class StateSecondMode : public EnemyState<EnemyBoss>
+    {
+    private:
+        int waitTime_;
+        int hModel_;
+    public:
+        static StateSecondMode* GetInstance()
+        {
+            static StateSecondMode* instance = nullptr;
+            if (instance == nullptr)
+            {
+                instance = new StateSecondMode;
+            }
+            return instance;
+        }
+        void Init(EnemyBoss& enemy) override;
+        void Update(EnemyBoss& enemy) override;
+    };
+
+
     void ChangeState(EnemyState<EnemyBoss>* state);
 public:
     //コンストラクタ
@@ -65,8 +91,8 @@ public:
 
     //エネミーの動き
     //動く方向ベクトル
-    void Shot();
-    void HShot();
+    void Shot(bool shot);
+    void HShot(bool shot);
 
     //開放
     void Release() override;

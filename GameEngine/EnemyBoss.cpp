@@ -20,7 +20,11 @@ EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
 	hModel_(-1),
 	shotTime_(0),
-	rpm_(200)
+	rpm_(200),
+	perShot_(false),
+	shotCount_(0),
+	reLoadTime_(0),
+	RELOAD(90)
 {
 }
 
@@ -67,39 +71,63 @@ void EnemyBoss::Attack()
 	{
 		//çUåÇ1
 		//íºêiÇ∑ÇÈíeÇ≈çUåÇ
+		if (shotCount_ % 10 == 0 && perShot_)
+		{
+			reLoadTime_ = RELOAD;
+			perShot_ = false;
+		}
+		else
+		{
+			reLoadTime_--;
+			reLoadTime_ = max(reLoadTime_, 0);
+		}
 
-		Shot();
+		if (reLoadTime_ == 0)
+		{
+			perShot_ = true;
+		}
+
+		Shot(perShot_);
 	}
 	else if(XMVectorGetX(XMVector3Length(GetToPlayerVec())) < farRange)
 	{
 		//çUåÇ2
 		//í«îˆíeÇ≈çUåÇ
-		HShot();
+		HShot(true);
 	}
 }
 
-void EnemyBoss::HShot()
+void EnemyBoss::HShot(bool shot)
 {
 	shotTime_++;
-	float isShot = 3600.0f / rpm_;
-	if (isShot <= (float)shotTime_)
+	if (shot)
 	{
-		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
-		shotTime_ = 0;
+		float isShot = 3600.0f / rpm_;
+		if (isShot <= (float)shotTime_)
+		{
+			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
+			HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
+			shotTime_ = 0;
+			shotCount_++;
+		}
 	}
 }
 
-void EnemyBoss::Shot()
+void EnemyBoss::Shot(bool shot)
 {
 	shotTime_++;
-	float isShot = 3600.0f / rpm_;
-	if (isShot <= (float)shotTime_)
+	if (shot)
 	{
-		XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
-		Bullet* pBullet = Instantiate<Bullet>(this);
-		pBullet->SetDir(shotDir);
-		shotTime_ = 0;
+
+		float isShot = 3600.0f / rpm_;
+		if (isShot <= (float)shotTime_)
+		{
+			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
+			Bullet* pBullet = Instantiate<Bullet>(this);
+			pBullet->SetDir(shotDir);
+			shotTime_ = 0;
+			shotCount_++;
+		}
 	}
 }
 
@@ -151,4 +179,15 @@ void EnemyBoss::StateSearch::Update(EnemyBoss& enemy)
 	{
 		enemy.ChangeState(StateChase::GetInstance());
 	}
+}
+
+void EnemyBoss::StateSecondMode::Init(EnemyBoss& enemy)
+{
+	enemy.shotTime_ = 0;
+	//hModel_=ModelManager::Load()
+}
+
+void EnemyBoss::StateSecondMode::Update(EnemyBoss& enemy)
+{
+
 }

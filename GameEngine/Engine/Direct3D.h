@@ -68,6 +68,7 @@ namespace Direct3D
 	ID3D11DeviceContext* GetContext();
 	int GetScreenWidth();
 	int GetScreenHeight();
+	void SetDepthBufferWriteEnable(bool isWrite);
 	//•`‰æŠJŽn
 	void BeginDraw();
 
