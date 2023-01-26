@@ -31,8 +31,9 @@ namespace InterSceneData
 
 		return 1;
 	}*/
-	int AddData(std::string dataName,std::string* name,int* i=nullptr,float* f=nullptr);
+	int AddData(std::string dataName,std::string* name,int* i=nullptr,float* f=nullptr, bool* b = nullptr);
 	int GetintData(std::string dataName);
+	bool GetboolData(std::string dataName);
 	/*int AddData(bool b, std::string name);
 	int AddData(XMFLOAT3 f3, std::string name);
 	int AddData(XMVECTOR v, std::string name);

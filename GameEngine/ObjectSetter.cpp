@@ -8,6 +8,7 @@
 #include"EnemyTurret.h"
 #include"EnemyBoss.h"
 #include"SetObject.h"
+#include"InterSceneData.h"
 #include"Test.h"
 #include"Stage1.h"
 
@@ -92,6 +93,8 @@ void ObjectSetter::PlayUpdate()
 	}
 	else if (bossSpawn_ && enemys_.empty())
 	{
+		bool result = true;
+		InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
 		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT);
 	}
 }

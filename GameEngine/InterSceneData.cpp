@@ -10,12 +10,13 @@ namespace InterSceneData
         std::string* s;
         int* i;
         float* f;
+        bool* b;
     };
 
     std::vector<Data*> dataList_;
 
 
-    int AddData(std::string dataName,std::string* s,int* i, float* f)
+    int AddData(std::string dataName,std::string* s,int* i, float* f,bool* b)
     {
         bool existData = false;
         Data* pData = new Data;
@@ -38,6 +39,13 @@ namespace InterSceneData
         {
             pData->f = new float;
             *pData->f = *f;
+            existData = true;
+        }
+
+        if (b != nullptr)
+        {
+            pData->b = new bool;
+            *pData->b = *b;
             existData = true;
         }
 
@@ -65,6 +73,19 @@ namespace InterSceneData
 
         }
         return -2147483648;
+    }
+
+    bool GetboolData(std::string dataName)
+    {
+        for (int i = 0; i < dataList_.size(); i++)
+        {
+            if (dataList_[i]->dataName == dataName && dataList_[i]->b!= nullptr)
+            {
+                return *(dataList_[i]->b);
+            }
+
+        }
+        return 3;
     }
 
 }

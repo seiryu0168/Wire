@@ -15,11 +15,11 @@ ResultUI::~ResultUI()
 
 void ResultUI::Initialize()
 {
-	if (InterSceneData::GetintData("PlayerData") == 0)
-	hPict_ = ImageManager::Load("Assets\\GameOver.png");
+	if (InterSceneData::GetboolData("Result"))
+	hPict_ = ImageManager::Load("Assets\\Clear.png");
 
-	else if (InterSceneData::GetintData("PlayerData") > 0)
-		hPict_ = ImageManager::Load("Assets\\Clear.png");
+	else if (InterSceneData::GetboolData("Result")==false)
+		hPict_ = ImageManager::Load("Assets\\GameOver.png");
 }
 
 void ResultUI::Update()
