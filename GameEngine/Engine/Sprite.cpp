@@ -43,7 +43,7 @@ HRESULT Sprite::Initialize()
 void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
 	Direct3D::SetShader(SHADER_2D);
-
+	Direct3D::SetBlendMode(BLEND_DEFAULT);
 	Direct3D::SetDepthBufferWriteEnable(false);
 	//コンスタントバッファに情報を渡す
 	transform.Calclation();

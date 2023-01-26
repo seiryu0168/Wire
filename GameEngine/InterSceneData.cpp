@@ -4,32 +4,67 @@
 namespace InterSceneData
 {
 
-   /* struct Data
+    struct Data
     {
-        std::string name_;
-        int dataSize_;
-        GameObject* chunkClass_;
-    };*/
+        std::string dataName;
+        std::string* s;
+        int* i;
+        float* f;
+    };
 
     std::vector<Data*> dataList_;
 
 
-    /*template<class T>
-    int InteAddData(T* obj, std::string name,size_t dataSize)
+    int AddData(std::string dataName,std::string* s,int* i, float* f)
     {
-
+        bool existData = false;
         Data* pData = new Data;
+        pData->i = new int;
+        pData->f = new float;
+        if (s != nullptr)
+        {
+            pData->s = new std::string;
+            *pData->s = *s;
+        }
+
+        if (i != nullptr)
+        {
+            pData->i = new int;
+            *pData->i = *i;
+           
+            existData = true;
+        }
+        if (f != nullptr)
+        {
+            pData->f = new float;
+            *pData->f = *f;
+            existData = true;
+        }
+
+        if (existData)
+        {
+            pData->dataName = dataName;
+            dataList_.push_back(pData);
+            return 1;
+
+        }
+        else
+            delete pData;
+
+        return 0;
+    }
+
+    int GetintData(std::string dataName)
+    {
         for (int i = 0; i < dataList_.size(); i++)
         {
-            if (name == dataList_[i]->name_)
+            if (dataList_[i]->dataName == dataName&&dataList_[i]->i!=nullptr)
             {
-                SAFE_DELETE(pData);
-                return -1;
+                return *(dataList_[i]->i);
             }
-        }
-        memcpy(&pData->chunkClass_, obj, dataSize);
-        dataList_.push_back(pData);
 
-            return 1;
-    }*/
+        }
+        return -2147483648;
+    }
+
 }

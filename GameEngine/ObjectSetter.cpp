@@ -92,7 +92,7 @@ void ObjectSetter::PlayUpdate()
 	}
 	else if (bossSpawn_ && enemys_.empty())
 	{
-		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TEST);
+		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT);
 	}
 }
 

@@ -565,8 +565,8 @@ void Player::OnCollision(GameObject* pTarget)
 
     if (playerLife_ == 0)
     {
-        InterSceneData::AddData(this, "PlayerData", sizeof(*this));
-        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TEST);
+        InterSceneData::AddData("PlayerData",nullptr,&playerLife_);
+        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT);
         return;
     }
 

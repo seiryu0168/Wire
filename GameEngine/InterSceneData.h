@@ -12,8 +12,8 @@ struct Data
 
 namespace InterSceneData
 {
-	extern std::vector<Data*> dataList_;
-	template<class T>
+	//extern std::vector<Data*> dataList_;
+	/*template<class T>
 	int AddData(T* obj, std::string name, size_t dataSize)
 	{
 		Data* pData = new Data;
@@ -25,14 +25,15 @@ namespace InterSceneData
 				return -1;
 			}
 		}
-
-		memcpy((T*)pData->chunkClass_, obj, dataSize);
+		pData->chunkClass_ = new ((GameObject*)T(nullptr,""));
+		memcpy((&(T*)pData->chunkClass_), obj, dataSize);
 		dataList_.push_back(pData);
 
 		return 1;
-	}
-	/*int AddData(float f, std::string name);
-	int AddData(bool b, std::string name);
+	}*/
+	int AddData(std::string dataName,std::string* name,int* i=nullptr,float* f=nullptr);
+	int GetintData(std::string dataName);
+	/*int AddData(bool b, std::string name);
 	int AddData(XMFLOAT3 f3, std::string name);
 	int AddData(XMVECTOR v, std::string name);
 	int AddData(XMMATRIX m, std::string name);*/

@@ -3,6 +3,7 @@
 #include"../TestScene.h"
 #include"../PlayScene.h"
 #include"../TitleScene.h"
+#include"../ResultScene.h"
 #include"Model.h"
 #include"ImageManager.h"
 
@@ -33,7 +34,7 @@ void SceneManager::Update()
 		{
 		case SCENE_ID::SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
 		case SCENE_ID::SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
-		case SCENE_ID::SCENE_ID_TEST: Instantiate<TestScene>(this); break;
+		case SCENE_ID::SCENE_ID_RESULT: Instantiate<ResultScene>(this); break;
 		}
 		currentSceneID_ = nextSceneID_;
 	}
