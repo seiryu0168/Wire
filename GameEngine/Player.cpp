@@ -3,6 +3,7 @@
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
 #include"Engine/SceneManager.h"
+#include"InterSceneData.h"
 #include"EngineTime.h"
 #include"Engine/ImageManager.h"
 #include"ObjectSetter.h"
@@ -16,8 +17,10 @@
 namespace
 {
     static const std::vector<Enemy*> enemyList_;
-    static const float hitdist_=2.001f;
-    static const int   MAX_LIFE = 10;
+    static const float hitdist_   =2.001f;
+    static const int   MAX_LIFE   = 10;
+    static const float LIFE_OFFSET_X = -1800.0f;
+    static const float LIFE_OFFSET_Y = -700.0f;
 }
 
 //コンストラクタ
@@ -105,7 +108,7 @@ void Player::Initialize()
     for (int i = 0; i < MAX_LIFE; i++)
     {
         int hPict_ = ImageManager::Load("Assets\\Life.png");
-        ImageManager::SetImagePos(hPict_, { -900.0f+300*i, -400.0f, 0 });
+        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+200*i, LIFE_OFFSET_Y, 0 });
         ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
 
         life_.push_back(hPict_);
@@ -562,7 +565,9 @@ void Player::OnCollision(GameObject* pTarget)
 
     if (playerLife_ == 0)
     {
+        InterSceneData::AddData(this, "PlayerData", sizeof(*this));
         ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TEST);
+        return;
     }
 
     ImageManager::SetAlpha(life_[playerLife_ - 1], 0);
@@ -581,6 +586,7 @@ void Player::CheckTargetList()
         {
             itr++;
         }
+
         if (enemyList_.empty())
         {
             return;
