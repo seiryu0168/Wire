@@ -17,6 +17,7 @@ class Sprite
 		XMMATRIX matWorld;
 		XMMATRIX matUVTrans;
 		XMFLOAT4 color;
+		XMFLOAT4 ChangeColor;
 	};
 protected:
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
@@ -48,6 +49,6 @@ public:
 	
 	void SetSize(float width, float height) { size_ = { width,height, 1.0f}; }
 	XMFLOAT3 GetSize() { return size_; }
-	void Draw(Transform& transform,RECT rect,float alpha);
+	void Draw(Transform& transform,RECT rect,XMFLOAT4 changeColor,float alpha);
 };
 

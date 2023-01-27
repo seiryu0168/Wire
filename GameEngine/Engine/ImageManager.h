@@ -54,7 +54,8 @@ namespace ImageManager
 	/// </summary>
 	/// <param name="imgHandle">画像番号</param>
 	/// <param name="pos">画像の位置</param>
-	void  SetImagePos(int imgHandle,XMFLOAT3 pos);
+	void SetImagePos(int imgHandle,XMFLOAT3 pos);
+	void ChangeColor(int imgHandle, XMFLOAT4 color);
 
 	/// <summary>
 	/// 画像サイズ設定

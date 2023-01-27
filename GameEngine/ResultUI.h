@@ -6,6 +6,9 @@ private:
 	int hPict_;
 	int hPictTitle_;
 	int hPictRetry_;
+
+	int inputInterval_;
+	int buttonNum_;
 public:
 	ResultUI(GameObject* parent);
 	~ResultUI();

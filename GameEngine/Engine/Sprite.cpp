@@ -40,7 +40,7 @@ HRESULT Sprite::Initialize()
 	return S_OK;
 }
 
-void Sprite::Draw(Transform& transform, RECT rect, float alpha)
+void Sprite::Draw(Transform& transform, RECT rect, XMFLOAT4 changeColor,float alpha)
 {
 	Direct3D::SetShader(SHADER_2D);
 	Direct3D::SetBlendMode(BLEND_DEFAULT);
@@ -62,6 +62,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 
 	cb.matUVTrans = XMMatrixTranspose(matTexScale * matTexTrans);
 	cb.color = XMFLOAT4(1, 1, 1, alpha);
+	cb.ChangeColor = changeColor;
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
