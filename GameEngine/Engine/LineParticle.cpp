@@ -116,31 +116,56 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 			{
 				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 				vArm = XMVector3Normalize(vArm) * WIDTH_;
-
-				XMVECTOR allRotate = XMQuaternionRotationAxis(vLine, (M_PI / 2.0f) * i);
-				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
 				XMFLOAT3 pos;
-				vArm = XMVector3Rotate(vArm, allRotate);
-				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 
 				XMStoreFloat3(&pos, vPos + vArm);	
 				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
-				XMStoreFloat3(&pos, vPos + (vLine+vArm));
+				XMStoreFloat3(&pos, vPos - vArm);
 				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
+				
+				vertices[index] = vertex0;
+				index++;
+				vertices[index] = vertex1;
+				index++;
+			}
+
+		}
+
+	    itr = pList->begin();
+		for (int j = 0; j < LENGTH_; j++)
+		{
+			//記憶している位置取得
+			XMVECTOR vPos = XMLoadFloat3(&(*itr));
+
+			itr++;
+			if (itr == pList->end())
+			{
+				break;
+			}
+
+			//さっき取得した位置から次の位置に向かうベクトル
+			XMVECTOR vLine = XMLoadFloat3(&(*itr)) - vPos;
+
+			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
+			{
+				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
+				vArm = XMVector3Normalize(vArm) * WIDTH_;
+
+				XMVECTOR allRotate = XMQuaternionRotationAxis(vLine, (M_PI / 2.0f));
+				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
+				XMFLOAT3 pos;
+				vArm = XMVector3Rotate(vArm, allRotate);
+				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMStoreFloat3(&pos, vPos + vArm2);
 				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
 
-				XMStoreFloat3(&pos, vPos + (vLine+vArm2));
+				XMStoreFloat3(&pos, vPos - vArm2);
 				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
-				vertices[index] = vertex0;
-				index++;
 				vertices[index] = vertex2;
 				index++;
 				vertices[index] = vertex3;
-				index++;
-				vertices[index] = vertex1;
 				index++;
 			}
 		}
@@ -314,7 +339,7 @@ void LineParticle::Draw(Transform* transform)
 	HRESULT hr;
 	Direct3D::SetShader(SHADER_EFF);
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(transform->GetWorldMatrix()*Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = XMFLOAT4(1, 1, 1, 1);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
