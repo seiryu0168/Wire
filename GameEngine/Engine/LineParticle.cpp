@@ -67,7 +67,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	{
 		return;
 	}*/
-	CreateMeshPype(&positionList_);// , split);
+	CreateMeshPlate(&positionList_);// , split);
 	//CreateMeshPlate(&positionList_);
 	/*switch(mode)
 	{
@@ -94,8 +94,8 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	VERTEX* vertices = new VERTEX[LENGTH_ * 4];
 	
 	
-	for (int i = 0; i < 4; i++)
-	{
+	/*for (int i = 0; i < 4; i++)
+	{*/
 		int index = 0;
 		auto itr = pList->begin();
 		for (int j = 0; j < LENGTH_; j++)
@@ -114,8 +114,10 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
 			{
+				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
 				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 				vArm = XMVector3Normalize(vArm) * WIDTH_;
+				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMFLOAT3 pos;
 
 				XMStoreFloat3(&pos, vPos + vArm);	
@@ -124,52 +126,23 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				XMStoreFloat3(&pos, vPos - vArm);
 				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
-				
-				vertices[index] = vertex0;
-				index++;
-				vertices[index] = vertex1;
-				index++;
-			}
-
-		}
-
-	    itr = pList->begin();
-		for (int j = 0; j < LENGTH_; j++)
-		{
-			//記憶している位置取得
-			XMVECTOR vPos = XMLoadFloat3(&(*itr));
-
-			itr++;
-			if (itr == pList->end())
-			{
-				break;
-			}
-
-			//さっき取得した位置から次の位置に向かうベクトル
-			XMVECTOR vLine = XMLoadFloat3(&(*itr)) - vPos;
-
-			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
-			{
-				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
-				vArm = XMVector3Normalize(vArm) * WIDTH_;
-
-				XMVECTOR allRotate = XMQuaternionRotationAxis(vLine, (M_PI / 2.0f));
-				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
-				XMFLOAT3 pos;
-				vArm = XMVector3Rotate(vArm, allRotate);
-				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMStoreFloat3(&pos, vPos + vArm2);
 				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
 
 				XMStoreFloat3(&pos, vPos - vArm2);
 				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
-				vertices[index] = vertex2;
+				
+				vertices[index] = vertex0;
+				index++;
+				vertices[index] = vertex1;
+				index++;
+				/*vertices[index] = vertex2;
 				index++;
 				vertices[index] = vertex3;
-				index++;
+				index++;*/
 			}
 		}
-	}
+	//}
 	
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 4;
@@ -369,7 +342,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 	
 	//インデックスバッファ
-	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+	//Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 	
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
@@ -383,11 +356,11 @@ void LineParticle::Draw(Transform* transform)
 	}
 	else
 	{
-		vertexCount = (positionList_.size() - 1) * 4;
+		vertexCount = (positionList_.size() - 1) * 2;
 	}
 
-	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); //設定を変える
-	Direct3D::pContext->DrawIndexed(vertexCount, 0,0);
+	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
+	Direct3D::pContext->Draw(vertexCount, 0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

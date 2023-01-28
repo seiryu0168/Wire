@@ -286,7 +286,7 @@ void Player::Draw()
 void Player::SecondDraw()
 {
     pLine_->Draw(&transform_);
-    pWire_->Draw(&transform_);
+    //pWire_->Draw(&transform_);
 }
 
 //ŠJ•ú
