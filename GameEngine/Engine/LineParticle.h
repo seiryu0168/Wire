@@ -2,14 +2,15 @@
 #include"Direct3D.h"
 #include"Texture.h"
 #include"DirectXMath.h"
+#include"Transform.h"
 #include<list>
 
 class LineParticle
 {
-	enum LineMode
+	enum class LineMode
 	{
-		DEFAULT=0,
-		BILLBOARD,
+		LINE_DEFAULT=0,
+		LINE_CROSS,
 	};
 
 private:
@@ -29,21 +30,25 @@ private:
 	float WIDTH_;//ラインパーティクルの幅
 	int LENGTH_;//ラインパーティクルのポジションを記憶する量
 	float tipWidth_;
+	//int* index_;
 
 	ID3D11Buffer* pVertexBuffer_;
+	ID3D11Buffer* pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 
 	Texture* pTexture_;
+	std::vector<int> indexList;
 	std::list<XMFLOAT3> positionList_;
 public:
 	LineParticle();
 	LineParticle(float width,int length,float tipWidth);
 	//現在位置を記憶 : pos
 	void AddPosition(XMFLOAT3 pos);
-	HRESULT CreateMeshPype(std::list<XMFLOAT3>* pList,int splt);
-	HRESULT CreateMeshPlate(std::list<XMFLOAT3>* pList, int splt);
+	HRESULT CreateMeshPype(std::list<XMFLOAT3>* pList);
+	HRESULT CreateMeshPlate(std::list<XMFLOAT3>* pList);
 	HRESULT Load(std::string fileName);
-	void Draw();
+	void SetIndex();
+	void Draw(Transform* transform);
 	void SetLineParameter(float width, int length,float tipWidth=0);
 	void DeleteLine();
 	void Release();

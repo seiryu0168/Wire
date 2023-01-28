@@ -26,7 +26,7 @@ void TestScene::FixedUpdate()
 //•`‰æ
 void TestScene::Draw()
 {
-	pLine_->Draw();
+	//pLine_->Draw();
 }
 
 //ŠJ•ú

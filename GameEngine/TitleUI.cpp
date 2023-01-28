@@ -21,7 +21,7 @@ void TitleUI::Initialize()
 	hPictPlay_ = ImageManager::Load("Assets\\PlayButton.jpg");
 	assert(hPictPlay_ >= 0);
 	ImageManager::SetImagePos(hPictPlay_, { -500,-300,1 });
-	hPictTitle_ = ImageManager::Load("Assets\\TitleImage.jpg");
+	hPictTitle_ = ImageManager::Load("Assets\\TitleImage.png");
 	assert(hPictTitle_ >= 0);
 }
 

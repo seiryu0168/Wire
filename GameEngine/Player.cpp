@@ -75,7 +75,7 @@ void Player::Initialize()
     pWire_ = new LineParticle;
     pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
-    pLine_->Load("Assets\\Line.png");
+    pLine_->Load("Assets\\ReStart.png");
     pWire_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
@@ -285,8 +285,8 @@ void Player::Draw()
 
 void Player::SecondDraw()
 {
-    pLine_->Draw();
-    pWire_->Draw();
+    pLine_->Draw(&transform_);
+    pWire_->Draw(&transform_);
 }
 
 //ŠJ•ú
