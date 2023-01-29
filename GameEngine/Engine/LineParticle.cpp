@@ -366,8 +366,8 @@ void LineParticle::Draw(Transform* transform)
 		vertexCount = (positionList_.size() - 1) * 2;
 	}
 
-	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //Ý’è‚ð•Ï‚¦‚é
-	Direct3D::pContext->DrawIndexed(vertexCount, 0,0);
+	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //Ý’è‚ð•Ï‚¦‚é
+	Direct3D::pContext->Draw(vertexCount, 0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
