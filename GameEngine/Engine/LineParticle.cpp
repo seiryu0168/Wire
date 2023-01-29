@@ -44,10 +44,6 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	//カメラの位置取得(ベクトルで)
 	XMFLOAT3 camPos = Camera::GetPosition();
 	XMVECTOR vCamPos = XMLoadFloat3(&camPos);
-
-	auto itr = positionList_.begin();
-	
-	int index = 0;
 	/*int split = 0;
 	for (int i = 0; i<= LENGTH_; i++)
 	{
@@ -155,6 +151,11 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	D3D11_SUBRESOURCE_DATA data_vertex;
 	data_vertex.pSysMem = vertices;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
+		return hr;
+	}
 	hr = Direct3D::pDevice->GetDeviceRemovedReason();
 	if (FAILED(hr))
 	{
@@ -226,7 +227,12 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 
 	D3D11_SUBRESOURCE_DATA data_vertex;
 	data_vertex.pSysMem = vertices;
-	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
+	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);//例外のスローが起こる。原因不明
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
+		return hr;
+	}
 	hr = Direct3D::pDevice->GetDeviceRemovedReason();
 
 	if (FAILED(hr))
@@ -234,7 +240,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
 		return hr;
 	}
-	SAFE_DELETE_ARRAY(vertices);
+	delete[] vertices;
 
 	return hr;
 }

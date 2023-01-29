@@ -18,7 +18,10 @@ void Camera::Initialize(float width,float height)
 	position_ = XMVectorSet(0, 3, -10, 0);	//カメラの位置
 	target_ = XMVectorSet(0, 0, 0, 0);	//カメラの焦点
 	upVector_ = XMVectorSet(0, 1, 0, 0);
-
+	angleOfView = XM_PIDIV4;
+	aspectRadio = (FLOAT)width / (FLOAT)height;
+	nearClipping = 0.1f;
+	farClipping = 1000.0f;
 	// プロジェクション行列
 		projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)width / (FLOAT)height, 0.1f, 1000.0f);
 }

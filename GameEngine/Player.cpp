@@ -20,7 +20,10 @@ namespace
     static const float hitdist_   =2.001f;
     static const int   MAX_LIFE   = 10;
     static const float LIFE_OFFSET_X = -1800.0f;
-    static const float LIFE_OFFSET_Y = -700.0f;
+    static const float LIFE_OFFSET_Y = -900.0f;
+    static const float ACCEL_AOV     = 70.0f;
+    static const float NORMAL_AOV    = 45.0f;
+    static const float CAMERA_DIST   = 1.5f;
 }
 
 //コンストラクタ
@@ -75,7 +78,7 @@ void Player::Initialize()
     pWire_ = new LineParticle;
     pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
-    pLine_->Load("Assets\\ReStart.png");
+    pLine_->Load("Assets\\Line.png");
     pWire_->Load("Assets\\Effect01.png");
     //pWire_ = Instantiate<Wire>(this);
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
@@ -108,8 +111,8 @@ void Player::Initialize()
     for (int i = 0; i < MAX_LIFE; i++)
     {
         int hPict_ = ImageManager::Load("Assets\\Life.png");
-        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+200*i, LIFE_OFFSET_Y, 0 });
-        ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
+        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+100*i, LIFE_OFFSET_Y, 0 });
+        ImageManager::SetImageSize(hPict_, { 0.1f,0.1f,1.0f });
 
         life_.push_back(hPict_);
 
@@ -317,6 +320,9 @@ void Player::CameraMove(RayCastData ray)
         aimTime_ += -0.08f;
         aimTime_ = max(aimTime_, 0);
     }
+
+    float cameraRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
+    Camera::SetAOV((M_PI / 180.0f) *cameraRate );
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
 
@@ -338,7 +344,7 @@ void Player::CameraMove(RayCastData ray)
 
     matCamY_   = XMMatrixRotationX(angleX_ * (M_PI / 180));
     matCamX_   = XMMatrixRotationY(angleY_ * (M_PI / 180));
-    vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_);
+    vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_)* CAMERA_DIST;
     vAimCam    = XMVector3TransformCoord(vBaseAim_, matCamY_ * matCamX_);
     vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
     
