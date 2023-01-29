@@ -5,7 +5,7 @@
 #include<vector>
 LineParticle::LineParticle()
 	:WIDTH_(0.5),
-	LENGTH_(30),
+	LENGTH_(2),
 	tipWidth_(0),
 	pVertexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
@@ -39,6 +39,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	//頂点バッファ解放
 	SAFE_RELEASE(pVertexBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
+	indexList.clear();
 	SetIndex();
 
 	//カメラの位置取得(ベクトルで)
@@ -87,7 +88,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 	//頂点データ作成
 	XMVECTOR upVec = XMVectorSet(0, 1, 0, 0);
-	VERTEX* vertices = new VERTEX[LENGTH_ * 4];
+	VERTEX* vertices = new VERTEX[(LENGTH_ +1)* 4];
 	
 	
 	/*for (int i = 0; i < 4; i++)
@@ -111,7 +112,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
 			{
 				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
-				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
+				XMVECTOR vArm = XMVector3Cross(vLine, upVec);
 				vArm = XMVector3Normalize(vArm) * WIDTH_;
 				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMFLOAT3 pos;
@@ -119,23 +120,23 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				XMStoreFloat3(&pos, vPos + vArm);	
 				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
-				XMStoreFloat3(&pos, vPos - vArm);
+				XMStoreFloat3(&pos, vPos + -vArm);
 				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
 				XMStoreFloat3(&pos, vPos + vArm2);
 				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
 
-				XMStoreFloat3(&pos, vPos - vArm2);
+				XMStoreFloat3(&pos, vPos + -vArm2);
 				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
 				
 				vertices[index] = vertex0;
 				index++;
 				vertices[index] = vertex1;
 				index++;
-				/*vertices[index] = vertex2;
+				vertices[index] = vertex2;
 				index++;
 				vertices[index] = vertex3;
-				index++;*/
+				index++;
 			}
 		}
 	//}
@@ -192,8 +193,6 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 
 		//さっき取得した位置から次の位置に向かうベクトル
 		XMVECTOR vLine = XMLoadFloat3(&(*itr)) - vPos;
-		int splitCount = 0;
-		splitCount = XMVectorGetX(XMVector3Length(vLine)) / 1.0f + 1;
 
 		XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 		vArm = XMVector3Normalize(vArm) * WIDTH_;
@@ -227,7 +226,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 
 	D3D11_SUBRESOURCE_DATA data_vertex;
 	data_vertex.pSysMem = vertices;
-	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);//例外のスローが起こる。原因不明
+	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);//たまに例外のスローが起こる。原因不明
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラインパーティクルのポジション更新失敗", L"エラー", MB_OK);
@@ -284,12 +283,14 @@ void LineParticle::SetIndex()
 {
 	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
 	int indexOffset = 0;
+	int indexdelta=0;
 	for (int i = 0; i < LENGTH_ * 4; i++)
 	{
-		indexList.push_back(i - (indexOffset+fixedIndex[i % 12]));
-		if (i % 11 == 0&&i!=0)
+			indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
+		if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
 		{
 			indexOffset += 8;
+			indexdelta++;
 		}
 	}
 
@@ -348,7 +349,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 	
 	//インデックスバッファ
-	//Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 	
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
@@ -365,8 +366,8 @@ void LineParticle::Draw(Transform* transform)
 		vertexCount = (positionList_.size() - 1) * 2;
 	}
 
-	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->Draw(vertexCount, 0);
+	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
+	Direct3D::pContext->DrawIndexed(vertexCount, 0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
