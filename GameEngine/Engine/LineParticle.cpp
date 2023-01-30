@@ -31,7 +31,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	positionList_.push_front(pos);
 	
 	//LENGTH超えてたら終端のpositionを削除
-	if (positionList_.size() > LENGTH_)
+	if (positionList_.size() > LENGTH_+2)
 	{
 		positionList_.pop_back();
 	}
@@ -64,7 +64,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	{
 		return;
 	}*/
-	CreateMeshPlate(&positionList_);// , split);
+	CreateMeshPype(&positionList_);// , split);
 	//CreateMeshPlate(&positionList_);
 	/*switch(mode)
 	{
@@ -88,14 +88,14 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 	//頂点データ作成
 	XMVECTOR upVec = XMVectorSet(0, 1, 0, 0);
-	VERTEX* vertices = new VERTEX[(LENGTH_ +1)* 4];
+	VERTEX* vertices = new VERTEX[(LENGTH_ +2)* 4];
 	
 	
 	/*for (int i = 0; i < 4; i++)
 	{*/
 		int index = 0;
 		auto itr = pList->begin();
-		for (int j = 0; j < LENGTH_; j++)
+		for (int j = 0; j < LENGTH_+2; j++)
 		{
 			//記憶している位置取得
 			XMVECTOR vPos = XMLoadFloat3(&(*itr));
@@ -117,13 +117,13 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMFLOAT3 pos;
 
-				XMStoreFloat3(&pos, vPos + vArm);	
+				XMStoreFloat3(&pos, vPos + -vArm);	
 				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
-				XMStoreFloat3(&pos, vPos + -vArm);
+				XMStoreFloat3(&pos, vPos + vArm2);
 				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
 
-				XMStoreFloat3(&pos, vPos + vArm2);
+				XMStoreFloat3(&pos, vPos + vArm);
 				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
 
 				XMStoreFloat3(&pos, vPos + -vArm2);
@@ -142,7 +142,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	//}
 	
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 4;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 4;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -284,25 +284,28 @@ void LineParticle::SetIndex()
 	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
 	int indexOffset = 0;
 	int indexdelta=0;
-	for (int i = 0; i < LENGTH_ * 4; i++)
-	{
-			indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
-		if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
-		{
-			indexOffset += 8;
-			indexdelta++;
-		}
-	}
+	//for (int i = 0; i < LENGTH_ * 4; i++)
+	//{
+	//		indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
+	//	if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
+	//	{
+	//		indexOffset += 8;
+	//		indexdelta++;
+	//	}
+	//}
+	//indexList.push_back()
+
+	int ind[] = { 0,1,4, 1,5,4, 1,2,5, 2,6,5, 2,3,6, 3,7,6, 3,0,7, 0,4,7 };
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * LENGTH_* 4;
+	bd.ByteWidth = sizeof(int) * (LENGTH_+2) * 4;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &indexList;
+	InitData.pSysMem = &ind;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
@@ -363,11 +366,11 @@ void LineParticle::Draw(Transform* transform)
 	}
 	else
 	{
-		vertexCount = (positionList_.size() - 1) * 2;
+		vertexCount = (positionList_.size()) * 4;
 	}
 
-	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->Draw(vertexCount, 0);
+	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
+	Direct3D::pContext->DrawIndexed(24, 0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

@@ -34,7 +34,8 @@ struct VS_OUT
 	float4 normal	: TEXCOORD0;	//法線
 	float4 light	: TEXCOORD1;	//ライト
 	float4 eyeVector: TEXCOORD2;	//視線
-	float4 col		: COLOR;		//カラー
+	float4 col		: COLOR0;		//カラー
+	float4 fog		: COLOR1;		//フォグ
 	float2 uv		: TEXCOORD3;	//UV座標
 };
 
@@ -51,6 +52,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//視線ベクトル
 	float4 cameraPos = mul(pos, g_matW);
 	outData.eyeVector = normalize(g_cameraPosition - cameraPos);
+	
+	//float fogDepth = 30.0f;
+	//outData.fog = eyeVector
 
 	//法線
 	normal.w = 0;
