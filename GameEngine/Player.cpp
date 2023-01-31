@@ -46,7 +46,7 @@ Player::Player(GameObject* parent)
     flyTime_(0),
     velocity_(0),
     rotateSpeed_(4.0f),
-    maxSpeed_(3.0f),
+    maxSpeed_(1.5f),
     wireLength_(100.0f),
     angleY_(0),
     angleX_(0),
@@ -76,7 +76,7 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(GetParent());
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
-    pLine_->SetLineParameter(0.5f, 1,0.4f);
+    pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
     pLine_->Load("Assets\\Line.png");
     pWire_->Load("Assets\\Effect01.png");
@@ -175,8 +175,6 @@ void Player::Update()
             XMStoreFloat3(&pointerPos, ray.hitPos);
             pPointer_->SetPointerPos(pointerPos);
             pPointer_->SetDraw(ray.hit);
-            pWire_->AddPosition(transform_.position_);
-            pWire_->AddPosition(pointerPos);
         }
     }
 
@@ -283,7 +281,7 @@ void Player::FixedUpdate()
 void Player::Draw()
 {
     ModelManager::SetTransform(hModel_, transform_);
-    //ModelManager::Draw(hModel_); 
+    ModelManager::Draw(hModel_); 
 }
 
 void Player::SecondDraw()

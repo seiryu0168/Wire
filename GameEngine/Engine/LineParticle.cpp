@@ -64,7 +64,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	{
 		return;
 	}*/
-	CreateMeshPype(&positionList_);// , split);
+	CreateMeshPlate(&positionList_);// , split);
 	//CreateMeshPlate(&positionList_);
 	/*switch(mode)
 	{
@@ -180,7 +180,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 	auto itr = pList->begin();
 	//頂点データ作成
 	VERTEX* vertices = new VERTEX[pList->size() * 2];
-	for (int i = 0; i < LENGTH_; i++)
+	for (int i = 0; i < LENGTH_+2; i++)
 	{
 		//記憶している位置取得
 		XMVECTOR vPos = XMLoadFloat3(&(*itr));
@@ -217,7 +217,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 	}
 
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 2;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 2;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -352,7 +352,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 	
 	//インデックスバッファ
-	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+	//Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 	
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);//頂点シェーダー用
@@ -366,11 +366,11 @@ void LineParticle::Draw(Transform* transform)
 	}
 	else
 	{
-		vertexCount = (positionList_.size()) * 4;
+		vertexCount = (positionList_.size()) * 2;
 	}
 
-	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->DrawIndexed(24, 0,0);
+	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
+	Direct3D::pContext->Draw(vertexCount, 0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
