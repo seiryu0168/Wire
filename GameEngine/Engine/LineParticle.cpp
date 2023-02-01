@@ -60,9 +60,6 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	XMVECTOR upVec = XMVectorSet(0, 1, 0, 0);
 	VERTEX* vertices = new VERTEX[(pList->size()-1)* 4];
 	
-	
-	/*for (int i = 0; i < 4; i++)
-	{*/
 		int index = 0;
 		auto itr = pList->begin();
 		for (int j = 0; j < LENGTH_+2; j++)
@@ -83,18 +80,18 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 			{
 				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
 				XMVECTOR vArm = XMVector3Cross(vLine, upVec);
-				vArm = XMVector3Normalize(vArm) * WIDTH_;
+				vArm = XMVector3Normalize(vArm) * WIDTH_*(LENGTH_-j)/LENGTH_;
 				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMFLOAT3 pos;
 
 				XMStoreFloat3(&pos, vPos + -vArm);	
-				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
+				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1.0f/4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + vArm2);
-				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,0,0) };
+				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,2.0f / 4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + vArm);
-				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
+				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,3.0f/4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + -vArm2);
 				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
@@ -265,9 +262,9 @@ void LineParticle::SetIndex()
 {
 	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
 	int indexOffset = 0;
-	int indexdelta=0;
-	
-	int ind[] = { 0,1,5, 0,5,4, 1,2,6, 1,6,5, 2,3,7, 2,7,6, 3,4,0, 3,0,7 };
+	int indexdelta = 0;
+	int ind2[]={ 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7 };
+	int ind[] = { 0,5,1, 0,4,5, 1,2,6, 1,6,5, 2,7,6, 2,3,7, 3,7,4, 3,4,0 };
 
 	//for (int i = 0; i < LENGTH_ * 4; i++)
 	//{
@@ -289,7 +286,7 @@ void LineParticle::SetIndex()
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &ind;
+	InitData.pSysMem = &ind2;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
@@ -353,7 +350,7 @@ void LineParticle::Draw(Transform* transform)
 		vertexCount = (positionList_.size()) * 4;
 	}
 
-	Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //Ý’è‚ð•Ï‚¦‚é
+	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //Ý’è‚ð•Ï‚¦‚é
 	Direct3D::pContext->DrawIndexed(24, 0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
