@@ -384,7 +384,7 @@ HRESULT Direct3D::InitShaderEFF()
 
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
-	rdc.CullMode = D3D11_CULL_NONE;
+	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise =TRUE;
 	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_EFF].pRasterizerState);

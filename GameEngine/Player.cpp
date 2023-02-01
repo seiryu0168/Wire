@@ -76,7 +76,7 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(GetParent());
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
-    pLine_->SetLineParameter(0.5f, 30,0.4f);
+    pLine_->SetLineParameter(0.5f, 2,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
     pLine_->Load("Assets\\Line.png");
     pWire_->Load("Assets\\Effect01.png");
