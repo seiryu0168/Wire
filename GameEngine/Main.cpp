@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include<stdlib.h>
 #include"Engine/Direct3D.h"
+#include"Direct2D.h"
 #include"Engine/Camera.h"
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"
@@ -81,6 +82,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	{
 		PostQuitMessage(0);
 	}
+	if (FAILED(D2D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd)))
+	{
+		PostQuitMessage(0);
+	}
 
 
 	DebugUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
@@ -147,7 +152,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 				ImageManager::Draw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
+				//D2D::RenderTest();
 
 				Direct3D::EndDraw();
 			}

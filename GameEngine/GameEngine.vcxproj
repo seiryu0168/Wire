@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Direct2D.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -218,6 +219,7 @@
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Direct2D.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />

@@ -601,7 +601,7 @@ void Direct3D::EndDraw()
 	if (hr== DXGI_ERROR_DEVICE_REMOVED || hr== DXGI_ERROR_DEVICE_RESET)
 	{
 		
-			MessageBox(nullptr, L"スワップチェイン失敗", L"エラー", MB_OK);
+			MessageBox(nullptr, L"Direct3D : スワップチェイン失敗", L"エラー", MB_OK);
 		
 	}
 }
