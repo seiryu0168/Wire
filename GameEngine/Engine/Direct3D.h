@@ -66,6 +66,7 @@ namespace Direct3D
 	void SetBlendMode(BLEND_MODE mode);
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
+	IDXGISwapChain* GetSwapChain();
 	int GetScreenWidth();
 	int GetScreenHeight();
 	void SetDepthBufferWriteEnable(bool isWrite);

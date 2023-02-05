@@ -65,7 +65,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		nullptr,						// どのビデオアダプタを使用するか？既定ならばnullptrで
 		D3D_DRIVER_TYPE_HARDWARE,		// ドライバのタイプを渡す。ふつうはHARDWARE
 		nullptr,						// 上記をD3D_DRIVER_TYPE_SOFTWAREに設定しないかぎりnullptr
-		0,//D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT,								// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
+		D3D10_CREATE_DEVICE_BGRA_SUPPORT,//D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT,								// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
 		nullptr,						// デバイス、コンテキストのレベルを設定。nullptrにしとけばOK
 		0,								// 上の引数でレベルを何個指定したか
 		D3D11_SDK_VERSION,				// SDKのバージョン。必ずこの値
@@ -557,6 +557,10 @@ ID3D11Device* Direct3D::GetDevice()
 ID3D11DeviceContext* Direct3D::GetContext()
 {
 	 return pContext;
+}
+IDXGISwapChain* Direct3D::GetSwapChain()
+{
+	return pSwapChain;
 }
 int Direct3D::GetScreenWidth()
 {
