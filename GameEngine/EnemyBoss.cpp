@@ -130,7 +130,6 @@ void EnemyBoss::Shot(bool shot)
 	shotTime_++;
 	if (shot)
 	{
-
 		float isShot = 3600.0f / rpm_;
 		if (isShot <= (float)shotTime_)
 		{
@@ -167,7 +166,6 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			{
 				ChangeState(StateSecondMode::GetInstance());
 				ModelManager::DeleteModelNum(hModelShield_);
-
 			}
 		}
 	}

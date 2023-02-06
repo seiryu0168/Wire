@@ -25,7 +25,6 @@ Enemy::~Enemy()
 
 bool Enemy::IsVisible( float visibleAngle, float range)
 {
-
 	XMVECTOR toPlayer;
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	enemyParameter_.toPlayerVec = XMLoadFloat3(&playerPos) - enemyParameter_.vPosition;
