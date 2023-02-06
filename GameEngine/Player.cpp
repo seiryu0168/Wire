@@ -308,7 +308,7 @@ void Player::CameraMove(RayCastData ray)
     {
         aimTime_ += -0.07f;
         aimTime_ = max(aimTime_, 0.5);
-        flyMove_ = { 0, 0, 0 };
+        //flyMove_ = { 0, 0, 0 };
     }
 
     //ƒƒCƒ„[‚Å”ò‚ñ‚Å‚¢‚é

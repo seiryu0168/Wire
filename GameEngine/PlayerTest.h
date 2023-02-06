@@ -14,17 +14,79 @@ class PlayerTest : public GameObject
     PlayerState<PlayerTest>* pState_;
     class StateJump : public PlayerState<PlayerTest>
     {
+    private:
+
     public:
         static StateJump* GetInstance()
         {
             static StateJump* instance = nullptr;
-            if (instance = nullptr)
+            if (instance == nullptr)
             {
                 instance = new StateJump();
             }
             return instance;
         }
+
+        void Init(PlayerTest& player) override;
+        void Update(PlayerTest& player) override;
     };
+
+    class StateAim : public PlayerState<PlayerTest>
+    {
+    public:
+        static StateAim* GetInstance()
+        {
+            static StateAim* instance = nullptr;
+            if (instance == nullptr)
+            {
+                instance = new StateAim();
+            }
+            return instance;
+        }
+
+        void Init(PlayerTest& player) override;
+        void Update(PlayerTest& player) override;
+    };
+
+    class StateGod : public PlayerState<PlayerTest>
+    {
+    private:
+        int godTime_;
+    public:
+        static StateGod* GetInstance()
+        {
+            static StateGod* instance = nullptr;
+            if (instance == nullptr)
+            {
+                instance = new StateGod();
+            }
+            return instance;
+        }
+
+        void Init(PlayerTest& player) override;
+        void Update(PlayerTest& player) override;
+    };
+
+    class StateFly : public PlayerState<PlayerTest>
+    {
+    private:
+        int godTime_;
+    public:
+        static StateFly* GetInstance()
+        {
+            static StateFly* instance = nullptr;
+            if (instance == nullptr)
+            {
+                instance = new StateFly();
+            }
+            return instance;
+        }
+
+        void Init(PlayerTest& player) override;
+        void Update(PlayerTest& player) override;
+    };
+
+    void ChangeState(PlayerState<PlayerTest>* state);
 
         enum DIR_NAME
         {
@@ -55,11 +117,10 @@ class PlayerTest : public GameObject
         bool jumpFlag_;
         bool groundFlag_;
         bool godFlag_;
-
         int hModel_;
         int hModel_Handle_;
         int hAudio_;
-        int PlayerTestLife_;
+        int playerLife_;
         int stageNum_;
         int godTime_;
         std::vector<int> life_;
@@ -77,8 +138,8 @@ class PlayerTest : public GameObject
 
 
         XMVECTOR vCamPos_;
-        XMVECTOR vPlayerTestPos_;
-        XMVECTOR vPlayerTestMove_;
+        XMVECTOR vPlayerPos_;
+        XMVECTOR vPlayerMove_;
         XMVECTOR vBaseTarget_;
         XMVECTOR vFlyMove_;
         XMVECTOR vBaseAim_;
@@ -88,7 +149,7 @@ class PlayerTest : public GameObject
 
 
 
-        PlayerTestStatus* PlayerTestState_;
+        PlayerStatus* PlayerState_;
         Particle* pParticle_;
         LineParticle* pLine_;
         LineParticle* pWire_;
@@ -109,8 +170,6 @@ class PlayerTest : public GameObject
 
         //更新
         void Update() override;
-
-        void FixedUpdate() override;
         //描画
         void Draw() override;
 
@@ -138,7 +197,7 @@ class PlayerTest : public GameObject
         char GetSatatus() { return status_; }
 
         //プレイヤーの移動ベクトル取得
-        XMVECTOR GetPlayerTestMove() { return vPlayerTestMove_; }
+        XMVECTOR GetPlayerTestMove() { return vPlayerMove_; }
 
         //パーティクル
         void OccurParticle();
@@ -159,7 +218,7 @@ class PlayerTest : public GameObject
 
         /////////////////////////////////セッター、ゲッター//////////////////////////////////
         XMVECTOR GetvBaseTarget() { return vBaseTarget_; }
-        XMVECTOR GetvPlayerTestPos() { return vPlayerTestPos_; }
+        XMVECTOR GetvPlayerTestPos() { return vPlayerPos_; }
         XMMATRIX GetCameraMatrixX() { return matCamX_; }
         XMMATRIX GetCameraMatrixY() { return matCamY_; }
         XMMATRIX GetCameraMatrix() { return matCamY_ * matCamX_; }

@@ -9,14 +9,6 @@ namespace
 	static const float nearRange = 75.0f;
 	static const float farRange = 125.0f;
 }
-void EnemyBoss::ChangeState(EnemyState<EnemyBoss>* state)
-{
-	if (state != pState_)
-	{
-		pState_ = state;
-		pState_->Init(*this);
-	}
-}
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
 	hModelCore_(-1),
@@ -205,4 +197,13 @@ void EnemyBoss::StateSecondMode::Init(EnemyBoss& enemy)
 void EnemyBoss::StateSecondMode::Update(EnemyBoss& enemy)
 {
 
+}
+
+void EnemyBoss::ChangeState(EnemyState<EnemyBoss>* state)
+{
+	if (state != pState_)
+	{
+		pState_ = state;
+		pState_->Init(*this);
+	}
 }
