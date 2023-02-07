@@ -38,7 +38,7 @@ void EnemyBoss::Initialize()
 	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
 	ModelManager::SetModelNum(hModelShield_);
 	assert(hModelShield_ >= 0);
-	SetPlayerPointer((Player*)FindObject("Player"));
+	SetPlayerPointer((PlayerTest*)FindObject("Player"));
 	sight.SetAngle(M_PI*1.5);
 	sight.SetRange(200);
 	

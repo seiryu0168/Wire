@@ -3,15 +3,37 @@
 #include"Engine/Fbx.h"
 #include"Engine/LineParticle.h"
 #include"PlayerState.h"
-    class Particle;
-    class Enemy;
-    class Wire;
-    class Pointer;
-    class PlayerStatus;
-    class ObjectSetter;
+    
+class Particle;
+class Enemy;
+class Wire;
+class Pointer;
+class PlayerStatus;
+class ObjectSetter;
+
 class PlayerTest : public GameObject
 {
     PlayerState<PlayerTest>* pState_;
+ 
+    class StateDefault : public PlayerState<PlayerTest>
+    {
+    private:
+
+    public:
+        static StateDefault* GetInstance()
+        {
+            static StateDefault* instance = nullptr;
+            if (instance == nullptr)
+            {
+                instance = new StateDefault();
+            }
+            return instance;
+        }
+
+        void Init(PlayerTest& player) override;
+        void Update(PlayerTest& player) override;
+    };
+
     class StateJump : public PlayerState<PlayerTest>
     {
     private:
@@ -85,6 +107,8 @@ class PlayerTest : public GameObject
         void Init(PlayerTest& player) override;
         void Update(PlayerTest& player) override;
     };
+
+
 
     void ChangeState(PlayerState<PlayerTest>* state);
 
@@ -188,10 +212,10 @@ class PlayerTest : public GameObject
         void OnCollision(GameObject* pTarget) override;
 
         //エイムアシスト範囲内にあるかどうか
-        bool IsAssistRange(XMVECTOR dirVec, XMFLOAT3 targetVec, float length = 9999.0f);
+        bool IsAssistRange(XMVECTOR dirVec, XMFLOAT3 targetPos, float length = 9999.0f);
 
         //認識リスト内でエイムアシスト可能なやつをアシストする
-        Enemy* AimAssist(RayCastData* rey);
+        Enemy* AimAssist(RayCastData* ray);
 
         //プレイヤーのステータス取得
         char GetSatatus() { return status_; }

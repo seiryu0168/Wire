@@ -17,6 +17,7 @@ namespace Input
 
 
 
+
 	void Initialize(HWND hWnd)
 	{
 		//とりあえず書いとく
@@ -34,6 +35,7 @@ namespace Input
 
 		//コントローラー
 		ZeroMemory(&Controller_, sizeof(XINPUT_STATE));
+		ZeroMemory(&prevController_, sizeof(XINPUT_STATE));
 	}
 
 	void Update()
@@ -44,7 +46,7 @@ namespace Input
 
 		pMouseDevice->Acquire();
 		memcpy(&prevMouseState, &mouseState, sizeof(mouseState));		//前フレームの状態をコピー
-		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);	//キー調べる
+		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);	//マウス調べる
 
 		memcpy(&prevController_, &Controller_, sizeof(Controller_));
 		XInputGetState(0, &Controller_);
@@ -167,10 +169,43 @@ namespace Input
 		}
 		return 0;
 	}
+	float GetLTriggerDown()
+	{
+		if (Controller_.Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD&&prevController_.Gamepad.bLeftTrigger< XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bLeftTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+	float GetLTriggerUp()
+	{
+		if (Controller_.Gamepad.bLeftTrigger < XINPUT_GAMEPAD_TRIGGER_THRESHOLD && prevController_.Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bLeftTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+
 
 	float GetRTrigger()
 	{
 		if (Controller_.Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bRightTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+	float GetRTriggerDown()
+	{
+		if (Controller_.Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD && prevController_.Gamepad.bRightTrigger< XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{
+			return Controller_.Gamepad.bRightTrigger / TRIGGER_MAX;
+		}
+		return 0;
+	}
+	float GetRTriggerUp()
+	{
+		if (Controller_.Gamepad.bRightTrigger < XINPUT_GAMEPAD_TRIGGER_THRESHOLD && prevController_.Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 		{
 			return Controller_.Gamepad.bRightTrigger / TRIGGER_MAX;
 		}

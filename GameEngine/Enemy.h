@@ -2,6 +2,7 @@
 #include"Engine/GameObject.h"
 #include"EnemyState.h"
 #include"Player.h"
+#include"PlayerTest.h"
 
 struct parameter
 {
@@ -16,7 +17,7 @@ struct parameter
     XMVECTOR toPlayerVec;  //プレイヤーに向かうベクトル
     XMVECTOR upVec;        //上方向ベクトル(プレイヤーとの位置関係を求める時に使ったりする)
     XMVECTOR vPosition;    //現在位置のベクトル
-    Player*  pPlayer;      //プレイヤーのポインタ
+    PlayerTest*  pPlayer;      //プレイヤーのポインタ
 };
 
 class Enemy : public GameObject
@@ -57,7 +58,7 @@ public:
     void SetFrontVec(XMVECTOR vec) { enemyParameter_.frontVec = vec; }           //前方向ベクトルの設定
     void SetMatrixX(XMMATRIX mat) { enemyParameter_.matX = mat; }                //X軸の回転行列
     void SetMatrixY(XMMATRIX mat) { enemyParameter_.matY = mat; }                //Y軸の回転行列
-    void SetPlayerPointer(Player* pointer) { enemyParameter_.pPlayer = pointer; }//プレイヤーのポインター
+    void SetPlayerPointer(PlayerTest* pointer) { enemyParameter_.pPlayer = pointer; }//プレイヤーのポインター
     void SetLife(int life) { enemyParameter_.life = life; }                      //エネミーのライフ設定
     void DecreaseLife(int decRate) { enemyParameter_.life -= decRate; }          //ライフを減らす
     void IncreaseLife(int incRate) { enemyParameter_.life += incRate; }          //ライフを増やす
@@ -71,7 +72,7 @@ public:
     XMVECTOR GetPositionVec() { return enemyParameter_.vPosition; }     //ポジションベクトル取得
     XMVECTOR GetUpVec() { return enemyParameter_.upVec; }               //上方向ベクトル取得
     XMVECTOR GetFrontVec() { return enemyParameter_.frontVec; }         //前方向ベクトル取得
-    Player*  GetPlayerPointer() { return enemyParameter_.pPlayer; }     //プレイヤーのポインター取得
+    PlayerTest*  GetPlayerPointer() { return enemyParameter_.pPlayer; }     //プレイヤーのポインター取得
     bool     GetIsList() { return enemyParameter_.isTargetList; }       //エネミーがプレイヤーの認識リストに入ってるかどうか
     int      GetLife() { return enemyParameter_.life; }                 //エネミーのライフ取得
     bool     GetVisibleFrag() { return enemyParameter_.visibleFlag; }   //プレイヤーを認識してるかどうか

@@ -1,7 +1,7 @@
 #include "ObjectSetter.h"
 #include"Engine/Model.h"
 #include"Engine/Fbx.h"
-#include"Player.h"
+#include"PlayerTest.h"
 #include"Engine//SceneManager.h"
 #include"TitleUI.h"
 #include"EnemyNormal.h"
@@ -30,7 +30,7 @@ void ObjectSetter::Initialize()
 	if (parentName == "PlayScene")
 	{
 		Instantiate<Stage1>(GetParent());
-		Instantiate<Player>(GetParent());
+		Instantiate<PlayerTest>(GetParent());
 		for (int i = 0; i < 3; i++)
 		{
 			enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));

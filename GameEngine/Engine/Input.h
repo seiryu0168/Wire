@@ -36,7 +36,12 @@ namespace Input
 
 
 	float GetLTrigger();
+	float GetLTriggerDown();
+	float GetLTriggerUp();
+
 	float GetRTrigger();
+	float GetRTriggerDown();
+	float GetRTriggerUp();
 
 	XMVECTOR GetMousePosition();
 	void SetMousePosition(int x, int y);
