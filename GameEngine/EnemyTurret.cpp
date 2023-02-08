@@ -59,7 +59,7 @@ void EnemyTurret::Initialize()
 		initPos.y = 999 - ray.dist;
 	}
 	transform_.position_ = initPos;
-	SetPlayerPointer((PlayerTest*)FindObject("Player"));
+	SetPlayerPointer((Player*)FindObject("Player"));
 	ChangeSatate(StateSearch::GetInstance());
 }
 
