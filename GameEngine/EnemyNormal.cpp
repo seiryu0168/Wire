@@ -38,7 +38,7 @@ void EnemyNormal::Initialize()
 	transform_.position_.x = std::rand() % 100;
 	transform_.position_.y = std::rand() % 100;
 	transform_.position_.z = std::rand() % 100;
-	SetPlayerPointer((PlayerTest*)FindObject("Player"));
+	SetPlayerPointer((Player*)FindObject("Player"));
 	ChangeState(StateSearch::GetInstance());
 }
 

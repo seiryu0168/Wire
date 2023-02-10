@@ -198,12 +198,15 @@
     <ClCompile Include="Direct2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="PlayerTest.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+=======
+>>>>>>> c96712b37bd715c5ac6aad5e0581e1de0ab37a29
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imstb_truetype.h">
@@ -390,9 +393,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Direct2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerTest.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="PlayerState.h">

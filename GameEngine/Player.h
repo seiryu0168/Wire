@@ -12,15 +12,15 @@ class PlayerStatus;
 class ObjectSetter;
 class Player : public GameObject
 {
-    enum DIR_NAME
-    {
-        DIR_FRONT=0,
-        DIR_BACK,
-        DIR_LEFT,
-        DIR_RIGHT,
-        DIR_UP,
-        DIR_DOWN
-    };
+    //enum DIR_NAME
+    //{
+    //    DIR_FRONT=0,
+    //    DIR_BACK,
+    //    DIR_LEFT,
+    //    DIR_RIGHT,
+    //    DIR_UP,
+    //    DIR_DOWN
+    //};
     enum STATUS
     {
         STATE_GROUND=0,
@@ -113,6 +113,8 @@ public:
     
     //衝突判定
     void OnCollision(GameObject* pTarget) override;
+
+    void Aim(RayCastData* ray);
     
     //エイムアシスト範囲内にあるかどうか
     bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);

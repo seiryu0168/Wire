@@ -16,8 +16,8 @@ private:
     int hModel_;
     bool drawFlag_;
     short objectType_;
-public:
 
+public:
 
     Pointer(GameObject* parent);
 

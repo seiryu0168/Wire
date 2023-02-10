@@ -24,6 +24,8 @@ namespace
     static const float ACCEL_AOV     = 70.0f;
     static const float NORMAL_AOV    = 45.0f;
     static const float CAMERA_DIST   = 1.5f;
+    static const float ANGLE_MAX     = 69.0f;
+    static const float ANGLE_MIN     = -89.0f;
 }
 
 //コンストラクタ
@@ -92,14 +94,14 @@ void Player::Initialize()
     RayCastData firstRay;
     firstRay.start = transform_.position_;
     
-    rayDir_[0] = XMVectorSet( 0, 0, 1, 0);
-    rayDir_[1] = XMVectorSet( 0, 0,-1, 0);
-    rayDir_[2] = XMVectorSet(-1, 0, 0, 0);
-    rayDir_[3] = XMVectorSet( 1, 0, 0, 0);
-    rayDir_[4] = XMVectorSet( 0, 1, 0, 0);
-    rayDir_[5] = XMVectorSet( 0,-1, 0, 0);
+    //rayDir_[0] = XMVectorSet( 0, 0, 1, 0);
+    //rayDir_[1] = XMVectorSet( 0, 0,-1, 0);
+    //rayDir_[2] = XMVectorSet(-1, 0, 0, 0);
+    //rayDir_[3] = XMVectorSet( 1, 0, 0, 0);
+    //rayDir_[4] = XMVectorSet( 0, 1, 0, 0);
+    //rayDir_[5] = XMVectorSet( 0,-1, 0, 0);
     
-    XMStoreFloat3(&firstRay.dir,rayDir_[DIR_DOWN]);
+    XMStoreFloat3(&firstRay.dir, XMVectorSet(0, -1, 0, 0));
     ModelManager::RayCast(stageNum_, firstRay);
     ModelManager::SetModelNum(stageNum_);
 
@@ -143,39 +145,40 @@ void Player::Update()
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
-        //レイキャストの判定距離の上限
-        ray.distLimit = 100.0f;
-        aimFlag_ = true;
-        //当たる位置の計算
-        XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
-        XMVECTOR vPtrDir = vPlayerDir;
-        XMStoreFloat3(&ray.start, vPlayerPos_);
-        XMStoreFloat3(&ray.dir, vPtrDir);
-
-        //エイムアシスト範囲内かどうか判定
-        pSetter_->GetEnemyList(&enemyList_);
-        if (enemyList_.size() > 0)
-        {
-            Enemy* pEnemy = AimAssist(&ray);
-            if (pEnemy != nullptr)
-            {
-                vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
-                XMStoreFloat3(&ray.dir, vPtrDir);
-            }
-        }
-        
-        //レイキャストの始点と方向を入力
-        ModelManager::RayCast(ray);
-
-        //当たった位置にマーカー表示
-        if (ray.hit && !flyFlag_)
-        {
-            rotateSpeed_ = 2.0f;
-            XMFLOAT3 pointerPos;
-            XMStoreFloat3(&pointerPos, ray.hitPos);
-            pPointer_->SetPointerPos(pointerPos);
-            pPointer_->SetDraw(ray.hit);
-        }
+        ////レイキャストの判定距離の上限
+        //ray.distLimit = 100.0f;
+        //aimFlag_ = true;
+        ////当たる位置の計算
+        //XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
+        //XMVECTOR vPtrDir = vPlayerDir;
+        //XMStoreFloat3(&ray.start, vPlayerPos_);
+        //XMStoreFloat3(&ray.dir, vPtrDir);
+        //
+        ////エイムアシスト範囲内かどうか判定
+        //pSetter_->GetEnemyList(&enemyList_);
+        //if (enemyList_.size() > 0)
+        //{
+        //    Enemy* pEnemy = AimAssist(&ray);
+        //    if (pEnemy != nullptr)
+        //    {
+        //        vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+        //        XMStoreFloat3(&ray.dir, vPtrDir);
+        //    }
+        //}
+        //
+        ////レイキャストの始点と方向を入力
+        //ModelManager::RayCast(ray);
+        //
+        ////当たった位置にマーカー表示
+        //if (ray.hit && !flyFlag_)
+        //{
+        //    rotateSpeed_ = 2.0f;
+        //    XMFLOAT3 pointerPos;
+        //    XMStoreFloat3(&pointerPos, ray.hitPos);
+        //    pPointer_->SetPointerPos(pointerPos);
+        //    pPointer_->SetDraw(ray.hit);
+        //}
+        Aim(&ray);
     }
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
@@ -221,11 +224,15 @@ void Player::Update()
     {
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
+
+        //空中にいて、ジャンプしてない状態の時移動を制限する
         if (airFlag_ == true && jumpFlag_ == false&& groundFlag_==false)
         {
             moveX *= 0.3f;
             moveZ *= 0.3f;
         }
+
+        //地面についてる時落ちる
         if (groundFlag_ != true)
         {
             velocity_ += gravity_;
@@ -308,7 +315,6 @@ void Player::CameraMove(RayCastData ray)
     {
         aimTime_ += -0.07f;
         aimTime_ = max(aimTime_, 0.5);
-        //flyMove_ = { 0, 0, 0 };
     }
 
     //ワイヤーで飛んでいる時
@@ -332,11 +338,11 @@ void Player::CameraMove(RayCastData ray)
 
     if (angleX_ <= -90)
     {
-        angleX_ = -89;
+        angleX_ = ANGLE_MIN;
     }
     if (angleX_ >= 70)
     {
-        angleX_ = 69;
+        angleX_ = ANGLE_MAX;
     }
 
 
@@ -578,6 +584,43 @@ void Player::OnCollision(GameObject* pTarget)
     ImageManager::SetAlpha(life_[playerLife_ - 1], 0);
 }
 
+void Player::Aim(RayCastData* ray)
+{
+    //レイキャストの判定距離の上限
+    ray->distLimit = 100.0f;
+    aimFlag_ = true;
+    //当たる位置の計算
+    XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
+    XMVECTOR vPtrDir = vPlayerDir;
+    XMStoreFloat3(&ray->start, vPlayerPos_);
+    XMStoreFloat3(&ray->dir, vPtrDir);
+
+    //エイムアシスト範囲内かどうか判定
+    pSetter_->GetEnemyList(&enemyList_);
+    if (enemyList_.size() > 0)
+    {
+        Enemy* pEnemy = AimAssist(ray);
+        if (pEnemy != nullptr)
+        {
+            vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+            XMStoreFloat3(&ray->dir, vPtrDir);
+        }
+    }
+
+    //レイキャストの始点と方向を入力
+    ModelManager::RayCast(*ray);
+
+    //当たった位置にマーカー表示
+    if (ray->hit && !flyFlag_)
+    {
+        rotateSpeed_ = 2.0f;
+        XMFLOAT3 pointerPos;
+        XMStoreFloat3(&pointerPos, ray->hitPos);
+        pPointer_->SetPointerPos(pointerPos);
+        pPointer_->SetDraw(ray->hit);
+    }
+}
+
 void Player::CheckTargetList()
 {
     for (auto itr = enemyList_.begin(); itr != enemyList_.end();)
@@ -617,20 +660,23 @@ void Player::DeleteTargetList(Enemy* target)
 bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
 {
     
+    //自分からtargetPosまでのベクトル
     XMVECTOR targetVec = XMLoadFloat3(&targetPos) -
-                         XMLoadFloat3(&transform_.position_);                       //自分からtargetPosまでのベクトル
+                         XMLoadFloat3(&transform_.position_); 
     
     //targetVecがlength以下だったら
     if (XMVectorGetX(XMVector3Length(targetVec)) < length)
     {
         targetVec = XMVector3Normalize(targetVec);
         dirVec = XMVector3Normalize(dirVec);
-        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));//targetVecとdirVecの内積を求める
+
+        //targetVecとdirVecの内積を求める
+        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
 
         //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
         if (angle > -0.4f && angle < 0.4f)
         {
-            rotateSpeed_ = rotateSpeed_ * angle + 0.6f;
+            rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
         }
 
         //angle(ラジアン)がlockOnAngleLimit_以内だったらロックオン
