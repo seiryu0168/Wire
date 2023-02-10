@@ -18,6 +18,7 @@ int Text::Load(std::string fontName)
 	pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
+	return -1;
 }
 void Text::SetColor()
 {

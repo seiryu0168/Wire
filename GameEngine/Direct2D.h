@@ -11,8 +11,8 @@ namespace D2D
 	extern ID2D1RenderTarget* pRenderTarget_;
 
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
-	ID2D1Factory* Get2DFactory() { return pFactory_; }
-	ID2D1RenderTarget* GetRenderTarget() { return pRenderTarget_; }
+	ID2D1Factory* Get2DFactory();
+	ID2D1RenderTarget* GetRenderTarget();
 	void Release();
 	void RenderTest();
 	void Drawtext();

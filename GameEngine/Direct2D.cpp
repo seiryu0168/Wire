@@ -87,6 +87,16 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	return S_OK;
 }
 
+ID2D1Factory* D2D::Get2DFactory()
+{
+	return pFactory_;
+}
+
+ID2D1RenderTarget* D2D::GetRenderTarget()
+{
+	return pRenderTarget_;
+}
+
 void D2D::Release()
 {
 	SAFE_RELEASE(pFactory_);
