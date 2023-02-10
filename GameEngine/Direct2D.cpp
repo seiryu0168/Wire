@@ -69,7 +69,7 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 
-	hr = pRenderTarget_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),&pColorBrush_);
+	hr = pRenderTarget_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White),&pColorBrush_);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"Direct2D : ブラシの作成に失敗", L"エラー", MB_OK);
