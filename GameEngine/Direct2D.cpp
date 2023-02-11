@@ -1,5 +1,4 @@
 #include "Direct2D.h"
-#include"Engine/Direct3D.h"
 #include"Engine/SAFE_DELETE_RELEASE.h"
 namespace D2D
 {
@@ -12,7 +11,8 @@ namespace D2D
 	const wchar_t*		   pWszText       = nullptr;	//テキスト
 	UINT32				   textLength_	  = 0;
 	D2D1_RECT_F			   layoutRect_;
-
+	float				   dpiScaleX_;
+	float				   dpiScaleY_;
 }
 
 HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
@@ -35,13 +35,15 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	pWszText = L"Hello World!";
 	textLength_ = (UINT32)wcslen(pWszText);
 
+	//文字のフォーマット作成
 	hr = pWriteFactory_->CreateTextFormat(L"Gabliora", NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"Direct2D : テキストフォント作成に失敗", L"エラー", MB_OK);
 		return hr;
 	}
-
+	
+	//アライメント設定
 	hr = pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	if (FAILED(hr))
 	{
@@ -58,8 +60,8 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	RECT rect;
 	GetClientRect(hWnd, &rect);
 	
-	float dpiScaleX_ = GetDpiForWindow(hWnd);
-	float dpiScaleY_ = GetDpiForWindow(hWnd);
+	dpiScaleX_ = GetDpiForWindow(hWnd);
+	dpiScaleY_ = GetDpiForWindow(hWnd);
 	D2D1_SIZE_U size = D2D1::Size<UINT>(rect.right, rect.bottom);
 	D2D1_RENDER_TARGET_PROPERTIES prop = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpiScaleX_, dpiScaleY_);
 	hr = pFactory_->CreateDxgiSurfaceRenderTarget(pBackBuffer,prop , &pRenderTarget_);
@@ -116,7 +118,7 @@ void D2D::RenderTest()
 		//return hr;
 	}
 	pRenderTarget_->BeginDraw();
-	Drawtext();
+	Draw();
 	//D2D1_ELLIPSE ell = D2D1::Ellipse(D2D1::Point2F(1120.0f, 120.0f), 100.0f, 100.0f);
 	//pRenderTarget_->DrawEllipse(ell, pGreenBrush, 10.0f);
 
@@ -126,8 +128,18 @@ void D2D::RenderTest()
 	SAFE_RELEASE(pGreenBrush);
 }
 
-void D2D::Drawtext()
+void D2D::Draw()
 {
 	pRenderTarget_->SetTransform(D2D1::IdentityMatrix());	
-	pRenderTarget_->DrawText(pWszText, textLength_, pTextFormat_, layoutRect_, pColorBrush_);
+	pRenderTarget_->DrawTextW(pWszText, textLength_, pTextFormat_, layoutRect_, pColorBrush_);
+}
+
+int D2D::GetdpiX()
+{
+	return dpiScaleX_;
+}
+
+int D2D::GetdpiY()
+{
+	return dpiScaleY_;
 }

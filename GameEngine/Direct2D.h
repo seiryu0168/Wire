@@ -1,4 +1,5 @@
 #pragma once
+#include"Engine/Direct3D.h"
 #include<d2d1.h>
 #include<dwrite.h>
 
@@ -15,7 +16,9 @@ namespace D2D
 	ID2D1RenderTarget* GetRenderTarget();
 	void Release();
 	void RenderTest();
-	void Drawtext();
+	void Draw();
+	int  GetdpiX();
+	int  GetdpiY();
 
 };
 
