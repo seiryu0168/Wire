@@ -14,14 +14,15 @@ private:
 	IDWriteFactory*		  pWriteFactory_;		//文字描画のファクトリ
 	IDWriteTextFormat*	  pTextFormat_;    //テキストフォーマット
 	wchar_t*			  pText_;			//テキスト
-	UINT32				  textLength_;
+	size_t				  textLength_;
 	D2D1_RECT_F			  layoutRect_;
 
 public:
 	Text();
 	~Text();
-	int Load(std::string text, std::string fontName, TEXT_RECT rect);
+	int Load(const std::string& text, const std::string& fontName, TEXT_RECT rect, STARTING_TYPE type);
 	void Draw();
+	void SetAlinmentType(STARTING_TYPE);
 	void SetFont();
 	void SetColor();
 	void SetTransform();

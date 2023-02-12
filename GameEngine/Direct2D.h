@@ -5,9 +5,22 @@
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib,"dwrite.lib")
+enum STARTING_TYPE
+{
+	LEFT_TOP = 0,
+	LEFT_CENTE,
+	LEFT_BOTTOM,
+	CENTER_TOP,
+	CENTER_CENTER,
+	CENTER_BOTTOM,
+	RIGHT_TOP,
+	RIGHT_CENTER,
+	RIGHT_BOTTOM,
+};
 
 namespace D2D
 {
+	
 	extern ID2D1Factory* pFactory_;
 	extern ID2D1RenderTarget* pRenderTarget_;
 
@@ -16,7 +29,8 @@ namespace D2D
 	ID2D1RenderTarget* GetRenderTarget();
 	void Release();
 	void RenderTest();
-	void Draw();
+	void BeginDraw();
+	void EndDraw();
 	int  GetdpiX();
 	int  GetdpiY();
 

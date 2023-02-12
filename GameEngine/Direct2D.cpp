@@ -43,8 +43,9 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 	
+	
 	//アライメント設定
-	hr = pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	hr = pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"Direct2D : アライメント設定に失敗", L"エラー", MB_OK);
@@ -78,11 +79,20 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 
-
-	layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left) / dpiScaleX_,
-										 static_cast<FLOAT>(rect.top) / dpiScaleY_,
-										 static_cast<FLOAT>(rect.right - rect.left) / dpiScaleX_,
-										 static_cast<FLOAT>(rect.bottom - rect.top) / dpiScaleY_);
+	XMINT2 trns(0, 0);
+	rect.top += trns.y;
+	rect.bottom += trns.y;
+	rect.left += trns.x;
+	rect.right += trns.x;
+	//layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left) / dpiScaleX_,
+	//						  static_cast<FLOAT>(rect.top) / dpiScaleY_,
+	//						  static_cast<FLOAT>(rect.right - rect.left) / dpiScaleX_,
+	//						  static_cast<FLOAT>(rect.bottom - rect.top) / dpiScaleY_);	
+	
+	layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left),
+		static_cast<FLOAT>(rect.top),
+		static_cast<FLOAT>(rect.right - rect.left),
+		static_cast<FLOAT>(rect.bottom - rect.top));
 
 
 
@@ -117,21 +127,31 @@ void D2D::RenderTest()
 		MessageBox(nullptr, L"Direct2D : テスト失敗", L"エラー", MB_OK);
 		//return hr;
 	}
-	pRenderTarget_->BeginDraw();
-	Draw();
+	
 	//D2D1_ELLIPSE ell = D2D1::Ellipse(D2D1::Point2F(1120.0f, 120.0f), 100.0f, 100.0f);
 	//pRenderTarget_->DrawEllipse(ell, pGreenBrush, 10.0f);
 
-	pRenderTarget_->EndDraw();
+	
 
 
 	SAFE_RELEASE(pGreenBrush);
 }
 
-void D2D::Draw()
+void D2D::BeginDraw()
 {
-	pRenderTarget_->SetTransform(D2D1::IdentityMatrix());	
-	pRenderTarget_->DrawTextW(pWszText, textLength_, pTextFormat_, layoutRect_, pColorBrush_);
+	pRenderTarget_->BeginDraw();
+}
+
+//void D2D::Draw()
+//{
+//	pRenderTarget_->BeginDraw();
+//	pRenderTarget_->SetTransform(D2D1::IdentityMatrix());	
+//	pRenderTarget_->DrawTextW(pWszText, textLength_, pTextFormat_, layoutRect_, pColorBrush_);
+//}
+
+void D2D::EndDraw()
+{
+	pRenderTarget_->EndDraw();
 }
 
 int D2D::GetdpiX()

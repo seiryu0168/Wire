@@ -15,6 +15,7 @@
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
 #include"Engine/Audio.h"
+#include"Text.h"
 
 
 #pragma comment(lib, "winmm.lib")
@@ -151,7 +152,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				pRootJob->SecondDrawSub();
 
 				ImageManager::Draw();
-				D2D::RenderTest();
+				D2D::BeginDraw();
+				Text t;
+				TEXT_RECT re = { 100,500,100,500 };
+				t.Load("YO!", "Gabliora", re, LEFT_CENTE);
+				t.Draw();
+				D2D::EndDraw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 				Direct3D::EndDraw();
@@ -165,6 +171,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	pRootJob->ReleaseSub();
 	Input::Release();
 	Direct3D::Release();
+	D2D::Release();
 
 	CoUninitialize();
 	return 0;
