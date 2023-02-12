@@ -1,5 +1,6 @@
 #include "Direct2D.h"
 #include"Engine/SAFE_DELETE_RELEASE.h"
+
 namespace D2D
 {
 	ID2D1Factory*		   pFactory_	  = nullptr;	//ファクトリ
@@ -77,7 +78,6 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	//	MessageBox(nullptr, L"Direct2D : ブラシの作成に失敗", L"エラー", MB_OK);
 	//	return hr;
 	//}
-
 	//XMINT2 trns(0, 0);
 	//rect.top += trns.y;
 	//rect.bottom += trns.y;
@@ -87,7 +87,6 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	//						  static_cast<FLOAT>(rect.top) / dpiScaleY_,
 	//						  static_cast<FLOAT>(rect.right - rect.left) / dpiScaleX_,
 	//						  static_cast<FLOAT>(rect.bottom - rect.top) / dpiScaleY_);	
-	
 	//layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left),
 	//	static_cast<FLOAT>(rect.top),
 	//	static_cast<FLOAT>(rect.right - rect.left),

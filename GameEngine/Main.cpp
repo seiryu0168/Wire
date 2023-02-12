@@ -133,7 +133,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//¡‚ÌŽž‚ÆÅŒã‚ÉXV‚µ‚½Žž‚Ì·*60‚ª1000ˆÈã‚Å‚ ‚ê‚Î
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
+#if false
 				DebugUI::StartImGui();
+#endif
 				//ƒQ[ƒ€‚Ìˆ—
 				Input::Update();
 				Camera::Update();
@@ -144,8 +146,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 #if false
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
 				DebugUI::Log();
-#endif 
 				ImGui::Render();
+#endif 
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				pRootJob->DrawSub();
@@ -156,9 +158,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				Text t;
 				TEXT_RECT re = { 100,100,500,500 };
 				t.Load("YO!", "Gabliora", re, LEFT_CENTE);
-				//t.Draw();
+				t.Draw();
 				D2D::EndDraw();
+#if false		
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
 
 				Direct3D::EndDraw();
 			}

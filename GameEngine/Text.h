@@ -7,15 +7,15 @@ typedef D2D_RECT_F TEXT_RECT;//left top right bottom
 class Text
 {
 private:
-	wchar_t				  fontName_;
-	wchar_t				  locale_;
 	XMINT2				  transform2D;
+	size_t				  textLength_;
+	D2D1_RECT_F			  layoutRect_;
+	wchar_t*			  pFontName_;
+	wchar_t*			  pLocale_;
+	wchar_t*			  pText_;			//テキスト
 	ID2D1SolidColorBrush* pColorBrush_;	//ブラシ	
 	IDWriteFactory*		  pWriteFactory_;		//文字描画のファクトリ
 	IDWriteTextFormat*	  pTextFormat_;    //テキストフォーマット
-	wchar_t* pText_;			//テキスト
-	size_t				  textLength_;
-	D2D1_RECT_F			  layoutRect_;
 
 public:
 	Text();

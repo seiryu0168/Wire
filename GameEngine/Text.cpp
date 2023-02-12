@@ -3,14 +3,14 @@
 
 Text::Text()
 {
-	fontName_ = wchar_t(FILENAME_MAX);
 	textLength_	   = 0;
 	transform2D = { 0,0 };
-	locale_ = wchar_t(FILENAME_MAX);
+	pFontName_ = nullptr;
+	pLocale_ = nullptr;
+	pText_		   = nullptr;
 	pColorBrush_   = nullptr;
 	pWriteFactory_ = nullptr;
 	pTextFormat_   = nullptr;
-	pText_		   = nullptr;
 
 }
 Text::~Text()
@@ -20,23 +20,27 @@ Text::~Text()
 
 void Text::Release()
 {
-	SAFE_DELETE(pText_);
 	SAFE_RELEASE(pTextFormat_);
 	SAFE_RELEASE(pWriteFactory_);
 	SAFE_RELEASE(pColorBrush_);
+	SAFE_DELETE(pText_);
+	SAFE_DELETE(pLocale_)
+	SAFE_DELETE(pFontName_)
 }
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)
 {
 	
-	//パス名をファイル名と拡張子だけにする
-	char name[_MAX_FNAME];	//ファイル名
-	char ext[_MAX_EXT];		//拡張子
-	_splitpath_s(fontName.c_str(), nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);//ファイルパス(フルパス)をファイル名、拡張子に分ける
-	sprintf_s(name, "%s%s", name, ext);
+	////パス名をファイル名と拡張子だけにする
+	//char name[_MAX_FNAME];	//ファイル名
+	//char ext[_MAX_EXT];		//拡張子
+	//_splitpath_s(fontName.c_str(), nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);//ファイルパス(フルパス)をファイル名、拡張子に分ける
+	//sprintf_s(name, "%s%s", name, ext);
 
+	//フォント名用の配列用意
 	size_t ret;
-	int a=mbstowcs_s(&ret, &fontName_,FILENAME_MAX, fontName.c_str(), fontName.length());
+	pFontName_ = new wchar_t[fontName.length()+1];
+	int a=mbstowcs_s(&ret, pFontName_, fontName.length() + 1, fontName.c_str(), fontName.length());
 	size_t textSize;
 
 	//描画するテキスト用の配列を用意する
@@ -45,7 +49,7 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
 	
 	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
-	pWriteFactory_->CreateTextFormat(&fontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"en-us", &pTextFormat_);
+	pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"en-us", &pTextFormat_);
 	SetAlinmentType(type);
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
 
@@ -62,9 +66,10 @@ void Text::SetColor()
 {
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
 }
+
 void Text::SetFont()
 {
-	pWriteFactory_->CreateTextFormat(&fontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
+	pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
 }
 void Text::SetTransform()
 {
