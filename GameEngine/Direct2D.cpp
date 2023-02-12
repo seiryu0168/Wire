@@ -4,11 +4,10 @@ namespace D2D
 {
 	ID2D1Factory*		   pFactory_	  = nullptr;	//ファクトリ
 	ID2D1RenderTarget* pRenderTarget_ = nullptr;    //レンダーターゲット
-	IDXGIDevice*		   pDxgiDevice_   = nullptr;	//
-	ID2D1SolidColorBrush*  pColorBrush_   = nullptr;	//ブラシ	
-	IDWriteFactory*		   pWriteFactory_ = nullptr;	//文字描画のファクトリ
-	IDWriteTextFormat*	   pTextFormat_   = nullptr;	//テキストフォーマット
-	const wchar_t*		   pWszText       = nullptr;	//テキスト
+	//ID2D1SolidColorBrush*  pColorBrush_   = nullptr;	//ブラシ	
+	//IDWriteFactory*		   pWriteFactory_ = nullptr;	//文字描画のファクトリ
+	//IDWriteTextFormat*	   pTextFormat_   = nullptr;	//テキストフォーマット
+	//const wchar_t*		   pWszText       = nullptr;	//テキスト
 	UINT32				   textLength_	  = 0;
 	D2D1_RECT_F			   layoutRect_;
 	float				   dpiScaleX_;
@@ -26,44 +25,44 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	}
 	IDXGISurface* pBackBuffer;
 	Direct3D::GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,__uuidof(IDWriteFactory),reinterpret_cast<IUnknown**>(&pWriteFactory_));
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Direct2D : テキスト描画用ファクトリの作成に失敗", L"エラー", MB_OK);
-		return hr;
-	}
-	pWszText = L"Hello World!";
-	textLength_ = (UINT32)wcslen(pWszText);
-
-	//文字のフォーマット作成
-	hr = pWriteFactory_->CreateTextFormat(L"Gabliora", NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Direct2D : テキストフォント作成に失敗", L"エラー", MB_OK);
-		return hr;
-	}
-	
-	
-	//アライメント設定
-	hr = pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Direct2D : アライメント設定に失敗", L"エラー", MB_OK);
-		return hr;
-	}
-
-	hr = pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Direct2D : アライメント設定に失敗", L"エラー", MB_OK);
-		return hr;
-	}
+	//hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,__uuidof(IDWriteFactory),reinterpret_cast<IUnknown**>(&pWriteFactory_));
+	//if (FAILED(hr))
+	//{
+	//	MessageBox(nullptr, L"Direct2D : テキスト描画用ファクトリの作成に失敗", L"エラー", MB_OK);
+	//	return hr;
+	//}
+	//pWszText = L"Hello World!";
+	//textLength_ = (UINT32)wcslen(pWszText);
+	//
+	////文字のフォーマット作成
+	//hr = pWriteFactory_->CreateTextFormat(L"Gabliora", NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
+	//if (FAILED(hr))
+	//{
+	//	MessageBox(nullptr, L"Direct2D : テキストフォント作成に失敗", L"エラー", MB_OK);
+	//	return hr;
+	//}
+	//
+	//
+	////アライメント設定
+	//hr = pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
+	//if (FAILED(hr))
+	//{
+	//	MessageBox(nullptr, L"Direct2D : アライメント設定に失敗", L"エラー", MB_OK);
+	//	return hr;
+	//}
+	//
+	//hr = pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	//if (FAILED(hr))
+	//{
+	//	MessageBox(nullptr, L"Direct2D : アライメント設定に失敗", L"エラー", MB_OK);
+	//	return hr;
+	//}
 	RECT rect;
 	GetClientRect(hWnd, &rect);
 	
 	dpiScaleX_ = GetDpiForWindow(hWnd);
 	dpiScaleY_ = GetDpiForWindow(hWnd);
-	D2D1_SIZE_U size = D2D1::Size<UINT>(rect.right, rect.bottom);
+	//D2D1_SIZE_U size = D2D1::Size<UINT>(rect.right, rect.bottom);
 	D2D1_RENDER_TARGET_PROPERTIES prop = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpiScaleX_, dpiScaleY_);
 	hr = pFactory_->CreateDxgiSurfaceRenderTarget(pBackBuffer,prop , &pRenderTarget_);
 	if (FAILED(hr))
@@ -72,27 +71,27 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 
-	hr = pRenderTarget_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White),&pColorBrush_);
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr, L"Direct2D : ブラシの作成に失敗", L"エラー", MB_OK);
-		return hr;
-	}
+	//hr = pRenderTarget_->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White),&pColorBrush_);
+	//if (FAILED(hr))
+	//{
+	//	MessageBox(nullptr, L"Direct2D : ブラシの作成に失敗", L"エラー", MB_OK);
+	//	return hr;
+	//}
 
-	XMINT2 trns(0, 0);
-	rect.top += trns.y;
-	rect.bottom += trns.y;
-	rect.left += trns.x;
-	rect.right += trns.x;
+	//XMINT2 trns(0, 0);
+	//rect.top += trns.y;
+	//rect.bottom += trns.y;
+	//rect.left += trns.x;
+	//rect.right += trns.x;
 	//layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left) / dpiScaleX_,
 	//						  static_cast<FLOAT>(rect.top) / dpiScaleY_,
 	//						  static_cast<FLOAT>(rect.right - rect.left) / dpiScaleX_,
 	//						  static_cast<FLOAT>(rect.bottom - rect.top) / dpiScaleY_);	
 	
-	layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left),
-		static_cast<FLOAT>(rect.top),
-		static_cast<FLOAT>(rect.right - rect.left),
-		static_cast<FLOAT>(rect.bottom - rect.top));
+	//layoutRect_ = D2D1::RectF(static_cast<FLOAT>(rect.left),
+	//	static_cast<FLOAT>(rect.top),
+	//	static_cast<FLOAT>(rect.right - rect.left),
+	//	static_cast<FLOAT>(rect.bottom - rect.top));
 
 
 
@@ -113,7 +112,7 @@ void D2D::Release()
 {
 	SAFE_RELEASE(pFactory_);
 	SAFE_RELEASE(pRenderTarget_);
-	SAFE_RELEASE(pColorBrush_);
+	//SAFE_RELEASE(pColorBrush_);
 }
 
 void D2D::RenderTest()

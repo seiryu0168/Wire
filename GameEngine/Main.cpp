@@ -154,9 +154,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				ImageManager::Draw();
 				D2D::BeginDraw();
 				Text t;
-				TEXT_RECT re = { 100,500,100,500 };
+				TEXT_RECT re = { 100,100,500,500 };
 				t.Load("YO!", "Gabliora", re, LEFT_CENTE);
-				t.Draw();
+				//t.Draw();
 				D2D::EndDraw();
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -170,8 +170,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	ImageManager::AllRelease();
 	pRootJob->ReleaseSub();
 	Input::Release();
-	Direct3D::Release();
 	D2D::Release();
+	Direct3D::Release();
 
 	CoUninitialize();
 	return 0;

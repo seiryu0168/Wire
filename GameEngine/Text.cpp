@@ -5,10 +5,13 @@ Text::Text()
 {
 	fontName_ = wchar_t(FILENAME_MAX);
 	textLength_	   = 0;
+	transform2D = { 0,0 };
+	locale_ = wchar_t(FILENAME_MAX);
 	pColorBrush_   = nullptr;
 	pWriteFactory_ = nullptr;
 	pTextFormat_   = nullptr;
 	pText_		   = nullptr;
+
 }
 Text::~Text()
 {
@@ -33,7 +36,7 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	sprintf_s(name, "%s%s", name, ext);
 
 	size_t ret;
-	int a=mbstowcs_s(&ret, &fontName_,(size_t)FILENAME_MAX, fontName.c_str(), fontName.length());
+	int a=mbstowcs_s(&ret, &fontName_,FILENAME_MAX, fontName.c_str(), fontName.length());
 	size_t textSize;
 
 	//描画するテキスト用の配列を用意する
@@ -48,8 +51,9 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 	layoutRect_ = rect;
 
-	return -1;
+	return 0;
 }
+
 void Text::Draw()
 {
 	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,layoutRect_, pColorBrush_);
