@@ -156,8 +156,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				ImageManager::Draw();
 				D2D::BeginDraw();
 				Text t;
-				TEXT_RECT re = { 100,100,500,500 };
-				t.Load("YO!", "Gabliora", re, LEFT_CENTE);
+				TEXT_RECT re = { 0,0,100,100 };
+				t.Load("YO!", "Gabliora", re, RIGHT_TOP);
 				t.Draw();
 				D2D::EndDraw();
 #if false		

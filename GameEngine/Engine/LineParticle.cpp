@@ -21,6 +21,7 @@ LineParticle::LineParticle(float width, int length, float tipWidth)
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
+	assert(LENGTH_ >= 1);
 	tipWidth_ = max(tipWidth_, 0);
 }
 
@@ -261,21 +262,23 @@ HRESULT LineParticle::Load(std::string fileName)
 void LineParticle::SetIndex()
 {
 	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
+	int fixedIndex2[] = { 1,1,-2, 4,0,2, 6,6,3,  9,5,7, 11,11, 8, 14,10,12, 16,20,17, 19,19,17 };
+
 	int indexOffset = 0;
 	int indexdelta = 0;
-	int ind2[]={ 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7 };
+	int ind2[]= { 0,1,5, 0,5,4, 1,2,6, 1,6,5, 2,3,7, 2,7,6, 3,0,4, 3,4,7 };
 	int ind[] = { 0,5,1, 0,4,5, 1,2,6, 1,6,5, 2,7,6, 2,3,7, 3,7,4, 3,4,0 };
 
-	//for (int i = 0; i < LENGTH_ * 4; i++)
-	//{
-	//		indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
-	//	if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
-	//	{
-	//		indexOffset += 8;
-	//		indexdelta++;
-	//	}
-	//}
-	//indexList.push_back()
+	for (int i = 0; i < (LENGTH_+1) * 8; i++)
+	{
+			indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
+		if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
+		{
+			indexOffset += 8;
+			indexdelta++;
+		}
+	}
+	indexList.push_back()
 
 
 	D3D11_BUFFER_DESC   bd;

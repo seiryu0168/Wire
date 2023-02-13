@@ -89,7 +89,7 @@ void Text::SetAlinmentType(STARTING_TYPE type)
 		pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 		break;
 
-	case LEFT_CENTE:
+	case LEFT_CENTER:
 		//Œ´“_¶
 		pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 		pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
