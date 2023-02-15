@@ -28,7 +28,7 @@ private:
 	};
 
 	float WIDTH_;//ラインパーティクルの幅
-	int LENGTH_;//ラインパーティクルのポジションを記憶する量
+	size_t LENGTH_;//ラインパーティクルのポジションを記憶する量
 	float tipWidth_;
 	//int* index_;
 

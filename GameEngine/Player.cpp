@@ -78,7 +78,7 @@ void Player::Initialize()
     pParticle_ = Instantiate<Particle>(GetParent());
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
-    pLine_->SetLineParameter(0.5f, 2,0.4f);
+    pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
     pLine_->Load("Assets\\Line.png");
     pWire_->Load("Assets\\Effect01.png");
@@ -145,39 +145,6 @@ void Player::Update()
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
-        ////レイキャストの判定距離の上限
-        //ray.distLimit = 100.0f;
-        //aimFlag_ = true;
-        ////当たる位置の計算
-        //XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
-        //XMVECTOR vPtrDir = vPlayerDir;
-        //XMStoreFloat3(&ray.start, vPlayerPos_);
-        //XMStoreFloat3(&ray.dir, vPtrDir);
-        //
-        ////エイムアシスト範囲内かどうか判定
-        //pSetter_->GetEnemyList(&enemyList_);
-        //if (enemyList_.size() > 0)
-        //{
-        //    Enemy* pEnemy = AimAssist(&ray);
-        //    if (pEnemy != nullptr)
-        //    {
-        //        vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
-        //        XMStoreFloat3(&ray.dir, vPtrDir);
-        //    }
-        //}
-        //
-        ////レイキャストの始点と方向を入力
-        //ModelManager::RayCast(ray);
-        //
-        ////当たった位置にマーカー表示
-        //if (ray.hit && !flyFlag_)
-        //{
-        //    rotateSpeed_ = 2.0f;
-        //    XMFLOAT3 pointerPos;
-        //    XMStoreFloat3(&pointerPos, ray.hitPos);
-        //    pPointer_->SetPointerPos(pointerPos);
-        //    pPointer_->SetDraw(ray.hit);
-        //}
         Aim(&ray);
     }
 
@@ -712,3 +679,17 @@ Enemy* Player::AimAssist(RayCastData* ray)
 
     return pEnemy;
 }
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+

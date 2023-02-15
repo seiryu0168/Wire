@@ -8,6 +8,7 @@ LineParticle::LineParticle()
 	LENGTH_(2),
 	tipWidth_(0),
 	pVertexBuffer_(nullptr),
+	pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
@@ -18,6 +19,7 @@ LineParticle::LineParticle(float width, int length, float tipWidth)
 	LENGTH_(length),
 	tipWidth_(tipWidth),
 	pVertexBuffer_(nullptr),
+	pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
@@ -79,12 +81,20 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
 			{
+				//パーティクルの腕を回すクオータニオン
 				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
+				
+				//パーティクルの腕を作る
 				XMVECTOR vArm = XMVector3Cross(vLine, upVec);
+				
+				//距離によって太さ変わる
 				vArm = XMVector3Normalize(vArm) * WIDTH_*(LENGTH_-j)/LENGTH_;
+				
+				//腕を回転
 				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
 				XMFLOAT3 pos;
 
+				//ひし形になるように頂点を配置
 				XMStoreFloat3(&pos, vPos + -vArm);	
 				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1.0f/4.0f,0) };
 
@@ -121,10 +131,16 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				index++;
 			}
 		}
-	//}
-	
+		for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX); i++)
+		{
+			if (vertices[i].position.x == 0.0f&& vertices[i].position.y == 0.0f&& vertices[i].position.z == 0.0f)
+			{
+				int a = 0;
+			}
+		}
+
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+1) * 4;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 4;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -133,6 +149,9 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 	D3D11_SUBRESOURCE_DATA data_vertex;
 	data_vertex.pSysMem = vertices;
+	data_vertex.SysMemPitch = sizeof(VERTEX);
+	data_vertex.SysMemSlicePitch = 0;
+
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
 	{
@@ -152,7 +171,6 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 {
-
 	//カメラの位置取得(ベクトルで)
 	XMFLOAT3 camPos = Camera::GetPosition();
 	XMVECTOR vCamPos = XMLoadFloat3(&camPos);
@@ -195,9 +213,9 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 
 
 	}
-
+	//頂点バッファ用意
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 2;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 4;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -262,34 +280,32 @@ HRESULT LineParticle::Load(std::string fileName)
 void LineParticle::SetIndex()
 {
 	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
-	int fixedIndex2[] = { 1,1,-2, 4,0,2, 6,6,3,  9,5,7, 11,11, 8, 14,10,12, 16,20,17, 19,19,17 };
+	int fixedIndex2[] = { 0,0,-3, 3,-1,1, 5,5,2,  8, 4, 6, 10,10, 7, 13,9, 11, 15,19,16, 18,18,16 };
 
 	int indexOffset = 0;
-	int indexdelta = 0;
+	int indexdelta = 1;
 	int ind2[]= { 0,1,5, 0,5,4, 1,2,6, 1,6,5, 2,3,7, 2,7,6, 3,0,4, 3,4,7 };
 	int ind[] = { 0,5,1, 0,4,5, 1,2,6, 1,6,5, 2,7,6, 2,3,7, 3,7,4, 3,4,0 };
 
-	for (int i = 0; i < (LENGTH_+1) * 8; i++)
+	for (int i = 0; i < 3 * (LENGTH_+2) * 8; i++)
 	{
-			indexList.push_back(i - (indexOffset + fixedIndex[i % 12]));
-		if (i % (11+11*indexdelta+indexdelta) == 0&&i!=0)
+			indexList.push_back(i - (indexOffset + fixedIndex2[i % 24]));
+		if (i%(24*indexdelta-1) == 0&&i!=0)
 		{
-			indexOffset += 8;
+			indexOffset += 20;
 			indexdelta++;
 		}
 	}
-	indexList.push_back()
-
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * 24;
+	bd.ByteWidth = sizeof(int) * indexList.size();
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &ind2;
+	InitData.pSysMem = &indexList;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
@@ -350,11 +366,11 @@ void LineParticle::Draw(Transform* transform)
 	}
 	else
 	{
-		vertexCount = (positionList_.size()) * 4;
+		vertexCount = positionList_.size() * LENGTH_*4;
 	}
 
 	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->DrawIndexed(24, 0,0);
+	Direct3D::pContext->DrawIndexed(vertexCount,0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
