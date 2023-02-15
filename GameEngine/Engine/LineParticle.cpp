@@ -277,27 +277,19 @@ HRESULT LineParticle::Load(std::string fileName)
 
 void LineParticle::SetIndex()
 {
-	int fixedIndex[] = { 0,0,0,3,2,2,3,5,3,6,5,7 };
-	int fixedIndex2[] = { 0,0,-3, 3,-1,1, 5,5,2,  8, 4, 6, 10,10, 7, 13,9, 11, 15,19,16, 18,18,16 };
+	int fixedIndex[] = { 0,0,-3, 3,-1,1, 5,5,2,  8, 4, 6, 10,10, 7, 13,9, 11, 15,19,16, 18,18,16 };
 
 	int indexOffset = 0;
 	int indexdelta = 1;
-	int ind2[]= { 0,1,5, 0,5,4, 1,2,6, 1,6,5, 2,3,7, 2,7,6, 3,0,4, 3,4,7, 4,5,9, 4,9,8, 5,6,10, 5,10,9, 6,7,11, 6,11,10, 7,4,8, 7,8,11, 8,9,13, 8,13,12, 9,10,14, 9,14,13, 10,11,15, 10,15,14, 11,8,12, 11,12,15 };
-	int ind[] = { 0,5,1, 0,4,5, 1,2,6, 1,6,5, 2,7,6, 2,3,7, 3,7,4, 3,4,0 };
 
 	for (int i = 0; i < LENGTH_*3*8; i++)
 	{
-			indexList.push_back(i - (indexOffset + fixedIndex2[i % 24]));
+			indexList.push_back(i - (indexOffset + fixedIndex[i % 24]));
 		if (i%(24*indexdelta-1) == 0&&i!=0)
 		{
 			indexOffset += 20;
 			indexdelta++;
 		}
-	}
-	int* ind3 = new int[indexList.size()];
-	for (int i = 0; i < indexList.size(); i++)
-	{
-		ind3[i] = indexList[i];
 	}
 
 	D3D11_BUFFER_DESC   bd;
@@ -308,7 +300,8 @@ void LineParticle::SetIndex()
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = ind3;
+	//配列部分取ってくるには.data()。&vector[0]と同値
+	InitData.pSysMem = indexList.data();
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
@@ -317,7 +310,6 @@ void LineParticle::SetIndex()
 		MessageBox(nullptr, L"インデックスバッファの作成に失敗", L"エラー", MB_OK);
 		//return hr;
 	}
-	SAFE_DELETE_ARRAY(ind3);
 	//return S_OK;
 }
 
