@@ -27,7 +27,7 @@ void TitleUI::Initialize()
 
 void TitleUI::Update()
 {
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_A))
 	{
 		SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
 		pManager->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);

@@ -164,7 +164,7 @@ void Player::Update()
         }
     }
     //当たってなかったらジャンプ
-    else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
+    else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_SPACE)&&airFlag_==false)
     {
         //ワイヤーで飛んでたらjumpFlag_はfalseにし、そうでなければtrue
         jumpFlag_ = flyFlag_ == true ? false : true;
@@ -191,6 +191,10 @@ void Player::Update()
     {
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
+        if (Input::IsKey(DIK_W))
+        {
+            moveZ = 1;
+        }
 
         //空中にいて、ジャンプしてない状態の時移動を制限する
         if (airFlag_ == true && jumpFlag_ == false&& groundFlag_==false)
