@@ -85,7 +85,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
 				
 				//パーティクルの腕を作る
-				XMVECTOR vArm = XMVector3Cross(vLine, upVec);
+				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 				
 				//距離によって太さ変わる
 				vArm = XMVector3Normalize(vArm) * WIDTH_*(LENGTH_-j)/LENGTH_;
@@ -285,7 +285,7 @@ void LineParticle::SetIndex()
 	int ind2[]= { 0,1,5, 0,5,4, 1,2,6, 1,6,5, 2,3,7, 2,7,6, 3,0,4, 3,4,7, 4,5,9, 4,9,8, 5,6,10, 5,10,9, 6,7,11, 6,11,10, 7,4,8, 7,8,11, 8,9,13, 8,13,12, 9,10,14, 9,14,13, 10,11,15, 10,15,14, 11,8,12, 11,12,15 };
 	int ind[] = { 0,5,1, 0,4,5, 1,2,6, 1,6,5, 2,7,6, 2,3,7, 3,7,4, 3,4,0 };
 
-	for (int i = 0; i < 72; i++)
+	for (int i = 0; i < LENGTH_*3*8; i++)
 	{
 			indexList.push_back(i - (indexOffset + fixedIndex2[i % 24]));
 		if (i%(24*indexdelta-1) == 0&&i!=0)
@@ -294,7 +294,7 @@ void LineParticle::SetIndex()
 			indexdelta++;
 		}
 	}
-w	int* ind3 = new int[indexList.size()];
+	int* ind3 = new int[indexList.size()];
 	for (int i = 0; i < indexList.size(); i++)
 	{
 		ind3[i] = indexList[i];
@@ -302,13 +302,13 @@ w	int* ind3 = new int[indexList.size()];
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * 72;
+	bd.ByteWidth = sizeof(int) * indexList.size();
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &ind2;
+	InitData.pSysMem = ind3;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
@@ -374,7 +374,7 @@ void LineParticle::Draw(Transform* transform)
 	}
 
 	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->DrawIndexed(72,0,0);
+	Direct3D::pContext->DrawIndexed(indexList.size(),0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
