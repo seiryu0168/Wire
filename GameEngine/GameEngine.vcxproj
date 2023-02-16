@@ -183,7 +183,6 @@
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\OBBCollider.cpp" />
     <ClCompile Include="Engine\Particle.cpp" />
-    <ClCompile Include="Engine\Quad.cpp" />
     <ClCompile Include="Engine\RootJob.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
     <ClCompile Include="Engine\SphereCollider.cpp" />
@@ -244,7 +243,6 @@
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\OBBCollider.h" />
     <ClInclude Include="Engine\Particle.h" />
-    <ClInclude Include="Engine\Quad.h" />
     <ClInclude Include="Engine\RootJob.h" />
     <ClInclude Include="Engine\SAFE_DELETE_RELEASE.h" />
     <ClInclude Include="Engine\SceneManager.h" />
