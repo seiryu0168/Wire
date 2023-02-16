@@ -61,7 +61,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 	//頂点データ作成
 	XMVECTOR upVec = XMVectorSet(0, 1, 0, 0);
-	VERTEX* vertices = new VERTEX[LENGTH_* 4];
+	VERTEX* vertices = new VERTEX[(pList->size()-1)* 4];
 	
 		int index = 0;
 		auto itr = pList->begin();
@@ -356,17 +356,8 @@ void LineParticle::Draw(Transform* transform)
 
 	//頂点の並び方を指定
 	UINT vertexCount = 0;
-	if(positionList_.empty())
-	{
-		vertexCount = 0;
-	}
-	else
-	{
-		vertexCount = positionList_.size() * LENGTH_*4;
-	}
 
-	//Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); //設定を変える
-	Direct3D::pContext->DrawIndexed(indexList.size(),0,0);
+	Direct3D::pContext->DrawIndexed(indexList.size()-24,0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

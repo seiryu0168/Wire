@@ -162,9 +162,10 @@ void Player::Update()
             vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
             SetStatus(pPointer_->GetObjectType());
         }
+        
     }
     //当たってなかったらジャンプ
-    else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_SPACE)&&airFlag_==false)
+    else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
     {
         //ワイヤーで飛んでたらjumpFlag_はfalseにし、そうでなければtrue
         jumpFlag_ = flyFlag_ == true ? false : true;
@@ -265,7 +266,8 @@ void Player::Draw()
 void Player::SecondDraw()
 {
     pLine_->Draw(&transform_);
-    pWire_->Draw(&transform_);
+    if (pPointer_->IsDraw())
+        pWire_->Draw(&transform_);
 }
 
 //開放
@@ -589,6 +591,8 @@ void Player::Aim(RayCastData* ray)
         XMStoreFloat3(&pointerPos, ray->hitPos);
         pPointer_->SetPointerPos(pointerPos);
         pPointer_->SetDraw(ray->hit);
+        pWire_->AddPosition(transform_.position_);
+        pWire_->AddPosition(pPointer_->GetPosition());
     }
 }
 
