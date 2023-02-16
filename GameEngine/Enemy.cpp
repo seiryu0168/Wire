@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#include"Engine/Model.h"
+#include"Engine/ResourceManager/Model.h"
 //コンストラクタ
 Enemy::Enemy(GameObject* parent, std::string name)
 	:GameObject(parent, name)

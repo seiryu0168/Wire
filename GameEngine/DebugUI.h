@@ -2,7 +2,7 @@
 #include"ImGui/imgui_impl_dx11.h"
 #include"ImGui/imgui_impl_win32.h"
 #include<string>
-#include"Engine/Direct3D.h"
+#include"Engine/DirectX_11/Direct3D.h"
 
 class GameObject;
 namespace DebugUI

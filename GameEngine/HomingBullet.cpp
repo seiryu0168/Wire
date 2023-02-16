@@ -1,9 +1,9 @@
 #include "HomingBullet.h"
 #include"Player.h"
-#include"Engine/Audio.h"
-#include"Engine/Camera.h"
-#include"Engine/Particle.h"
-#include"Engine/SphereCollider.h"
+#include"Engine/ResourceManager/Audio.h"
+#include"Engine/GameObject/Camera.h"
+#include"Engine/DirectX_11/Particle.h"
+#include"Engine/Collider/SphereCollider.h"
 namespace
 {
 	static const float frame = 60.0f;

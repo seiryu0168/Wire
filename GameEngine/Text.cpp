@@ -24,8 +24,8 @@ void Text::Release()
 	SAFE_RELEASE(pWriteFactory_);
 	SAFE_RELEASE(pColorBrush_);
 	SAFE_DELETE(pText_);
-	SAFE_DELETE(pLocale_)
-	SAFE_DELETE(pFontName_)
+	SAFE_DELETE(pLocale_);
+	SAFE_DELETE(pFontName_);
 }
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)

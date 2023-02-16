@@ -1,6 +1,6 @@
 #pragma once
-#include"Engine/GameObject.h"
-#include"Engine/BillBoard.h"
+#include"Engine/GameObject/GameObject.h"
+#include"Engine/DirectX_11/BillBoard.h"
 class Player;
 class Particle;
 class HomingBullet : public GameObject

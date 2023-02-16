@@ -1,6 +1,6 @@
 #include "EnemyNormal.h"
-#include"Engine/Model.h"
-#include"Engine/BoxCollider.h"
+#include"Engine/ResourceManager/Model.h"
+#include"Engine/Collider/BoxCollider.h"
 #include"Pointer.h"
 
 void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)

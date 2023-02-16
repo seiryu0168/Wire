@@ -1,9 +1,9 @@
 #include "EnemyTurret.h"
-#include"Engine/Model.h"
+#include"Engine/ResourceManager/Model.h"
 #include"Bullet.h"
 #include"HomingBullet.h"
 #include"Pointer.h"
-#include"Engine/OBBCollider.h"
+#include"Engine/Collider/OBBCollider.h"
 
 namespace
 {

@@ -1,7 +1,7 @@
 #pragma once
-#include "Engine/GameObject.h"
-#include"Engine/Fbx.h"
-#include"Engine/LineParticle.h"
+#include "Engine/GameObject/GameObject.h"
+#include"Engine/DirectX_11/Fbx.h"
+#include"Engine/DirectX_11/LineParticle.h"
 
 
 class Particle;

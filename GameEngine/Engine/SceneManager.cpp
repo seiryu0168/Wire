@@ -1,11 +1,11 @@
-#include"RootJob.h"
+#include"GameObject/RootJob.h"
 #include "SceneManager.h"
 #include"../TestScene.h"
 #include"../PlayScene.h"
 #include"../TitleScene.h"
 #include"../ResultScene.h"
-#include"Model.h"
-#include"ImageManager.h"
+#include"ResourceManager/Model.h"
+#include"ResourceManager/ImageManager.h"
 
 
 SceneManager::SceneManager(GameObject* parent) 

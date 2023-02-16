@@ -1,8 +1,8 @@
 #pragma once
-#include "Engine/GameObject.h"
-#include"Engine/Fbx.h"
-#include"Engine/BillBoard.h"
-#include"Engine/Particle.h"
+#include "Engine/GameObject/GameObject.h"
+#include"Engine/DirectX_11/Fbx.h"
+#include"Engine/DirectX_11/BillBoard.h"
+#include"Engine/DirectX_11/Particle.h"
 class Test : public GameObject
 {
     int hModel_;

@@ -1,6 +1,6 @@
 #include "Pointer.h"
-#include"Engine/Model.h"
-#include"Engine/SphereCollider.h"
+#include"Engine/ResourceManager/Model.h"
+#include"Engine/Collider/SphereCollider.h"
 Pointer::Pointer(GameObject* parent)
 	:GameObject(parent,"Pointer"),
 	drawFlag_(false)

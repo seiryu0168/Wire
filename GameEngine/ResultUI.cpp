@@ -1,7 +1,7 @@
 #include "ResultUI.h"
-#include"Engine/ImageManager.h"
+#include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/SceneManager.h"
-#include"Engine/Input.h"
+#include"Engine/DirectX_11/Input.h"
 #include"InterSceneData.h"
 
 namespace

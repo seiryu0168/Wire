@@ -1,8 +1,8 @@
 //インクルード
 #include <Windows.h>
 #include<stdlib.h>
-#include"Engine/Direct3D.h"
-#include"Direct2D.h"
+#include"DirectX_11/Direct3D.h"
+#include"DirectX_11/Direct2D.h"
 #include"Engine/Camera.h"
 #include"Engine/Quad.h"
 #include"Engine/Sprite.h"

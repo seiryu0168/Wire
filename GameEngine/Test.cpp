@@ -1,8 +1,8 @@
 #include "Test.h"
-#include"Engine/Input.h"
-#include"Engine/Model.h"
+#include"Engine/DirectX_11/Input.h"
+#include"Engine/ResourceManager/Model.h"
 #include"Effect.h"
-#include"Engine/Camera.h"
+#include"Engine/GameObject/Camera.h"
 //コンストラクタ
 Test::Test(GameObject* parent)
     :GameObject(parent, "Test"),

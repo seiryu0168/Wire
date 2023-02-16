@@ -1,5 +1,5 @@
 #include "Stage1.h"
-#include"Engine/Model.h"
+#include"Engine/ResourceManager/Model.h"
 //コンストラクタ
 Stage1::Stage1(GameObject* parent)
 	:GameObject(parent,"Stage1"),

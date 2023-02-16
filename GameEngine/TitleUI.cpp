@@ -1,6 +1,6 @@
 #include "TitleUI.h"
-#include"Engine/ImageManager.h"
-#include"Engine/Input.h"
+#include"Engine/ResourceManager/ImageManager.h"
+#include"Engine/DirectX_11/Input.h"
 #include"Engine/SceneManager.h"
 
 TitleUI::TitleUI(GameObject* parent)

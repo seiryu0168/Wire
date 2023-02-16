@@ -1,5 +1,5 @@
 #pragma once
-#include"Engine/GameObject.h"
+#include"Engine/GameObject/GameObject.h"
 #include"Engine/SAFE_DELETE_RELEASE.h"
 #include<vector>
 

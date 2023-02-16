@@ -1,6 +1,6 @@
 #pragma once
-#include"Engine/ImageManager.h"
-#include"Engine/GameObject.h"
+#include"Engine/ResourceManager/ImageManager.h"
+#include"Engine/GameObject/GameObject.h"
 class Button
 {
 private:
