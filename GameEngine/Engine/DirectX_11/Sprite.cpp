@@ -2,12 +2,15 @@
 #include"../ResourceManager/TextureManager.h"
 Sprite::Sprite()
 {
+	indexNum_ = 0;
+	size_ = { 0,0,0 };
+	vertexNum_ = 0;
+	hPict_			 = -1;
 	pVertexBuffer_	 = nullptr;
 	pIndexBuffer_	 = nullptr;
 	pConstantBuffer_ = nullptr;
 	vertices_		 = nullptr;
 	index_			 = nullptr;
-	hPict_			 = -1;
 }
 
 Sprite::~Sprite()
@@ -36,14 +39,14 @@ HRESULT Sprite::Initialize()
 		return E_FAIL;
 	}
 
-	SetSize(TextureManager::GetTexture(hPict_)->GetWidth(), TextureManager::GetTexture(hPict_)->GetHeight());
+	SetSize((float)TextureManager::GetTexture(hPict_)->GetWidth(), (float)TextureManager::GetTexture(hPict_)->GetHeight());
 	return S_OK;
 }
 
 void Sprite::Draw(Transform& transform, RECT rect, XMFLOAT4 changeColor,float alpha)
 {
-	Direct3D::SetShader(SHADER_2D);
-	Direct3D::SetBlendMode(BLEND_DEFAULT);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
+	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
 	Direct3D::SetDepthBufferWriteEnable(false);
 	//コンスタントバッファに情報を渡す
 	transform.Calclation();
@@ -51,7 +54,7 @@ void Sprite::Draw(Transform& transform, RECT rect, XMFLOAT4 changeColor,float al
 	//画面のサイズに合わせる行列
 	XMMATRIX matImageSize = XMMatrixScaling((float)(1.0f / Direct3D::GetScreenWidth()), (float)(1.0f / Direct3D::GetScreenHeight()), 1.0f);
 	//切り抜きサイズに合わせる行列
-	XMMATRIX matCut = XMMatrixScaling(rect.right, rect.bottom, 1.0f);
+	XMMATRIX matCut = XMMatrixScaling((float)rect.right, (float)rect.bottom, 1.0f);
 	CONSTANT_BUFFER cb;
 	
 	//最終的な行列

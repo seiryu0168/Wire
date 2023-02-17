@@ -8,19 +8,9 @@ class Particle;
 class Enemy;
 class Wire;
 class Pointer;
-class PlayerStatus;
 class ObjectSetter;
 class Player : public GameObject
 {
-    //enum DIR_NAME
-    //{
-    //    DIR_FRONT=0,
-    //    DIR_BACK,
-    //    DIR_LEFT,
-    //    DIR_RIGHT,
-    //    DIR_UP,
-    //    DIR_DOWN
-    //};
     enum STATUS
     {
         STATE_GROUND=0,
@@ -28,8 +18,6 @@ class Player : public GameObject
         STATE_FLY,
     };
 
-    XMVECTOR baseUpVec_;
-    XMVECTOR rayDir_[6];
 
     char status_;
 
@@ -61,20 +49,16 @@ class Player : public GameObject
     float angleX_;
     float lockOnAngleLimit_;
 
-
+    XMVECTOR baseUpVec_;
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
     XMVECTOR vPlayerMove_;
     XMVECTOR vBaseTarget_;
     XMVECTOR vFlyMove_;
     XMVECTOR vBaseAim_;
-    XMFLOAT3 flyMove_;
     XMMATRIX matCamX_;
     XMMATRIX matCamY_;
 
-
-
-    PlayerStatus* PlayerState_;
     Particle*     pParticle_;
     LineParticle* pLine_;
     LineParticle* pWire_;

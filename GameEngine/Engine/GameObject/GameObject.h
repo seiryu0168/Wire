@@ -19,6 +19,7 @@ protected:
 	std::string objectTag_;				//オブジェクトに任意でつけられる識別用の名前
 	bool killFlag_;						//キルするかどうか
 	bool drawFlag_;						//描画するかどうか
+
 public:
 	GameObject();
 	GameObject(GameObject* parent, const std::string& name);

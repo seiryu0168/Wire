@@ -189,8 +189,8 @@ void Particle::FixedUpdate()
 //•`‰æ
 void Particle::Draw()
 {
-	Direct3D::SetShader(SHADER_EFF);
-	Direct3D::SetBlendMode(BLEND_ADD);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
+	Direct3D::SetBlendMode(BLEND_MODE::BLEND_ADD);
 
 	for (auto i = particleList_.begin(); i != particleList_.end(); i++)
 	{

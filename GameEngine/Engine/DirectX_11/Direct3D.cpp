@@ -6,24 +6,24 @@
 //変数
 namespace Direct3D
 {
-	ID3D11Device* pDevice;									//デバイス
-	ID3D11DeviceContext* pContext;							//デバイスコンテキスト
-	IDXGISwapChain* pSwapChain;								//スワップチェイン
-	ID3D11RenderTargetView* pRenderTargetView;				//レンダーターゲットビュー
-	ID3D11Texture2D* pDepthStencil;							//深度ステンシル
-	ID3D11DepthStencilView* pDepthStencilView;				//深度ステンシルビュー
-	ID3D11BlendState* pBlendState[BLEND_MAX];				//ブレンドステート
-	ID3D11DepthStencilState* pDepthStencilState[BLEND_MAX];	//デプスステンシルステート
+	ID3D11Device* pDevice;										//デバイス
+	ID3D11DeviceContext* pContext;								//デバイスコンテキスト
+	IDXGISwapChain* pSwapChain;									//スワップチェイン
+	ID3D11RenderTargetView* pRenderTargetView;					//レンダーターゲットビュー
+	ID3D11Texture2D* pDepthStencil;								//深度ステンシル
+	ID3D11DepthStencilView* pDepthStencilView;									//深度ステンシルビュー
+	ID3D11BlendState* pBlendState[(int)BLEND_MODE::BLEND_MAX];					//ブレンドステート
+	ID3D11DepthStencilState* pDepthStencilState[(int)BLEND_MODE::BLEND_MAX];	//デプスステンシルステート
 
 
 	struct SHADER_BUNDLE
 	{
 		ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー
 		ID3D11PixelShader* pPixelShader = nullptr;		//ピクセルシェーダー
-		ID3D11InputLayout* pVertexLayout = nullptr;	//頂点インプットレイアウト
+		ID3D11InputLayout* pVertexLayout = nullptr;		//頂点インプットレイアウト
 		ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
 	};
-	SHADER_BUNDLE shaderBundle[SHADER_MAX];
+	SHADER_BUNDLE shaderBundle[(int)SHADER_TYPE::SHADER_MAX];
 
 	int screenWidth;
 	int screenHeight;
@@ -121,11 +121,11 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	depthstencildesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	depthstencildesc.StencilEnable = true;
 
-	pDevice->CreateDepthStencilState(&depthstencildesc, &pDepthStencilState[BLEND_DEFAULT]);
-	pContext->OMSetDepthStencilState(pDepthStencilState[BLEND_DEFAULT], 0);
+	pDevice->CreateDepthStencilState(&depthstencildesc, &pDepthStencilState[(int)BLEND_MODE::BLEND_DEFAULT]);
+	pContext->OMSetDepthStencilState(pDepthStencilState[(int)BLEND_MODE::BLEND_DEFAULT], 0);
 
 	depthstencildesc.StencilEnable = false;
-	pDevice->CreateDepthStencilState(&depthstencildesc, &pDepthStencilState[BLEND_ADD]);
+	pDevice->CreateDepthStencilState(&depthstencildesc, &pDepthStencilState[(int)BLEND_MODE::BLEND_ADD]);
 
 	//ブレンドステートの作成
 
@@ -145,18 +145,18 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 
 	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO ,D3D11_BLEND_ZERO ,D3D11_BLEND_ZERO };
 	HRESULT hr;
-	hr=pDevice->CreateBlendState(&desc, &pBlendState[BLEND_DEFAULT]);
+	hr=pDevice->CreateBlendState(&desc, &pBlendState[(int)BLEND_MODE::BLEND_DEFAULT]);
 
 	if(FAILED(hr))
 	{
 		MessageBox(nullptr, L"ブレンドステートの作成に失敗", L"エラー", MB_OK);
 		return hr;
 	}
-	pContext->OMSetBlendState(pBlendState[BLEND_DEFAULT], factor, 0xffffffff);
+	pContext->OMSetBlendState(pBlendState[(int)BLEND_MODE::BLEND_DEFAULT], factor, 0xffffffff);
 	//加算合成
 	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	pDevice->CreateBlendState(&desc, &pBlendState[BLEND_ADD]);
+	pDevice->CreateBlendState(&desc, &pBlendState[(int)BLEND_MODE::BLEND_ADD]);
 
 
 
@@ -210,7 +210,8 @@ HRESULT Direct3D::InitShader2D()
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(L"Simple2D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
-	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_2D].pVertexShader);
+	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL,
+									 &shaderBundle[(int)SHADER_TYPE::SHADER_2D].pVertexShader);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -223,7 +224,8 @@ HRESULT Direct3D::InitShader2D()
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR),  D3D11_INPUT_PER_VERTEX_DATA, 0 },  //UV座標
 	};
-	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_2D].pVertexLayout);
+	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(),
+									pCompileVS->GetBufferSize(), &shaderBundle[(int)SHADER_TYPE::SHADER_2D].pVertexLayout);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -236,7 +238,8 @@ HRESULT Direct3D::InitShader2D()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"Simple2D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_2D].pPixelShader);
+	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL,
+									&shaderBundle[(int)SHADER_TYPE::SHADER_2D].pPixelShader);
 
 	if (FAILED(hr))
 	{
@@ -251,7 +254,7 @@ HRESULT Direct3D::InitShader2D()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
-	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_2D].pRasterizerState);
+	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[(int)SHADER_TYPE::SHADER_2D].pRasterizerState);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompilePS);
@@ -269,7 +272,8 @@ HRESULT Direct3D::InitShader3D()
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
-	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_3D].pVertexShader);
+	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL,
+									 &shaderBundle[(int)SHADER_TYPE::SHADER_3D].pVertexShader);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -294,7 +298,8 @@ HRESULT Direct3D::InitShader3D()
 		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },  //接線
 	};
 
-	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_3D].pVertexLayout);
+	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), 
+									pCompileVS->GetBufferSize(), &shaderBundle[(int)SHADER_TYPE::SHADER_3D].pVertexLayout);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -307,7 +312,8 @@ HRESULT Direct3D::InitShader3D()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_3D].pPixelShader);
+	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL,
+									&shaderBundle[(int)SHADER_TYPE::SHADER_3D].pPixelShader);
 	SAFE_RELEASE(pCompilePS);
 	if (FAILED(hr))
 	{
@@ -320,7 +326,7 @@ HRESULT Direct3D::InitShader3D()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
-	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_3D].pRasterizerState);
+	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[(int)SHADER_TYPE::SHADER_3D].pRasterizerState);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラスタライザの作成に失敗", L"エラー", MB_OK);
@@ -337,7 +343,8 @@ HRESULT Direct3D::InitShaderEFF()
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(L"BillBoard.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
-	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_EFF].pVertexShader);
+	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL,
+									 &shaderBundle[(int)SHADER_TYPE::SHADER_EFF].pVertexShader);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -349,7 +356,8 @@ HRESULT Direct3D::InitShaderEFF()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"BillBoard.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_EFF].pPixelShader);
+	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL,
+									&shaderBundle[(int)SHADER_TYPE::SHADER_EFF].pPixelShader);
 	SAFE_RELEASE(pCompilePS);
 	if (FAILED(hr))
 	{
@@ -372,7 +380,8 @@ HRESULT Direct3D::InitShaderEFF()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	  0, sizeof(XMFLOAT3),  D3D11_INPUT_PER_VERTEX_DATA, 0 },  //UV座標
 	};
 
-	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_EFF].pVertexLayout);
+	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(),
+									pCompileVS->GetBufferSize(), &shaderBundle[(int)SHADER_TYPE::SHADER_EFF].pVertexLayout);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -387,7 +396,7 @@ HRESULT Direct3D::InitShaderEFF()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise =TRUE;
-	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_EFF].pRasterizerState);
+	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[(int)SHADER_TYPE::SHADER_EFF].pRasterizerState);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラスタライザの作成に失敗", L"エラー", MB_OK);
@@ -404,7 +413,8 @@ HRESULT Direct3D::InitShaderOutLine()
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(L"OutLine.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
-	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_OUTLINE].pVertexShader);
+	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, 
+									 &shaderBundle[(int)SHADER_TYPE::SHADER_OUTLINE].pVertexShader);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -429,7 +439,8 @@ HRESULT Direct3D::InitShaderOutLine()
 		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },  //接線
 	};
 
-	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_OUTLINE].pVertexLayout);
+	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(),
+									pCompileVS->GetBufferSize(), &shaderBundle[(int)SHADER_TYPE::SHADER_OUTLINE].pVertexLayout);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -442,7 +453,8 @@ HRESULT Direct3D::InitShaderOutLine()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"OutLine.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_OUTLINE].pPixelShader);
+	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL,
+									&shaderBundle[(int)SHADER_TYPE::SHADER_OUTLINE].pPixelShader);
 	SAFE_RELEASE(pCompilePS);
 	if (FAILED(hr))
 	{
@@ -455,7 +467,7 @@ HRESULT Direct3D::InitShaderOutLine()
 	rdc.CullMode = D3D11_CULL_FRONT;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
-	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_OUTLINE].pRasterizerState);
+	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[(int)SHADER_TYPE::SHADER_OUTLINE].pRasterizerState);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラスタライザの作成に失敗", L"エラー", MB_OK);
@@ -472,7 +484,8 @@ HRESULT Direct3D::InitShaderToon()
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(L"ToonShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
-	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_TOON].pVertexShader);
+	hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL,
+									 &shaderBundle[(int)SHADER_TYPE::SHADER_TOON].pVertexShader);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -497,7 +510,8 @@ HRESULT Direct3D::InitShaderToon()
 		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },  //接線
 	};
 
-	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_TOON].pVertexLayout);
+	hr = pDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), 
+									&shaderBundle[(int)SHADER_TYPE::SHADER_TOON].pVertexLayout);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(pCompileVS);
@@ -510,7 +524,8 @@ HRESULT Direct3D::InitShaderToon()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"ToonShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_TOON].pPixelShader);
+	hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, 
+									&shaderBundle[(int)SHADER_TYPE::SHADER_TOON].pPixelShader);
 	SAFE_RELEASE(pCompilePS);
 	if (FAILED(hr))
 	{
@@ -523,7 +538,7 @@ HRESULT Direct3D::InitShaderToon()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
-	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[SHADER_TOON].pRasterizerState);
+	hr = pDevice->CreateRasterizerState(&rdc, &shaderBundle[(int)SHADER_TYPE::SHADER_TOON].pRasterizerState);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ラスタライザの作成に失敗", L"エラー", MB_OK);
@@ -536,18 +551,18 @@ HRESULT Direct3D::InitShaderToon()
 void Direct3D::SetShader(SHADER_TYPE type)
 {
 	//それぞれをデバイスコンテキストにセット  これらの情報を使って描画を行う
-	pContext->VSSetShader(shaderBundle[type].pVertexShader, NULL, 0);	//頂点シェーダー
-	pContext->PSSetShader(shaderBundle[type].pPixelShader, NULL, 0);	//ピクセルシェーダー
-	pContext->IASetInputLayout(shaderBundle[type].pVertexLayout);	//頂点インプットレイアウト
-	pContext->RSSetState(shaderBundle[type].pRasterizerState);		//ラスタライザー
+	pContext->VSSetShader(shaderBundle[(int)type].pVertexShader, NULL, 0);	//頂点シェーダー
+	pContext->PSSetShader(shaderBundle[(int)type].pPixelShader, NULL, 0);	//ピクセルシェーダー
+	pContext->IASetInputLayout(shaderBundle[(int)type].pVertexLayout);	//頂点インプットレイアウト
+	pContext->RSSetState(shaderBundle[(int)type].pRasterizerState);		//ラスタライザー
 }
 
 void Direct3D::SetBlendMode(BLEND_MODE mode)
 {
 	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
-	Direct3D::pContext->OMSetBlendState(pBlendState[mode], factor, 0xffffffff);			//ブレンドステート
+	Direct3D::pContext->OMSetBlendState(pBlendState[(int)mode], factor, 0xffffffff);			//ブレンドステート
 
-	pContext->OMSetDepthStencilState(pDepthStencilState[mode], 0);
+	pContext->OMSetDepthStencilState(pDepthStencilState[(int)mode], 0);
 }
 ID3D11Device* Direct3D::GetDevice()
 {
@@ -588,7 +603,7 @@ void Direct3D::BeginDraw()
 	EngineTime::SetTime();
 	//画面をクリア
 		//背景色
-		float clearColor[4] = { 0.1,0.5,0.5,1.0 };
+		float clearColor[4] = { 0.1f,0.5f,0.5f,1.0f };
 		//レンダーターゲットビューをクリア
 		pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
 
@@ -614,7 +629,7 @@ void Direct3D::EndDraw()
 void Direct3D::Release()
 {
 	//解放処理
-	for (int releaseShader = 0; releaseShader < SHADER_MAX; releaseShader++)
+	for (int releaseShader = 0; releaseShader < (int)SHADER_TYPE::SHADER_MAX; releaseShader++)
 	{
 		SAFE_RELEASE(shaderBundle[releaseShader].pRasterizerState);
 		SAFE_RELEASE(shaderBundle[releaseShader].pVertexLayout);
@@ -622,7 +637,7 @@ void Direct3D::Release()
 		SAFE_RELEASE(shaderBundle[releaseShader].pVertexShader);
 	}
 
-	for (int i = 0; i < BLEND_MAX; i++)
+	for (int i = 0; i < (int)BLEND_MODE::BLEND_MAX; i++)
 	{
 		SAFE_RELEASE(pDepthStencilState[i]);
 		SAFE_RELEASE(pBlendState[i]);				//深度ステンシル

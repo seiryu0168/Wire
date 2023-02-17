@@ -63,7 +63,7 @@ bool Math::IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir)
 
 	XMStoreFloat3(&normal, vNormal);
 	XMStoreFloat3(&dir, -vDir);
-	float denominator = sqrtf(pow(normal.x, 2) + pow(normal.y, 2) + pow(normal.z, 2)) * sqrtf(pow(dir.x, 2) + pow(dir.y, 2) + pow(dir.z, 2));
+	float denominator = sqrtf(powf(normal.x, 2) + powf(normal.y, 2) + powf(normal.z, 2)) * sqrtf(pow(dir.x, 2) + powf(dir.y, 2) + powf(dir.z, 2));
 	float dot = ((normal.x * dir.x) + (normal.y * dir.y) + (normal.z * dir.z))/denominator;
 	if (dot <= 1.0f && dot >= 0.0f)
 	{

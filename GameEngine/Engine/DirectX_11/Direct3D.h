@@ -10,7 +10,7 @@ using namespace DirectX;
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-enum SHADER_TYPE
+enum class SHADER_TYPE
 {
 	SHADER_2D = 0,
 	SHADER_3D,
@@ -19,7 +19,7 @@ enum SHADER_TYPE
 	SHADER_TOON,
 	SHADER_MAX,
 };
-enum TARGET
+enum classTARGET
 {
 	TARGET_BACK_BUFFER=0,
 	TARGET_RENDER_TARGET_1,
@@ -28,7 +28,7 @@ enum TARGET
 	TARGET_RENDER_TARGET_MAX
 };
 
-enum BLEND_MODE
+enum class BLEND_MODE
 {
 	BLEND_DEFAULT = 0,
 	BLEND_ADD,

@@ -80,10 +80,10 @@ void Bullet::OnCollision(GameObject* target)
 
 		data.textureFileName = "Assets\\Smoke.png";
 		data.position = transform_.position_;
-		data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+		data.positionErr = XMFLOAT3(0.2f, 0.0f, 0.2f);
 		data.delay = 0;
 		data.number = 30;
-		data.lifTime = 600.0f;
+		data.lifTime = 600;
 		data.acceleration = 0.98f;
 		data.gravity = 0.0f;
 
@@ -95,8 +95,8 @@ void Bullet::OnCollision(GameObject* target)
 		data.size = XMFLOAT2(0.8f, 0.8f);
 		data.sizeErr = XMFLOAT2(0.4f, 0.4f);
 		data.scale = XMFLOAT2(1.1f, 1.1f);
-		data.color = XMFLOAT4(1, 1, 0.1, 1);
-		data.deltaColor = XMFLOAT4(0, -1.0 / 20, 0, -1.0 / 20);
+		data.color = XMFLOAT4(1, 1, 0.1f, 1);
+		data.deltaColor = XMFLOAT4(0, (float)(-1.0f / 20.0f), 0, (float)(-1.0f / 20.0f));
 		pParticle_->ParticleStart(data);
 
 
@@ -104,7 +104,7 @@ void Bullet::OnCollision(GameObject* target)
 		data.positionErr = XMFLOAT3(0.5f, 0.5f, 0.5f);
 		data.delay = 0;
 		data.number = 10;
-		data.lifTime = 50.0f;
+		data.lifTime = 50;
 		data.acceleration = 0.98f;
 		data.gravity = 0.0f;
 
@@ -116,7 +116,7 @@ void Bullet::OnCollision(GameObject* target)
 		data.size = XMFLOAT2(0.1f, 0.1f);
 		data.sizeErr = XMFLOAT2(0, 0);
 		data.scale = XMFLOAT2(0.99f, 0.99f);
-		data.color = XMFLOAT4(1, 1, 0.1, 1);
+		data.color = XMFLOAT4(1, 1, 0.1f, 1);
 		data.deltaColor = XMFLOAT4(0, 0, 0, 0);
 		pParticle_->ParticleStart(data);
 		KillMe();

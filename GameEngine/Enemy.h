@@ -86,7 +86,7 @@ protected:
             float range_;
         Sight()
         {
-            angle_ = M_PI / 2.0f;
+            angle_ = (float)(M_PI / 2.0f);
             range_ = 50.0f;
         }
 

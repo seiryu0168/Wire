@@ -349,7 +349,7 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 {
 	Direct3D::SetShader(shaderType);
-	Direct3D::SetBlendMode(BLEND_DEFAULT);
+	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
 	for (int i = 0; i<parts_.size(); i++)
 	{
 		FbxTime time;
@@ -368,8 +368,8 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 
 void Fbx::DrawOutLine(Transform& transform, int frame)
 {
-	Direct3D::SetBlendMode(BLEND_DEFAULT);
-	Direct3D::SetShader(SHADER_TOON);
+	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_TOON);
 	for (int i = 0; i < parts_.size(); i++)
 	{
 		FbxTime time;
@@ -385,7 +385,7 @@ void Fbx::DrawOutLine(Transform& transform, int frame)
 		}
 	}
 
-	Direct3D::SetShader(SHADER_3D);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_3D);
 	for (int i = 0; i < parts_.size(); i++)
 	{
 		FbxTime time;
@@ -404,10 +404,10 @@ void Fbx::DrawOutLine(Transform& transform, int frame)
 
 void Fbx::DrawToon(Transform& transform, bool isOutLine, int frame)
 {
-	Direct3D::SetBlendMode(BLEND_DEFAULT);
+	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
 	if (isOutLine)
 	{
-	Direct3D::SetShader(SHADER_OUTLINE);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_OUTLINE);
 
 		for (int i = 0; i < parts_.size(); i++)
 		{
@@ -424,7 +424,7 @@ void Fbx::DrawToon(Transform& transform, bool isOutLine, int frame)
 			}
 		}
 	}
-	Direct3D::SetShader(SHADER_TOON);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_TOON);
 	for (int i = 0; i < parts_.size(); i++)
 	{
 		FbxTime time;

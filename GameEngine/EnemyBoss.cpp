@@ -39,7 +39,7 @@ void EnemyBoss::Initialize()
 	ModelManager::SetModelNum(hModelShield_);
 	assert(hModelShield_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
-	sight.SetAngle(M_PI*1.5);
+	sight.SetAngle((float)(M_PI*1.5f));
 	sight.SetRange(200);
 	
 	SetLife(5);

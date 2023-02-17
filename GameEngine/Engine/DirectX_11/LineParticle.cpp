@@ -65,7 +65,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	
 		int index = 0;
 		auto itr = pList->begin();
-		for (int j = 0; j < LENGTH_; j++)
+		for (UINT j = 0; j < LENGTH_; j++)
 		{
 			//記憶している位置取得
 			XMVECTOR vPos = XMLoadFloat3(&(*itr));
@@ -82,13 +82,13 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 			if (XMVectorGetX(XMVector3Length(vLine)) >= 0.01f)
 			{
 				//パーティクルの腕を回すクオータニオン
-				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, M_PI / 2.0f);
+				XMVECTOR armRotate = XMQuaternionRotationAxis(vLine, (float)(M_PI / 2.0f));
 				
 				//パーティクルの腕を作る
 				XMVECTOR vArm = XMVector3Cross(vLine, vCamPos);
 				
 				//距離によって太さ変わる
-				vArm = XMVector3Normalize(vArm) * WIDTH_*(LENGTH_-j)/LENGTH_;
+				vArm = XMVector3Normalize(vArm) * (float)(WIDTH_*(LENGTH_-j)/LENGTH_);
 				
 				//腕を回転
 				XMVECTOR vArm2 = XMVector3Rotate(vArm, armRotate);
@@ -178,7 +178,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 	auto itr = pList->begin();
 	//頂点データ作成
 	VERTEX* vertices = new VERTEX[pList->size() * 2];
-	for (int i = 0; i < LENGTH_+2; i++)
+	for (UINT i = 0; i < LENGTH_+2; i++)
 	{
 		//記憶している位置取得
 		XMVECTOR vPos = XMLoadFloat3(&(*itr));
@@ -282,7 +282,7 @@ void LineParticle::SetIndex()
 	int indexOffset = 0;
 	int indexdelta = 1;
 
-	for (int i = 0; i < LENGTH_*3*8; i++)
+	for (UINT i = 0; i < LENGTH_*3*8; i++)
 	{
 			indexList.push_back(i - (indexOffset + fixedIndex[i % 24]));
 		if (i%(24*indexdelta-1) == 0&&i!=0)
@@ -294,7 +294,7 @@ void LineParticle::SetIndex()
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * indexList.size();
+	bd.ByteWidth = (int)(sizeof(int) * indexList.size());
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -316,7 +316,7 @@ void LineParticle::SetIndex()
 void LineParticle::Draw(Transform* transform)
 {
 	HRESULT hr;
-	Direct3D::SetShader(SHADER_EFF);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.color = XMFLOAT4(1, 1, 1, 1);
@@ -357,7 +357,7 @@ void LineParticle::Draw(Transform* transform)
 	//頂点の並び方を指定
 	UINT vertexCount = 0;
 
-	Direct3D::pContext->DrawIndexed(indexList.size()-24,0,0);
+	Direct3D::pContext->DrawIndexed((UINT)indexList.size()-24,0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

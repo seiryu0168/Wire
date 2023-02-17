@@ -56,7 +56,7 @@ int ModelManager::Load(std::string fileName)
 		pModelData->pfbx_->Load(fileName);
 	}
 	modelData_.push_back(pModelData);
-	return modelData_.size() - 1;
+	return (int)modelData_.size() - 1;
 }
 
 void ModelManager::SetTransform(int modelNum, Transform transform)
@@ -74,11 +74,11 @@ void ModelManager::Draw(int modelNum)
 	}
 	modelData_[modelNum]->nowFrame_ += modelData_[modelNum]->animSpeed_;
 	if (modelData_[modelNum]->nowFrame_ > (float)modelData_[modelNum]->endFrame_)
-		modelData_[modelNum]->nowFrame_ = modelData_[modelNum]->startFrame_;
+		modelData_[modelNum]->nowFrame_ = (float)modelData_[modelNum]->startFrame_;
 	
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{
-		modelData_[modelNum]->pfbx_->Draw(modelData_[modelNum]->transform_, SHADER_3D,(int)modelData_[modelNum]->nowFrame_);
+		modelData_[modelNum]->pfbx_->Draw(modelData_[modelNum]->transform_, SHADER_TYPE::SHADER_3D,(int)modelData_[modelNum]->nowFrame_);
 	}
 }
 
@@ -90,7 +90,7 @@ void ModelManager::DrawOutLine(int modelNum)
 	}
 	modelData_[modelNum]->nowFrame_ += modelData_[modelNum]->animSpeed_;
 	if (modelData_[modelNum]->nowFrame_ > (float)modelData_[modelNum]->endFrame_)
-		modelData_[modelNum]->nowFrame_ = modelData_[modelNum]->startFrame_;
+		modelData_[modelNum]->nowFrame_ = (float)modelData_[modelNum]->startFrame_;
 
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{
@@ -106,7 +106,7 @@ void ModelManager::DrawToon(int modelNum)
 	}
 	modelData_[modelNum]->nowFrame_ += modelData_[modelNum]->animSpeed_;
 	if (modelData_[modelNum]->nowFrame_ > (float)modelData_[modelNum]->endFrame_)
-		modelData_[modelNum]->nowFrame_ = modelData_[modelNum]->startFrame_;
+		modelData_[modelNum]->nowFrame_ = (float)modelData_[modelNum]->startFrame_;
 
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{

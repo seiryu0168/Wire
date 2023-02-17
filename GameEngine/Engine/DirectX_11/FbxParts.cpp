@@ -5,6 +5,20 @@
 
 FbxParts::FbxParts()
 {
+	boneNum_ = 0;
+	materialCount_ = 0;
+	polygonCount_ = 0;
+	vertexCount_ = 0;
+
+	indexCount_ = nullptr;
+	pBoneArray_ = nullptr;
+	pMaterialList_ = nullptr;
+	pSkinInfo_ = nullptr;
+	pVertices_ = nullptr;
+	pWeightArray_ = nullptr;
+	ppCluster_ = nullptr;
+	ppIndex_ = nullptr;
+
 	pVertexBuffer_ = nullptr;
 	ppIndexBuffer_ = nullptr;
 	pConstantBuffer_ = nullptr;
@@ -477,7 +491,7 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			speculer = pPhong->Specular;
 			pMaterialList_[i].speculer = XMFLOAT4((float)speculer[0], (float)speculer[1], (float)speculer[2], 1.0f);
 			//blenderだと1-粗さの値x100にあたる
-			pMaterialList_[i].shininess = pPhong->Shininess;
+			pMaterialList_[i].shininess = (float)pPhong->Shininess;
 		}
 
 		//テクスチャの枚数

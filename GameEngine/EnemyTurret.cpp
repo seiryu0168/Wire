@@ -48,8 +48,8 @@ void EnemyTurret::Initialize()
 	ModelManager::SetModelNum(hModel_);
 	
 	XMFLOAT3 initPos = transform_.position_;
-	initPos.x = rand() % 100;
-	initPos.z = rand() % 100;
+	initPos.x = (float)(rand() % 100);
+	initPos.z = (float)(rand() % 100);
 	RayCastData ray;
 	ray.start = { initPos.x, 999.0f, initPos.z };
 	ray.dir = { 0,1,0 };

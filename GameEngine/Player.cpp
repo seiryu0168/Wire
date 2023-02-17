@@ -31,21 +31,26 @@ namespace
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
+    status_(STATE_GROUND),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
     playerLife_(MAX_LIFE),
-    gravity_(-0.06),
+    gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
     hModel_Handle_(-1),
+    stageNum_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
     vBaseAim_(XMVectorSet(3, 2, -4, 0)),
+    vFlyMove_(XMVectorSet(0,0,0,0)),
+    vPlayerMove_(XMVectorSet(0,0,0,0)),
     matCamX_(XMMatrixIdentity()),
     matCamY_(XMMatrixIdentity()),
     moveTime_(0),
     aimTime_(0),
     flyTime_(0),
+    godTime_(0),
     velocity_(0),
     rotateSpeed_(4.0f),
     maxSpeed_(1.5f),
@@ -54,9 +59,16 @@ Player::Player(GameObject* parent)
     angleX_(0),
     lockOnAngleLimit_(0.2f),
     flyFlag_(false),
+    airFlag_(false),
     aimFlag_(false),
+    jumpFlag_(false),
     groundFlag_(true),
-    godFlag_(false)
+    godFlag_(false),
+    pLine_(nullptr),
+    pWire_(nullptr),
+    pParticle_(nullptr),
+    pPointer_(nullptr),
+    pSetter_(nullptr)
 {
 }
 
@@ -93,14 +105,7 @@ void Player::Initialize()
     transform_.position_ = XMFLOAT3(0, 20,0);
     RayCastData firstRay;
     firstRay.start = transform_.position_;
-    
-    //rayDir_[0] = XMVectorSet( 0, 0, 1, 0);
-    //rayDir_[1] = XMVectorSet( 0, 0,-1, 0);
-    //rayDir_[2] = XMVectorSet(-1, 0, 0, 0);
-    //rayDir_[3] = XMVectorSet( 1, 0, 0, 0);
-    //rayDir_[4] = XMVectorSet( 0, 1, 0, 0);
-    //rayDir_[5] = XMVectorSet( 0,-1, 0, 0);
-    
+       
     XMStoreFloat3(&firstRay.dir, XMVectorSet(0, -1, 0, 0));
     ModelManager::RayCast(stageNum_, firstRay);
     ModelManager::SetModelNum(stageNum_);
@@ -282,12 +287,12 @@ void Player::CameraMove(RayCastData ray)
     if (aimFlag_ == true)
     {
         aimTime_ += 0.05f;
-        aimTime_ = min(aimTime_, 1);
+        aimTime_ = (float)min(aimTime_, 1);
     }
     else
     {
         aimTime_ += -0.07f;
-        aimTime_ = max(aimTime_, 0.5);
+        aimTime_ = (float)max(aimTime_, 0.5);
     }
 
     //ワイヤーで飛んでいる時
@@ -295,11 +300,11 @@ void Player::CameraMove(RayCastData ray)
     {
         aimFlag_ = false;
         aimTime_ += -0.08f;
-        aimTime_ = max(aimTime_, 0);
+        aimTime_ = (float)max(aimTime_, 0);
     }
 
     float cameraRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
-    Camera::SetAOV((M_PI / 180.0f) *cameraRate );
+    Camera::SetAOV((float)(M_PI / 180.0) *cameraRate );
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
 
@@ -319,8 +324,8 @@ void Player::CameraMove(RayCastData ray)
     }
 
 
-    matCamY_   = XMMatrixRotationX(angleX_ * (M_PI / 180));
-    matCamX_   = XMMatrixRotationY(angleY_ * (M_PI / 180));
+    matCamY_   = XMMatrixRotationX(angleX_ * (float)(M_PI / 180.0));
+    matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0));
     vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_)* CAMERA_DIST;
     vAimCam    = XMVector3TransformCoord(vBaseAim_, matCamY_ * matCamX_);
     vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
@@ -346,8 +351,8 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
     XMVECTOR startVec[5] = { 0 };
     startVec[0] = -XMVector3Normalize(moveHolizon);                                                //進行方向
-    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, M_PI/2));   //進行方向に見て右
-    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -(M_PI/2)));  //進行方向に見て左
+    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, (float)(M_PI/2.0f)));   //進行方向に見て右
+    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -(float)(M_PI/2.0f)));  //進行方向に見て左
     startVec[3] = baseUpVec_;                                                                      //上ベクトル
     startVec[4] = -baseUpVec_;                                                                     //下ベクトル
     XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
@@ -361,13 +366,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //進行方向に見て右のレイ
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
-    XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(M_PI/2))));
+    XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(float)(M_PI/2.0f))));
     ModelManager::RayCast(stageNum_, lMoveRay);
 
     //進行方向に見て左のレイ
     RayCastData rMoveRay;
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
-    XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(M_PI/2))));
+    XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(float)(M_PI/2.0f))));
     ModelManager::RayCast(stageNum_, rMoveRay);
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
@@ -475,10 +480,10 @@ void Player::OccurParticle()
         XMFLOAT3 particlePos;
         XMStoreFloat3(&particlePos, pos + (XMVector3Normalize(vPlayerMove_)));
         data.position = particlePos;
-        data.positionErr = XMFLOAT3(0.2, 0, 0.2);
+        data.positionErr = XMFLOAT3(0.2f, 0, 0.2f);
         data.delay = 0;
         data.number = 30;
-        data.lifTime = 50.0f;
+        data.lifTime = 50;
         data.acceleration = 0.98f;
         data.gravity = 0.0f;
 
@@ -492,7 +497,7 @@ void Player::OccurParticle()
         data.sizeErr = XMFLOAT2(0.3f, 0.3f);
         data.scale = XMFLOAT2(0.98f, 0.98f);
         data.color = XMFLOAT4(1, 1, 1, 1);
-        data.deltaColor = XMFLOAT4(0, 0, 0, -0.08);
+        data.deltaColor = XMFLOAT4(0, 0, 0, -0.08f);
         pParticle_->ParticleStart(data);
     }
 

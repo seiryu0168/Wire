@@ -19,7 +19,7 @@ struct EmitterData
     XMFLOAT2 size;                  //サイズ
     XMFLOAT2 sizeErr;               //サイズの誤差
     XMFLOAT2 scale;                 //1フレームあたりの拡大率
-    float lifTime;                  //パーティクルの寿命
+    DWORD lifTime;                  //パーティクルの寿命
     
     int delay;                      //パーティクルを出す間隔のフレーム数
     int number;                     //1回に出すパーティクルの数
@@ -35,7 +35,7 @@ struct EmitterData
             color = { 1,1,1,1 };
             deltaColor = { 0,0,0,0 };
             size = scale = { 1.0f,1.0f };
-            lifTime = 10.0f;
+            lifTime = 10;
         }
 
 };

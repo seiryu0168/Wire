@@ -14,7 +14,7 @@ SetObject::~SetObject()
 //初期化
 void SetObject::Initialize()
 {
-	Load();
+	//Load();
 }
 
 ////更新
@@ -62,22 +62,26 @@ void SetObject::Load()
 						NULL);
 
 	DWORD fileSize = GetFileSize(hFile,NULL);
+	if (fileSize >= 0)
+	{
+		return;
+	}
 	char* data = new char[fileSize];
 	DWORD byte = 0;
-	ReadFile(
-			hFile,
-			data,
-			fileSize,
-			&byte,
-			NULL);
+	if (ReadFile(hFile, data, fileSize, &byte, NULL)==false)
+	{
+		MessageBox(nullptr, L"ファイル読み込み失敗", L"エラー", MB_OK);
+		delete[] data;
+		return;
+	}
 
 	int commaCount = 0;
 	
-	for (int i = 0; i < fileSize; i++)
+	for (int i = 0; i < (int)fileSize; i++)
 	{
 		objectData obj;
 		std::string parameter = "";
-		for (int j = i; commaCount<10||j<fileSize; j++)
+		for (int j = i; commaCount<10||j<(int)fileSize; j++)
 		{
 			if (data[j] != ',')
 			{

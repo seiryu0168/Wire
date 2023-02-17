@@ -35,9 +35,9 @@ void EnemyNormal::Initialize()
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
 
-	transform_.position_.x = std::rand() % 100;
-	transform_.position_.y = std::rand() % 100;
-	transform_.position_.z = std::rand() % 100;
+	transform_.position_.x = (float)(std::rand() % 100);
+	transform_.position_.y = (float)(std::rand() % 100);
+	transform_.position_.z = (float)(std::rand() % 100);
 	SetPlayerPointer((Player*)FindObject("Player"));
 	ChangeState(StateSearch::GetInstance());
 }

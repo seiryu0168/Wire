@@ -5,6 +5,7 @@ namespace D2D
 {
 	ID2D1Factory*		   pFactory_	  = nullptr;	//ファクトリ
 	ID2D1RenderTarget* pRenderTarget_ = nullptr;    //レンダーターゲット
+
 	//ID2D1SolidColorBrush*  pColorBrush_   = nullptr;	//ブラシ	
 	//IDWriteFactory*		   pWriteFactory_ = nullptr;	//文字描画のファクトリ
 	//IDWriteTextFormat*	   pTextFormat_   = nullptr;	//テキストフォーマット
@@ -61,8 +62,8 @@ HRESULT D2D::Initialize(int winW, int winH, HWND hWnd)
 	RECT rect;
 	GetClientRect(hWnd, &rect);
 	
-	dpiScaleX_ = GetDpiForWindow(hWnd);
-	dpiScaleY_ = GetDpiForWindow(hWnd);
+	dpiScaleX_ = (float)GetDpiForWindow(hWnd);
+	dpiScaleY_ = (float)GetDpiForWindow(hWnd);
 	//D2D1_SIZE_U size = D2D1::Size<UINT>(rect.right, rect.bottom);
 	D2D1_RENDER_TARGET_PROPERTIES prop = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpiScaleX_, dpiScaleY_);
 	hr = pFactory_->CreateDxgiSurfaceRenderTarget(pBackBuffer,prop , &pRenderTarget_);
@@ -154,10 +155,10 @@ void D2D::EndDraw()
 
 int D2D::GetdpiX()
 {
-	return dpiScaleX_;
+	return (int)dpiScaleX_;
 }
 
 int D2D::GetdpiY()
 {
-	return dpiScaleY_;
+	return (int)dpiScaleY_;
 }
