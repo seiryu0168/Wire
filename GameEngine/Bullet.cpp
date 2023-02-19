@@ -57,10 +57,6 @@ void Bullet::Update()
 	life_--;
 }
 
-void Bullet::FixedUpdate()
-{
-
-}
 //•`‰æ
 void Bullet::Draw()
 {

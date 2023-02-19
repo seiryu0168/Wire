@@ -24,17 +24,19 @@ ResultUI::~ResultUI()
 
 void ResultUI::Initialize()
 {
+	//クリアかゲームオーバーかで表示する画像を変える
 	if (InterSceneData::GetboolData("Result"))
 	hPict_ = ImageManager::Load("Assets\\Clear.png");
 
 	else if (InterSceneData::GetboolData("Result")==false)
 		hPict_ = ImageManager::Load("Assets\\GameOver.png");
 
+	//ボタンの画像ロード
 	hPictTitle_ = ImageManager::Load("Assets\\ReturnTitle.png");
 	assert(hPictTitle_ >= 0);
 	hPictRetry_ = ImageManager::Load("Assets\\ReStart.png");
 	assert(hPictRetry_ >= 0);
-
+	//位置設定
 	ImageManager::SetImagePos(hPictTitle_, XMFLOAT3(-800, -500, 0));
 	ImageManager::SetImagePos(hPictRetry_, XMFLOAT3(800, -500, 0));
 }

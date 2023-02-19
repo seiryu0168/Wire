@@ -28,12 +28,11 @@ public:
     //XV
     void Update() override;
 
-    void FixedUpdate() override;
-
     void SetDir(XMVECTOR dir) { dir_ = dir; }
     //•`‰æ
     void Draw() override;
     
+    //Õ“Ë
     void OnCollision(GameObject* target) override;
 
     void Release() override;

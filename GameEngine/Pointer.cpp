@@ -26,7 +26,6 @@ void Pointer::Initialize()
 //XV
 void Pointer::Update()
 {
-
 	objectType_ = -1;
 }
 

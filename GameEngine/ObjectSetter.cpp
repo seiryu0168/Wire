@@ -26,7 +26,10 @@ void ObjectSetter::Initialize()
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	//feildって名前にしといたほうがいい
 	std::string parentName;
+	//親のオブジェクト名を取得
 	parentName = GetParent()->GetObjectName();
+
+	//親がプレイシーンだったら
 	if (parentName == "PlayScene")
 	{
 		Instantiate<Stage1>(GetParent());
@@ -38,7 +41,7 @@ void ObjectSetter::Initialize()
 
 		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
 	}
-
+	//親がタイトルシーンだったら
 	if (parentName == "TitleScene")
 	{
 		Instantiate<TitleUI>(GetParent());

@@ -42,14 +42,44 @@ private:
 public:
 	LineParticle();
 	LineParticle(float width,int length,float tipWidth);
-	//現在位置を記憶 : pos
+	/// <summary>
+	/// ラインの位置保存
+	/// 位置をポジションリストに追加
+	/// </summary>
+	/// <param name="pos">この関数が呼ばれた時の位置</param>
 	void AddPosition(XMFLOAT3 pos);
+	/// <summary>
+	/// パイプ状のラインパーティクル生成
+	/// </summary>
+	/// <param name="pList"></param>
+	/// <returns></returns>
 	HRESULT CreateMeshPype(std::list<XMFLOAT3>* pList);
 	HRESULT CreateMeshPlate(std::list<XMFLOAT3>* pList);
+	/// <summary>
+	/// ラインパーティクルに使う画像のロード
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
 	HRESULT Load(std::string fileName);
+	/// <summary>
+	/// インデックス生成
+	/// </summary>
 	void SetIndex();
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="transform">呼び出し元のtransform</param>
 	void Draw(Transform* transform);
+	/// <summary>
+	/// ラインパーティクルの各パラメータ設定
+	/// </summary>
+	/// <param name="width">横幅</param>
+	/// <param name="length">ポジションの保存数</param>
+	/// <param name="tipWidth">終端の幅</param>
 	void SetLineParameter(float width, int length,float tipWidth=0);
+	/// <summary>
+	/// ポジションリストの削除
+	/// </summary>
 	void DeleteLine();
 	void Release();
 

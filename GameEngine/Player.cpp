@@ -129,6 +129,7 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
+    //無敵時間の処理
     if (godFlag_)
     {
         godTime_--;
@@ -138,6 +139,8 @@ void Player::Update()
     {
         godFlag_ = false;
     }
+
+    //回転速度やらポジションの取得やらの処理
     rotateSpeed_ = 4.0f;
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
@@ -199,7 +202,6 @@ void Player::Update()
         moveZ = Input::GetLStick_Y();
         if (Input::IsKey(DIK_W))
         {
-            OccurParticle();
             moveZ = 1;
         }
 
@@ -474,7 +476,9 @@ void Player::SetStatus(int type)
 void Player::OccurParticle()
 {
     EmitterData data;
-    if (true/*status_ & ATC_ATTACK*/)
+    
+    //攻撃状態ならパーティクルを発生させる
+    if (status_ & ATC_ATTACK)
     {
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
         data.textureFileName = "Assets\\Effect01.png";

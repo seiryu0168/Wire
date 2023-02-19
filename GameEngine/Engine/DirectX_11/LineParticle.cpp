@@ -277,11 +277,14 @@ HRESULT LineParticle::Load(std::string fileName)
 
 void LineParticle::SetIndex()
 {
+	//インデックスの初期配列
 	int fixedIndex[] = { 0,0,-3, 3,-1,1, 5,5,2,  8, 4, 6, 10,10, 7, 13,9, 11, 15,19,16, 18,18,16 };
 
+	//配列を一巡した時に増える値
 	int indexOffset = 0;
 	int indexdelta = 1;
-
+	
+	//インデックス生成
 	for (UINT i = 0; i < LENGTH_*3*8; i++)
 	{
 			indexList.push_back(i - (indexOffset + fixedIndex[i % 24]));
@@ -292,6 +295,7 @@ void LineParticle::SetIndex()
 		}
 	}
 
+	//インデックスのデータ
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = (int)(sizeof(int) * indexList.size());
@@ -304,6 +308,8 @@ void LineParticle::SetIndex()
 	InitData.pSysMem = indexList.data();
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
+
+	//インデックスバッファ生成
 	HRESULT hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr))
 	{
@@ -355,8 +361,6 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
 
 	//頂点の並び方を指定
-	UINT vertexCount = 0;
-
 	Direct3D::pContext->DrawIndexed((UINT)indexList.size()-24,0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
