@@ -11,7 +11,7 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-
+	Release();
 }
 
 HRESULT Texture::Load(LPCWSTR fileName)
@@ -193,6 +193,10 @@ HRESULT Texture::Load(std::string fileName)
 		return hr;
 	}
 	SAFE_RELEASE(pTexture);
+	SAFE_RELEASE(pFormatConverter);
+	SAFE_RELEASE(pFrame);
+	SAFE_RELEASE(pDecoder);
+	SAFE_RELEASE(pFactory);
 
 	return S_OK;
 
