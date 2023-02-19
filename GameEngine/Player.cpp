@@ -199,6 +199,7 @@ void Player::Update()
         moveZ = Input::GetLStick_Y();
         if (Input::IsKey(DIK_W))
         {
+            OccurParticle();
             moveZ = 1;
         }
 
@@ -473,7 +474,7 @@ void Player::SetStatus(int type)
 void Player::OccurParticle()
 {
     EmitterData data;
-    if (status_ & ATC_ATTACK)
+    if (true/*status_ & ATC_ATTACK*/)
     {
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
         data.textureFileName = "Assets\\Effect01.png";

@@ -21,8 +21,8 @@ HRESULT Texture::Load(LPCWSTR fileName)
 	IWICBitmapDecoder* pDecoder = nullptr;
 	IWICBitmapFrameDecode* pFrame = nullptr;
 	IWICFormatConverter* pFormatConverter = nullptr;
-	CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, reinterpret_cast<void**>(&pFactory));
-	HRESULT hr = pFactory->CreateDecoderFromFilename(fileName, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecoder);
+	HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, reinterpret_cast<void**>(&pFactory));
+	hr = pFactory->CreateDecoderFromFilename(fileName, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecoder);
 	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ファイルのロードに失敗しました", L"エラー", MB_OK);
