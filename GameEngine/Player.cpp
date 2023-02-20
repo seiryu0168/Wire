@@ -1,14 +1,14 @@
-#include "Player.h"
 #include"Engine/DirectX_11/Input.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/GameObject/Camera.h"
 #include"Engine/SceneManager.h"
-#include"InterSceneData.h"
 #include"EngineTime.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"Engine/DirectX_11/Particle.h"
+#include"Player.h"
+#include"InterSceneData.h"
 #include"ObjectSetter.h"
 #include"EnemyNormal.h"
-#include"Engine/DirectX_11/Particle.h"
 #include"Easing.h"
 #include"Stage1.h"
 #include"Pointer.h"
@@ -288,7 +288,6 @@ void Player::SecondDraw()
 //ŠJ•ú
 void Player::Release()
 {
-    SAFE_DELETE(pSetter_);
     SAFE_RELEASE(pParticle_);
     SAFE_RELEASE(pLine_);
     SAFE_RELEASE(pWire_);
@@ -572,7 +571,8 @@ void Player::OnCollision(GameObject* pTarget)
     {
         bool result = false;
         InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
-        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT);
+        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT,300);
+        DelCollider(*this);
         return;
     }
 

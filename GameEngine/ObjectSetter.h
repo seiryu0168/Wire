@@ -7,6 +7,8 @@ class ObjectSetter : public GameObject
 {
 private:
     std::list<Enemy*> enemys_;
+    Player* pPlayer_;
+    int countDown_;
     bool bossSpawn_;
 public:
         //コンストラクタ

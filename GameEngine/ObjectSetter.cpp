@@ -13,7 +13,10 @@
 #include"Stage1.h"
 
 ObjectSetter::ObjectSetter(GameObject* parent)
-	:GameObject(parent,"ObjectSetter")
+	:GameObject(parent,"ObjectSetter"),
+	pPlayer_(nullptr),
+	countDown_(0),
+	bossSpawn_(false)
 {
 }
 
@@ -33,7 +36,7 @@ void ObjectSetter::Initialize()
 	if (parentName == "PlayScene")
 	{
 		Instantiate<Stage1>(GetParent());
-		Instantiate<Player>(GetParent());
+		pPlayer_ = Instantiate<Player>(GetParent());
 		for (int i = 0; i < 3; i++)
 		{
 			enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));
@@ -89,6 +92,7 @@ void ObjectSetter::PlayUpdate()
 		else
 			itr++;
 	}
+
 	if (enemys_.empty() && bossSpawn_ == false)
 	{
 		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));

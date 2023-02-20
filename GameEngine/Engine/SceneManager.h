@@ -13,6 +13,7 @@ class SceneManager : public GameObject
 {
 	int currentSceneID_;
 	int nextSceneID_;
+	UINT countDown_;
 public:
 	SceneManager(GameObject* parent);
 
@@ -21,7 +22,7 @@ public:
 	void Draw() override;
 	void Release() override;
 
-	void ChangeScene(int sceneID);
+	void ChangeScene(int sceneID,UINT count = 0);
 	int GetCurrentSceneID() { return currentSceneID_; }
 	GameObject* CurrentScene();
 };

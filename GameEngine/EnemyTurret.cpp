@@ -16,8 +16,8 @@ void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
 		pState_ = state;
 		pState_->Init(*this);
 	}
-	
 }
+
 //コンストラクタ
 EnemyTurret::EnemyTurret(GameObject* parent)
 	:Enemy(parent,"EnemyTurret"),
@@ -46,7 +46,7 @@ void EnemyTurret::Initialize()
 	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
 	assert(hModel_ >= 0);
 	ModelManager::SetModelNum(hModel_);
-	
+
 	XMFLOAT3 initPos = transform_.position_;
 	initPos.x = (float)(rand() % 100);
 	initPos.z = (float)(rand() % 100);

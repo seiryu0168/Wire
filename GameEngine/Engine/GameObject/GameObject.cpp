@@ -134,8 +134,13 @@ void GameObject::Collision(GameObject* pTarget)
 			if ((*i)->IsHit(*j))
 			{
 				this->OnCollision(pTarget);
+				if (this->colliderList_.empty())
+					break;
 			}
 		}
+
+		if (this->colliderList_.empty())
+			break;
 	}
 
 	if (pTarget->childList_.empty())
@@ -155,6 +160,22 @@ void GameObject::AddCollider(Collider* collider)
 {
 	collider->SetGemaObject(this);
 	colliderList_.push_back(collider);
+}
+
+void GameObject::DelCollider(const GameObject& obj)
+{
+	for (auto itr = colliderList_.begin(); itr != colliderList_.end();)
+	{
+		if ((*itr)->GetpColObject() == &obj)
+		{
+			itr = colliderList_.erase(itr);
+		}
+		if (itr == colliderList_.end())
+		{
+			break;
+		}
+		itr ++;
+	}
 }
 
 void GameObject::KillAllChildren()

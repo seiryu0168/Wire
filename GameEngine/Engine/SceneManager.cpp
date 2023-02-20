@@ -23,7 +23,7 @@ void SceneManager::Initialize()
 
 void SceneManager::Update()
 {
-	if (currentSceneID_ != nextSceneID_)
+	if (currentSceneID_ != nextSceneID_&&countDown_ == 0)
 	{
 		KillAllChildren();
 		ModelManager::Release();
@@ -38,6 +38,7 @@ void SceneManager::Update()
 		}
 		currentSceneID_ = nextSceneID_;
 	}
+	countDown_--;
 }
 
 void SceneManager::Draw()
@@ -49,7 +50,8 @@ void SceneManager::Release()
 {
 
 }
-void SceneManager::ChangeScene(int sceneID)
+void SceneManager::ChangeScene(int sceneID,UINT count)
 {
 	nextSceneID_ = sceneID;
+	countDown_ = count;
 }

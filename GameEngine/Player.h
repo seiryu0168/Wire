@@ -138,6 +138,7 @@ public:
     XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
     Pointer* GetPointer() { return pPointer_; }
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
+    int GetLife() { return (int)life_.size(); }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

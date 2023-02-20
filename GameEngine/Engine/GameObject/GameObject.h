@@ -60,6 +60,7 @@ public:
 	virtual void OnCollision(GameObject* pTarget) {};
 			void Collision(GameObject* pTarget);
 			void AddCollider(Collider* collider);
+			void DelCollider(const GameObject& obj);
 
 
 
