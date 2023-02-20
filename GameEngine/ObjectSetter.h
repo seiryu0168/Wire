@@ -1,5 +1,6 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
+#include"Engine/SceneManager.h"
 #include<list>
 class Player;
 class Enemy;
@@ -10,6 +11,8 @@ private:
     Player* pPlayer_;
     int countDown_;
     bool bossSpawn_;
+    int hPict_;
+    SceneManager* pManager_;
 public:
         //コンストラクタ
         ObjectSetter(GameObject* parent);

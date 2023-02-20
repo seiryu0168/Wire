@@ -54,7 +54,6 @@ namespace InterSceneData
             pData->dataName = dataName;
             dataList_.push_back(pData);
             return 1;
-
         }
         else
             delete pData;

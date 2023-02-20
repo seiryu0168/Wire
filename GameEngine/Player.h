@@ -99,6 +99,7 @@ public:
     //衝突判定
     void OnCollision(GameObject* pTarget) override;
 
+    //エイム
     void Aim(RayCastData* ray);
     
     //エイムアシスト範囲内にあるかどうか
@@ -124,6 +125,7 @@ public:
 
     //敵をプレイヤーの認識リストから外す
     void DeleteTargetList(Enemy* target);
+
     //開放
     void Release() override;
 
@@ -138,7 +140,7 @@ public:
     XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
     Pointer* GetPointer() { return pPointer_; }
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
-    int GetLife() { return (int)life_.size(); }
+    int GetLife() { return (int)playerLife_; }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

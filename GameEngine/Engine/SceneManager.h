@@ -23,7 +23,9 @@ public:
 	void Release() override;
 
 	void ChangeScene(int sceneID,UINT count = 0);
+	int GetCountDown() { return countDown_; }
 	int GetCurrentSceneID() { return currentSceneID_; }
+	int GetNextSceneID() { return nextSceneID_; }
 	GameObject* CurrentScene();
 };
 

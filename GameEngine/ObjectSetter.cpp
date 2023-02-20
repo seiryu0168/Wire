@@ -1,8 +1,8 @@
 #include "ObjectSetter.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/DirectX_11/Fbx.h"
+#include"Engine/ResourceManager/ImageManager.h"
 #include"Player.h"
-#include"Engine/SceneManager.h"
 #include"TitleUI.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
@@ -11,12 +11,17 @@
 #include"InterSceneData.h"
 #include"Test.h"
 #include"Stage1.h"
-
+namespace 
+{
+	static const int DELAY = 180;
+}
 ObjectSetter::ObjectSetter(GameObject* parent)
-	:GameObject(parent,"ObjectSetter"),
+	:GameObject(parent, "ObjectSetter"),
 	pPlayer_(nullptr),
 	countDown_(0),
-	bossSpawn_(false)
+	bossSpawn_(false),
+	pManager_(nullptr),
+	hPict_(-1)
 {
 }
 
@@ -26,6 +31,7 @@ ObjectSetter::~ObjectSetter()
 
 void ObjectSetter::Initialize()
 {
+	pManager_ = (SceneManager*)FindObject("SceneManager");
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	//feildって名前にしといたほうがいい
 	std::string parentName;
@@ -49,6 +55,9 @@ void ObjectSetter::Initialize()
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
+	hPict_ = ImageManager::Load("Assets\\Black.png");
+	assert(hPict_ >= 0);
+	ImageManager::SetAlpha(hPict_,0.0f);
 }
 
 void ObjectSetter::Update()
@@ -92,6 +101,13 @@ void ObjectSetter::PlayUpdate()
 		else
 			itr++;
 	}
+	if (pPlayer_->GetLife() - 1 == 0)
+	{
+		if(!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
+		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
+
+		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
+	}
 
 	if (enemys_.empty() && bossSpawn_ == false)
 	{
@@ -102,7 +118,10 @@ void ObjectSetter::PlayUpdate()
 	{
 		bool result = true;
 		InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
-		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT);
+		if (!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
+		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
+
+		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 	}
 }
 

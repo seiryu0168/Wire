@@ -567,16 +567,16 @@ void Player::OnCollision(GameObject* pTarget)
         }
     }
 
-    if (playerLife_ == 0)
+    if (playerLife_ <= 1)
     {
         bool result = false;
         InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
-        ((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT,300);
         DelCollider(*this);
+        ImageManager::SetAlpha(life_[playerLife_-1], 0);
         return;
     }
 
-    ImageManager::SetAlpha(life_[playerLife_ - 1], 0);
+    ImageManager::SetAlpha(life_[playerLife_-1], 0);
 }
 
 void Player::Aim(RayCastData* ray)
