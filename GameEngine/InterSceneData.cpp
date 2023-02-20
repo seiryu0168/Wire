@@ -6,11 +6,11 @@ namespace InterSceneData
 
     struct Data
     {
-        std::string dataName;
-        std::string* s;
-        int* i;
-        float* f;
-        bool* b;
+        std::string dataName = "";
+        std::string* s = nullptr;
+        int* i = nullptr;
+        float* f = nullptr;
+        bool* b = nullptr;
     };
 
     std::vector<Data*> dataList_;

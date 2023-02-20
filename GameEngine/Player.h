@@ -56,8 +56,10 @@ class Player : public GameObject
     XMVECTOR vBaseTarget_;
     XMVECTOR vFlyMove_;
     XMVECTOR vBaseAim_;
+    XMVECTOR cameraShake_;
     XMMATRIX matCamX_;
     XMMATRIX matCamY_;
+
 
     Particle*     pParticle_;
     LineParticle* pLine_;
@@ -80,7 +82,6 @@ public:
     //çXêV
     void Update() override;
 
-    void FixedUpdate() override;
     //ï`âÊ
     void Draw() override;
 

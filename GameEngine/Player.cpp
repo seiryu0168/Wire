@@ -26,6 +26,7 @@ namespace
     static const float CAMERA_DIST   = 1.5f;
     static const float ANGLE_MAX     = 69.0f;
     static const float ANGLE_MIN     = -89.0f;
+    static const float SHAKE_RATE = 1.5f;
 }
 
 //コンストラクタ
@@ -80,21 +81,31 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
+    //タグ設定
     SetTag("Player");
+    //セッターのポインター取得
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
+    
+    //モデルロード
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
     hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
     assert(hModel_Handle_ > 0);
-    
+
+    //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(GetParent());
+    
+    //ラインパーティクル生成
     pLine_ = new LineParticle;
     pWire_ = new LineParticle;
+    //パラメータ設定
     pLine_->SetLineParameter(0.5f, 30,0.4f);
     pWire_->SetLineParameter(0.1f, 2);
+    //画像ロード
     pLine_->Load("Assets\\Line.png");
     pWire_->Load("Assets\\Effect01.png");
-    //pWire_ = Instantiate<Wire>(this);
+
+
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
@@ -122,7 +133,6 @@ void Player::Initialize()
         ImageManager::SetImageSize(hPict_, { 0.1f,0.1f,1.0f });
 
         life_.push_back(hPict_);
-
     }
 }
 
@@ -132,11 +142,13 @@ void Player::Update()
     //無敵時間の処理
     if (godFlag_)
     {
+        cameraShake_ = XMVectorSet((float)(rand() % 10)/10, (float)(rand() % 10) / 10, 0, 0)*SHAKE_RATE;
         godTime_--;
         godTime_ = max(0, godTime_);
     }
     if(godTime_==0)
     {
+        cameraShake_ = XMVectorSet(0, 0, 0, 0);
         godFlag_ = false;
     }
 
@@ -259,11 +271,6 @@ void Player::Update()
     CameraMove(ray);
 }
 
-void Player::FixedUpdate()
-{
-   
-}
-
 //描画
 void Player::Draw()
 {
@@ -281,6 +288,10 @@ void Player::SecondDraw()
 //開放
 void Player::Release()
 {
+    SAFE_DELETE(pSetter_);
+    SAFE_RELEASE(pParticle_);
+    SAFE_RELEASE(pLine_);
+    SAFE_RELEASE(pWire_);
 }
 
 void Player::CameraMove(RayCastData ray)
@@ -331,7 +342,7 @@ void Player::CameraMove(RayCastData ray)
     matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0));
     vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_)* CAMERA_DIST;
     vAimCam    = XMVector3TransformCoord(vBaseAim_, matCamY_ * matCamX_);
-    vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
+    vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_)+cameraShake_;
     
     vMoveCam   = XMVectorLerp(vNormalCam, vAimCam, aimTime_);
     
@@ -519,6 +530,7 @@ void Player::AddTargetList(Enemy* target)
     }
         enemyList_.push_back(target);
 }
+
 void Player::OnCollision(GameObject* pTarget)
 {
     if (pTarget->GetTag()=="Enemy")
@@ -697,17 +709,3 @@ Enemy* Player::AimAssist(RayCastData* ray)
 
     return pEnemy;
 }
-
-
-
- 
-
-
-
-
-
-
-
-
-
-

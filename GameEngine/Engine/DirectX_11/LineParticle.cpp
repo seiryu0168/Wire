@@ -34,7 +34,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	positionList_.push_front(pos);
 	
 	//LENGTH超えてたら終端のpositionを削除
-	if (positionList_.size() > LENGTH_+2)
+	if (positionList_.size() > (size_t)LENGTH_+2)
 	{
 		positionList_.pop_back();
 	}
@@ -131,6 +131,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				index++;
 			}
 		}
+
 		for (int i = 0; i < sizeof(*vertices) / sizeof(VERTEX); i++)
 		{
 			if (abs(vertices[i].position.x) <= 0.1f&& abs(vertices[i].position.y) <= 1.1f&& abs(vertices[i].position.z) <= 0.1f)
@@ -140,7 +141,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 		}
 
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * LENGTH_ * 4;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * pList->size()*4;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -213,7 +214,7 @@ HRESULT LineParticle::CreateMeshPlate(std::list<XMFLOAT3>* pList)
 	}
 	//頂点バッファ用意
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(VERTEX) * (LENGTH_+2) * 4;
+	bd_vertex.ByteWidth = sizeof(VERTEX) * ((size_t)LENGTH_+2) * 4;
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;

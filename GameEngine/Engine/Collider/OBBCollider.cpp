@@ -35,13 +35,13 @@ XMVECTOR OBBCollider::calcDistance(XMFLOAT3 posA, XMFLOAT3 posB)
 	return distance;
 }
 
-float OBBCollider:: prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3)
+float OBBCollider::prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3)
 {
 	XMVECTOR sp = XMVectorZero();
 	sp = XMVector3Normalize(*sep);
-	float r1 = fabs(XMVectorGetX(XMVector3Dot(sp, *e1)));
-	float r2 = fabs(XMVectorGetX(XMVector3Dot(sp, *e2)));
-	float r3 = e3 ? fabs(XMVectorGetX(XMVector3Dot(sp, *e3))) : 0;
+	float r1 = abs(XMVectorGetX(XMVector3Dot(sp, *e1)));
+	float r2 = abs(XMVectorGetX(XMVector3Dot(sp, *e2)));
+	float r3 = e3 ? abs(XMVectorGetX(XMVector3Dot(sp, *e3))) : 0;
 
 	return r1 + r2 + r3;
 }
