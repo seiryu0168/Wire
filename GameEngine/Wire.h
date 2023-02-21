@@ -1,10 +1,10 @@
 #pragma once
-#include"Engine/GameObject/GameObject.h"
-class Wire : public GameObject
+#include"Player.h"
+class Wire
 {
 private:
     int hModel_;
-
+    int extendFrame
 public:
     Wire(GameObject* parent);
 
@@ -12,16 +12,14 @@ public:
     ~Wire();
 
     //èâä˙âª
-    void Initialize() override;
+    void Init(XMVECTOR startPos,XMVECTOR endPos);
 
     //çXêV
-    void Update() override;
-
-    void FixedUpdate() override;
+    void Update();
     //ï`âÊ
-    void Draw() override;
+    void Draw();
 
-    void Release() override;
+    void Release();
 
     void ExtendWire(const float& extendLength,XMMATRIX rotateMat);
 };

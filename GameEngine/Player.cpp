@@ -184,6 +184,7 @@ void Player::Update()
         }
         
     }
+
     //“–‚½‚Á‚Ä‚È‚©‚Á‚½‚çƒWƒƒƒ“ƒv
     else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
     {

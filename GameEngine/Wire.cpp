@@ -12,6 +12,11 @@ Wire::~Wire()
 {
 }
 
+void Wire::Init(XMVECTOR startPos, XMVECTOR endPos)
+{
+
+}
+
 void Wire::Initialize()
 {
 	hModel_ = ModelManager::Load("Assets\\wire.fbx");
