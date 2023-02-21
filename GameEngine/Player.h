@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/GameObject/GameObject.h"
+
 #include"Engine/DirectX_11/Fbx.h"
 #include"Engine/DirectX_11/LineParticle.h"
 
@@ -63,7 +64,8 @@ class Player : public GameObject
 
     Particle*     pParticle_;
     LineParticle* pLine_;
-    LineParticle* pWire_;
+    LineParticle* pPinterLine_;
+    Wire*         wire_;
     Pointer*      pPointer_;
     ObjectSetter* pSetter_;
     std::list<Enemy*> enemyList_;

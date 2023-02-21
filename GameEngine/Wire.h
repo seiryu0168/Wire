@@ -1,12 +1,19 @@
 #pragma once
 #include"Player.h"
+#include"Engine/DirectX_11/LineParticle.h"
 class Wire
 {
 private:
-    int hModel_;
-    int extendFrame
+    LineParticle wireLine_;
+    int extendFrame_;
+    XMVECTOR vWire_;
+    XMVECTOR vWidth_;
+    int split_;
+    int splitCount_;
+    XMVECTOR startPos_;
+    std::vector<float> shakeRate_;
 public:
-    Wire(GameObject* parent);
+    Wire();
 
     //デストラクタ
     ~Wire();
@@ -14,13 +21,16 @@ public:
     //初期化
     void Init(XMVECTOR startPos,XMVECTOR endPos);
 
+    void SetWire(XMVECTOR startPos, XMVECTOR endPos);
+
     //更新
-    void Update();
+    int Update();
     //描画
-    void Draw();
+    void Draw(const Transform& transform);
 
+    bool isExtend();
     void Release();
-
+    int  CalcWidthSize();
     void ExtendWire(const float& extendLength,XMMATRIX rotateMat);
 };
 

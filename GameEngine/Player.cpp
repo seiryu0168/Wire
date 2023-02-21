@@ -13,6 +13,7 @@
 #include"Stage1.h"
 #include"Pointer.h"
 #include"Wire.h"
+
 #include<list>
 namespace
 {
@@ -66,7 +67,7 @@ Player::Player(GameObject* parent)
     groundFlag_(true),
     godFlag_(false),
     pLine_(nullptr),
-    pWire_(nullptr),
+    pPinterLine_(nullptr),
     pParticle_(nullptr),
     pPointer_(nullptr),
     pSetter_(nullptr)
@@ -97,13 +98,13 @@ void Player::Initialize()
     
     //ラインパーティクル生成
     pLine_ = new LineParticle;
-    pWire_ = new LineParticle;
+    pPinterLine_ = new LineParticle;
     //パラメータ設定
     pLine_->SetLineParameter(0.5f, 30,0.4f);
-    pWire_->SetLineParameter(0.1f, 2);
+    pPinterLine_->SetLineParameter(0.1f, 2);
     //画像ロード
     pLine_->Load("Assets\\Line.png");
-    pWire_->Load("Assets\\Effect01.png");
+    pPinterLine_->Load("Assets\\Effect01.png");
 
 
     OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
@@ -134,6 +135,7 @@ void Player::Initialize()
 
         life_.push_back(hPict_);
     }
+    wire_ = new Wire;
 }
 
 //更新
@@ -169,7 +171,7 @@ void Player::Update()
     }
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
-    if (Input::GetRTrigger() && pPointer_->IsDraw())
+    if (Input::GetRTriggerDown() && pPointer_->IsDraw())
     {
         if (ray.hit)
         {
@@ -179,10 +181,16 @@ void Player::Update()
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
             velocity_ = 0;
-            vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
-            SetStatus(pPointer_->GetObjectType());
+            //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
+            wire_->SetWire(vPlayerPos_, ray.hitPos);
         }
         
+    }
+
+    if (wire_->Update()==0)
+    {
+        vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_) * maxSpeed_;
+            SetStatus(pPointer_->GetObjectType());
     }
 
     //当たってなかったらジャンプ
@@ -263,6 +271,7 @@ void Player::Update()
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
+    //移動
     vPlayerMove_  = vMove;
     velocity_     = max(velocity_, -2);
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
@@ -282,8 +291,9 @@ void Player::Draw()
 void Player::SecondDraw()
 {
     pLine_->Draw(&transform_);
+    wire_->Draw(transform_);
     if (pPointer_->IsDraw())
-        pWire_->Draw(&transform_);
+        pPinterLine_->Draw(&transform_);
 }
 
 //開放
@@ -291,7 +301,7 @@ void Player::Release()
 {
     SAFE_RELEASE(pParticle_);
     SAFE_RELEASE(pLine_);
-    SAFE_RELEASE(pWire_);
+    SAFE_RELEASE(pPinterLine_);
 }
 
 void Player::CameraMove(RayCastData ray)
@@ -614,8 +624,8 @@ void Player::Aim(RayCastData* ray)
         XMStoreFloat3(&pointerPos, ray->hitPos);
         pPointer_->SetPointerPos(pointerPos);
         pPointer_->SetDraw(ray->hit);
-        pWire_->AddPosition(transform_.position_);
-        pWire_->AddPosition(pPointer_->GetPosition());
+        pPinterLine_->AddPosition(transform_.position_);
+        pPinterLine_->AddPosition(pPointer_->GetPosition());
     }
 }
 
