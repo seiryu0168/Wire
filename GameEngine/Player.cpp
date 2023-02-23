@@ -182,15 +182,19 @@ void Player::Update()
             transform_.position_.y += 0.2f;
             velocity_ = 0;
             //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
-            wire_->SetWire(vPlayerPos_, ray.hitPos);
+            wire_->ShotWire(vPlayerPos_, ray.hitPos);
         }
         
     }
-
-    if (wire_->Update()==0)
+    wire_->Update();
+    if (wire_->GetWireState()==WIRE_STATE::EXTEND)
     {
         vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_) * maxSpeed_;
             SetStatus(pPointer_->GetObjectType());
+    }
+    else if (wire_->GetWireState() == WIRE_STATE::STRETCH)
+    {
+        return;
     }
 
     //“–‚½‚Á‚Ä‚È‚©‚Á‚½‚çƒWƒƒƒ“ƒv

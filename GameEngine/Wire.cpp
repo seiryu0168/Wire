@@ -2,12 +2,13 @@
 #include"Easing.h"
 namespace
 {
-	static const int FRAME = 10;
+	static const int FRAME = 8;
 
 }
 Wire::Wire()
 	:splitCount_(5),
-	extendFrame_(-1)
+	extendFrame_(-1),
+	wireStatus_(WIRE_STATE::HOUSE)
 {
 	wireLine_.SetLineParameter(1.0f, splitCount_);
 	wireLine_.Load("Assets\\Effect01.png");
@@ -33,7 +34,46 @@ void Wire::SetWire(XMVECTOR startPos, XMVECTOR endPos)
 }
 
 //XV
-int Wire::Update()
+void Wire::Update()
+{
+	XMFLOAT3 pos;
+	switch (wireStatus_)
+	{
+	case WIRE_STATE::HOUSE:
+		House();
+		break;
+
+	case WIRE_STATE::STRETCH:
+		Stretch();
+		break;
+
+	case WIRE_STATE::EXTEND:
+		Extend();
+		break;
+
+	default:
+		break;
+	}
+}
+
+//•`‰æ
+void Wire::Draw(const Transform& transform)
+{
+	if(extendFrame_ > 0)
+	wireLine_.Draw((Transform*)&transform);
+}
+
+void Wire::ShotWire(XMVECTOR startPos, XMVECTOR endPos)
+{
+	wireStatus_ = WIRE_STATE::STRETCH;
+	SetWire(startPos, endPos);
+}
+
+void Wire::House()
+{
+}
+
+void Wire::Stretch()
 {
 	XMFLOAT3 pos;
 	if (extendFrame_ > 0)
@@ -47,22 +87,16 @@ int Wire::Update()
 		vWidth_ *= -1;
 	}
 	extendFrame_--;
-	extendFrame_ = max(extendFrame_, -1);
-	return extendFrame_;
+	extendFrame_ = max(extendFrame_, 0);
+	if (extendFrame_ == 0)
+	{
+		wireStatus_ = WIRE_STATE::EXTEND;
+	}
 }
 
-//•`‰æ
-void Wire::Draw(const Transform& transform)
+void Wire::Extend()
 {
-	if(extendFrame_ > 0)
-	wireLine_.Draw((Transform*)&transform);
-}
-
-bool Wire::isExtend()
-{
-	if (extendFrame_ <= 0)
-		return true;
-	return false;
+	wireStatus_ = WIRE_STATE::HOUSE;
 }
 
 void Wire::Release()
