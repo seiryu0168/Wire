@@ -46,6 +46,7 @@ public:
     void Extend();
     void Release();
     int  CalcWidthSize();
+    XMVECTOR GetWireVec() { return vWire_; }
     void ExtendWire(const float& extendLength,XMMATRIX rotateMat);
 };
 

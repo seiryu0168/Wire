@@ -47,6 +47,7 @@ Player::Player(GameObject* parent)
     vBaseAim_(XMVectorSet(3, 2, -4, 0)),
     vFlyMove_(XMVectorSet(0,0,0,0)),
     vPlayerMove_(XMVectorSet(0,0,0,0)),
+    cameraShake_(XMVectorZero()),
     matCamX_(XMMatrixIdentity()),
     matCamY_(XMMatrixIdentity()),
     moveTime_(0),
@@ -70,7 +71,8 @@ Player::Player(GameObject* parent)
     pPinterLine_(nullptr),
     pParticle_(nullptr),
     pPointer_(nullptr),
-    pSetter_(nullptr)
+    pSetter_(nullptr),
+    wire_(nullptr)
 {
 }
 
@@ -189,7 +191,7 @@ void Player::Update()
     wire_->Update();
     if (wire_->GetWireState()==WIRE_STATE::EXTEND)
     {
-        vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_) * maxSpeed_;
+        vFlyMove_ = wire_->GetWireVec() * maxSpeed_;
             SetStatus(pPointer_->GetObjectType());
     }
     else if (wire_->GetWireState() == WIRE_STATE::STRETCH)

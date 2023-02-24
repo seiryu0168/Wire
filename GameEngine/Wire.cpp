@@ -7,8 +7,12 @@ namespace
 }
 Wire::Wire()
 	:splitCount_(5),
+	split_(0),
 	extendFrame_(-1),
-	wireStatus_(WIRE_STATE::HOUSE)
+	wireStatus_(WIRE_STATE::HOUSE),
+	startPos_(XMVectorZero()),
+	vWidth_(XMVectorZero()),
+	vWire_(XMVectorZero())
 {
 	wireLine_.SetLineParameter(1.0f, splitCount_);
 	wireLine_.Load("Assets\\Effect01.png");
