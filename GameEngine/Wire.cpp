@@ -2,7 +2,7 @@
 #include"Easing.h"
 namespace
 {
-	static const int FRAME = 8;
+	static const int FRAME = 15;
 
 }
 Wire::Wire()
@@ -80,7 +80,7 @@ void Wire::Stretch()
 	{
 		for (int i = 0; i < splitCount_; i++)
 		{
-			XMStoreFloat3(&pos, (startPos_ + (vWire_ * split_ * i)) + vWidth_ * CalcWidthSize());
+			XMStoreFloat3(&pos, (startPos_ + (vWire_ * split_ * i*Easing::EaseINOutQuad((float)(FRAME-extendFrame_)/(float)FRAME))) + vWidth_ * CalcWidthSize());
 			vWidth_ *= -1;
 			wireLine_.AddPosition(pos);
 		}
