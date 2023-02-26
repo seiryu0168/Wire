@@ -26,9 +26,9 @@ void Transform::Calclation()
 	matTranslate_ = XMMatrixTranslation(position_.x, position_.y, position_.z);
 	
 	//âÒì]çsóÒ
-	matRotate_ = XMMatrixRotationZ(XMConvertToRadians(rotate_.z))
-			   * XMMatrixRotationX(XMConvertToRadians(rotate_.x))
-			   * XMMatrixRotationY(XMConvertToRadians(rotate_.y));
+	matRotate_ = XMMatrixRotationX(XMConvertToRadians(rotate_.x))
+		* XMMatrixRotationY(XMConvertToRadians(rotate_.y))
+		* XMMatrixRotationZ(XMConvertToRadians(rotate_.z));
 	
 	//ägëÂçsóÒ
 	matScale_ = XMMatrixScaling(scale_.x, scale_.y, scale_.z);

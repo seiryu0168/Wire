@@ -71,7 +71,7 @@ void EnemyNormal::EnemyMove()
 	float angle = XMVectorGetX(XMVector3Dot(GetFrontVec(), toVec)); //角度計算(ラジアン)
 	transform_.rotate_.y = 1-angle;
 	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//角度を回転行列に変換
-	SetFrontVec(XMVector3TransformCoord(toVec, GetMatrixY()));			//前方向ベクトルを回転
+	//SetFrontVec(XMVector3TransformCoord(toVec, GetMatrixY()));			//前方向ベクトルを回転
 	toVec *= 0.6f;
 	toVec += GetPositionVec();
 	SetPositionVec(toVec);

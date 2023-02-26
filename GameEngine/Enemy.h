@@ -48,6 +48,8 @@ public:
 /// <param name="range">見える距離</param>
 /// <returns></returns>
     bool IsVisible(float angle,float range);
+    void TurnToPlayer(XMVECTOR vToPlayer);
+
     
    // void ChangeState(EnemyState* state);                                         //エネミーの状態変更
     //void SetviewRange(float range) { enemyParameter_.viewRange = range; }        //見える距離設定

@@ -40,6 +40,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 		enemyParameter_.visibleFlag = true;
 		if (angle<visibleAngle && angle>-visibleAngle && toPlayerRange < range)
 		{
+			TurnToPlayer(toPlayer);
 			enemyParameter_.frontVec = toPlayer;
 			return true;
 		}
@@ -50,6 +51,31 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	}
 
 	return false;
+}
+
+void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
+{
+
+	XMFLOAT3 buff(0, 0, 0);
+	XMStoreFloat3(&buff, vToPlayer);
+	buff.y = 0;
+	vToPlayer=XMLoadFloat3(&buff);
+	XMVECTOR base = XMVectorSet(0, 0, 1, 0);
+	XMVECTOR fVec = XMVectorSet(0, 0, 0, 0);
+	XMStoreFloat3(&buff, GetFrontVec());
+	buff.y = 0;
+	fVec = XMLoadFloat3(&buff);
+	float angle = XMVectorGetX(XMVector3Dot(base, fVec));
+	XMStoreFloat3(&buff, XMVector3Cross(base, fVec));
+	
+	angle = acosf(min(angle, 1));
+	if (buff.y < 0)
+	{
+		angle+=M_PI*2;
+		angle *= -1;
+	}
+	
+	transform_.rotate_.y = (180.0f/M_PI)*angle;
 }
 
 void Enemy::LoadModel(std::string fileName)
