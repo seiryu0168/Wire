@@ -39,7 +39,6 @@ Player::Player(GameObject* parent)
     gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
-    hModel_Handle_(-1),
     stageNum_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
@@ -92,8 +91,6 @@ void Player::Initialize()
     //モデルロード
     hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
     assert(hModel_ >= 0);
-    hModel_Handle_ = ModelManager::Load("Assets\\wire.fbx");
-    assert(hModel_Handle_ > 0);
 
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(GetParent());
@@ -285,6 +282,8 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
+    transform_.rotate_.y = angleY_;
+    transform_.rotate_.x = angleX_;
 }
 
 //描画

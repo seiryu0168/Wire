@@ -32,7 +32,6 @@ class Player : public GameObject
     bool godFlag_;
 
     int hModel_;
-    int hModel_Handle_;
     int hAudio_;
     int playerLife_;
     int stageNum_;
