@@ -30,7 +30,7 @@ EnemyNormal::~EnemyNormal()
 void EnemyNormal::Initialize()
 {
 	SetTag("Enemy");
-	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
+	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
