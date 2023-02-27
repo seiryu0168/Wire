@@ -34,7 +34,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	positionList_.push_front(pos);
 	
 	//LENGTH超えてたら終端のpositionを削除
-	if (positionList_.size() > (size_t)LENGTH_-1)
+	if (positionList_.size() > (size_t)LENGTH_+2)
 	{
 		positionList_.pop_back();
 	}
@@ -65,7 +65,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 	
 		int index = 0;
 		auto itr = pList->begin();
-		for (UINT j = 0; j < LENGTH_; j++)
+		for (UINT j = 0; j < LENGTH_+2; j++)
 		{
 			//記憶している位置取得
 			XMVECTOR vPos = XMLoadFloat3(&(*itr));
@@ -362,7 +362,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
 
 	//頂点の並び方を指定
-	Direct3D::pContext->DrawIndexed((UINT)indexList.size(),0,0);
+	Direct3D::pContext->DrawIndexed((UINT)indexList.size()-24,0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
