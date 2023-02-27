@@ -213,11 +213,11 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			FbxVector4 pos = mesh->GetControlPointAt(index);
 			pVertices_[index].position = XMVectorSet((float)pos[0], (float)pos[1], (float)pos[2], 0.0f);
 
-			//頂点のUV
-			FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
-			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
-			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
-			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+			////頂点のUV
+			//FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
+			//int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
+			//FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
+			//pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
 
 			//頂点の法線
 			FbxVector4 Normal;
@@ -247,6 +247,17 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			}
 		}
 #endif
+	}
+
+	int UVCount = mesh->GetTextureUVCount();
+	FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
+	if (UVCount > 0 && pUV->GetMappingMode() == FbxLayerElement::eByControlPoint)
+	{
+		for (int i = 0; i < UVCount; i++)
+		{
+			FbxVector2  uv = pUV->GetDirectArray().GetAt(i);
+			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+		}
 	}
 
 	D3D11_BUFFER_DESC bd_vertex;

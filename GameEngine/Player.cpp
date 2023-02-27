@@ -99,7 +99,7 @@ void Player::Initialize()
     pLine_ = new LineParticle;
     pPinterLine_ = new LineParticle;
     //パラメータ設定
-    pLine_->SetLineParameter(0.5f, 30,0.4f);
+    pLine_->SetLineParameter(0.5f, 20,0.4f);
     pPinterLine_->SetLineParameter(0.1f, 2);
     //画像ロード
     pLine_->Load("Assets\\Line.png");

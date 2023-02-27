@@ -51,7 +51,7 @@ void EnemyTurret::Initialize()
 	initPos.x = (float)(rand() % 100);
 	initPos.z = (float)(rand() % 100);
 	RayCastData ray;
-	ray.start = { initPos.x, 999.0f, initPos.z };
+	ray.start = { initPos.x, 1000.0f, initPos.z };
 	ray.dir = { 0,1,0 };
 	ModelManager::RayCast(hModel_, ray);
 	if (ray.hit)
@@ -118,7 +118,7 @@ void EnemyTurret::OnCollision(GameObject* pTarget)
 		{
 			DecreaseLife(1);
 			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
-			if (GetLife() <= 0)
+			if (GetLife() < 0)
 			{
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };

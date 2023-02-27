@@ -75,9 +75,9 @@ HRESULT Texture::Load(LPCWSTR fileName)
 	D3D11_SAMPLER_DESC  SamDesc;
 	ZeroMemory(&SamDesc, sizeof(D3D11_SAMPLER_DESC));
 	SamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	SamDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	SamDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	SamDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	SamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	SamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	SamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	hr = Direct3D::pDevice->CreateSamplerState(&SamDesc, &pSampler_);
 	if (FAILED(hr))
 	{

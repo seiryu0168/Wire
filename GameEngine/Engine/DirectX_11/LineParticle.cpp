@@ -34,7 +34,7 @@ void LineParticle::AddPosition(XMFLOAT3 pos)
 	positionList_.push_front(pos);
 	
 	//LENGTH超えてたら終端のpositionを削除
-	if (positionList_.size() > (size_t)LENGTH_+2)
+	if (positionList_.size() > (size_t)LENGTH_-1)
 	{
 		positionList_.pop_back();
 	}
@@ -61,7 +61,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 	//頂点データ作成
 	XMVECTOR upVec = XMVectorSet(0, 1, 0, 0);
-	VERTEX* vertices = new VERTEX[(pList->size()-1)* 4];
+	VERTEX* vertices = new VERTEX[pList->size()* 4];
 	
 		int index = 0;
 		auto itr = pList->begin();
@@ -96,16 +96,16 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 
 				//ひし形になるように頂点を配置
 				XMStoreFloat3(&pos, vPos + -vArm);	
-				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1.0f/4.0f,0) };
+				VERTEX vertex0 = { pos,XMFLOAT3((float)j / LENGTH_,1.0f/4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + vArm2);
-				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,2.0f / 4.0f,0) };
+				VERTEX vertex1 = { pos,XMFLOAT3((float)j / LENGTH_,2.0f / 4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + vArm);
-				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,3.0f/4.0f,0) };
+				VERTEX vertex2 = { pos,XMFLOAT3((float)j / LENGTH_,3.0f/4.0f,0) };
 
 				XMStoreFloat3(&pos, vPos + -vArm2);
-				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_ + tipWidth_,1,0) };
+				VERTEX vertex3 = { pos,XMFLOAT3((float)j / LENGTH_,1,0) };
 				
 				vertices[index] = vertex0;
 				index++;
@@ -115,7 +115,7 @@ HRESULT LineParticle::CreateMeshPype(std::list<XMFLOAT3>* pList)
 				index++;
 				vertices[index] = vertex3;
 				index++;
-			}
+			} 
 			else
 			{
 				XMFLOAT3 dumPos;
@@ -362,7 +362,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);//ピクセルシェーダー用
 
 	//頂点の並び方を指定
-	Direct3D::pContext->DrawIndexed((UINT)indexList.size()-24,0,0);
+	Direct3D::pContext->DrawIndexed((UINT)indexList.size(),0,0);
 	Direct3D::pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
