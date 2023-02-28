@@ -207,6 +207,9 @@
     <ClCompile Include="Wire.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerBase.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imstb_truetype.h">
@@ -397,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DirectX_11\Direct2D.h">
       <Filter>ソース ファイル\Engine\DirectX_11</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBase.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

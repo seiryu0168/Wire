@@ -17,7 +17,7 @@ Stage1::~Stage1()
 //‰Šú‰»
 void Stage1::Initialize()
 {
-	hModel_ = ModelManager::Load("Assets\\Stage_Maya.fbx");
+	hModel_ = ModelManager::Load("Assets\\Stage.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_ = XMFLOAT3(0, 0, 0);
 }

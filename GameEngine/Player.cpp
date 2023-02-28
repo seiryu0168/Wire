@@ -5,6 +5,7 @@
 #include"EngineTime.h"
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Particle.h"
+#include"PlayerBase.h"
 #include"Player.h"
 #include"InterSceneData.h"
 #include"ObjectSetter.h"
@@ -89,11 +90,12 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\TestBox.fbx");
+    hModel_ = ModelManager::Load("Assets\\WireShooter.fbx");
     assert(hModel_ >= 0);
 
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(GetParent());
+    Instantiate<PlayerBase>(this);
     
     //ラインパーティクル生成
     pLine_ = new LineParticle;
@@ -182,6 +184,7 @@ void Player::Update()
             velocity_ = 0;
             //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
             SetStatus(ATC_ATTACK);
+            
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
         }
         
@@ -284,7 +287,6 @@ void Player::Update()
     XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
     transform_.rotate_.y = angleY_;
-    transform_.rotate_.x = angleX_;
 }
 
 //描画
@@ -632,7 +634,8 @@ void Player::Aim(RayCastData* ray)
         XMStoreFloat3(&pointerPos, ray->hitPos);
         pPointer_->SetPointerPos(pointerPos);
         pPointer_->SetDraw(ray->hit);
-        pPinterLine_->AddPosition(transform_.position_);
+        XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "Bone");
+        pPinterLine_->AddPosition(bonePos);
         pPinterLine_->AddPosition(pPointer_->GetPosition());
     }
 }

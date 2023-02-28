@@ -201,6 +201,7 @@
     <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="PlayButton.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerBase.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="ResultScene.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="ObjectSetter.h" />
     <ClInclude Include="PlayButton.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerBase.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="resource.h" />

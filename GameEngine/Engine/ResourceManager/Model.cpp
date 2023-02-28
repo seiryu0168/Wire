@@ -185,6 +185,16 @@ void ModelManager::DeleteModelNum(int modelNum)
 	}
 }
 
+XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)
+{
+
+	if (modelNum<0 || modelNum>modelData_.size() || modelData_[modelNum] == nullptr)
+	{
+		return XMFLOAT3(-9999.0f, -9999.0f, 9999.0f);
+	}
+	return modelData_[modelNum]->pfbx_->GetBonePosition(boneName);
+}
+
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない
 void ModelManager::Release()
 {

@@ -65,10 +65,11 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 	polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
 	materialCount_ = pNode->GetMaterialCount();//マテリアルの数
 
-	InitVertex(mesh);
 	InitIndex(mesh);
+	InitVertex(mesh);
 	CreateConstantBuffer();
 	InitMaterial(pNode);
+	InitSkelton(mesh);
 	return S_OK;
 }
 
@@ -265,10 +266,10 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 	//	//{
 	//		//FbxLayerElement indeces = 
 	//	int indexCount = pUV->GetIndexArray().GetCount();
-	//		for (int i = 0; i < indexCount; i++)
+	//		for (int i = 0; i < UVCount; i++)
 	//		{
 	//			int ind= pUV->GetIndexArray().GetAt(i);
-	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(ind);
+	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(i);
 	//			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
 	//		}
 	//	//}
