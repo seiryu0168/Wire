@@ -192,7 +192,10 @@ XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)
 	{
 		return XMFLOAT3(-9999.0f, -9999.0f, 9999.0f);
 	}
-	return modelData_[modelNum]->pfbx_->GetBonePosition(boneName);
+	XMFLOAT3 pos = modelData_[modelNum]->pfbx_->GetBonePosition(boneName);
+	XMVECTOR vBone = XMVector3TransformCoord(XMLoadFloat3(&pos), modelData_[modelNum]->transform_.GetWorldMatrix());
+	XMStoreFloat3(&pos, vBone);
+	return pos;
 }
 
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない
