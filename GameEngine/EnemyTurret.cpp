@@ -1,4 +1,5 @@
 #include "EnemyTurret.h"
+#include"Stage1.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Bullet.h"
 #include"HomingBullet.h"
@@ -43,20 +44,22 @@ void EnemyTurret::Initialize()
 	SetTag("Enemy");
 	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
 	AddCollider(pCollider);
-	hModel_ = ModelManager::Load("Assets\\Enemy2.fbx");
+	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
 	assert(hModel_ >= 0);
 	ModelManager::SetModelNum(hModel_);
-
+	int stageModelHandle = -1;
+	stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
 	XMFLOAT3 initPos = transform_.position_;
 	initPos.x = (float)(rand() % 100);
 	initPos.z = (float)(rand() % 100);
 	RayCastData ray;
-	ray.start = { initPos.x, 1000.0f, initPos.z };
-	ray.dir = { 0,1,0 };
-	ModelManager::RayCast(hModel_, ray);
+	ray.start = { initPos.x, 999.0f, initPos.z };
+	ray.dir = { 0,-1,0 };
+	
+	ModelManager::RayCast(stageModelHandle, ray);
 	if (ray.hit)
 	{
-		initPos.y = 999 - ray.dist;
+		initPos.y = (999 - ray.dist)+2.0f;
 	}
 	transform_.position_ = initPos;
 	SetPlayerPointer((Player*)FindObject("Player"));

@@ -181,6 +181,7 @@ void Player::Update()
             transform_.position_.y += 0.2f;
             velocity_ = 0;
             //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
+            SetStatus(ATC_ATTACK);
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
         }
         
@@ -422,7 +423,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
         XMVECTOR back = (XMLoadFloat3(&fMoveRay.start) + (XMLoadFloat3(&fMoveRay.dir) * 2)) -fMoveRay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_+(-back));
-
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -435,7 +436,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
         XMVECTOR back = (XMLoadFloat3(&lMoveRay.start) + (XMLoadFloat3(&lMoveRay.dir) * 2)) - lMoveRay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
-
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -448,7 +449,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
         XMVECTOR back = (XMLoadFloat3(&rMoveRay.start) + (XMLoadFloat3(&rMoveRay.dir) * 2)) - rMoveRay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
-
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -462,6 +463,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         wallzuri = moveVector + (URay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, URay.normal))));
         XMVECTOR back = (XMLoadFloat3(&URay.start) + (XMLoadFloat3(&URay.dir) * 2)) - URay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -482,6 +484,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
             {
                 flyFlag_ = false;
             }
+            SetStatus(ATC_DEFAULT);
         }
     }
     else

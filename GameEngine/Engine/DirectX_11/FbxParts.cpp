@@ -263,15 +263,14 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 	//{
 	//	//if (((FbxLayerElement*)pUV)->GetReferensMode() == FbxLayerElement::eIndexToDirect)
 	//	//{
-	//		FbxLayerElementArrayTemplate<int>* indeces = &pUV->GetIndexArray();
-	//		int indexCount = indeces->GetCount();
+	//		//FbxLayerElement indeces = 
+	//	int indexCount = pUV->GetIndexArray().GetCount();
 	//		for (int i = 0; i < indexCount; i++)
 	//		{
-	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(indeces->GetAt(i));
+	//			int ind= pUV->GetIndexArray().GetAt(i);
+	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(ind);
 	//			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
-	//
 	//		}
-	//		//SAFE_DELETE(indeces);
 	//	//}
 	//}
 
