@@ -203,6 +203,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBase.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="PlayScreen.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="ResultUI.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBase.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="PlayScreen.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResultScene.h" />

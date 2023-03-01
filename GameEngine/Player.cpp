@@ -6,6 +6,7 @@
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Particle.h"
 #include"PlayerBase.h"
+#include"PlayScreen.h"
 #include"Player.h"
 #include"InterSceneData.h"
 #include"ObjectSetter.h"
@@ -114,7 +115,7 @@ void Player::Initialize()
     
     Instantiate<Pointer>(GetParent());
     pPointer_ = (Pointer*)FindObject("Pointer");
-
+    pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
     RayCastData firstRay;
     firstRay.start = transform_.position_;
@@ -136,6 +137,7 @@ void Player::Initialize()
 
         life_.push_back(hPict_);
     }
+    pScreen_ = new PlayScreen;
     wire_ = new Wire;
 }
 
@@ -186,6 +188,7 @@ void Player::Update()
             SetStatus(ATC_ATTACK);
             
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
+            pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
         }
         
     }
@@ -307,6 +310,9 @@ void Player::SecondDraw()
 //ŠJ•ú
 void Player::Release()
 {
+    SAFE_DELETE(wire_);
+    SAFE_RELEASE(pPointer_);
+    SAFE_DELETE(pScreen_);  
     SAFE_RELEASE(pParticle_);
     SAFE_RELEASE(pLine_);
     SAFE_RELEASE(pPinterLine_);
@@ -564,11 +570,14 @@ void Player::OnCollision(GameObject* pTarget)
             godFlag_ = true;
             godTime_ = 30;
         }
-
-        if(godFlag_==false)
+        else
         {
             playerLife_--;
             playerLife_ = max(0, playerLife_);
+        }
+
+        if(godFlag_==false)
+        {
             godFlag_ = true;
             godTime_ = 30;
         }
@@ -619,7 +628,8 @@ void Player::Aim(RayCastData* ray)
         Enemy* pEnemy = AimAssist(ray);
         if (pEnemy != nullptr)
         {
-            vPtrDir = XMVector3TransformCoord(vPtrDir, LookAtMatrix(pEnemy->GetTransform().position_, vPtrDir));
+            XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
+            vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
             XMStoreFloat3(&ray->dir, vPtrDir);
         }
     }

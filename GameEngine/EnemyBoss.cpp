@@ -43,7 +43,7 @@ void EnemyBoss::Initialize()
 	sight.SetRange(200);
 	
 	SetLife(5);
-	transform_.position_ = { 110,0,110 };
+	transform_.position_ = { 110,10,110 };
 	ChangeState(StateSearch::GetInstance());
 }
 

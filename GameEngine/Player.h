@@ -10,6 +10,7 @@ class Enemy;
 class Wire;
 class Pointer;
 class ObjectSetter;
+class PlayScreen;
 class Player : public GameObject
 {
     enum STATUS
@@ -66,6 +67,7 @@ class Player : public GameObject
     LineParticle* pPinterLine_;
     Wire*         wire_;
     Pointer*      pPointer_;
+    PlayScreen*   pScreen_;
     ObjectSetter* pSetter_;
     std::list<Enemy*> enemyList_;
 
