@@ -104,7 +104,7 @@ public:
     void Aim(RayCastData* ray);
     
     //エイムアシスト範囲内にあるかどうか
-    bool IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetVec,float length=9999.0f);
+    bool IsAssistRange(const RayCastData& ray,const XMFLOAT3& targetVec,float length=9999.0f);
     
     //認識リスト内でエイムアシスト可能なやつをアシストする
     Enemy* AimAssist(RayCastData* rey);

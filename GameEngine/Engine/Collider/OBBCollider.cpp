@@ -48,7 +48,7 @@ float OBBCollider::prjLine(XMVECTOR* sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* 
 
 void OBBCollider::CalcAxisVec()
 {
-	XMVECTOR rotateQua = XMQuaternionRotationMatrix(GetpColObject()->GetTransform().GetLocalRotateMatrix());
+	XMVECTOR rotateQua = XMQuaternionRotationMatrix(GetpColObject()->GetTransform().GetWorldRotateMatrix());
 	OBB_X = XMVector3Rotate(OBB_X, rotateQua);
 	OBB_Y = XMVector3Rotate(OBB_Y, rotateQua);
 	OBB_Z = XMVector3Rotate(OBB_Z, rotateQua);

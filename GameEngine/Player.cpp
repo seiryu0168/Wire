@@ -90,7 +90,7 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\WireShooter.fbx");
+    hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
     assert(hModel_ >= 0);
 
     //パーティクルオブジェクト生成
@@ -606,9 +606,10 @@ void Player::Aim(RayCastData* ray)
     ray->distLimit = 100.0f;
     aimFlag_ = true;
     //当たる位置の計算
+    XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
     XMVECTOR vPtrDir = vPlayerDir;
-    XMStoreFloat3(&ray->start, vPlayerPos_);
+    ray->start = bonePos;
     XMStoreFloat3(&ray->dir, vPtrDir);
 
     //エイムアシスト範囲内かどうか判定
@@ -634,7 +635,7 @@ void Player::Aim(RayCastData* ray)
         XMStoreFloat3(&pointerPos, ray->hitPos);
         pPointer_->SetPointerPos(pointerPos);
         pPointer_->SetDraw(ray->hit);
-        XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "Bone");
+        
         pPinterLine_->AddPosition(bonePos);
         pPinterLine_->AddPosition(pPointer_->GetPosition());
     }
@@ -676,7 +677,7 @@ void Player::DeleteTargetList(Enemy* target)
     }
 }
 
-bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
+bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, float length)
 {
     
     //自分からtargetPosまでのベクトル
@@ -687,7 +688,7 @@ bool Player::IsAssistRange(XMVECTOR dirVec,XMFLOAT3 targetPos, float length)
     if (XMVectorGetX(XMVector3Length(targetVec)) < length)
     {
         targetVec = XMVector3Normalize(targetVec);
-        dirVec = XMVector3Normalize(dirVec);
+        XMVECTOR dirVec = XMVector3Normalize(XMLoadFloat3(&ray.dir));
 
         //targetVecとdirVecの内積を求める
         float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
@@ -717,10 +718,10 @@ Enemy* Player::AimAssist(RayCastData* ray)
     auto i = enemyList_.begin();
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
-        if (IsAssistRange(XMLoadFloat3(&ray->dir), (*itr)->GetPosition(), ray->distLimit))
+        if (IsAssistRange(*ray, (*itr)->GetPosition(), ray->distLimit))
         {
             XMFLOAT3 targetPos = (*itr)->GetPosition();
-            float range = XMVectorGetX(XMVector3Length(XMLoadFloat3(&targetPos) - XMLoadFloat3(&transform_.position_)));
+            float range = XMVectorGetX(XMVector3Length(XMLoadFloat3(&targetPos) - XMLoadFloat3(&ray->start)));
             if (range < minRange)
             {
                 minRange = range;
