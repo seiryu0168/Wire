@@ -503,6 +503,33 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     else
         groundFlag_ = false;
 
+    if (transform_.position_.x <= -250.0f)
+    {
+        transform_.position_.x = -250.0f;
+    }
+    if (transform_.position_.x >= 250.0f)
+    {
+        transform_.position_.x = 250.0f;
+    }
+
+    if (transform_.position_.y <= -250.0f)
+    {
+        transform_.position_.y = 5.0f;
+    }
+    if (transform_.position_.y >= 250.0f)
+    {
+        transform_.position_.y = 250.0f;
+    }
+
+    if (transform_.position_.z <= -250.0f)
+    {
+        transform_.position_.z = -250.0f;
+    }
+    if (transform_.position_.z >= 250.0f)
+    {
+        transform_.position_.z = 250.0f;
+    }
+
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     moveDist.y = moveY;
     moveVector = XMLoadFloat3(&moveDist);

@@ -40,6 +40,7 @@ private:
         void Update(EnemyNormal& enemy) override;
     };
 
+    XMVECTOR moveVec_;
     void ChangeState(EnemyState<EnemyNormal>* state);
 public:
     //コンストラクタ

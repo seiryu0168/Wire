@@ -15,7 +15,8 @@ void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
-	hModel_(-1)
+	hModel_(-1),
+	moveVec_(XMVectorZero())
 {
 
 }
@@ -69,11 +70,10 @@ void EnemyNormal::EnemyMove()
 	XMVECTOR toVec = toTargetVec - GetPositionVec();
 	toVec = XMVector3Normalize(toVec);							//引数の正規化
 	float angle = XMVectorGetX(XMVector3Dot(GetFrontVec(), toVec)); //角度計算(ラジアン)
-	transform_.rotate_.y = 1-angle;
 	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//角度を回転行列に変換
-	//SetFrontVec(XMVector3TransformCoord(toVec, GetMatrixY()));			//前方向ベクトルを回転
 	toVec *= 0.6f;
-	toVec += GetPositionVec();
+	toVec+= GetPositionVec();
+	//moveVec_ += moveVec_;
 	SetPositionVec(toVec);
 	XMStoreFloat3(&transform_.position_, toVec);
 }
@@ -91,6 +91,8 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
 			DecreaseLife(1);
+			//moveVec_ = -GetToPlayerVec();
+			TurnToPlayer(GetToPlayerVec());
 			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
 			if (GetLife() < 0)
 			{

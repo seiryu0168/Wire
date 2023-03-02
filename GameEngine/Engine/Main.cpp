@@ -135,7 +135,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//¡‚ÌŽž‚ÆÅŒã‚ÉXV‚µ‚½Žž‚Ì·*60‚ª1000ˆÈã‚Å‚ ‚ê‚Î
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
-#if false
+#if true
 				DebugUI::StartImGui();
 #endif
 				//ƒQ[ƒ€‚Ìˆ—
@@ -145,7 +145,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
-#if false
+#if true
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
 				DebugUI::Log();
 				ImGui::Render();
@@ -158,7 +158,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				ImageManager::Draw();
 				D2D::BeginDraw();
 				D2D::EndDraw();
-#if false		
+#if true		
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif
 

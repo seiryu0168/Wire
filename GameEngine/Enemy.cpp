@@ -41,7 +41,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 		if (angle<visibleAngle && angle>-visibleAngle && toPlayerRange < range)
 		{
 			TurnToPlayer(toPlayer);
-			enemyParameter_.frontVec = toPlayer;
+			
 			return true;
 		}
 	}
@@ -55,7 +55,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 
 void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 {
-
+	//y軸の値を0にして平面のベクトルとして考える
 	XMFLOAT3 buff(0, 0, 0);
 	XMStoreFloat3(&buff, vToPlayer);
 	buff.y = 0;
@@ -74,7 +74,7 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 		angle+=M_PI*2;
 		angle *= -1;
 	}
-	
+	enemyParameter_.frontVec = vToPlayer;
 	transform_.rotate_.y = (180.0f/M_PI)*angle;
 }
 
