@@ -2,6 +2,10 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/Collider/SphereCollider.h"
 #include"Pointer.h"
+namespace
+{
+	static const int KNOCKBACKTIME = 30;
+}
 
 void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
 {
@@ -16,7 +20,8 @@ void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
 EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
 	hModel_(-1),
-	moveVec_(XMVectorZero())
+	moveVec_(XMVectorZero()),
+	knockBackTime_(0)
 {
 
 }
@@ -47,6 +52,10 @@ void EnemyNormal::Initialize()
 void EnemyNormal::Update()
 {
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
+	if (knockBackTime_ > 0)
+	{
+		knockBackTime_--;
+	}
 	pState_->Update(*this);
 }
 
@@ -73,9 +82,10 @@ void EnemyNormal::EnemyMove()
 	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//Šp“x‚ð‰ñ“]s—ñ‚É•ÏŠ·
 	toVec *= 0.6f;
 	toVec+= GetPositionVec();
+	moveVec_ *= (float)knockBackTime_/(float)KNOCKBACKTIME;
 	//moveVec_ += moveVec_;
 	SetPositionVec(toVec);
-	XMStoreFloat3(&transform_.position_, toVec);
+	XMStoreFloat3(&transform_.position_, toVec+moveVec_);
 }
 
 void EnemyNormal::Attack()
@@ -91,7 +101,8 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
 			DecreaseLife(1);
-			//moveVec_ = -GetToPlayerVec();
+			moveVec_ = -GetToPlayerVec();
+			knockBackTime_ = KNOCKBACKTIME;
 			TurnToPlayer(GetToPlayerVec());
 			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
 			if (GetLife() < 0)

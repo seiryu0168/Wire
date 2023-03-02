@@ -41,6 +41,7 @@ private:
     };
 
     XMVECTOR moveVec_;
+    int knockBackTime_;
     void ChangeState(EnemyState<EnemyNormal>* state);
 public:
     //コンストラクタ
