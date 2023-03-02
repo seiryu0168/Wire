@@ -1,6 +1,6 @@
 #include "EnemyNormal.h"
 #include"Engine/ResourceManager/Model.h"
-#include"Engine/Collider/BoxCollider.h"
+#include"Engine/Collider/SphereCollider.h"
 #include"Pointer.h"
 
 void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
@@ -31,7 +31,7 @@ void EnemyNormal::Initialize()
 {
 	SetTag("Enemy");
 	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
-	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1),false,false);
+	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
 
@@ -87,6 +87,7 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetTag() == "Player")
 	{
+
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
 			DecreaseLife(1);

@@ -17,8 +17,8 @@ Pointer::~Pointer()
 //‰Šú‰»
 void Pointer::Initialize()
 {
-	SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 1);
-	AddCollider(pCollision);
+	//SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 3);
+	//AddCollider(pCollision);
 	hModel_ = ModelManager::Load("Assets\\Mark.fbx");
 	assert(hModel_ >= 0);
 }
@@ -59,7 +59,7 @@ void Pointer::OnCollision(GameObject* pTarget)
 {
 	if (drawFlag_)
 	{
-		if (pTarget->GetObjectName() == "EnemyNormal")
+		if (pTarget->GetTag() == "Enemy")
 		{
 			objectType_ = ATC_ATTACK;
 		}

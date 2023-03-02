@@ -4,7 +4,7 @@
 #include"Bullet.h"
 #include"HomingBullet.h"
 #include"Pointer.h"
-#include"Engine/Collider/OBBCollider.h"
+#include"Engine/Collider/SphereCollider.h"
 
 namespace
 {
@@ -42,7 +42,7 @@ EnemyTurret::~EnemyTurret()
 void EnemyTurret::Initialize()
 {
 	SetTag("Enemy");
-	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1, 1, 1), false, false);
+	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0),3);
 	AddCollider(pCollider);
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
 	assert(hModel_ >= 0);
@@ -125,7 +125,7 @@ void EnemyTurret::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
-				ModelManager::SetTransform(hModel_, pos);
+				ModelManager::DeleteModelNum(hModel_);
 				SetIsList(false);
 				KillMe();
 			}

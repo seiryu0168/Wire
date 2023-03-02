@@ -2,7 +2,7 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Bullet.h"
 #include"Pointer.h"
-
+#include"Engine/Collider/BoxCollider.h"
 #include"HomingBullet.h"
 namespace
 {
@@ -29,7 +29,7 @@ EnemyBoss::~EnemyBoss()
 void EnemyBoss::Initialize()
 {
 	SetTag("Enemy");
-	OBBCollider* pCollider = new OBBCollider(XMFLOAT3(7, 11, 7), false, false);
+	BoxCollider* pCollider = new BoxCollider({0,0,0}, XMFLOAT3(5, 10, 5));
 	AddCollider(pCollider);
 
 	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");

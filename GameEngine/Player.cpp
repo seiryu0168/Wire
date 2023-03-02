@@ -2,6 +2,7 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/GameObject/Camera.h"
 #include"Engine/SceneManager.h"
+#include"Engine/Collider/SphereCollider.h"
 #include"EngineTime.h"
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Particle.h"
@@ -109,7 +110,7 @@ void Player::Initialize()
     pPinterLine_->Load("Assets\\Effect01.png");
 
 
-    OBBCollider* pCollider = new OBBCollider(XMFLOAT3(1,1,1), false, false);
+    SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
@@ -131,9 +132,9 @@ void Player::Initialize()
 
     for (int i = 0; i < MAX_LIFE; i++)
     {
-        int hPict_ = ImageManager::Load("Assets\\Life.png");
+        int hPict_ = ImageManager::Load("Assets\\LifeImage.png");
         ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+100*i, LIFE_OFFSET_Y, 0 });
-        ImageManager::SetImageSize(hPict_, { 0.1f,0.1f,1.0f });
+        ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
 
         life_.push_back(hPict_);
     }
@@ -172,6 +173,8 @@ void Player::Update()
     {
         Aim(&ray);
     }
+    else
+        lockOn_ = false;
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
     if (Input::GetRTriggerDown() && pPointer_->IsDraw())
@@ -185,10 +188,8 @@ void Player::Update()
             transform_.position_.y += 0.2f;
             velocity_ = 0;
             //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
-            SetStatus(ATC_ATTACK);
-            
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
-            pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
+            
         }
         
     }
@@ -196,7 +197,10 @@ void Player::Update()
     if (wire_->GetWireState()==WIRE_STATE::EXTEND)
     {
         vFlyMove_ = wire_->GetWireVec() * maxSpeed_;
-            SetStatus(pPointer_->GetObjectType());
+        //if(lockOn_)
+        SetStatus(ATC_ATTACK);
+        
+        pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     }
     else if (wire_->GetWireState() == WIRE_STATE::STRETCH)
     {
@@ -249,6 +253,7 @@ void Player::Update()
             velocity_ += gravity_;
         }
     }
+    pScreen_->Update({ moveX,moveZ });
 
     //L,Rスティックで移動
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
@@ -507,6 +512,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
 void Player::SetStatus(int type)
 {
+    if(status_!=type)
     status_ = type;
 }
 
@@ -565,12 +571,12 @@ void Player::OnCollision(GameObject* pTarget)
         {
             OccurParticle();
             flyFlag_ = false;
-            XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             vFlyMove_ = -vFlyMove_;
+            XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             godFlag_ = true;
             godTime_ = 30;
         }
-        else
+        else if(godFlag_==false)
         {
             playerLife_--;
             playerLife_ = max(0, playerLife_);
@@ -597,12 +603,12 @@ void Player::OnCollision(GameObject* pTarget)
         }
     }
 
-    if (playerLife_ <= 1)
+    if (playerLife_ <= 0)
     {
         bool result = false;
         InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
         DelCollider(*this);
-        ImageManager::SetAlpha(life_[playerLife_-1], 0);
+        ImageManager::SetAlpha(life_[playerLife_], 0);
         return;
     }
 
@@ -631,6 +637,7 @@ void Player::Aim(RayCastData* ray)
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
             XMStoreFloat3(&ray->dir, vPtrDir);
+            lockOn_ = true;
         }
     }
 

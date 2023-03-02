@@ -31,6 +31,7 @@ class Player : public GameObject
     bool jumpFlag_;
     bool groundFlag_;
     bool godFlag_;
+    bool lockOn_;
 
     int hModel_;
     int hAudio_;

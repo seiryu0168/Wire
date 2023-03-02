@@ -101,7 +101,7 @@ void ObjectSetter::PlayUpdate()
 		else
 			itr++;
 	}
-	if (pPlayer_->GetLife() - 1 == 0)
+	if (pPlayer_->GetLife()-1 <= -1)
 	{
 		if(!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
 		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
