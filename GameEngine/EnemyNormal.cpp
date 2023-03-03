@@ -68,7 +68,12 @@ void EnemyNormal::FixedUpdate()
 void EnemyNormal::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
-	ModelManager::Draw(hModel_);
+	if(IsLockOned(this))
+		ModelManager::DrawOutLine(hModel_, {1,0,0,1});
+	else if (GetPlayerPointer()->IsAim())
+		ModelManager::DrawOutLine(hModel_, {1,1,0,1});
+	else
+		ModelManager::Draw(hModel_);
 }
 
 void EnemyNormal::EnemyMove()
@@ -100,10 +105,10 @@ void EnemyNormal::OnCollision(GameObject* pTarget)
 
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
-			DecreaseLife(1);
-			moveVec_ = -GetToPlayerVec();
-			knockBackTime_ = KNOCKBACKTIME;
-			TurnToPlayer(GetToPlayerVec());
+			DecreaseLife(1);				//ライフを1減らす
+			moveVec_ = -GetToPlayerVec();	//ノックバック用のベクトル
+			knockBackTime_ = KNOCKBACKTIME; //ノックバックの時間(フレーム)
+			TurnToPlayer(GetToPlayerVec()); //当たった方向に振り向く
 			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
 			if (GetLife() < 0)
 			{

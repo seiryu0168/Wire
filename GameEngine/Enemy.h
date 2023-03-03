@@ -49,6 +49,7 @@ public:
 /// <returns></returns>
     bool IsVisible(float angle,float range);
     void TurnToPlayer(XMVECTOR vToPlayer);
+    bool IsLockOned( Enemy* enemy);
 
     
    // void ChangeState(EnemyState* state);                                         //エネミーの状態変更

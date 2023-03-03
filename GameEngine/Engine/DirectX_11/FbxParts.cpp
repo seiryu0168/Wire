@@ -73,7 +73,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 	return S_OK;
 }
 
-void FbxParts::Draw(Transform& transform)
+void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 {
 	transform.Calclation();
 	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
@@ -95,7 +95,7 @@ void FbxParts::Draw(Transform& transform)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
-		cb.customColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
+		cb.customColor = lineColor;
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); //GPUからのデータアクセスを止める
@@ -142,7 +142,7 @@ void FbxParts::Draw(Transform& transform)
 	}
 }
 
-void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
+void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineColor)
 {
 	for (int i = 0; i < boneNum_; i++)
 	{
@@ -192,7 +192,7 @@ void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
 		memcpy_s(msr.pData, msr.RowPitch, pVertices_, sizeof(VERTEX) * vertexCount_);
 		Direct3D::pContext->Unmap(pVertexBuffer_, 0);
 	}
-	Draw(transform);
+	Draw(transform,lineColor);
 }
 
 

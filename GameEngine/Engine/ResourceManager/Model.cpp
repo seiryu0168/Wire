@@ -82,7 +82,7 @@ void ModelManager::Draw(int modelNum)
 	}
 }
 
-void ModelManager::DrawOutLine(int modelNum)
+void ModelManager::DrawOutLine(int modelNum ,XMFLOAT4 lineColor)
 {
 	if (modelNum < 0 || modelNum >= modelData_.size() || modelData_[modelNum] == nullptr)
 	{
@@ -94,7 +94,7 @@ void ModelManager::DrawOutLine(int modelNum)
 
 	if (modelData_[modelNum]->pfbx_ != nullptr)
 	{
-		modelData_[modelNum]->pfbx_->DrawOutLine(modelData_[modelNum]->transform_, (int)modelData_[modelNum]->nowFrame_);
+		modelData_[modelNum]->pfbx_->DrawOutLine(modelData_[modelNum]->transform_, (int)modelData_[modelNum]->nowFrame_,lineColor);
 	}
 }
 

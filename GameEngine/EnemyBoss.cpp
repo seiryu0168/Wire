@@ -60,12 +60,22 @@ void EnemyBoss::FixedUpdate()
 void EnemyBoss::Draw()
 {
 	ModelManager::SetTransform(hModelCore_, transform_);
-	ModelManager::Draw(hModelCore_);
+	if (IsLockOned(this))
+		ModelManager::DrawOutLine(hModelCore_, { 1,0,0,1 });
+	else if (GetPlayerPointer()->IsAim())
+		ModelManager::DrawOutLine(hModelCore_, { 1,1,0,1 });
+	else
+		ModelManager::Draw(hModelCore_);
 	
 	if (GetLife() >= 3)
 	{
 		ModelManager::SetTransform(hModelShield_, transform_);
-		ModelManager::Draw(hModelShield_);
+		if (IsLockOned(this))
+			ModelManager::DrawOutLine(hModelShield_, { 1,0,0,1 });
+		else if (GetPlayerPointer()->IsAim())
+			ModelManager::DrawOutLine(hModelShield_, { 1,1,0,1 });
+		else
+			ModelManager::Draw(hModelShield_);
 	}
 }
 

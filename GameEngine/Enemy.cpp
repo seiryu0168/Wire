@@ -78,6 +78,14 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 	transform_.rotate_.y = (180.0f/M_PI)*angle;
 }
 
+bool Enemy::IsLockOned(Enemy* enemy)
+{
+	if (GetPlayerPointer()->GetTargetEnemyNum() == -1)
+		return false;
+	else if (GetPlayerPointer()->GetTargetEnemyNum() == enemy->GetObjectID())
+		return true;
+}
+
 void Enemy::LoadModel(std::string fileName)
 {
 	hModel_ = ModelManager::Load("Assets\\" + fileName);

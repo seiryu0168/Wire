@@ -33,10 +33,10 @@ private:
 		XMFLOAT4 speculer;			//スペキュラー
 		XMFLOAT4 lightDirection;	//ライトの向き
 		XMFLOAT4 cameraPosition;	//カメラの位置
+		XMFLOAT4 customColor;       //プログラム側で色を変えたい場合
 		FLOAT	 shininess;			//ハイライトの強さ
 		BOOL	 isTexture;			//テクスチャが貼ってあるかどうか
 		BOOL     isNormal;	//ノーマルマップがあるかどうか
-		XMFLOAT4 customColor;       //プログラム側で色を変えたい場合
 	};
 
 	//頂点に格納される情報
@@ -97,8 +97,8 @@ public:
 	~FbxParts();
 
 	HRESULT Init(FbxNode* pNode);
-	void Draw(Transform& transform);
-	void DrawSkinAnime(Transform& transform, FbxTime time);
+	void Draw(Transform& transform, XMFLOAT4 lineColor = { 0,0,0,1 });
+	void DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineColor = { 0,0,0,0 });
 	//void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
 	FbxSkin* GetSkinInfo() { return pSkinInfo_; }
 	bool GetBonePosition(std::string boneName, XMFLOAT3* position);

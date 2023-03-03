@@ -366,10 +366,10 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 	}
 }
 
-void Fbx::DrawOutLine(Transform& transform, int frame)
+void Fbx::DrawOutLine(Transform& transform, int frame, XMFLOAT4 lineColor)
 {
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
-	Direct3D::SetShader(SHADER_TYPE::SHADER_TOON);
+	Direct3D::SetShader(SHADER_TYPE::SHADER_OUTLINE);
 	for (int i = 0; i < parts_.size(); i++)
 	{
 		FbxTime time;
@@ -377,11 +377,12 @@ void Fbx::DrawOutLine(Transform& transform, int frame)
 
 		if (parts_[i]->GetSkinInfo())
 		{
-			parts_[i]->DrawSkinAnime(transform, frame);
+			parts_[i]->DrawSkinAnime(transform, frame,lineColor);
 		}
 		else
 		{
-			parts_[i]->Draw(transform);
+
+			parts_[i]->Draw(transform,lineColor);
 		}
 	}
 

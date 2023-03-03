@@ -63,6 +63,7 @@ Player::Player(GameObject* parent)
     angleY_(0),
     angleX_(0),
     lockOnAngleLimit_(0.2f),
+    lockOn_(false),
     flyFlag_(false),
     airFlag_(false),
     aimFlag_(false),
@@ -174,7 +175,10 @@ void Player::Update()
         Aim(&ray);
     }
     else
+    {
+        enemyNumber_ = -1;
         lockOn_ = false;
+    }
 
     //レイが壁などに当たってたらその方向に向かうベクトルを作る
     if (Input::GetRTriggerDown() && pPointer_->IsDraw())
@@ -666,7 +670,11 @@ void Player::Aim(RayCastData* ray)
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
             XMStoreFloat3(&ray->dir, vPtrDir);
             lockOn_ = true;
+            enemyNumber_ = pEnemy->GetObjectID();
         }
+        else
+            enemyNumber_ = -1;
+
     }
 
     //レイキャストの始点と方向を入力

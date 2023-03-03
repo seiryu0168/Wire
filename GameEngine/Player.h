@@ -38,6 +38,7 @@ class Player : public GameObject
     int playerLife_;
     int stageNum_;
     int godTime_;
+    int enemyNumber_;
     std::vector<int> life_;
 
     float moveTime_;
@@ -145,6 +146,9 @@ public:
     Pointer* GetPointer() { return pPointer_; }
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
     int GetLife() { return (int)playerLife_; }
+    int GetTargetEnemyNum() { return enemyNumber_; }
+    bool IsLockOn() { return lockOn_; }
+    bool IsAim() { return aimFlag_; }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

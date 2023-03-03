@@ -105,7 +105,12 @@ void EnemyTurret::FixedUpdate()
 void EnemyTurret::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
-	ModelManager::Draw(hModel_);
+	if (IsLockOned(this))
+		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+	else if (GetPlayerPointer()->IsAim())
+		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+	else
+		ModelManager::Draw(hModel_);
 }
 
 void EnemyTurret::Release()

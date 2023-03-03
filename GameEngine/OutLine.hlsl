@@ -19,10 +19,10 @@ cbuffer global
 	float4		g_speculer;			//スペキュラー
 	float4		g_lightDirection;	//ライトの向き
 	float4		g_cameraPosition;	//カメラの位置
+	float4      g_customColor;		//プログラム側で色を変える場合の変数
 	float		g_shininess;		//ハイライトの強さ
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
 	bool		g_isNormal;  //プログラム側で変える色
-	float4      g_customColor;		//プログラム側で色を変える場合の変数
 };
 
 //───────────────────────────────────────
@@ -66,5 +66,5 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	return float4(0,0,0,1);
+	return g_customColor;
 }

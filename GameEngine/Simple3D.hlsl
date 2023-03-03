@@ -19,10 +19,10 @@ cbuffer global
 	float4		g_speculer;			//スペキュラー
 	float4		g_lightDirection;	//ライトの向き
 	float4		g_cameraPosition;	//カメラの位置
+	float4      g_customColor;		//プログラム側で色を変える場合の変数
 	float		g_shininess;		//ハイライトの強さ
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
 	bool		g_isNormal;  //プログラム側で変える色
-	float4      g_customColor;		//プログラム側で色を変える場合の変数
 };
 
 //───────────────────────────────────────

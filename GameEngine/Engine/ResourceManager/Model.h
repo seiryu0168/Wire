@@ -22,7 +22,7 @@ namespace ModelManager
 	/// </summary>
 	/// <param name="modelNum">モデル番号</param>
 	void Draw(int modelNum);
-	void DrawOutLine(int modelNum);
+	void DrawOutLine(int modelNum, XMFLOAT4 lineColor = {0,0,0,1});
 	void DrawToon(int modelNum);
 	/// <summary>
 	/// レイキャスト
