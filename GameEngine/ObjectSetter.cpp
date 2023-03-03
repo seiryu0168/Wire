@@ -41,6 +41,8 @@ void ObjectSetter::Initialize()
 	//親がプレイシーンだったら
 	if (parentName == "PlayScene")
 	{
+		//リザルトデータ削除
+		InterSceneData::DeleteData("Result");
 		Instantiate<Stage1>(GetParent());
 		pPlayer_ = Instantiate<Player>(GetParent());
 		for (int i = 0; i < 3; i++)
@@ -101,8 +103,15 @@ void ObjectSetter::PlayUpdate()
 		else
 			itr++;
 	}
+	//プレイヤーのライフが0になったら
 	if (pPlayer_->GetLife()-1 <= -1)
 	{
+		if (resultFrag_ == false)
+		{
+			resultFrag_ = true;
+			bool result = false;
+			InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
+		}
 		if(!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
 		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
 
@@ -116,8 +125,12 @@ void ObjectSetter::PlayUpdate()
 	}
 	else if (bossSpawn_ && enemys_.empty())
 	{
-		bool result = true;
-		InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
+		if (resultFrag_ == false)
+		{
+			resultFrag_ = true;
+			bool result = true;
+			InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
+		}
 		if (!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
 		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
 

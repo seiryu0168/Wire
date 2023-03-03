@@ -594,6 +594,7 @@ void Player::OnCollision(GameObject* pTarget)
 {
     if (pTarget->GetTag()=="Enemy")
     {
+        //ƒvƒŒƒCƒ„[‚ªUŒ‚ó‘Ô‚¾‚Á‚½‚ç
         if (status_ & ATC_ATTACK)
         {
             OccurParticle();
@@ -633,7 +634,7 @@ void Player::OnCollision(GameObject* pTarget)
     if (playerLife_ <= 0)
     {
         bool result = false;
-        InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
+        //InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
         DelCollider(*this);
         ImageManager::SetAlpha(life_[playerLife_], 0);
         return;

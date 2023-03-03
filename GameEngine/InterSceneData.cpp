@@ -61,6 +61,19 @@ namespace InterSceneData
         return 0;
     }
 
+    void DeleteData(std::string dataName)
+    {
+        auto itr = dataList_.begin();
+        for (int i = 0; i < dataList_.size(); i++)
+        {
+            if (dataList_[i]->dataName == dataName)
+            {
+                SAFE_DELETE(dataList_[i]);
+                dataList_.erase(itr + i);
+            }
+        }
+    }
+
     int GetintData(std::string dataName)
     {
         for (int i = 0; i < dataList_.size(); i++)
@@ -78,7 +91,7 @@ namespace InterSceneData
     {
         for (int i = 0; i < dataList_.size(); i++)
         {
-            if (dataList_[i]->dataName == dataName && dataList_[i]->b!= nullptr)
+            if (dataList_[i]->b != nullptr && dataList_[i]->dataName == dataName)
             {
                 return *(dataList_[i]->b);
             }

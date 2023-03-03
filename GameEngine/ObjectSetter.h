@@ -12,6 +12,7 @@ private:
     int countDown_;
     bool bossSpawn_;
     int hPict_;
+    bool resultFrag_;
     SceneManager* pManager_;
 public:
         //コンストラクタ
