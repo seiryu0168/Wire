@@ -134,16 +134,16 @@ void Player::Initialize()
         transform_.position_.y -= firstRay.dist-transform_.scale_.y;
     }
 
+    pScreen_ = new PlayScreen;
+    wire_ = new Wire;
     for (int i = 0; i < MAX_LIFE; i++)
     {
         int hPict_ = ImageManager::Load("Assets\\LifeImage.png");
-        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+100*i, LIFE_OFFSET_Y, 0 });
+        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+105*i, LIFE_OFFSET_Y, 0 });
         ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
 
         life_.push_back(hPict_);
     }
-    pScreen_ = new PlayScreen;
-    wire_ = new Wire;
 }
 
 //XV
@@ -643,10 +643,7 @@ void Player::OnCollision(GameObject* pTarget)
 
     if (playerLife_ < 0)
     {
-        bool result = false;
-        //InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
         DelCollider(*this);
-        //ImageManager::SetAlpha(life_[playerLife_], 0);
         return;
     }
 

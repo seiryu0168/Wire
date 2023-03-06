@@ -11,6 +11,7 @@ PlayScreen::PlayScreen()
 	hPict_[3] = ImageManager::Load("Assets\\ScreenFrameRight2.png");
 	assert(hPict_[3] >= 0);
 
+	//データを外部に出せるようになったら変える
 	ImageManager::SetImagePos(hPict_[0], { 0,580,0 });
 	ImageManager::SetImagePos(hPict_[1], { 0,-580,0 });
 	ImageManager::SetImagePos(hPict_[2], { -1410,10,0 });
