@@ -38,7 +38,7 @@ Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
     status_(STATE_GROUND),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
-    playerLife_(MAX_LIFE),
+    playerLife_(MAX_LIFE-1),
     gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
@@ -106,7 +106,7 @@ void Player::Initialize()
     //パラメータ設定
     pLine_->SetLineParameter(0.5f, 20,0.4f);
     pPinterLine_->SetLineParameter(0.1f, 2);
-    //画像ロード
+    //ラインパーティクル用画像のロード
     pLine_->Load("Assets\\Line.png");
     pPinterLine_->Load("Assets\\Effect01.png");
 
@@ -115,10 +115,13 @@ void Player::Initialize()
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
+    //マーカーを生成
     Instantiate<Pointer>(GetParent());
     pPointer_ = (Pointer*)FindObject("Pointer");
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
+   
+    //初期位置用のレイキャスト準備
     RayCastData firstRay;
     firstRay.start = transform_.position_;
        
@@ -610,6 +613,7 @@ void Player::OnCollision(GameObject* pTarget)
         }
         else if(godFlag_==false)
         {
+            ImageManager::SetAlpha(life_[playerLife_], 0);
             playerLife_--;
             playerLife_ = max(0, playerLife_);
         }
@@ -627,24 +631,26 @@ void Player::OnCollision(GameObject* pTarget)
         {
             if (godFlag_ == false)
             {
+                ImageManager::SetAlpha(life_[playerLife_], 0);
                 playerLife_--;
                 playerLife_ = max(0, playerLife_);
                 godFlag_ = true;
                 godTime_ = 30;
+
             }
         }
     }
 
-    if (playerLife_ <= 0)
+    if (playerLife_ < 0)
     {
         bool result = false;
         //InterSceneData::AddData("Result",nullptr,nullptr,nullptr,&result);
         DelCollider(*this);
-        ImageManager::SetAlpha(life_[playerLife_], 0);
+        //ImageManager::SetAlpha(life_[playerLife_], 0);
         return;
     }
 
-    ImageManager::SetAlpha(life_[playerLife_-1], 0);
+    //ImageManager::SetAlpha(life_[playerLife_], 0);
 }
 
 void Player::Aim(RayCastData* ray)

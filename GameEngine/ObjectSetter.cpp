@@ -117,12 +117,13 @@ void ObjectSetter::PlayUpdate()
 
 		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 	}
-
+	//エネミーが全て倒されたらボス出現
 	if (enemys_.empty() && bossSpawn_ == false)
 	{
 		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));
 		bossSpawn_ = true;
 	}
+	//ボス含めてエネミーがすべて倒されたら
 	else if (bossSpawn_ && enemys_.empty())
 	{
 		if (resultFrag_ == false)
