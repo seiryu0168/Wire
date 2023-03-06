@@ -53,8 +53,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 
 	//ñ@ê¸
 	normal.w = 0;
-	outData.normal = mul(normal, g_matNormal);
-	pos = pos + outData.normal * 0.1f;
+	//outData.normal = mul(normal, g_matNormal);
+	pos = pos + normal * 0.3f;
 	outData.pos = mul(pos, g_matWVP);
 
 
