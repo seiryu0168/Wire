@@ -57,6 +57,11 @@ void ObjectSetter::Initialize()
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
+	if (parentName == "TutorialScene")
+	{
+		Instantiate<Stage1>(GetParent());
+		Instantiate<Player>(GetParent());
+	}
 	hPict_ = ImageManager::Load("Assets\\Black.png");
 	assert(hPict_ >= 0);
 	ImageManager::SetAlpha(hPict_,0.0f);
@@ -90,6 +95,7 @@ void ObjectSetter::Release()
 
 void ObjectSetter::TitleUpdate()
 {
+
 }
 
 void ObjectSetter::PlayUpdate()

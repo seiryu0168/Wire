@@ -5,8 +5,10 @@ class TitleUI : public GameObject
 {
 private:
 	int hPictPlay_;
-	int hPictQuit_;
+	int hPictTutorial_;
 	int hPictTitle_;
+	int buttonNum_;
+	int inputInterval_;
 
 public:
 	TitleUI(GameObject* parent);
