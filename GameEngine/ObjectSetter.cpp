@@ -104,7 +104,7 @@ void ObjectSetter::PlayUpdate()
 			itr++;
 	}
 	//プレイヤーのライフが0になったら
-	if (pPlayer_->GetLife()-1 <= -1)
+	if (pPlayer_->GetLife() <= 0)
 	{
 		if (resultFrag_ == false)
 		{

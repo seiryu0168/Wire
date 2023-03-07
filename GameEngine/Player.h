@@ -66,7 +66,7 @@ class Player : public GameObject
 
     Particle*     pParticle_;
     LineParticle* pLine_;
-    LineParticle* pPinterLine_;
+    LineParticle* pPointerLine_;
     Wire*         wire_;
     Pointer*      pPointer_;
     PlayScreen*   pScreen_;

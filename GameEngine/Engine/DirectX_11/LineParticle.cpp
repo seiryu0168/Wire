@@ -7,6 +7,7 @@ LineParticle::LineParticle()
 	:WIDTH_(0.5),
 	LENGTH_(2),
 	tipWidth_(0),
+	color_(1,1,1,1),
 	pVertexBuffer_(nullptr),
 	pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
@@ -18,6 +19,7 @@ LineParticle::LineParticle(float width, int length, float tipWidth)
 	:WIDTH_(width),
 	LENGTH_(length),
 	tipWidth_(tipWidth),
+	color_({1,1,1,1}),
 	pVertexBuffer_(nullptr),
 	pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
@@ -276,6 +278,11 @@ HRESULT LineParticle::Load(std::string fileName)
 	return S_OK;
 }
 
+void LineParticle::SetColor(XMFLOAT4 col)
+{
+	color_ = col;
+}
+
 void LineParticle::SetIndex()
 {
 	//インデックスの初期配列
@@ -326,7 +333,7 @@ void LineParticle::Draw(Transform* transform)
 	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.color = XMFLOAT4(1, 1, 1, 1);
+	cb.color = color_;
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 

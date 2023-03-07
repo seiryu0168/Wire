@@ -30,6 +30,7 @@ private:
 	float WIDTH_;//ラインパーティクルの幅
 	UINT LENGTH_;//ラインパーティクルのポジションを記憶する量
 	float tipWidth_;
+	XMFLOAT4 color_;
 	//int* index_;
 
 	ID3D11Buffer* pVertexBuffer_;
@@ -61,6 +62,11 @@ public:
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	HRESULT Load(std::string fileName);
+	/// <summary>
+	/// ラインパーティクルの色設定
+	/// </summary>
+	/// <param name="col">色</param>
+	void SetColor(XMFLOAT4 col);
 	/// <summary>
 	/// インデックス生成
 	/// </summary>

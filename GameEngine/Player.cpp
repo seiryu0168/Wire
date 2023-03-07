@@ -38,7 +38,7 @@ Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
     status_(STATE_GROUND),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
-    playerLife_(MAX_LIFE-1),
+    playerLife_(MAX_LIFE),
     gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
@@ -71,7 +71,7 @@ Player::Player(GameObject* parent)
     groundFlag_(true),
     godFlag_(false),
     pLine_(nullptr),
-    pPinterLine_(nullptr),
+    pPointerLine_(nullptr),
     pParticle_(nullptr),
     pPointer_(nullptr),
     pSetter_(nullptr),
@@ -102,13 +102,13 @@ void Player::Initialize()
     
     //ラインパーティクル生成
     pLine_ = new LineParticle;
-    pPinterLine_ = new LineParticle;
+    pPointerLine_ = new LineParticle;
     //パラメータ設定
     pLine_->SetLineParameter(0.5f, 20,0.4f);
-    pPinterLine_->SetLineParameter(0.1f, 2);
+    pPointerLine_->SetLineParameter(0.1f, 2);
     //ラインパーティクル用画像のロード
     pLine_->Load("Assets\\Line.png");
-    pPinterLine_->Load("Assets\\Effect01.png");
+    pPointerLine_->Load("Assets\\Effect01.png");
 
 
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
@@ -313,10 +313,19 @@ void Player::Draw()
 
 void Player::SecondDraw()
 {
+   
     pLine_->Draw(&transform_);
     wire_->Draw(transform_);
     if (pPointer_->IsDraw())
-        pPinterLine_->Draw(&transform_);
+    {
+        if (lockOn_)
+        {
+            pPointerLine_->SetColor({ 1,0,0,1 });
+        }
+        else
+            pPointerLine_->SetColor({ 1,1,1,1 });
+        pPointerLine_->Draw(&transform_);
+    }
 }
 
 //開放
@@ -327,7 +336,7 @@ void Player::Release()
     SAFE_DELETE(pScreen_);  
     SAFE_RELEASE(pParticle_);
     SAFE_RELEASE(pLine_);
-    SAFE_RELEASE(pPinterLine_);
+    SAFE_RELEASE(pPointerLine_);
 }
 
 void Player::CameraMove(RayCastData ray)
@@ -613,9 +622,9 @@ void Player::OnCollision(GameObject* pTarget)
         }
         else if(godFlag_==false)
         {
-            ImageManager::SetAlpha(life_[playerLife_], 0);
             playerLife_--;
             playerLife_ = max(0, playerLife_);
+            ImageManager::SetAlpha(life_[playerLife_], 0);
         }
 
         if(godFlag_==false)
@@ -631,23 +640,21 @@ void Player::OnCollision(GameObject* pTarget)
         {
             if (godFlag_ == false)
             {
-                ImageManager::SetAlpha(life_[playerLife_], 0);
                 playerLife_--;
                 playerLife_ = max(0, playerLife_);
                 godFlag_ = true;
                 godTime_ = 30;
+                ImageManager::SetAlpha(life_[playerLife_], 0);
 
             }
         }
     }
 
-    if (playerLife_ < 0)
+    if (playerLife_ <= 0)
     {
         DelCollider(*this);
         return;
     }
-
-    //ImageManager::SetAlpha(life_[playerLife_], 0);
 }
 
 void Player::Aim(RayCastData* ray)
@@ -655,6 +662,7 @@ void Player::Aim(RayCastData* ray)
     //レイキャストの判定距離の上限
     ray->distLimit = 100.0f;
     aimFlag_ = true;
+
     //当たる位置の計算
     XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
@@ -676,7 +684,10 @@ void Player::Aim(RayCastData* ray)
             enemyNumber_ = pEnemy->GetObjectID();
         }
         else
+        {
             enemyNumber_ = -1;
+            lockOn_ = false;
+        }
 
     }
 
@@ -692,8 +703,8 @@ void Player::Aim(RayCastData* ray)
         pPointer_->SetPointerPos(pointerPos);
         pPointer_->SetDraw(ray->hit);
         
-        pPinterLine_->AddPosition(bonePos);
-        pPinterLine_->AddPosition(pPointer_->GetPosition());
+        pPointerLine_->AddPosition(bonePos);
+        pPointerLine_->AddPosition(pPointer_->GetPosition());
     }
 }
 
@@ -766,6 +777,7 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
 
 Enemy* Player::AimAssist(RayCastData* ray)
 {
+    //エネミーリストが空だったらnullptr1 返す
     if (enemyList_.empty())
         return nullptr;
 
