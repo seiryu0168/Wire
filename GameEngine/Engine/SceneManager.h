@@ -12,8 +12,8 @@ enum class SCENE_ID
 
 class SceneManager : public GameObject
 {
-	int currentSceneID_;
-	int nextSceneID_;
+	SCENE_ID currentSceneID_;
+	SCENE_ID nextSceneID_;
 	UINT countDown_;
 public:
 	SceneManager(GameObject* parent);
@@ -23,10 +23,10 @@ public:
 	void Draw() override;
 	void Release() override;
 
-	void ChangeScene(int sceneID,UINT count = 0);
+	void ChangeScene(SCENE_ID sceneID, UINT count = 0);
 	int GetCountDown() { return countDown_; }
-	int GetCurrentSceneID() { return currentSceneID_; }
-	int GetNextSceneID() { return nextSceneID_; }
+	SCENE_ID GetCurrentSceneID() { return currentSceneID_; }
+	SCENE_ID GetNextSceneID() { return nextSceneID_; }
 	GameObject* CurrentScene();
 };
 

@@ -8,6 +8,7 @@ namespace
 {
 	static const int INTERVAL = 10;
 	static const int MAX_BUTTON=2;
+	static const int DELAY = 120;
 }
 
 ResultUI::ResultUI(GameObject* parent)
@@ -70,7 +71,7 @@ void ResultUI::Update()
 
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
-			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TITLE);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TITLE, DELAY);
 		}
 		break;
 	case 1:
@@ -82,7 +83,7 @@ void ResultUI::Update()
 		ImageManager::ChangeColor(hPictTitle_, XMFLOAT4(1, 1, 1, 1));
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
-			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 		}
 		break;
 

@@ -2,6 +2,7 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/DirectX_11/Fbx.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"ResultUI.h"
 #include"TutorialUI.h"
 #include"Player.h"
 #include"TitleUI.h"
@@ -33,6 +34,7 @@ ObjectSetter::~ObjectSetter()
 void ObjectSetter::Initialize()
 {
 	pManager_ = (SceneManager*)FindObject("SceneManager");
+	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	//feildって名前にしといたほうがいい
 	std::string parentName;
@@ -58,6 +60,10 @@ void ObjectSetter::Initialize()
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
+	if (parentName == "ResultScene")
+	{
+		Instantiate<ResultUI>(GetParent());
+	}
 	if (parentName == "TutorialScene")
 	{
 		Instantiate<Stage1>(GetParent());
@@ -71,21 +77,29 @@ void ObjectSetter::Initialize()
 
 void ObjectSetter::Update()
 {
-	switch ((SCENE_ID)((SceneManager*)GetParent()->GetParent())->GetCurrentSceneID())
+	if (nowSceneID_ == (SCENE_ID)pManager_->GetNextSceneID())
 	{
-	case SCENE_ID::SCENE_ID_TITLE:
-		TitleUpdate();
-		break;
 
-	case SCENE_ID::SCENE_ID_PLAY:
-		PlayUpdate();
-		break;
-	case SCENE_ID::SCENE_ID_TUTORIAL:
-		TutorialUpdate()
-		break;
-	default:
-		break;
+		switch ((SCENE_ID)pManager_->GetCurrentSceneID())
+		{
+		case SCENE_ID::SCENE_ID_TITLE:
+			TitleUpdate();
+			break;
 
+		case SCENE_ID::SCENE_ID_PLAY:
+			PlayUpdate();
+			break;
+
+		case SCENE_ID::SCENE_ID_TUTORIAL:
+			TutorialUpdate();
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		BlackOutUpdate();
 	}
 	
 }
@@ -123,10 +137,10 @@ void ObjectSetter::PlayUpdate()
 			bool result = false;
 			InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
 		}
-		if(!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
-		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
+		if(!(pManager_->GetNextSceneID() == SCENE_ID::SCENE_ID_RESULT))
+		pManager_->ChangeScene(SCENE_ID::SCENE_ID_RESULT, DELAY);
 
-		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
+		
 	}
 	//エネミーが全て倒されたらボス出現
 	if (enemys_.empty() && bossSpawn_ == false)
@@ -143,15 +157,20 @@ void ObjectSetter::PlayUpdate()
 			bool result = true;
 			InterSceneData::AddData("Result", nullptr, nullptr, nullptr, &result);
 		}
-		if (!(pManager_->GetNextSceneID() == (int)SCENE_ID::SCENE_ID_RESULT))
-		pManager_->ChangeScene((int)SCENE_ID::SCENE_ID_RESULT, DELAY);
+		if (!(pManager_->GetNextSceneID() == SCENE_ID::SCENE_ID_RESULT))
+		pManager_->ChangeScene(SCENE_ID::SCENE_ID_RESULT, DELAY);
 
-		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
+		//ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 	}
 }
 
 void ObjectSetter::TutorialUpdate()
 {
+}
+
+void ObjectSetter::BlackOutUpdate()
+{
+	ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 }
 
 void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)

@@ -1,5 +1,5 @@
 #include "ResultScene.h"
-#include"ResultUI.h"
+#include"ObjectSetter.h"
 
 ResultScene::ResultScene(GameObject* parent)
 	:GameObject(parent,"ResultScene")
@@ -12,7 +12,7 @@ ResultScene::~ResultScene()
 
 void ResultScene::Initialize()
 {
-	Instantiate<ResultUI>(this);
+	Instantiate<ObjectSetter>(this);
 }
 
 void ResultScene::Update()

@@ -14,6 +14,7 @@ private:
     int hPict_;
     bool resultFrag_;
     SceneManager* pManager_;
+    SCENE_ID nowSceneID_;
 public:
         //コンストラクタ
         ObjectSetter(GameObject* parent);
@@ -37,6 +38,8 @@ public:
         void PlayUpdate();
 
         void TutorialUpdate();
+
+        void BlackOutUpdate();
 
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
 

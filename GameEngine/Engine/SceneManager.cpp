@@ -10,14 +10,14 @@
 
 
 SceneManager::SceneManager(GameObject* parent) 
-	: GameObject(parent, "SceneManager"),currentSceneID_(0),nextSceneID_(0)
+	: GameObject(parent, "SceneManager"),currentSceneID_(SCENE_ID::SCENE_ID_TITLE),nextSceneID_(SCENE_ID::SCENE_ID_TITLE)
 {
 
 }
 
 void SceneManager::Initialize()
 {
-	currentSceneID_ = (int)SCENE_ID::SCENE_ID_TITLE;
+	currentSceneID_ = SCENE_ID::SCENE_ID_TITLE;
 	nextSceneID_ = currentSceneID_;
 	Instantiate<TitleScene>(this);
 }
@@ -53,7 +53,7 @@ void SceneManager::Release()
 {
 
 }
-void SceneManager::ChangeScene(int sceneID,UINT count)
+void SceneManager::ChangeScene(SCENE_ID sceneID,UINT count)
 {
 	nextSceneID_ = sceneID;
 	countDown_ = count;

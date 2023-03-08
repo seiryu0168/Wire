@@ -2,6 +2,11 @@
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Input.h"
 #include"Engine/SceneManager.h"
+
+namespace
+{
+	static const int DELAY = 120;
+}
 TutorialUI::TutorialUI(GameObject* parent)
 	:GameObject(parent,"TutorialScene"),
 	hPict_(-1)
@@ -24,7 +29,7 @@ void TutorialUI::Update()
 {
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
 	{
-		((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TITLE,30);
+		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TITLE, DELAY);
 	}
 }
 
