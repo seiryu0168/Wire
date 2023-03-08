@@ -84,11 +84,6 @@ void TitleUI::Update()
 	default:
 		break;
 	}
-	//if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_A))
-	//{
-	//	SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
-	//	pManager->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
-	//}
 }
 
 void TitleUI::Release()

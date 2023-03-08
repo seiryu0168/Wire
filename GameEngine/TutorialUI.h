@@ -3,7 +3,7 @@
 class TutorialUI : public GameObject
 {
 private:
-
+	int hPict_;
 public:
 	TutorialUI(GameObject* parent);
 	~TutorialUI();

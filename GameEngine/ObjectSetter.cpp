@@ -2,6 +2,7 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/DirectX_11/Fbx.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"TutorialUI.h"
 #include"Player.h"
 #include"TitleUI.h"
 #include"EnemyNormal.h"
@@ -61,6 +62,7 @@ void ObjectSetter::Initialize()
 	{
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
+		Instantiate<TutorialUI>(GetParent());
 	}
 	hPict_ = ImageManager::Load("Assets\\Black.png");
 	assert(hPict_ >= 0);
@@ -77,6 +79,9 @@ void ObjectSetter::Update()
 
 	case SCENE_ID::SCENE_ID_PLAY:
 		PlayUpdate();
+		break;
+	case SCENE_ID::SCENE_ID_TUTORIAL:
+		TutorialUpdate()
 		break;
 	default:
 		break;
@@ -143,6 +148,10 @@ void ObjectSetter::PlayUpdate()
 
 		ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 	}
+}
+
+void ObjectSetter::TutorialUpdate()
+{
 }
 
 void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)

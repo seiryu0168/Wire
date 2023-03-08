@@ -36,6 +36,8 @@ public:
 
         void PlayUpdate();
 
+        void TutorialUpdate();
+
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
 
 };
