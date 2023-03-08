@@ -185,6 +185,11 @@ void ModelManager::DeleteModelNum(int modelNum)
 	}
 }
 
+void ModelManager::AllDeleteModelNum()
+{
+	polygonTestList_.clear();
+}
+
 XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)
 {
 

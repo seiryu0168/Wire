@@ -65,7 +65,7 @@ void TitleUI::Update()
 
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
-			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TITLE);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
 		}
 		break;
 	case 1:
@@ -77,18 +77,18 @@ void TitleUI::Update()
 		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
-			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene((int)SCENE_ID::SCENE_ID_TUTORIAL);
 		}
 		break;
 
 	default:
 		break;
 	}
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_A))
-	{
-		SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
-		pManager->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
-	}
+	//if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A)||Input::IsKeyDown(DIK_A))
+	//{
+	//	SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
+	//	pManager->ChangeScene((int)SCENE_ID::SCENE_ID_PLAY);
+	//}
 }
 
 void TitleUI::Release()

@@ -675,6 +675,7 @@ void Player::Aim(RayCastData* ray)
     if (enemyList_.size() > 0)
     {
         Enemy* pEnemy = AimAssist(ray);
+        //エネミーを捕捉しているならエネミーの情報を取得、ロックオンフラグを立てる
         if (pEnemy != nullptr)
         {
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
@@ -683,6 +684,7 @@ void Player::Aim(RayCastData* ray)
             lockOn_ = true;
             enemyNumber_ = pEnemy->GetObjectID();
         }
+        //捕捉していない場合ロックオンフラグを降ろす
         else
         {
             enemyNumber_ = -1;

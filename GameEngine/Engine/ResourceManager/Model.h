@@ -45,6 +45,7 @@ namespace ModelManager
 	/// </summary>
 	/// <param name="modelNum"></param>
 	void DeleteModelNum(int modelNum);
+	void AllDeleteModelNum();
 
 	XMFLOAT3 GetBonePosition(int modelNum,std::string boneName);
 	void Release();

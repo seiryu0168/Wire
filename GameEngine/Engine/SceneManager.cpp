@@ -4,6 +4,7 @@
 #include"../PlayScene.h"
 #include"../TitleScene.h"
 #include"../ResultScene.h"
+#include"../TutorialScene.h"
 #include"ResourceManager/Model.h"
 #include"ResourceManager/ImageManager.h"
 
@@ -26,6 +27,7 @@ void SceneManager::Update()
 	if (currentSceneID_ != nextSceneID_&&countDown_ == 0)
 	{
 		KillAllChildren();
+		ModelManager::AllDeleteModelNum();
 		ModelManager::Release();
 		ImageManager::AllRelease();
 
@@ -35,6 +37,7 @@ void SceneManager::Update()
 		case SCENE_ID::SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
 		case SCENE_ID::SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
 		case SCENE_ID::SCENE_ID_RESULT: Instantiate<ResultScene>(this); break;
+		case SCENE_ID::SCENE_ID_TUTORIAL: Instantiate<TutorialScene>(this); break;
 		}
 		currentSceneID_ = nextSceneID_;
 	}
