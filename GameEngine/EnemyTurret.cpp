@@ -9,6 +9,7 @@
 namespace
 {
 	static const int SHOT_COUNT = 10;
+	static const int RELOAD = 90;
 }
 void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
 {
@@ -26,8 +27,7 @@ EnemyTurret::EnemyTurret(GameObject* parent)
 	shotTime_(),
 	rpm_(300),
 	shotCount_(0),
-	reLoadTime_(0),
-	RELOAD(90)
+	reLoadTime_(0)
 {
 
 }
@@ -148,7 +148,7 @@ void EnemyTurret::StateChase::Update(EnemyTurret& enemy)
 {
 	if (enemy.shotCount_ % 10 == 0 && perShot_)
 	{
-		enemy.reLoadTime_ = enemy.RELOAD;
+		enemy.reLoadTime_ = RELOAD;
 		perShot_ = false;
 	}
 	else

@@ -5,8 +5,11 @@ class TitleUI : public GameObject
 {
 private:
 	int hPictPlay_;
+	int hPictPlay2_;
 	int hPictTutorial_;
+	int hPictTutorial2_;
 	int hPictTitle_;
+	int hPictButtonFrame_;
 	int buttonNum_;
 	int inputInterval_;
 

@@ -7,7 +7,7 @@ namespace
 {
 	static const int INTERVAL = 10;
 	static const int MAX_BUTTON = 2;
-	static const int DELAY = 120;
+	static const int DELAY = 90;
 }
 
 TitleUI::TitleUI(GameObject* parent)
@@ -27,14 +27,25 @@ void TitleUI::Initialize()
 {
 	hPictTitle_ = ImageManager::Load("Assets\\TitleImage2.png");
 	assert(hPictTitle_ >= 0);
-	hPictPlay_ = ImageManager::Load("Assets\\PlayImage.jpg");
+	hPictPlay_ = ImageManager::Load("Assets\\PlayImage.png");
 	assert(hPictPlay_ >= 0);
-	hPictTutorial_ = ImageManager::Load("Assets\\TutorialImage.jpg");
+	hPictPlay2_ = ImageManager::Load("Assets\\PlayImage2.png");
+	assert(hPictPlay2_ >= 0);
+	hPictTutorial_ = ImageManager::Load("Assets\\TutorialImage.png");
 	assert(hPictTutorial_ >= 0);
+	hPictTutorial2_ = ImageManager::Load("Assets\\TutorialImage2.png");
+	assert(hPictTutorial2_ >= 0);
+	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	assert(hPictButtonFrame_ >= 0);
 
 	//位置設定
 	ImageManager::SetImagePos(hPictPlay_, XMFLOAT3(-800, -500, 0));
+	ImageManager::SetImagePos(hPictPlay2_, XMFLOAT3(-800, -500, 0));
+	ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-800, -500, 0));
 	ImageManager::SetImagePos(hPictTutorial_, XMFLOAT3(800, -500, 0));
+	ImageManager::SetImagePos(hPictTutorial2_, XMFLOAT3(800, -500, 0));
+	ImageManager::SetAlpha(hPictPlay2_, 0);
+	
 }
 
 void TitleUI::Update()
@@ -58,12 +69,14 @@ void TitleUI::Update()
 	{
 	case 0:
 		//プレイボタン
-		ImageManager::SetImageSize(hPictPlay_, XMFLOAT3(1.2f, 1.2f, 1.2f));
 		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1.9f, 1.9f, 1.9f, 1.0f));
 
-		ImageManager::SetImageSize(hPictTutorial_, XMFLOAT3(1, 1, 1));
-		ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1, 1, 1, 1));
+		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-800, -500, 0));
+		ImageManager::SetAlpha(hPictTutorial2_, 0);
 
+		ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1, 1, 1, 1));
+		ImageManager::SetAlpha(hPictPlay2_, 1);
+		
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
@@ -71,10 +84,14 @@ void TitleUI::Update()
 		break;
 	case 1:
 		//チュートリアルボタン
-		ImageManager::SetImageSize(hPictTutorial_, XMFLOAT3(1.2f, 1.2f, 1.2f));
+		//ImageManager::SetImageSize(hPictTutorial_, XMFLOAT3(1.2f, 1.2f, 1.2f));
 		ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1.9f, 1.9f, 1.9f, 1.0f));
 
-		ImageManager::SetImageSize(hPictPlay_, XMFLOAT3(1, 1, 1));
+		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(800, -500, 0));
+		
+		ImageManager::SetAlpha(hPictTutorial2_, 1);
+		ImageManager::SetAlpha(hPictPlay2_, 0);
+
 		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{

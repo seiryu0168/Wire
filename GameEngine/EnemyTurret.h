@@ -8,7 +8,6 @@ private:
     int shotTime_;
     int reLoadTime_;
     int shotCount_;
-    const int RELOAD;
     float rpm_;//˜AŽË‘¬“x Rounds Per Minute
 
     EnemyState<EnemyTurret>* pState_;
