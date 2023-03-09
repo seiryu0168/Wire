@@ -682,6 +682,7 @@ void Player::Aim(RayCastData* ray)
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
             //レイキャストの始点と方向を入力
             toEnemyDist = XMVectorGetX(XMVector3Length(vPtrDir));
+
                 XMStoreFloat3(&ray->dir, vPtrDir);
                 ModelManager::RayCast(*ray);
             if (ray->hitModel==pEnemy->GethModel())

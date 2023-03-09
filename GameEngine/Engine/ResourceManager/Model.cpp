@@ -162,7 +162,7 @@ void ModelManager::RayCast(RayCastData& ray)
 			length = ray.dist;
 			hitPos = ray.hitPos;
 			normal = ray.normal;
-			ray.hitModel = polygonTestList_[i];
+			ray.hitModelList.push_back(polygonTestList_[i]);
 		}
 	}
 	ray.dist = length;
