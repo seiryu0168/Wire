@@ -46,6 +46,7 @@ void EnemyTurret::Initialize()
 	AddCollider(pCollider);
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
 	assert(hModel_ >= 0);
+	SethModel(hModel_);
 	ModelManager::SetModelNum(hModel_);
 	int stageModelHandle = -1;
 	stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();

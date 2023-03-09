@@ -400,7 +400,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData URay;
     RayCastData DRay;
 
-
     XMFLOAT3 moveDist;
     float moveY;
 
@@ -662,6 +661,7 @@ void Player::Aim(RayCastData* ray)
     //レイキャストの判定距離の上限
     ray->distLimit = 100.0f;
     aimFlag_ = true;
+    float toEnemyDist = -1.0f;
 
     //当たる位置の計算
     XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
@@ -680,8 +680,18 @@ void Player::Aim(RayCastData* ray)
         {
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
-            XMStoreFloat3(&ray->dir, vPtrDir);
-            lockOn_ = true;
+            //レイキャストの始点と方向を入力
+            toEnemyDist = XMVectorGetX(XMVector3Length(vPtrDir));
+                XMStoreFloat3(&ray->dir, vPtrDir);
+                ModelManager::RayCast(*ray);
+            if (ray->hitModel==pEnemy->GethModel())
+            {
+                lockOn_ = true;
+                XMStoreFloat3(&ray->dir, vPlayerDir);
+            }
+            else
+                lockOn_ = false;
+
             enemyNumber_ = pEnemy->GetObjectID();
         }
         //捕捉していない場合ロックオンフラグを降ろす
@@ -692,13 +702,18 @@ void Player::Aim(RayCastData* ray)
         }
 
     }
-
-    //レイキャストの始点と方向を入力
-    ModelManager::RayCast(*ray);
+    if (ray->hit && lockOn_ == false)
+        ModelManager::RayCast(ray->hitModel, *ray);
+    else
+        ModelManager::RayCast(*ray);
 
     //当たった位置にマーカー表示
     if (ray->hit && !flyFlag_)
     {
+        //if (toEnemyDist < ray->dist)
+        //{
+        //    lockOn_ = false;
+        //}
         rotateSpeed_ = 2.0f;
         XMFLOAT3 pointerPos;
         XMStoreFloat3(&pointerPos, ray->hitPos);

@@ -10,6 +10,7 @@ struct parameter
     bool     isTargetList; //プレイヤーのターゲットリストに入ってるかどうか
 
     int      life;         //敵の体力
+    int      hModel_;
 
     XMMATRIX matX;         //X軸の回転行列
     XMMATRIX matY;         //Y軸の回転行列
@@ -23,7 +24,6 @@ struct parameter
 class Enemy : public GameObject
 {
 private:
-    int hModel_;
     parameter enemyParameter_;
     //EnemyState* pEnemyState_;
 public:
@@ -66,6 +66,7 @@ public:
     void DecreaseLife(int decRate) { enemyParameter_.life -= decRate; }          //ライフを減らす
     void IncreaseLife(int incRate) { enemyParameter_.life += incRate; }          //ライフを増やす
     void SetIsList(bool isList) { enemyParameter_.isTargetList = isList; }       //プレイヤーの認識リストに入ってるかどうかを設定
+    void SethModel(int modelHandle) { enemyParameter_.hModel_ = modelHandle; }
 
     //float    GetViewAngle() { return enemyParameter_.viewAngle; }       //見える距離取得
     //float    GetViewRange() { return enemyParameter_.viewRange; }       //視角取得
@@ -79,6 +80,7 @@ public:
     bool     GetIsList() { return enemyParameter_.isTargetList; }       //エネミーがプレイヤーの認識リストに入ってるかどうか
     int      GetLife() { return enemyParameter_.life; }                 //エネミーのライフ取得
     bool     GetVisibleFrag() { return enemyParameter_.visibleFlag; }   //プレイヤーを認識してるかどうか
+    int GethModel() { return enemyParameter_.hModel_; }
 
 protected:
     //部品化 : エネミーの視界はクラスにしておいて、必要な関数を実装しておく

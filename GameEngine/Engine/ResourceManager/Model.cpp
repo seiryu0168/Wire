@@ -116,6 +116,10 @@ void ModelManager::DrawToon(int modelNum)
 
 void ModelManager::RayCast(int modelNum, RayCastData& ray)
 {
+	if (modelNum == -1)
+	{
+		return;
+	}
 	XMMATRIX invW = XMMatrixInverse(nullptr,modelData_[modelNum]->transform_.GetWorldMatrix());
 	XMVECTOR vStart = XMLoadFloat3(&ray.start);
 	XMVECTOR vPass = XMVectorSet(ray.start.x+ray.dir.x, ray.start.y + ray.dir.y, ray.start.z + ray.dir.z,0);
@@ -137,6 +141,7 @@ void ModelManager::RayCast(RayCastData& ray)
 
 	XMFLOAT3 start = ray.start;
 	XMFLOAT3 dir = ray.dir;
+	int hitModel = -1;
 
 	for (int i = 0; i < polygonTestList_.size(); i++)
 	{
@@ -157,6 +162,7 @@ void ModelManager::RayCast(RayCastData& ray)
 			length = ray.dist;
 			hitPos = ray.hitPos;
 			normal = ray.normal;
+			ray.hitModel = polygonTestList_[i];
 		}
 	}
 	ray.dist = length;

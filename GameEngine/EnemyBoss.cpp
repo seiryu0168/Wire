@@ -36,6 +36,7 @@ void EnemyBoss::Initialize()
 	ModelManager::SetModelNum(hModelCore_);
 	assert(hModelCore_ >= 0);
 	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
+	SethModel(hModelShield_);
 	ModelManager::SetModelNum(hModelShield_);
 	assert(hModelShield_ >= 0);
 	SetPlayerPointer((Player*)FindObject("Player"));
@@ -168,6 +169,7 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			{
 				ChangeState(StateSecondMode::GetInstance());
 				ModelManager::DeleteModelNum(hModelShield_);
+				SethModel(hModelCore_);
 			}
 		}
 	}

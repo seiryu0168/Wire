@@ -88,5 +88,5 @@ bool Enemy::IsLockOned(Enemy* enemy)
 
 void Enemy::LoadModel(std::string fileName)
 {
-	hModel_ = ModelManager::Load("Assets\\" + fileName);
+	//hModel_ = ModelManager::Load("Assets\\" + fileName);
 }

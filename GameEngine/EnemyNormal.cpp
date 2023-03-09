@@ -37,6 +37,7 @@ void EnemyNormal::Initialize()
 {
 	SetTag("Enemy");
 	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
+	SethModel(hModel_);
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
