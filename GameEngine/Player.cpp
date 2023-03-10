@@ -705,7 +705,7 @@ void Player::Aim(RayCastData* ray)
 
     }
     ray->Init();
-    if (ray->hit && lockOn_ == false)
+    if (lockOn_ == false)
     {
         XMStoreFloat3(&ray->dir, vPlayerDir);
         ray->start = bonePos;
