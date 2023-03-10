@@ -5,6 +5,8 @@
 #include <string>
 #include"Direct3D.h"
 #include<list>
+#include<vector>
+#include <algorithm>
 #include "../GameObject/Transform.h"
 
 #pragma comment(lib, "LibFbxSDK-MT.lib")
@@ -22,7 +24,12 @@ struct RayCastData
 	XMVECTOR normal;
 	BOOL hit;
 	float distLimit;
-	std::list<int> hitModelList;
+	struct hitData
+	{
+		int hModel;
+		float hitDist;
+	};
+	std::list<hitData> hitModelList;
 
 	RayCastData() :start(XMFLOAT3(0, 0, 0)),
 		dir(XMFLOAT3(0, 0, 0)),
@@ -31,6 +38,21 @@ struct RayCastData
 		hitPos(XMVectorSet(0, 0, 0, 0)),
 		normal(XMVectorSet(0, 0, 0, 0)),
 		distLimit(9999.0f){}
+	void Init(XMFLOAT3 argstart = XMFLOAT3( 0,0,0 ), XMFLOAT3 argdir=XMFLOAT3(0,0,0))
+	{
+		start = argstart;
+		dir = argdir;
+		dist = 9999.0f;
+		hit = false;
+		hitPos = XMVectorSet(0, 0, 0, 0);
+		normal = XMVectorSet(0, 0, 0, 0);
+		distLimit = 9999.0f;
+	}
+	static bool fComp(const hitData& v1, const hitData& v2) { return v1.hitDist > v2.hitDist; }
+	void Adjust()
+	{
+		hitModelList.sort(fComp);
+	}
 };
 
 	 class FbxParts;

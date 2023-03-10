@@ -142,29 +142,44 @@ void ModelManager::RayCast(RayCastData& ray)
 	XMFLOAT3 start = ray.start;
 	XMFLOAT3 dir = ray.dir;
 	int hitModel = -1;
-
+	ray.hitModelList.clear();
+	//レイが対象になっているモデルに当たっているかどうか
 	for (int i = 0; i < polygonTestList_.size(); i++)
 	{
-
+		//ローカル座標に変換するための逆行列
 		XMMATRIX invW = XMMatrixInverse(nullptr, modelData_[polygonTestList_[i]]->transform_.GetWorldMatrix());
+		
+		//スタート位置と方向をベクトルにする
 		XMVECTOR vStart = XMLoadFloat3(&start);
 		XMVECTOR vPass = XMVectorSet(start.x + dir.x, start.y + dir.y, start.z + dir.z, 0);
-
+		
+		//逆行列で変換させる
 		vStart = XMVector3TransformCoord(vStart, invW);
 		vPass = XMVector3TransformCoord(vPass, invW);
 
+		//ベクトルから座標に戻す
 		XMStoreFloat3(&ray.start, vStart);
 		XMStoreFloat3(&ray.dir, vPass - vStart);
+		
+		ray.hit = false;
+		//レイキャスト
 		modelData_[polygonTestList_[i]]->pfbx_->RayCast(ray, modelData_[polygonTestList_[i]]->transform_);
-		if (ray.hit&&length>ray.dist)
+		
+		//当たっていたら
+		if (ray.hit)
 		{
-			isHit = ray.hit;
-			length = ray.dist;
-			hitPos = ray.hitPos;
-			normal = ray.normal;
-			ray.hitModelList.push_back(polygonTestList_[i]);
+
+			if (length > ray.dist)
+			{
+				isHit = ray.hit;
+				length = ray.dist;
+				hitPos = ray.hitPos;
+				normal = ray.normal;
+			}
+			ray.hitModelList.push_back({ polygonTestList_[i], ray.dist });
 		}
 	}
+	ray.Adjust();
 	ray.dist = length;
 	ray.hit = isHit;
 	ray.hitPos = hitPos;

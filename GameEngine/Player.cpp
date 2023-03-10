@@ -680,18 +680,19 @@ void Player::Aim(RayCastData* ray)
         {
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
-            //レイキャストの始点と方向を入力
             toEnemyDist = XMVectorGetX(XMVector3Length(vPtrDir));
 
+            //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
                 ModelManager::RayCast(*ray);
-            if (ray->hitModel==pEnemy->GethModel())
+            if (ray->hitModelList.begin()->hModel==pEnemy->GethModel()&&ray->hit)
             {
                 lockOn_ = true;
-                XMStoreFloat3(&ray->dir, vPlayerDir);
             }
             else
+            {
                 lockOn_ = false;
+            }
 
             enemyNumber_ = pEnemy->GetObjectID();
         }
@@ -703,10 +704,21 @@ void Player::Aim(RayCastData* ray)
         }
 
     }
+    ray->Init();
     if (ray->hit && lockOn_ == false)
-        ModelManager::RayCast(ray->hitModel, *ray);
-    else
+    {
+        XMStoreFloat3(&ray->dir, vPlayerDir);
+        ray->start = bonePos;
+
         ModelManager::RayCast(*ray);
+    }
+
+    else
+    {
+        XMStoreFloat3(&ray->dir, vPtrDir);
+        ray->start = bonePos;
+        ModelManager::RayCast(*ray);
+    }
 
     //当たった位置にマーカー表示
     if (ray->hit && !flyFlag_)

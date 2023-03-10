@@ -617,6 +617,7 @@ void FbxParts::RayCast(RayCastData& rayData,Transform& transform)
 		XMVECTOR nmlVec2;
 		for (int poly = 0; poly < indexCount_[material]; poly++)
 		{
+			//3つの頂点のベクトルを使って当たっているかどうかの判別をする
 			XMFLOAT3 v0 = { 0,0,0 };
 			XMStoreFloat3(&v0, pVertices_[ppIndex_[material][poly]].position);
 
