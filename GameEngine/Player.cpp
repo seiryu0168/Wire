@@ -15,6 +15,7 @@
 #include"Easing.h"
 #include"Stage1.h"
 #include"Pointer.h"
+#include"Engine/DirectX_11/Math.h"
 #include"Wire.h"
 
 #include<list>
@@ -110,7 +111,6 @@ void Player::Initialize()
     //ラインパーティクル用画像のロード
     pLine_->Load("Assets\\Line.png");
     pPointerLine_->Load("Assets\\Effect01.png");
-
 
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);

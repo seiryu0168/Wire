@@ -1,6 +1,6 @@
 #pragma once
 #include<DirectXMath.h>
-#include"Fbx.h"
+//#include"Fbx.h"
 using namespace DirectX;
 
 namespace Math
@@ -27,7 +27,7 @@ namespace Math
 	/// <param name="v1">面を構成する頂点2</param>
 	/// <param name="v2">面を構成する頂点3</param>
 	/// <returns>当たったかどうか</returns>
-	bool Intersect(RayCastData& rayCast, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2);
+	//bool Intersect(RayCastData& rayCast, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2);
 	/// <summary>
 	/// 法線との角度を調べる
 	/// </summary>
@@ -35,5 +35,27 @@ namespace Math
 	/// <param name="vDir">方向</param>
 	/// <returns>表かどうか</returns>
 	bool IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir);
+
+	//inline XMVECTOR operator-(const XMFLOAT3& f1, const XMFLOAT3& f2)
+	//{
+	//	XMFLOAT3 a = f1 - f2;
+	//
+	//	//return XMLoadFloat3(&f1) - XMLoadFloat3(&f2);
+	//}
+	//XMVECTOR operator*=(XMVECTOR& f1, const XMMATRIX& m1)
+	//{
+	//	//f1をm1で変形させる
+	//	f1 = XMVector3TransformCoord(f1, m1);
+	//	return f1;
+	//}
+	//XMVECTOR operator*(XMVECTOR f1, XMMATRIX m1)
+	//{
+	//	//f1をm1で変形
+	//	return XMVector3TransformCoord(f1, m1);
+	//}
+	//XMFLOAT3 operator*(const DirectX::XMFLOAT3& f1, const float f)
+	//{
+	//	return XMFLOAT3(f1.x * f, f1.y * f, f1.z * f);
+	//}
 }
 

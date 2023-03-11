@@ -1,5 +1,5 @@
 #pragma once
-#include<DirectXMath.h>
+#include"../DirectX_11/Math.h"
 
 using namespace DirectX;
 class Transform

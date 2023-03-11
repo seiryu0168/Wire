@@ -1,7 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include<assert.h>
-#include <DirectXMath.h>
+#include"Math.h"
 #include<vector>
 #include"../SAFE_DELETE_RELEASE.h"
 using namespace DirectX;
