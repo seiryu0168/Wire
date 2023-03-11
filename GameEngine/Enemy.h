@@ -40,7 +40,7 @@ public:
     //デストラクタ
     ~Enemy();
     
-    virtual void Attack()=0;
+    virtual void Attack() {};
     /// <summary>
 /// エネミーの視界内にプレイヤーがいるかどうか
 /// </summary>

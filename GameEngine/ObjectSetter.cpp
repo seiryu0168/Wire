@@ -6,6 +6,7 @@
 #include"TutorialUI.h"
 #include"Player.h"
 #include"TitleUI.h"
+#include"TutorialEnemy.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
 #include"EnemyBoss.h"
@@ -60,14 +61,18 @@ void ObjectSetter::Initialize()
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
+	//親がリザルトシーンだったら
 	if (parentName == "ResultScene")
 	{
 		Instantiate<ResultUI>(GetParent());
 	}
+	//親がチュートリアルシーンだったら
 	if (parentName == "TutorialScene")
 	{
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
+		
+		enemys_.push_back(Instantiate<TutorialEnemy>(GetParent()));
 		Instantiate<TutorialUI>(GetParent());
 	}
 	hPict_ = ImageManager::Load("Assets\\Black.png");

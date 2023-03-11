@@ -31,6 +31,7 @@ namespace
     static const float ANGLE_MAX     = 69.0f;
     static const float ANGLE_MIN     = -89.0f;
     static const float SHAKE_RATE = 1.5f;
+    static const float ASSISTLIMIT = 100.0f;
 }
 
 //コンストラクタ
@@ -659,7 +660,7 @@ void Player::OnCollision(GameObject* pTarget)
 void Player::Aim(RayCastData* ray)
 {
     //レイキャストの判定距離の上限
-    ray->distLimit = 1000.0f;
+    ray->distLimit = ASSISTLIMIT;
     aimFlag_ = true;
     lockOn_ = false;
     float toEnemyDist = -1.0f;
@@ -715,14 +716,14 @@ void Player::Aim(RayCastData* ray)
         if (lockOn_ == false)
         {
             XMStoreFloat3(&dir, vPlayerDir);
-            ray->Init(bonePos, dir, 1000.0f);
+            ray->Init(bonePos, dir, ASSISTLIMIT);
             ModelManager::RayCast(*ray);
         }
 
         else
         {
             XMStoreFloat3(&dir, vPtrDir);
-            ray->Init(bonePos, dir, 1000.0f);
+            ray->Init(bonePos, dir, ASSISTLIMIT);
             ModelManager::RayCast(*ray);
         }
     }

@@ -215,6 +215,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleUI.cpp" />
+    <ClCompile Include="TutorialEnemy.cpp" />
     <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TutorialUI.cpp" />
     <ClCompile Include="Wire.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleUI.h" />
+    <ClInclude Include="TutorialEnemy.h" />
     <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TutorialUI.h" />
     <ClInclude Include="Wire.h" />
