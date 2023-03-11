@@ -180,6 +180,8 @@ void ModelManager::RayCast(RayCastData& ray)
 		}
 	}
 	ray.Adjust();
+	ray.dir = dir;
+	ray.start = start;
 	ray.dist = length;
 	ray.hit = isHit;
 	ray.hitPos = hitPos;

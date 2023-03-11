@@ -24,12 +24,14 @@ struct RayCastData
 	XMVECTOR normal;
 	BOOL hit;
 	float distLimit;
-	struct hitData
+	class hitData
 	{
+	public:
 		int hModel;
 		float hitDist;
 	};
 	std::list<hitData> hitModelList;
+	//bool fComp(const hitData& v1, const hitData& v2) { return v1.hitDist < v2.hitDist; }
 
 	RayCastData() :start(XMFLOAT3(0, 0, 0)),
 		dir(XMFLOAT3(0, 0, 0)),
@@ -38,7 +40,7 @@ struct RayCastData
 		hitPos(XMVectorSet(0, 0, 0, 0)),
 		normal(XMVectorSet(0, 0, 0, 0)),
 		distLimit(9999.0f){}
-	void Init(XMFLOAT3 argstart = XMFLOAT3( 0,0,0 ), XMFLOAT3 argdir=XMFLOAT3(0,0,0))
+	void Init(XMFLOAT3 argstart = XMFLOAT3( 0,0,0 ), XMFLOAT3 argdir=XMFLOAT3(0,0,0),float argDistLimit=9999.0f)
 	{
 		start = argstart;
 		dir = argdir;
@@ -46,12 +48,11 @@ struct RayCastData
 		hit = false;
 		hitPos = XMVectorSet(0, 0, 0, 0);
 		normal = XMVectorSet(0, 0, 0, 0);
-		distLimit = 9999.0f;
+		distLimit = argDistLimit;
 	}
-	static bool fComp(const hitData& v1, const hitData& v2) { return v1.hitDist > v2.hitDist; }
 	void Adjust()
 	{
-		hitModelList.sort(fComp);
+		hitModelList.sort([](hitData& v1, hitData& v2) {return v1.hitDist < v2.hitDist; });
 	}
 };
 

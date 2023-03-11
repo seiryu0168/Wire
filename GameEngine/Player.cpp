@@ -659,8 +659,9 @@ void Player::OnCollision(GameObject* pTarget)
 void Player::Aim(RayCastData* ray)
 {
     //レイキャストの判定距離の上限
-    ray->distLimit = 100.0f;
+    ray->distLimit = 1000.0f;
     aimFlag_ = true;
+    lockOn_ = false;
     float toEnemyDist = -1.0f;
 
     //当たる位置の計算
@@ -678,8 +679,12 @@ void Player::Aim(RayCastData* ray)
         //エネミーを捕捉しているならエネミーの情報を取得、ロックオンフラグを立てる
         if (pEnemy != nullptr)
         {
+            //エネミーの座標取得
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
+            //エネミーへのベクトル生成
             vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
+            
+            //ベクトルの長さ
             toEnemyDist = XMVectorGetX(XMVector3Length(vPtrDir));
 
             //レイキャストの始点と方向を入力
@@ -689,35 +694,37 @@ void Player::Aim(RayCastData* ray)
             {
                 lockOn_ = true;
             }
-            else
-            {
-                lockOn_ = false;
-            }
+            //else
+            //{
+            //    lockOn_ = false;
+            //}
 
             enemyNumber_ = pEnemy->GetObjectID();
         }
-        //捕捉していない場合ロックオンフラグを降ろす
-        else
+         //捕捉していない場合ロックオンフラグを降ろす
+         else
+         {
+             enemyNumber_ = -1;
+             lockOn_ = false;
+         }
+
+    }
+    
+    {
+        XMFLOAT3 dir;
+        if (lockOn_ == false)
         {
-            enemyNumber_ = -1;
-            lockOn_ = false;
+            XMStoreFloat3(&dir, vPlayerDir);
+            ray->Init(bonePos, dir, 1000.0f);
+            ModelManager::RayCast(*ray);
         }
 
-    }
-    ray->Init();
-    if (lockOn_ == false)
-    {
-        XMStoreFloat3(&ray->dir, vPlayerDir);
-        ray->start = bonePos;
-
-        ModelManager::RayCast(*ray);
-    }
-
-    else
-    {
-        XMStoreFloat3(&ray->dir, vPtrDir);
-        ray->start = bonePos;
-        ModelManager::RayCast(*ray);
+        else
+        {
+            XMStoreFloat3(&dir, vPtrDir);
+            ray->Init(bonePos, dir, 1000.0f);
+            ModelManager::RayCast(*ray);
+        }
     }
 
     //当たった位置にマーカー表示
