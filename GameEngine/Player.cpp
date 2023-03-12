@@ -626,7 +626,7 @@ void Player::OnCollision(GameObject* pTarget)
             playerLife_ = max(0, playerLife_);
             flyFlag_ = false;
             flyTime_ = 1.0f;
-            vFlyMove_ = XMVector3Normalize(pTarget->GetPosition()-transform_.position_)*(-2);
+            vFlyMove_ = XMVector3Normalize(pTarget->GetPosition()-transform_.position_)*(-1.5f);
             ImageManager::SetAlpha(life_[playerLife_], 0);
         }
 
@@ -647,6 +647,9 @@ void Player::OnCollision(GameObject* pTarget)
                 playerLife_ = max(0, playerLife_);
                 godFlag_ = true;
                 godTime_ = 30;
+                flyFlag_ = false;
+                flyTime_ = 1.0f;
+                vFlyMove_ = XMVector3Normalize(pTarget->GetPosition() - transform_.position_) * (-0.5f);
                 ImageManager::SetAlpha(life_[playerLife_], 0);
 
             }

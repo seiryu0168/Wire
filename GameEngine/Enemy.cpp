@@ -29,7 +29,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	enemyParameter_.toPlayerVec = XMLoadFloat3(&playerPos) - enemyParameter_.vPosition;
 	float toPlayerRange;
-	toPlayerRange = XMVectorGetX(XMVector3Length(enemyParameter_.toPlayerVec)); //‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
+	toPlayerRange = VectorLength(enemyParameter_.toPlayerVec); //‹ŠE”»’è—p‚Ì‹ŠE‚Ì’·‚³æ“¾
 	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);					//³‹K‰»
 
 	//“àÏ‚ğ‹‚ß‚ÄŠp“xŒvZ(1ˆÈã‚É‚È‚ç‚È‚¢‚æ‚¤minŠÖ”‚Â‚¯‚½)
