@@ -624,6 +624,9 @@ void Player::OnCollision(GameObject* pTarget)
         {
             playerLife_--;
             playerLife_ = max(0, playerLife_);
+            flyFlag_ = false;
+            flyTime_ = 1.0f;
+            vFlyMove_ = XMVector3Normalize(pTarget->GetPosition()-transform_.position_)*(-2);
             ImageManager::SetAlpha(life_[playerLife_], 0);
         }
 
