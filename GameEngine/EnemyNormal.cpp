@@ -79,13 +79,13 @@ void EnemyNormal::Draw()
 
 void EnemyNormal::EnemyMove()
 {
-	SetPositionVec(XMLoadFloat3(&transform_.position_));//vPositionに今の座標を入れる
+	SetPositionVec(XMLoadFloat3(&transform_.position_));	//vPositionに今の座標を入れる
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	XMVECTOR toTargetVec = XMLoadFloat3(&playerPos);
 	XMVECTOR toVec = toTargetVec - GetPositionVec();
-	toVec = XMVector3Normalize(toVec);							//引数の正規化
-	float angle = XMVectorGetX(XMVector3Dot(GetFrontVec(), toVec)); //角度計算(ラジアン)
-	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));			//角度を回転行列に変換
+	toVec = XMVector3Normalize(toVec);						//引数の正規化
+	float angle = VectorDot(GetFrontVec(), toVec);			//角度計算(ラジアン)
+	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));	//角度を回転行列に変換
 	toVec *= 0.6f;
 	toVec+= GetPositionVec();
 	moveVec_ *= (float)knockBackTime_/(float)KNOCKBACKTIME;

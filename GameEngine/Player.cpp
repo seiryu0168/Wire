@@ -386,9 +386,9 @@ void Player::CameraMove(RayCastData ray)
 
     matCamY_   = XMMatrixRotationX(angleX_ * (float)(M_PI / 180.0));
     matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0));
-    vNormalCam = XMVector3TransformCoord(vCamPos_,  matCamY_ * matCamX_)* CAMERA_DIST;
-    vAimCam    = XMVector3TransformCoord(vBaseAim_, matCamY_ * matCamX_);
-    vTarCam    = vPlayerPos_+XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_)+cameraShake_;
+    vNormalCam = vCamPos_*  matCamY_ * matCamX_* CAMERA_DIST;
+    vAimCam    = vBaseAim_* matCamY_ * matCamX_;
+    vTarCam    = vPlayerPos_+/*XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_)*/vBaseTarget_ * matCamY_* matCamX_ +cameraShake_;
     
     vMoveCam   = XMVectorLerp(vNormalCam, vAimCam, aimTime_);
     
@@ -462,7 +462,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     if(lMoveRay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveHolizon + (lMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, lMoveRay.normal))));
+        wallzuri = moveHolizon + (lMoveRay.normal * (1 - VectorDot(-moveHolizon, lMoveRay.normal)));
         XMVECTOR back = (XMLoadFloat3(&lMoveRay.start) + (XMLoadFloat3(&lMoveRay.dir) * 2)) - lMoveRay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
         SetStatus(ATC_DEFAULT);
@@ -475,7 +475,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     if(rMoveRay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveHolizon + (rMoveRay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, rMoveRay.normal))));
+        wallzuri = moveHolizon + (rMoveRay.normal * (1 - VectorDot(-moveHolizon, rMoveRay.normal)));
         XMVECTOR back = (XMLoadFloat3(&rMoveRay.start) + (XMLoadFloat3(&rMoveRay.dir) * 2)) - rMoveRay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
         SetStatus(ATC_DEFAULT);
@@ -489,7 +489,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     if (URay.dist < hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveVector + (URay.normal * (1 - XMVectorGetX(XMVector3Dot(-moveHolizon, URay.normal))));
+        wallzuri = moveVector + (URay.normal * (1 - VectorDot(-moveHolizon, URay.normal)));
         XMVECTOR back = (XMLoadFloat3(&URay.start) + (XMLoadFloat3(&URay.dir) * 2)) - URay.hitPos;
         XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
         SetStatus(ATC_DEFAULT);
@@ -683,10 +683,10 @@ void Player::Aim(RayCastData* ray)
             //エネミーの座標取得
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             //エネミーへのベクトル生成
-            vPtrDir = XMLoadFloat3(&toEnemy) - XMLoadFloat3(&bonePos);
+            vPtrDir = toEnemy - bonePos;
             
             //ベクトルの長さ
-            toEnemyDist = XMVectorGetX(XMVector3Length(vPtrDir));
+            toEnemyDist = VectorLength(vPtrDir);
 
             //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
@@ -790,7 +790,7 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
                          XMLoadFloat3(&transform_.position_); 
     
     //targetVecがlength以下だったら
-    if (XMVectorGetX(XMVector3Length(targetVec)) < length)
+    if (VectorLength(targetVec) < length)
     {
         targetVec = XMVector3Normalize(targetVec);
         XMVECTOR dirVec = XMVector3Normalize(XMLoadFloat3(&ray.dir));
@@ -827,7 +827,7 @@ Enemy* Player::AimAssist(RayCastData* ray)
         if (IsAssistRange(*ray, (*itr)->GetPosition(), ray->distLimit))
         {
             XMFLOAT3 targetPos = (*itr)->GetPosition();
-            float range = XMVectorGetX(XMVector3Length(XMLoadFloat3(&targetPos) - XMLoadFloat3(&ray->start)));
+            float range = VectorLength(targetPos - ray->start);
             if (range < minRange)
             {
                 minRange = range;
