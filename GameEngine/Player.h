@@ -65,7 +65,6 @@ class Player : public GameObject
 
 
     Particle*     pParticle_;
-    LineParticle* pLine_;
     LineParticle* pPointerLine_;
     Wire*         wire_;
     Pointer*      pPointer_;
@@ -149,6 +148,9 @@ public:
     int GetTargetEnemyNum() { return enemyNumber_; }
     bool IsLockOn() { return lockOn_; }
     bool IsAim() { return aimFlag_; }
+    bool IsFly() { return flyFlag_; }
+    bool IsJump() { return jumpFlag_; }
+    bool IsAir() { return airFlag_; }
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

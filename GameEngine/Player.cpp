@@ -72,7 +72,6 @@ Player::Player(GameObject* parent)
     jumpFlag_(false),
     groundFlag_(true),
     godFlag_(false),
-    pLine_(nullptr),
     pPointerLine_(nullptr),
     pParticle_(nullptr),
     pPointer_(nullptr),
@@ -103,13 +102,10 @@ void Player::Initialize()
     Instantiate<PlayerBase>(this);
     
     //ラインパーティクル生成
-    pLine_ = new LineParticle;
     pPointerLine_ = new LineParticle;
     //パラメータ設定
-    pLine_->SetLineParameter(0.5f, 20,0.4f);
     pPointerLine_->SetLineParameter(0.1f, 2);
     //ラインパーティクル用画像のロード
-    pLine_->Load("Assets\\Line.png");
     pPointerLine_->Load("Assets\\Effect01.png");
 
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
@@ -190,7 +186,7 @@ void Player::Update()
         if (ray.hit)
         {
             groundFlag_ = false;
-            airFlag_ = false;
+            //airFlag_ = false;
             flyFlag_ = true;
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
@@ -289,7 +285,6 @@ void Player::Update()
         flyTime_ -= 0.01f;
         flyTime_=max(flyTime_, 0);
     }
-    pLine_->AddPosition(transform_.position_);
     
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
@@ -314,8 +309,6 @@ void Player::Draw()
 
 void Player::SecondDraw()
 {
-   
-    pLine_->Draw(&transform_);
     wire_->Draw(transform_);
     if (pPointer_->IsDraw())
     {
@@ -336,7 +329,6 @@ void Player::Release()
     SAFE_RELEASE(pPointer_);
     SAFE_DELETE(pScreen_);  
     SAFE_RELEASE(pParticle_);
-    SAFE_RELEASE(pLine_);
     SAFE_RELEASE(pPointerLine_);
 }
 
