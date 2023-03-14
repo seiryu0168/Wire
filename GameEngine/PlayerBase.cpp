@@ -35,7 +35,7 @@ void PlayerBase::Update()
     bool f = ((Player*)GetParent())->IsFly();
     bool j = ((Player*)GetParent())->IsJump();
     bool a = ((Player*)GetParent())->IsAir();
-    if(!f&&!a&&VectorLength(moveVec_)>=0.5f)
+    if(((Player*)GetParent())->IsGround()&&VectorLength(moveVec_)>=0.2f)
     Spark();
 }
 
@@ -64,8 +64,8 @@ void PlayerBase::Spark()
         data.delay = 0;
         data.number = 1;
         data.lifTime = 30;
-        data.acceleration = 0.98f;
-        data.gravity = 0.3f;
+        data.acceleration = 0.58f;
+        data.gravity = 0.2f;
 
         data.dir = StoreFloat3((-moveVec_)+ XMVectorSet(0, VectorLength(moveVec_)*0.6f, 0, 0));
         data.dirErr = XMFLOAT3(10.0f, 5.0f, 10.0f);

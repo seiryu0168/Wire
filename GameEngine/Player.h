@@ -151,6 +151,7 @@ public:
     bool IsFly() { return flyFlag_; }
     bool IsJump() { return jumpFlag_; }
     bool IsAir() { return airFlag_; }
+    bool IsGround(){return groundFlag_;}
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 

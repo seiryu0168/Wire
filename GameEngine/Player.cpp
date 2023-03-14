@@ -186,7 +186,7 @@ void Player::Update()
         if (ray.hit)
         {
             groundFlag_ = false;
-            //airFlag_ = false;
+            airFlag_ = false;
             flyFlag_ = true;
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
