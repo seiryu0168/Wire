@@ -25,18 +25,6 @@ class Text
 			fontStretch_ = DWRITE_FONT_STRETCH_NORMAL;
 			pCollection_ = nullptr;
 		}
-
-		~FontData()
-		{
-			if (pCollection_ != nullptr)
-			{
-				pCollection_->Release();
-				SAFE_DELETE(pCollection_);
-			}
-
-			SAFE_DELETE(pFontName_);
-			//SAFE_DELETE(pLocale_);
-		}
 	};
 private:
 	XMINT2				  transform2D;		//座標
@@ -46,7 +34,7 @@ private:
 	ID2D1SolidColorBrush* pColorBrush_;		//ブラシ	
 	IDWriteFactory*		  pWriteFactory_;	//文字描画のファクトリ
 	IDWriteTextFormat*	  pTextFormat_;     //テキストフォーマット
-
+	//IDWriteTextLayout*	  pLayout_;			//テキストレイアウト
 public:
 	Text();
 	~Text();
