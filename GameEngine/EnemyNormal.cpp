@@ -99,7 +99,8 @@ void EnemyNormal::EnemyMove()
 	//ベクトル調整
 	toVec *= 0.6f;
 	toVec+= GetPositionVec();
-	//ベクトル
+	
+	//ノックバックベクトル計算
 	knockBackVec_ *= (float)knockBackTime_/(float)KNOCKBACKTIME;
 	//ベクトル設定
 	SetPositionVec(toVec);
