@@ -1,13 +1,13 @@
 #include "EnemyBoss.h"
-#include"Engine/ResourceManager/Model.h"
+//#include"Engine/ResourceManager/Model.h"
 #include"Bullet.h"
 #include"Pointer.h"
 #include"Engine/Collider/BoxCollider.h"
 #include"HomingBullet.h"
 namespace
 {
-	static const float nearRange = 75.0f;
-	static const float farRange = 125.0f;
+	static const float RANGE_NEAR = 75.0f;
+	static const float RANGE_FAR = 125.0f;
 }
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
@@ -28,28 +28,40 @@ EnemyBoss::~EnemyBoss()
 
 void EnemyBoss::Initialize()
 {
+	//タグ設定
 	SetTag("Enemy");
+	//プレイヤーのポインター取得
+	SetPlayerPointer((Player*)FindObject("Player"));
+	//当たり判定設定
 	BoxCollider* pCollider = new BoxCollider({0,0,0}, XMFLOAT3(5, 10, 5));
 	AddCollider(pCollider);
-
+	
+	//コアのモデル読み込み
 	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
 	ModelManager::SetModelNum(hModelCore_);
 	assert(hModelCore_ >= 0);
+	//シールドのモデル読み込み
 	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
 	SethModel(hModelShield_);
 	ModelManager::SetModelNum(hModelShield_);
 	assert(hModelShield_ >= 0);
-	SetPlayerPointer((Player*)FindObject("Player"));
+	
+	//視覚の設定
 	sight.SetAngle((float)(M_PI*1.5f));
 	sight.SetRange(200);
 	
+	//HP設定
 	SetLife(5);
+	//位置設定
 	transform_.position_ = { 110,10,110 };
+	
+	//捜索ステートに設定
 	ChangeState(StateSearch::GetInstance());
 }
 
 void EnemyBoss::Update()
 {
+	//座標設定
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
 	pState_->Update(*this);
 }
@@ -60,16 +72,21 @@ void EnemyBoss::FixedUpdate()
 
 void EnemyBoss::Draw()
 {
+	//座標設定
 	ModelManager::SetTransform(hModelCore_, transform_);
+	//ロックオンされてるなら
 	if (IsLockOned(this))
 		ModelManager::DrawOutLine(hModelCore_, { 1,0,0,1 });
+	//PlayerがAimモードなら
 	else if (GetPlayerPointer()->IsAim())
 		ModelManager::DrawOutLine(hModelCore_, { 1,1,0,1 });
+	//それ以外
 	else
 		ModelManager::Draw(hModelCore_);
-	
+	//HPが3以上なら
 	if (GetLife() >= 3)
 	{
+		//上と同じ
 		ModelManager::SetTransform(hModelShield_, transform_);
 		if (IsLockOned(this))
 			ModelManager::DrawOutLine(hModelShield_, { 1,0,0,1 });
@@ -82,7 +99,8 @@ void EnemyBoss::Draw()
 
 void EnemyBoss::Attack()
 {
-	if (XMVectorGetX(XMVector3Length(GetToPlayerVec()))<nearRange)
+	//プレイヤーとの距離が近かったら
+	if (XMVectorGetX(XMVector3Length(GetToPlayerVec()))< RANGE_NEAR)
 	{
 		//攻撃1
 		//直進する弾で攻撃
@@ -104,7 +122,8 @@ void EnemyBoss::Attack()
 
 		Shot(perShot_);
 	}
-	else if(XMVectorGetX(XMVector3Length(GetToPlayerVec())) < farRange)
+	//プレイヤーとの距離が遠かったら
+	else if(XMVectorGetX(XMVector3Length(GetToPlayerVec())) < RANGE_FAR)
 	{
 		//攻撃2
 		//追尾弾で攻撃
@@ -118,11 +137,17 @@ void EnemyBoss::HShot(bool shot)
 	if (shot)
 	{
 		float isShot = 3600.0f / rpm_;
+		//isShotがshotTime_以下だったら
 		if (isShot <= (float)shotTime_)
 		{
+			//射撃方向をプレイヤーの方向にする
 			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
+			//HomingBullet生成
 			HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
+			
+			//shotTime_を0にする
 			shotTime_ = 0;
+			//撃った回数
 			shotCount_++;
 		}
 	}

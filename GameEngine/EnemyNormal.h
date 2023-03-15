@@ -40,7 +40,7 @@ private:
         void Update(EnemyNormal& enemy) override;
     };
 
-    XMVECTOR moveVec_;
+    XMVECTOR knockBackVec_;
     int knockBackTime_;
     void ChangeState(EnemyState<EnemyNormal>* state);
 public:
@@ -71,4 +71,5 @@ public:
     //è’ìÀ
     void OnCollision(GameObject* pTarget) override;
 
+    void AdjustStartPos(XMFLOAT3& pos);
 };

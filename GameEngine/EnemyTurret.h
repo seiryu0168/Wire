@@ -72,5 +72,6 @@ public:
     void Release() override;
 
     void OnCollision(GameObject* pTarget) override;
+    void AdjustStartPos(XMFLOAT3& pos);
 };
 

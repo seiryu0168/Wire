@@ -1,6 +1,6 @@
 #include "EnemyTurret.h"
 #include"Stage1.h"
-#include"Engine/ResourceManager/Model.h"
+//#include"Engine/ResourceManager/Model.h"
 #include"Bullet.h"
 #include"HomingBullet.h"
 #include"Pointer.h"
@@ -41,29 +41,42 @@ EnemyTurret::~EnemyTurret()
 //初期化
 void EnemyTurret::Initialize()
 {
+	//タグ設定
 	SetTag("Enemy");
+	//プレイヤーのポインター取得
+	SetPlayerPointer((Player*)FindObject("Player"));
+	
+	//当たり判定設定
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0),3);
 	AddCollider(pCollider);
+	
+	//モデル読み込み
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
 	assert(hModel_ >= 0);
+	//モデルセット
 	SethModel(hModel_);
 	ModelManager::SetModelNum(hModel_);
+	
+	//ステージのモデル取得
 	int stageModelHandle = -1;
 	stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
-	XMFLOAT3 initPos = transform_.position_;
-	initPos.x = (float)(rand() % 100);
-	initPos.z = (float)(rand() % 100);
-	RayCastData ray;
-	ray.start = { initPos.x, 999.0f, initPos.z };
-	ray.dir = { 0,-1,0 };
 	
+	//初期位置設定
+	XMFLOAT3 initPos = transform_.position_;
+	initPos = XMFLOAT3((float)((rand() % 1000)-500)/10.0f,0, (float)((rand() % 1000) - 500) / 10.0f);
+	AdjustStartPos(initPos);
+	initPos.y = 999.0f;
+	//レイキャストで地面を特定
+	RayCastData ray;
+	ray.start = initPos;
+	ray.dir = { 0,-1,0 };
 	ModelManager::RayCast(stageModelHandle, ray);
 	if (ray.hit)
 	{
 		initPos.y = (999 - ray.dist)+2.0f;
 	}
 	transform_.position_ = initPos;
-	SetPlayerPointer((Player*)FindObject("Player"));
+	//捜索ステートに設定
 	ChangeSatate(StateSearch::GetInstance());
 }
 
@@ -121,21 +134,44 @@ void EnemyTurret::Release()
 
 void EnemyTurret::OnCollision(GameObject* pTarget)
 {
+	//当たったオブジェクトのタグがPlayerだったら
 	if (pTarget->GetTag() == "Player")
 	{
+		//PlayerのステータスがATTACKだったら
 		if (GetPlayerPointer()->GetSatatus() & ATC_ATTACK)
 		{
+			//HPを1減らす
 			DecreaseLife(1);
+			
+			//PlayerのステータスをDEFAULTに戻す
 			GetPlayerPointer()->SetStatus(ATC_DEFAULT);
+			
+			//HPが0以下になったら
 			if (GetLife() < 0)
 			{
+				//座標を遠い所に移動させてから殺す
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
+				//モデル番号も消す
 				ModelManager::DeleteModelNum(hModel_);
+				//プレイヤーの認識リストから消す
 				SetIsList(false);
 				KillMe();
 			}
 		}
+	}
+}
+
+void EnemyTurret::AdjustStartPos(XMFLOAT3& pos)
+{
+	//座標をy＝0にしておく
+	pos.y = 0;
+	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
+	playerPos.y = 0;
+	//プレイヤーとの距離が70以上だったら離す
+	if (VectorLength(pos - playerPos) <= 70)
+	{
+		pos = StoreFloat3(XMLoadFloat3(&pos) + (pos - playerPos));
 	}
 }
 
