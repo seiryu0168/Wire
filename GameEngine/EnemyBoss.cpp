@@ -140,8 +140,6 @@ void EnemyBoss::HShot(bool shot)
 		//isShotがshotTime_以下だったら
 		if (isShot <= (float)shotTime_)
 		{
-			//射撃方向をプレイヤーの方向にする
-			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
 			//HomingBullet生成
 			HomingBullet* pHBullet = Instantiate<HomingBullet>(this);
 			
@@ -159,12 +157,18 @@ void EnemyBoss::Shot(bool shot)
 	if (shot)
 	{
 		float isShot = 3600.0f / rpm_;
+		//isShotがshotTime_以下だったら
 		if (isShot <= (float)shotTime_)
 		{
+			//射撃方向をプレイヤーの方向にする
 			XMVECTOR shotDir = XMVector3Normalize(GetToPlayerVec());
+			//Bullet生成
 			Bullet* pBullet = Instantiate<Bullet>(this);
+			//射撃方向設定
 			pBullet->SetDir(shotDir);
+			//shotTime_を0にする
 			shotTime_ = 0;
+			//撃った回数
 			shotCount_++;
 		}
 	}

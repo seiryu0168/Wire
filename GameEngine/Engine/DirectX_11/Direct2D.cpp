@@ -112,7 +112,6 @@ void D2D::Release()
 {
 	SAFE_RELEASE(pFactory_);
 	SAFE_RELEASE(pRenderTarget_);
-	//SAFE_RELEASE(pColorBrush_);
 }
 
 void D2D::RenderTest()

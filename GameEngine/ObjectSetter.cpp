@@ -13,6 +13,7 @@
 #include"SetObject.h"
 #include"InterSceneData.h"
 #include"Test.h"
+#include"MissionUI.h"
 #include"Stage1.h"
 namespace 
 {
@@ -45,6 +46,7 @@ void ObjectSetter::Initialize()
 	//親がプレイシーンだったら
 	if (parentName == "PlayScene")
 	{
+
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
 		Instantiate<Stage1>(GetParent());
@@ -55,6 +57,7 @@ void ObjectSetter::Initialize()
 		}
 
 		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
+		Instantiate<MissionUI>(GetParent());
 	}
 	//親がタイトルシーンだったら
 	if (parentName == "TitleScene")

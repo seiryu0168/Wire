@@ -5,8 +5,6 @@ Text::Text()
 {
 	textLength_	   = 0;
 	transform2D = { 0,0 };
-	pFontName_ = nullptr;
-	pLocale_ = nullptr;
 	pText_		   = nullptr;
 	pColorBrush_   = nullptr;
 	pWriteFactory_ = nullptr;
@@ -24,8 +22,6 @@ void Text::Release()
 	SAFE_RELEASE(pWriteFactory_);
 	SAFE_RELEASE(pColorBrush_);
 	SAFE_DELETE(pText_);
-	SAFE_DELETE(pLocale_);
-	SAFE_DELETE(pFontName_);
 }
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)
@@ -39,8 +35,9 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 	//フォント名用の配列用意
 	size_t ret;
-	pFontName_ = new wchar_t[fontName.length()+1];
-	int a=mbstowcs_s(&ret, pFontName_, fontName.length() + 1, fontName.c_str(), fontName.length());
+	FontData data;
+	data.pFontName_ = new wchar_t[fontName.length()+1];
+	int a=mbstowcs_s(&ret, data.pFontName_, fontName.length() + 1, fontName.c_str(), fontName.length());
 	size_t textSize;
 
 	//描画するテキスト用の配列を用意する
@@ -49,7 +46,8 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
 	
 	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
-	pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"en-us", &pTextFormat_);
+	SetFont(data);
+	//pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"ja-jp", &pTextFormat_);
 	SetAlinmentType(type);
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
 
@@ -67,9 +65,9 @@ void Text::SetColor()
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
 }
 
-void Text::SetFont()
+void Text::SetFont(const FontData& data)
 {
-	pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 72.0f, L"en-us", &pTextFormat_);
+	pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_/*DWRITE_FONT_WEIGHT_REGULAR*/, data.fontStyle_/*DWRITE_FONT_STYLE_NORMAL*/, data.fontStretch_/*DWRITE_FONT_STRETCH_NORMAL*/, data.fontSize_, data.pLocale_, &pTextFormat_);
 }
 void Text::SetTransform()
 {
