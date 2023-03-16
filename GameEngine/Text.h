@@ -3,6 +3,7 @@
 //#include"Engine/DirectX_11/Direct3D.h"
 #include<string>
 typedef D2D_RECT_F TEXT_RECT;//left top right bottom
+typedef D2D1_POINT_2F TEXT_POSITION;
 
 class Text
 {
@@ -33,9 +34,9 @@ private:
 	ID2D1SolidColorBrush* pColorBrush_;		//ブラシ	
 	IDWriteFactory*		  pWriteFactory_;	//文字描画のファクトリ
 	IDWriteTextFormat*	  pTextFormat_;     //テキストフォーマット
-	//IDWriteTextLayout*	  pLayout_;			//テキストレイアウト
+	IDWriteTextLayout*	  pLayout_;			//テキストレイアウト
 public:
-	XMINT2				  transform2D;		//座標
+	TEXT_POSITION				  transform2D;		//座標
 	Text();
 	~Text();
 	int Load(const std::string& text, const std::string& fontName, TEXT_RECT rect, STARTING_TYPE type);
@@ -43,9 +44,12 @@ public:
 	void SetAlinmentType(STARTING_TYPE type);
 	void SetFont(const FontData& data);
 	void SetColor();
-	void SetTransform();
+	void SetTextSize(float size,UINT32 startPos,UINT32 length);
+	void SetFontWeight(DWRITE_FONT_WEIGHT weightType,UINT32 startPos,UINT32 length);
+	void SetTransform(TEXT_POSITION pos);
+	void SetTextLayout();
 	void SetRatio(float ratioX,float ratioY);
-	void SetRect();
+	void SetRect(TEXT_RECT rect);
 	void Release();
 
 };

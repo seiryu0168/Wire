@@ -47,12 +47,16 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
 	
 	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
+	data.pFontName_ = (wchar_t*)L"Meiryo";
+	data.pLocale_ = (wchar_t*)L"en-us";
+
 	SetFont(data);
 	//pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"ja-jp", &pTextFormat_);
 	SetAlinmentType(type);
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
-
 	layoutRect_ = rect;
+	pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
+
 
 	return 0;
 }
@@ -62,12 +66,12 @@ void Text::Draw()
 	//D2D1_RECT_F rect = layoutRect_;
 	//rect.left += transform2D.x;
 	//rect.top += transform2D.y;
-
-	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
+	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
+	/*D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
 								    { transform2D.x + layoutRect_.left,
 									  transform2D.y + layoutRect_.top,
 									  transform2D.x + layoutRect_.right,
-									  transform2D.y + layoutRect_.bottom }, pColorBrush_);
+									  transform2D.y + layoutRect_.bottom }, pColorBrush_);*/
 }
 void Text::SetColor()
 {
@@ -79,16 +83,37 @@ void Text::SetRatio(float ratioX, float ratioY)
 	transform2D.y = Direct3D::GetScreenHeight() * ratioY;
 }
 
+void Text::SetTextLayout()
+{
+	//pWriteFactory_->CreateTextLayout()
+}
+
+void Text::SetFontWeight(DWRITE_FONT_WEIGHT weightType, UINT32 startPos, UINT32 length)
+{
+	pLayout_->SetFontWeight(weightType, { startPos,length });
+}
+
+void Text::SetTextSize(float size, UINT32 startPos, UINT32 length)
+{
+	if (startPos + length >= textLength_)
+	{
+		length = startPos + length - textLength_;
+	}
+	pLayout_->SetFontSize(size, { startPos,length });
+}
+
 void Text::SetFont(const FontData& data)
 {
 	pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_/*DWRITE_FONT_WEIGHT_REGULAR*/, data.fontStyle_/*DWRITE_FONT_STYLE_NORMAL*/, data.fontStretch_/*DWRITE_FONT_STRETCH_NORMAL*/, data.fontSize_, data.pLocale_, &pTextFormat_);
 }
-void Text::SetTransform()
+void Text::SetTransform(TEXT_POSITION pos)
 {
+	transform2D = pos;
 }
 
-void Text::SetRect()
-{
+void Text::SetRect(TEXT_RECT rect)
+{	
+	layoutRect_ = rect;
 }
 void Text::SetAlinmentType(STARTING_TYPE type)
 {

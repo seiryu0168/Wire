@@ -137,6 +137,7 @@ void D2D::RenderTest()
 
 void D2D::BeginDraw()
 {
+	//pRenderTarget_->Clear();
 	pRenderTarget_->BeginDraw();
 }
 
