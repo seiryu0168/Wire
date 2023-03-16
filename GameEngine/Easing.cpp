@@ -18,12 +18,13 @@ float Easing::EaseOutSine(float time)
 	Clamp(time);
 	return (1.0f - std::sin((time * M_PI) / 2.0f));
 }
-float Easing::EaseINOutSine(float time)
+float Easing::EaseInOutSine(float time)
 {
 	Clamp(time);
-	return (-(std::cos(M_PI * time) - 1.0f) / 2.0f);
+	return (-(std::cosf(M_PI * time) - 1.0f) / 2.0f);
 
 }
+
 
 float Easing::EaseInQuad(float time)
 {
@@ -127,6 +128,12 @@ float Easing::EaseInOutExpo(float time)
 		}
 	}
 	return 0;
+}
+
+float Easing::EaseOutIn(float time, float tan)
+{
+	Clamp(time);
+	return (powf((time - tan / tan), 3) * tan) + tan;
 }
 
 void Clamp(float &number,float min,float max)

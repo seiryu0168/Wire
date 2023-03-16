@@ -21,8 +21,8 @@ void MissionUI::Initialize()
 
 void MissionUI::Update()
 {
-	ratio_ += 0.005f;
-	pText_->SetRatio(Easing::EaseInQuad(ratio_),0.5f);
+	ratio_ += 0.01f;
+	pText_->SetRatio(Easing::EaseOutQuint(ratio_)*0.4f,0.5f);
 }
 
 void MissionUI::Draw()

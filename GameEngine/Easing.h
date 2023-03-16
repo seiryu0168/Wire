@@ -6,7 +6,7 @@ namespace Easing
 	
 	float EaseInSine(float time);
 	float EaseOutSine(float time);
-	float EaseINOutSine(float time);
+	float EaseInOutSine(float time);
 
 	float EaseInQuad(float time);
 	float EaseOutQuad(float time);
@@ -34,5 +34,6 @@ namespace Easing
 
 
 
+	float EaseOutIn(float time,float tan);
 };
 
