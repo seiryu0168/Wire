@@ -27,7 +27,6 @@ class Text
 		}
 	};
 private:
-	XMINT2				  transform2D;		//座標
 	size_t				  textLength_;		//テキストの長さ
 	D2D1_RECT_F			  layoutRect_;		//レイアウトレクト
 	wchar_t*			  pText_;			//テキスト
@@ -36,6 +35,7 @@ private:
 	IDWriteTextFormat*	  pTextFormat_;     //テキストフォーマット
 	//IDWriteTextLayout*	  pLayout_;			//テキストレイアウト
 public:
+	XMINT2				  transform2D;		//座標
 	Text();
 	~Text();
 	int Load(const std::string& text, const std::string& fontName, TEXT_RECT rect, STARTING_TYPE type);
@@ -44,6 +44,7 @@ public:
 	void SetFont(const FontData& data);
 	void SetColor();
 	void SetTransform();
+	void SetRatio(float ratioX,float ratioY);
 	void SetRect();
 	void Release();
 

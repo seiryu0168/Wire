@@ -1,6 +1,7 @@
 #include "Text.h"
 
 
+
 Text::Text()
 {
 	textLength_	   = 0;
@@ -58,11 +59,24 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 void Text::Draw()
 {
-	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,layoutRect_, pColorBrush_);
+	//D2D1_RECT_F rect = layoutRect_;
+	//rect.left += transform2D.x;
+	//rect.top += transform2D.y;
+
+	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
+								    { transform2D.x + layoutRect_.left,
+									  transform2D.y + layoutRect_.top,
+									  transform2D.x + layoutRect_.right,
+									  transform2D.y + layoutRect_.bottom }, pColorBrush_);
 }
 void Text::SetColor()
 {
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+}
+void Text::SetRatio(float ratioX, float ratioY)
+{
+	transform2D.x = Direct3D::GetScreenWidth() * ratioX;
+	transform2D.y = Direct3D::GetScreenHeight() * ratioY;
 }
 
 void Text::SetFont(const FontData& data)
