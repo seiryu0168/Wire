@@ -1,4 +1,5 @@
 #include "Text.h"
+#include<locale.h>
 
 
 
@@ -22,7 +23,6 @@ void Text::Release()
 	SAFE_RELEASE(pTextFormat_);
 	SAFE_RELEASE(pWriteFactory_);
 	SAFE_RELEASE(pColorBrush_);
-	SAFE_DELETE(pText_);
 }
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)
@@ -44,17 +44,31 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	//描画するテキスト用の配列を用意する
 	textLength_ = text.length()+1;
 	pText_ = new wchar_t[textLength_];
-	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
-	
-	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
-	data.pFontName_ = (wchar_t*)L"Meiryo";
-	data.pLocale_ = (wchar_t*)L"en-us";
 
+	//現在のロケール取得
+	std::string locale= setlocale(LC_CTYPE, NULL);
+	
+	//ロケールを日本語に変更
+	setlocale(LC_CTYPE, "ja-jp");
+	//描画するテキストをstringからwstringに変換
+	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
+	//ロケールを元に戻す
+	setlocale(LC_CTYPE, locale.c_str());
+	//変換した文字数
+	textLength_ = textSize;
+
+	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
+	//テキストフォーマットにフォントを設定
 	SetFont(data);
 	//pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"ja-jp", &pTextFormat_);
+	//アライメント設定
 	SetAlinmentType(type);
+	//描画のためのブラシ作成
 	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+	//テキスト表示の領域設定
 	layoutRect_ = rect;
+	
+	//テキストレイアウト作成
 	pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
 
 
@@ -73,9 +87,10 @@ void Text::Draw()
 									  transform2D.x + layoutRect_.right,
 									  transform2D.y + layoutRect_.bottom }, pColorBrush_);*/
 }
-void Text::SetColor()
+void Text::SetColor(XMFLOAT4 color)
 {
-	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+	D2D1_COLOR_F colorF = { color.x, color.y,color.z,color.w };
+	pColorBrush_->SetColor(colorF);
 }
 void Text::SetRatio(float ratioX, float ratioY)
 {
@@ -86,6 +101,20 @@ void Text::SetRatio(float ratioX, float ratioY)
 void Text::SetTextLayout()
 {
 	//pWriteFactory_->CreateTextLayout()
+}
+
+void Text::SetText(std::string text)
+{
+	size_t textSize;
+	textLength_ = text.length() + 1;
+	pText_ = new wchar_t[textLength_];
+
+	std::string locale = setlocale(LC_CTYPE, NULL);
+	setlocale(LC_CTYPE, "ja-jp");
+	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
+	setlocale(LC_CTYPE, locale.c_str());
+	textLength_ = textSize;
+	pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
 }
 
 void Text::SetFontWeight(DWRITE_FONT_WEIGHT weightType, UINT32 startPos, UINT32 length)

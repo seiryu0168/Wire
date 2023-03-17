@@ -43,9 +43,10 @@ public:
 	void Draw();
 	void SetAlinmentType(STARTING_TYPE type);
 	void SetFont(const FontData& data);
-	void SetColor();
+	void SetColor(XMFLOAT4 color);
 	void SetTextSize(float size,UINT32 startPos,UINT32 length);
 	void SetFontWeight(DWRITE_FONT_WEIGHT weightType,UINT32 startPos,UINT32 length);
+	void SetText(std::string text);
 	void SetTransform(TEXT_POSITION pos);
 	void SetTextLayout();
 	void SetRatio(float ratioX,float ratioY);
