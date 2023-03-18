@@ -4,20 +4,23 @@
 #include"ObjectSetter.h"
 MissionOrder::MissionOrder(ObjectSetter* p)
 	:ratio_(0),
+	pText_(nullptr),
+	pCountText_(nullptr),
 	hPict_(-1)
 
 {
-	TEXT_RECT rect = { 0,0,500,100 };
+	TEXT_RECT rect1 = { 0,0,500,100 };
+	TEXT_RECT rect2 = { 0,0,1000,200 };
 	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
 	assert(hPict_ >= 0);
-
-	GetTextPointer()->Load("敵を倒せ！", "Meiryo UI", rect, LEFT_TOP);
+	pText_ = new Text();
+	pText_->Load("敵を倒せ！", "Meiryo UI", rect1, LEFT_TOP);
 	pSetter_ = p;
 	EnemyMax_=pSetter_->GetEnemyCount();
 	EnemyCount_=pSetter_->GetEnemyCount();
 	pCountText_ = new Text();
 	count_ = std::to_string(EnemyCount_);
-	pCountText_->Load("残数" + count_, "Mairyo UI", { 0,0,1000,200 }, LEFT_TOP);
+	pCountText_->Load("残数" + count_, "Mairyo UI", rect2, LEFT_TOP);
 
 }
 
@@ -33,22 +36,25 @@ void MissionOrder::Update()
 	if (ratio_ >= 1.0f)
 	{
 		//アルファ値減らす
-		GetTextPointer()->SetColor({ 1,1,1,max(0,1.0f - (ratio_ - 1.0f)) });
+		pText_->SetColor({ 1,1,1,max(0,1.0f - (ratio_ - 1.0f)) });
 		ImageManager::SetAlpha(hPict_, max(0, 1.0f - (ratio_ - 1.0f)));
 	}
 	EnemyCount_ = pSetter_->GetEnemyCount();
 	count_ = std::to_string(EnemyCount_);
 	pCountText_->SetText("残数"+count_);
 	//テキスト移動
-	GetTextPointer()->SetRatio(Easing::EaseOutQuint(ratio_) * 0.4f, 0.45f);
+	pText_->SetRatio(Easing::EaseOutQuint(ratio_) * 0.4f, 0.45f);
 }
 
 void MissionOrder::Draw()
 {
 	pCountText_->Draw();
-	GetTextPointer()->Draw();
+	pText_->Draw();
 }
 
 void MissionOrder::Release()
 {
+	SAFE_RELEASE(pText_);
+	SAFE_RELEASE(pCountText_);
+
 }

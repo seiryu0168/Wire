@@ -13,6 +13,7 @@ private:
     bool bossSpawn_;
     int hPict_;
     bool resultFrag_;
+    std::string sceneName_;
     SceneManager* pManager_;
     SCENE_ID nowSceneID_;
 public:
@@ -43,6 +44,7 @@ public:
 
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
 
+        std::string GetSceneName() { return sceneName_; };
         int GetEnemyCount();
 };
 

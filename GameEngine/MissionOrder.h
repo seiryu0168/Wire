@@ -4,6 +4,7 @@ class ObjectSetter;
 class MissionOrder : public MissionUI
 {
 private:
+	Text* pText_;
 	Text* pCountText_;
 	std::string count_;
 	int hPict_;

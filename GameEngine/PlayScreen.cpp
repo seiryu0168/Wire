@@ -1,5 +1,7 @@
 #include "PlayScreen.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"ObjectSetter.h"
+#include"TutorialOrder.h"
 #include"MissionOrder.h"
 PlayScreen::PlayScreen(GameObject* parent)
 	:GameObject(parent,"PlayScreen"),
@@ -27,8 +29,16 @@ void PlayScreen::Initialize()
 	ImageManager::SetImagePos(hPict_[1], { 0,-580,0 });
 	ImageManager::SetImagePos(hPict_[2], { -1410,10,0 });
 	ImageManager::SetImagePos(hPict_[3], { 1410,10,0 });
-
-	pUI = new MissionOrder((ObjectSetter*)FindObject("ObjectSetter"));
+	ObjectSetter* p = (ObjectSetter*)FindObject("ObjectSetter");
+	
+	if (p->GetSceneName() == "PlayScene")
+	{
+		pUI = new MissionOrder(p);
+	}
+	else if (p->GetSceneName() == "TutorialScene")
+	{
+		pUI = new TutorialOrder();
+	}
 }
 
 void PlayScreen::Update()

@@ -3,9 +3,7 @@
 #include"Easing.h"
 
 MissionUI::MissionUI()
-	:pText_(nullptr)
 {
-	pText_ = new Text();
 }
 
 MissionUI::~MissionUI()
@@ -23,5 +21,4 @@ MissionUI::~MissionUI()
 
 void MissionUI::Release()
 {
-	SAFE_DELETE(pText_);
 }

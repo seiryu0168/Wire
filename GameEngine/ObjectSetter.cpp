@@ -39,12 +39,12 @@ void ObjectSetter::Initialize()
 	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	//feildって名前にしといたほうがいい
-	std::string parentName;
+	// 
 	//親のオブジェクト名を取得
-	parentName = GetParent()->GetObjectName();
+	sceneName_ = GetParent()->GetObjectName();
 
 	//親がプレイシーンだったら
-	if (parentName == "PlayScene")
+	if (sceneName_ == "PlayScene")
 	{
 
 		//リザルトデータ削除
@@ -59,17 +59,17 @@ void ObjectSetter::Initialize()
 		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
 	}
 	//親がタイトルシーンだったら
-	if (parentName == "TitleScene")
+	if (sceneName_ == "TitleScene")
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
 	//親がリザルトシーンだったら
-	if (parentName == "ResultScene")
+	if (sceneName_ == "ResultScene")
 	{
 		Instantiate<ResultUI>(GetParent());
 	}
 	//親がチュートリアルシーンだったら
-	if (parentName == "TutorialScene")
+	if (sceneName_ == "TutorialScene")
 	{
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
