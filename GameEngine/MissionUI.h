@@ -4,6 +4,7 @@
 class MissionUI : public GameObject
 {
 	Text* pText_;
+	int hPict_;
 	float ratio_;
 public:
 	MissionUI(GameObject* parent);
