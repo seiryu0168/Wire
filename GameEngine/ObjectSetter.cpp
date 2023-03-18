@@ -57,7 +57,6 @@ void ObjectSetter::Initialize()
 		}
 
 		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
-		Instantiate<MissionUI>(GetParent());
 	}
 	//親がタイトルシーンだったら
 	if (parentName == "TitleScene")
@@ -192,3 +191,9 @@ void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
 		}
 	}
 }
+
+int ObjectSetter::GetEnemyCount()
+{
+	return enemys_.size();
+}
+

@@ -1,17 +1,18 @@
 #pragma once
-#include"Engine/GameObject/GameObject.h"
+
 #include"Text.h"
-class MissionUI : public GameObject
+class MissionUI
 {
 	Text* pText_;
 	int hPict_;
 	float ratio_;
 public:
-	MissionUI(GameObject* parent);
+	MissionUI();
 	~MissionUI();
-	void Initialize() override;
-	void Update() override;
-	void Draw() override;
-	void Release() override;
+	
+	virtual void Update() {};
+	virtual void Draw() {};
+	Text* GetTextPointer() { return pText_; }
+	void Release();
 };
 

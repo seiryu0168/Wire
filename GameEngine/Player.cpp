@@ -131,7 +131,7 @@ void Player::Initialize()
         transform_.position_.y -= firstRay.dist-transform_.scale_.y;
     }
 
-    pScreen_ = new PlayScreen;
+    pScreen_ = Instantiate<PlayScreen>(this);
     wire_ = new Wire;
     for (int i = 0; i < MAX_LIFE; i++)
     {
@@ -257,7 +257,7 @@ void Player::Update()
             velocity_ += gravity_;
         }
     }
-    pScreen_->Update({ moveX,moveZ });
+    pScreen_->SetDir({ moveX,moveZ });
 
     //L,Rスティックで移動
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
@@ -327,7 +327,6 @@ void Player::Release()
 {
     SAFE_DELETE(wire_);
     SAFE_RELEASE(pPointer_);
-    SAFE_DELETE(pScreen_);  
     SAFE_RELEASE(pParticle_);
     SAFE_RELEASE(pPointerLine_);
 }

@@ -1,6 +1,17 @@
 #include "PlayScreen.h"
 #include"Engine/ResourceManager/ImageManager.h"
-PlayScreen::PlayScreen()
+#include"MissionOrder.h"
+PlayScreen::PlayScreen(GameObject* parent)
+	:GameObject(parent,"PlayScreen"),
+	pUI(nullptr)
+{
+}
+
+PlayScreen::~PlayScreen()
+{
+}
+
+void PlayScreen::Initialize()
 {
 	hPict_[0] = ImageManager::Load("Assets\\ScreenFrameUp2.png");
 	assert(hPict_[0] >= 0);
@@ -16,18 +27,31 @@ PlayScreen::PlayScreen()
 	ImageManager::SetImagePos(hPict_[1], { 0,-580,0 });
 	ImageManager::SetImagePos(hPict_[2], { -1410,10,0 });
 	ImageManager::SetImagePos(hPict_[3], { 1410,10,0 });
+
+	pUI = new MissionOrder((ObjectSetter*)FindObject("ObjectSetter"));
 }
 
-PlayScreen::~PlayScreen()
+void PlayScreen::Update()
 {
+	pUI->Update();
 }
 
-void PlayScreen::Update(XMFLOAT2 dir)
+void PlayScreen::Draw()
 {
-		ImageManager::SetAlpha(hPict_[0], 0);
-		ImageManager::SetAlpha(hPict_[1], 0);
-		ImageManager::SetAlpha(hPict_[2], 0);
-		ImageManager::SetAlpha(hPict_[3], 0);
+	pUI->Draw();
+}
+
+void PlayScreen::Release()
+{
+	pUI->Release();
+}
+
+void PlayScreen::SetDir(XMFLOAT2 dir)
+{
+	ImageManager::SetAlpha(hPict_[0], 0);
+	ImageManager::SetAlpha(hPict_[1], 0);
+	ImageManager::SetAlpha(hPict_[2], 0);
+	ImageManager::SetAlpha(hPict_[3], 0);
 
 	if (dir.x >= 0.4)
 	{
@@ -45,5 +69,4 @@ void PlayScreen::Update(XMFLOAT2 dir)
 	{
 		ImageManager::SetAlpha(hPict_[1], 1);
 	}
-
 }

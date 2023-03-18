@@ -1,16 +1,22 @@
 #pragma once
 #include<vector>
-#include"Engine/DirectX_11/Direct3D.h"
+#include"Engine/GameObject/GameObject.h"
 #include<string>
-class PlayScreen
+
+class MissionUI;
+class PlayScreen : public GameObject
 {
 private:
 	int hPict_[4];
-
+	MissionUI* pUI;
 public:
-	PlayScreen();
+	PlayScreen(GameObject* parent);
 	~PlayScreen();
-	void Update(XMFLOAT2 dir);
+	void Initialize() override;
+	void Update() override;
+	void Draw() override;
+	void Release() override;
+	void SetDir(XMFLOAT2 dir);
 
 };
 

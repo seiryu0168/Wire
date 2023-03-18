@@ -43,5 +43,6 @@ public:
 
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
 
+        int GetEnemyCount();
 };
 
