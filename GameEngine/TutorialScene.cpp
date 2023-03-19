@@ -1,7 +1,7 @@
 #include "TutorialScene.h"
 #include"ObjectSetter.h"
 TutorialScene::TutorialScene(GameObject* parent)
-	:GameObject(parent,"TutorialScene")
+	:SceneBase(parent,"TutorialScene")
 {
 }
 

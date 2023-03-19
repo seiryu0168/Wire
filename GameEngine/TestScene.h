@@ -1,7 +1,7 @@
 #pragma once
-#include"Engine/GameObject/GameObject.h"
+#include"SceneBase.h"
 #include"Engine/DirectX_11/LineParticle.h"
-class TestScene : public GameObject
+class TestScene : public SceneBase
 {
 	LineParticle* pLine_;
 public:

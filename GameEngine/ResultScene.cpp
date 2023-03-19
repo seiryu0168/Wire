@@ -2,7 +2,7 @@
 #include"ObjectSetter.h"
 
 ResultScene::ResultScene(GameObject* parent)
-	:GameObject(parent,"ResultScene")
+	:SceneBase(parent,"ResultScene")
 {
 }
 

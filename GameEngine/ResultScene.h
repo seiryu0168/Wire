@@ -1,6 +1,6 @@
 #pragma once
-#include"Engine/GameObject/GameObject.h"
-class ResultScene : public GameObject
+#include"SceneBase.h"
+class ResultScene : public SceneBase
 {
 public:
 	ResultScene(GameObject* parent);

@@ -10,7 +10,7 @@ MissionOrder::MissionOrder(ObjectSetter* p)
 
 {
 	TEXT_RECT rect1 = { 0,0,500,100 };
-	TEXT_RECT rect2 = { 0,0,1000,200 };
+	TEXT_RECT rect2 = { 0,0,700,200 };
 	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
 	assert(hPict_ >= 0);
 	pText_ = new Text();

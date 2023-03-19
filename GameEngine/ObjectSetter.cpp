@@ -27,19 +27,11 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_(nullptr),
 	hPict_(-1)
 {
-}
-
-ObjectSetter::~ObjectSetter()
-{
-}
-
-void ObjectSetter::Initialize()
-{
 	pManager_ = (SceneManager*)FindObject("SceneManager");
 	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
 	//feildって名前にしといたほうがいい
-	// 
+	
 	//親のオブジェクト名を取得
 	sceneName_ = GetParent()->GetObjectName();
 
@@ -77,6 +69,14 @@ void ObjectSetter::Initialize()
 		enemys_.push_back(Instantiate<TutorialEnemy>(GetParent()));
 		Instantiate<TutorialUI>(GetParent());
 	}
+}
+
+ObjectSetter::~ObjectSetter()
+{
+}
+
+void ObjectSetter::Initialize()
+{
 	hPict_ = ImageManager::Load("Assets\\Black.png");
 	assert(hPict_ >= 0);
 	ImageManager::SetAlpha(hPict_,0.0f);

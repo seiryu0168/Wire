@@ -10,6 +10,8 @@ GameObject::GameObject(GameObject* parent, const std::string& name)
 	objectName_(name),
 	objectTag_(""),
 	killFlag_(0),
+	activeFlag_(true),
+	startFlag_(false),
 	drawFlag_(true),
 	objectID_(-1)
 {
@@ -24,6 +26,13 @@ GameObject::~GameObject()
 void GameObject::UpdateSub()
 {
 	/////////アップデート/////////
+	if (startFlag_ == false&&activeFlag_)
+	{
+		GameObject* p = GetRootJob();
+		this->Initialize();
+		this->startFlag_ = true;
+	}
+	else
 	Update();
 
 
@@ -239,7 +248,7 @@ GameObject* GameObject::FindObject(std::string name)
 
 GameObject* GameObject::FindChild(std::string name)
 {
-	
+	//子がいなかったらnullptr返す
 	if (this->childList_.empty())
 	{
 		return nullptr;

@@ -1,6 +1,6 @@
 #pragma once
-#include"Engine/GameObject/GameObject.h"
-class TutorialScene : public GameObject
+#include"SceneBase.h"
+class TutorialScene : public SceneBase
 {
 private:
 

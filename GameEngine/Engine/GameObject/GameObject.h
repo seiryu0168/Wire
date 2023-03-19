@@ -18,6 +18,8 @@ protected:
 	int objectID_;						//オブジェクト固有の番号
 	std::string objectTag_;				//オブジェクトに任意でつけられる識別用の名前
 	bool killFlag_;						//キルするかどうか
+	bool activeFlag_;					//オブジェクトがアクティブ(Update呼ばれる)かどうか
+	bool startFlag_;					//一回もアクティブになってない場合false
 	bool drawFlag_;						//描画するかどうか
 
 public:
@@ -48,7 +50,6 @@ public:
 		{
 			parent->PushBackChild(p);
 		}
-		p->Initialize();
 		return p;
 	}
 
@@ -85,6 +86,7 @@ public:
 			void SetScale(XMFLOAT3 scale) { transform_.scale_ = scale; }
 
 			void SetTag(std::string tagName) { objectTag_ = tagName; }
+			void SetActive(bool status) { activeFlag_ = status; }
 			std::string GetTag() { return objectTag_; }
 
 			Transform GetTransform();

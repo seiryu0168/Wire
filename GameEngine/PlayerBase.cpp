@@ -7,6 +7,7 @@ PlayerBase::PlayerBase(GameObject* parent)
     hModel_(-1),
     prevPos_(XMFLOAT3(0, 0, 0))
 {
+	pParticle_ = Instantiate<Particle>(this);
 }
 
 PlayerBase::~PlayerBase()
@@ -17,7 +18,6 @@ void PlayerBase::Initialize()
 {
 	hModel_ = ModelManager::Load("Assets\\Player.fbx");
 	assert(hModel_ >= 0);
-	pParticle_ = Instantiate<Particle>(this);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_LEFT)] = XMVectorSet(-3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_RIGHT)] = XMVectorSet(3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::BACK_LEFT)] = XMVectorSet(-3.0f, -1.0f, -3.0f, 0);

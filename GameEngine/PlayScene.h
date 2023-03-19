@@ -1,9 +1,9 @@
 #pragma once
-#include "Engine/GameObject/GameObject.h"
+#include "SceneBase.h"
 
 
 //■■シーンを管理するクラス
-class PlayScene : public GameObject
+class PlayScene : public SceneBase
 {
 public:
 	//コンストラクタ

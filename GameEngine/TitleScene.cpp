@@ -4,7 +4,7 @@
 #include"Engine/ResourceManager/ImageManager.h"
 
 TitleScene::TitleScene(GameObject* parent)
-	: GameObject(parent, "TitleScene")
+	: SceneBase(parent, "TitleScene")
 {
 }
 

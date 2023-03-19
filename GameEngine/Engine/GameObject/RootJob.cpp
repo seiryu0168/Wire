@@ -17,7 +17,10 @@ RootJob::~RootJob()
 
 void RootJob::Initialize()
 {
-	Instantiate<SceneManager>(this);
+	if (FindChild("SceneManager") == nullptr)
+	{
+		Instantiate<SceneManager>(this);
+	}
 }
 
 void RootJob::Update()

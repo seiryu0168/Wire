@@ -31,14 +31,15 @@ void SceneManager::Update()
 		ModelManager::Release();
 		ImageManager::AllRelease();
 
-
+		SceneBase* p = nullptr;
 		switch ((SCENE_ID)nextSceneID_)
 		{
-		case SCENE_ID::SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
-		case SCENE_ID::SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
-		case SCENE_ID::SCENE_ID_RESULT: Instantiate<ResultScene>(this); break;
-		case SCENE_ID::SCENE_ID_TUTORIAL: Instantiate<TutorialScene>(this); break;
+		case SCENE_ID::SCENE_ID_TITLE:p = Instantiate<TitleScene>(this); break;
+		case SCENE_ID::SCENE_ID_PLAY:p = Instantiate<PlayScene>(this); break;
+		case SCENE_ID::SCENE_ID_RESULT:p = Instantiate<ResultScene>(this); break;
+		case SCENE_ID::SCENE_ID_TUTORIAL:p = Instantiate<TutorialScene>(this); break;
 		}
+
 		currentSceneID_ = nextSceneID_;
 	}
 	countDown_--;

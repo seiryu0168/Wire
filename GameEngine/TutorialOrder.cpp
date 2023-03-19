@@ -19,11 +19,15 @@ TutorialOrder::~TutorialOrder()
 void TutorialOrder::Update()
 {
 	ratio_ += 0.015f;
+	//ratio_が1以上になったら
 	if (ratio_ >= 1.0f)
 	{
+		//テキストと背景を透明にする
 		pText_->SetColor({ 1,1,1,max(0,1.0f - (ratio_ - 1.0f)) });
 		ImageManager::SetAlpha(hPict_, max(0, 1.0f - (ratio_ - 1.0f)));
 	}
+
+	//テキスト移動
 	pText_->SetRatio(Easing::EaseInOutQuint(ratio_)*0.4f, 0.45f);
 }
 

@@ -4,7 +4,7 @@
 #include"Test.h"
 // コンストラクタ
 PlayScene::PlayScene(GameObject * parent)
-	: GameObject(parent, "PlayScene")
+	: SceneBase(parent, "PlayScene")
 {
 }
 
