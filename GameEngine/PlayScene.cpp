@@ -6,12 +6,12 @@
 PlayScene::PlayScene(GameObject * parent)
 	: SceneBase(parent, "PlayScene")
 {
+	Instantiate<ObjectSetter>(this);
 }
 
 //‰Šú‰»
 void PlayScene::Initialize()
 {
-	Instantiate<ObjectSetter>(this);
 }
 
 //XV

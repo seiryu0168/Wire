@@ -78,11 +78,13 @@ Player::Player(GameObject* parent)
     pSetter_(nullptr),
     wire_(nullptr)
 {
+    Instantiate<PlayerBase>(this);
 }
 
 //デストラクタ
 Player::~Player()
 {
+    Release();
 }
 
 //初期化
@@ -99,7 +101,6 @@ void Player::Initialize()
 
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(GetParent());
-    Instantiate<PlayerBase>(this);
     
     //ラインパーティクル生成
     pPointerLine_ = new LineParticle;
@@ -113,8 +114,7 @@ void Player::Initialize()
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
     //マーカーを生成
-    Instantiate<Pointer>(GetParent());
-    pPointer_ = (Pointer*)FindObject("Pointer");
+    pPointer_=Instantiate<Pointer>(GetParent());
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
    
