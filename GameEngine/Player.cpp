@@ -79,6 +79,7 @@ Player::Player(GameObject* parent)
     wire_(nullptr)
 {
     Instantiate<PlayerBase>(this);
+    pScreen_ = Instantiate<PlayScreen>(this);
 }
 
 //デストラクタ
@@ -131,7 +132,6 @@ void Player::Initialize()
         transform_.position_.y -= firstRay.dist-transform_.scale_.y;
     }
 
-    pScreen_ = Instantiate<PlayScreen>(this);
     wire_ = new Wire;
     for (int i = 0; i < MAX_LIFE; i++)
     {

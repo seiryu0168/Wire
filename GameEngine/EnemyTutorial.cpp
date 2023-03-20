@@ -1,17 +1,17 @@
-#include "TutorialEnemy.h"
+#include "EnemyTutorial.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/Collider/SphereCollider.h"
-TutorialEnemy::TutorialEnemy(GameObject* parent)
+EnemyTutorial::EnemyTutorial(GameObject* parent)
 	:Enemy(parent,"TutorialEnemy"),
 	hModel_(-1)
 {
 }
 
-TutorialEnemy::~TutorialEnemy()
+EnemyTutorial::~EnemyTutorial()
 {
 }
 
-void TutorialEnemy::Initialize()
+void EnemyTutorial::Initialize()
 {
 	SetPosition({ 0,2,10 });
 	SetTag("Enemy");
@@ -24,12 +24,12 @@ void TutorialEnemy::Initialize()
 	SetPlayerPointer((Player*)FindObject("Player"));
 }
 
-void TutorialEnemy::Update()
+void EnemyTutorial::Update()
 {
 	IsVisible(sight.angle_,sight.range_);
 }
 
-void TutorialEnemy::Draw()
+void EnemyTutorial::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
 	if (IsLockOned(this))
@@ -40,6 +40,6 @@ void TutorialEnemy::Draw()
 		ModelManager::Draw(hModel_);
 }
 
-void TutorialEnemy::Release()
+void EnemyTutorial::Release()
 {
 }

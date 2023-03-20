@@ -7,6 +7,7 @@
 RootJob::RootJob() 
 	: GameObject(nullptr,"RootJob")
 {
+		Instantiate<SceneManager>(this);
 
 }
 
@@ -17,10 +18,6 @@ RootJob::~RootJob()
 
 void RootJob::Initialize()
 {
-	if (FindChild("SceneManager") == nullptr)
-	{
-		Instantiate<SceneManager>(this);
-	}
 }
 
 void RootJob::Update()

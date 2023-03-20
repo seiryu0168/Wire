@@ -97,7 +97,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Audio::Initialize();
 
 	pRootJob = new RootJob;
-	pRootJob->Initialize();
 	
 	//メッセージループ
 	MSG msg;
@@ -152,16 +151,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 #endif 
 				//描画処理
 				Direct3D::BeginDraw();
-				D2D::BeginDraw();
+				//D2D::BeginDraw();
 				pRootJob->DrawSub();
-				pRootJob->SecondDrawSub();
-				ImageManager::Draw();
 
-				D2D::EndDraw();
+				pRootJob->SecondDrawSub();
 #if true		
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif
 
+				//D2D::EndDraw();
+				ImageManager::Draw();
+				pRootJob->ThirdDrawSub();
 				Direct3D::EndDraw();
 			}
 		}

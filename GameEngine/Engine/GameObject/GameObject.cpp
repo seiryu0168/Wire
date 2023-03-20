@@ -85,7 +85,7 @@ void GameObject::FixedUpdateSub()
 
 void GameObject::DrawSub()
 {
-	if (drawFlag_)
+	if (drawFlag_ && startFlag_)
 	{
 		Draw();
 	}
@@ -98,7 +98,7 @@ void GameObject::DrawSub()
 
 void GameObject::SecondDrawSub()
 {
-	if (drawFlag_)
+	if (drawFlag_ && startFlag_)
 	{
 		SecondDraw();
 	}
@@ -106,6 +106,19 @@ void GameObject::SecondDrawSub()
 	for (auto i = childList_.begin(); i != childList_.end(); i++)
 	{
 		(*i)->SecondDrawSub();
+	}
+}
+
+void GameObject::ThirdDrawSub()
+{
+	if (drawFlag_&&startFlag_)
+	{
+		ThirdDraw();
+	}
+
+	for (auto i = childList_.begin(); i != childList_.end(); i++)
+	{
+		(*i)->ThirdDrawSub();
 	}
 }
 

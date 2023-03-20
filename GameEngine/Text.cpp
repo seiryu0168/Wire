@@ -80,7 +80,9 @@ void Text::Draw()
 	//D2D1_RECT_F rect = layoutRect_;
 	//rect.left += transform2D.x;
 	//rect.top += transform2D.y;
+	D2D::GetRenderTarget()->BeginDraw();
 	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
+	D2D::GetRenderTarget()->EndDraw();
 	/*D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
 								    { transform2D.x + layoutRect_.left,
 									  transform2D.y + layoutRect_.top,

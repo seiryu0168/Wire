@@ -33,12 +33,14 @@ public:
 	virtual void BeforeDeath() {};
 	virtual void Draw() {};
 	virtual void SecondDraw() {};
+	virtual void ThirdDraw() {};
 	virtual void Release() = 0;
 
 	void UpdateSub();
 	void FixedUpdateSub();
 	void DrawSub();
 	void SecondDrawSub();
+	void ThirdDrawSub();
 	void ReleaseSub();
 
 	template<class T>

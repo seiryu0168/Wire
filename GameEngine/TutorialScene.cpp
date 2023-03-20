@@ -3,6 +3,7 @@
 TutorialScene::TutorialScene(GameObject* parent)
 	:SceneBase(parent,"TutorialScene")
 {
+	Instantiate<ObjectSetter>(this);
 }
 
 TutorialScene::~TutorialScene()
@@ -11,7 +12,6 @@ TutorialScene::~TutorialScene()
 
 void TutorialScene::Initialize()
 {
-	Instantiate<ObjectSetter>(this);
 }
 
 void TutorialScene::Update()

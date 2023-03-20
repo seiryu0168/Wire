@@ -15,6 +15,7 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
+	void ThirdDraw() override;
 	void Release() override;
 	void SetDir(XMFLOAT2 dir);
 

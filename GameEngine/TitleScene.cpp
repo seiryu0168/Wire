@@ -6,12 +6,12 @@
 TitleScene::TitleScene(GameObject* parent)
 	: SceneBase(parent, "TitleScene")
 {
+	Instantiate<ObjectSetter>(this);
 }
 
 //‰Šú‰»
 void TitleScene::Initialize()
 {
-	Instantiate<ObjectSetter>(this);
 }
 
 //XV

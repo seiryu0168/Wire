@@ -48,6 +48,9 @@ void PlayScreen::Update()
 
 void PlayScreen::Draw()
 {
+}
+void PlayScreen::ThirdDraw()
+{
 	pUI->Draw();
 }
 

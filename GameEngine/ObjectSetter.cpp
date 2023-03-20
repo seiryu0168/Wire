@@ -6,7 +6,7 @@
 #include"TutorialUI.h"
 #include"Player.h"
 #include"TitleUI.h"
-#include"TutorialEnemy.h"
+#include"EnemyTutorial.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
 #include"EnemyBoss.h"
@@ -66,7 +66,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
 		
-		enemys_.push_back(Instantiate<TutorialEnemy>(GetParent()));
+		enemys_.push_back(Instantiate<EnemyTutorial>(GetParent()));
 		Instantiate<TutorialUI>(GetParent());
 	}
 }
@@ -113,6 +113,11 @@ void ObjectSetter::Update()
 
 void ObjectSetter::Draw()
 {
+}
+
+void ObjectSetter::ThirdDraw()
+{
+	ImageManager::Draw(hPict_);
 }
 
 void ObjectSetter::Release()

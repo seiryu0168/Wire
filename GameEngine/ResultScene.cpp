@@ -4,6 +4,7 @@
 ResultScene::ResultScene(GameObject* parent)
 	:SceneBase(parent,"ResultScene")
 {
+	Instantiate<ObjectSetter>(this);
 }
 
 ResultScene::~ResultScene()
@@ -12,7 +13,6 @@ ResultScene::~ResultScene()
 
 void ResultScene::Initialize()
 {
-	Instantiate<ObjectSetter>(this);
 }
 
 void ResultScene::Update()

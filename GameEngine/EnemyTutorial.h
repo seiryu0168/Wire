@@ -1,12 +1,12 @@
 #pragma once
 #include"Enemy.h"
 #include"EnemyState.h"
-class TutorialEnemy : public Enemy
+class EnemyTutorial : public Enemy
 {
 	int hModel_;
 public:
-	TutorialEnemy(GameObject* parent);
-	~TutorialEnemy();
+	EnemyTutorial(GameObject* parent);
+	~EnemyTutorial();
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;

@@ -7,14 +7,6 @@ namespace
 	static const int KNOCKBACKTIME = 30;
 }
 
-void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
-{
-	if (state != pState_)
-	{
-		pState_ = state;
-		pState_->Init(*this);
-	}
-}
 
 //コンストラクタ
 EnemyNormal::EnemyNormal(GameObject* parent)
@@ -192,5 +184,14 @@ void EnemyNormal::StateSearch::Update(EnemyNormal& enemy)
 	if (enemy.IsVisible(enemy.sight.angle_, enemy.sight.range_))
 	{
 		enemy.ChangeState(StateChase::GetInstance());
+	}
+}
+
+void EnemyNormal::ChangeState(EnemyState<EnemyNormal>* state)
+{
+	if (state != pState_)
+	{
+		pState_ = state;
+		pState_->Init(*this);
 	}
 }

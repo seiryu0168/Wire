@@ -31,6 +31,7 @@ public:
 
        //•`‰æ
         void Draw() override;
+        void ThirdDraw() override;
 
         void Release() override;
 
