@@ -48,7 +48,6 @@ void PlayerBase::Draw()
 
 void PlayerBase::Release()
 {
-	
 }
 
 void PlayerBase::Spark()

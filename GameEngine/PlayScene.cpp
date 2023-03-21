@@ -27,4 +27,5 @@ void PlayScene::Draw()
 //ŠJ•ú
 void PlayScene::Release()
 {
+	int a = 0;
 }

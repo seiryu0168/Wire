@@ -80,6 +80,10 @@ Player::Player(GameObject* parent)
 {
     Instantiate<PlayerBase>(this);
     pScreen_ = Instantiate<PlayScreen>(this);
+    //パーティクルオブジェクト生成
+    pParticle_ = Instantiate<Particle>(this);
+    //マーカーを生成
+    pPointer_=Instantiate<Pointer>(GetParent());
 }
 
 //デストラクタ
@@ -100,8 +104,6 @@ void Player::Initialize()
     hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
     assert(hModel_ >= 0);
 
-    //パーティクルオブジェクト生成
-    pParticle_ = Instantiate<Particle>(GetParent());
     
     //ラインパーティクル生成
     pPointerLine_ = new LineParticle;
@@ -114,8 +116,6 @@ void Player::Initialize()
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
-    //マーカーを生成
-    pPointer_=Instantiate<Pointer>(GetParent());
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
    
@@ -326,8 +326,7 @@ void Player::SecondDraw()
 void Player::Release()
 {
     SAFE_DELETE(wire_);
-    SAFE_RELEASE(pPointer_);
-    SAFE_RELEASE(pParticle_);
+    //SAFE_DELETE(pPointer_);
     SAFE_RELEASE(pPointerLine_);
 }
 

@@ -105,6 +105,11 @@ void SceneBase::Load()
 	}
 }
 
+void SceneBase::OutData()
+{
+
+}
+
 void SceneBase::SetData()
 {
 }

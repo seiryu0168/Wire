@@ -16,6 +16,7 @@ public:
 	virtual ~SceneBase() {};
 
 	void Load();
+    void OutData();
 	void SetData();
 };
 

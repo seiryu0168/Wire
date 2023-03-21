@@ -1,6 +1,8 @@
 #include "SetObject.h"
+#include<fstream>
+#include<sstream>
 #include"resource.h"
-SetObject::SetObject(GameObject* parent)
+SetObject::SetObject(GameObject* scene)
 {
 
 }
@@ -11,32 +13,41 @@ SetObject::~SetObject()
 
 }
 
-//初期化
-void SetObject::Initialize()
+void SetObject::Load(std::string fileName)
 {
-	//Load();
-}
+	//カレントディレクトリ取得
+	WCHAR currentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, currentDir);
+	
+	WCHAR path[FILENAME_MAX];
+	//size_t ret;
+	//mbstowcs_s(&ret, path, filePath.c_str(), filePath.length());
+	//WCHAR dir[MAX_PATH];
+	//std::wstring fileName;
+	//std::wstring extName;
+	//WCHAR fileName[FILENAME_MAX];
+	//_wsplitpath_s(path, nullptr, 0, dir, MAX_PATH, fileName, FILENAME_MAX, nullptr, 0);
+	SetCurrentDirectory(L"Assets");
+	std::ifstream fileReader;
+	fileReader.open(fileName);
+	std::string line;
+	std::vector<char> dels;
+	dels.push_back(':');
+	dels.push_back(',');
+	std::vector<std::string> recive;
+	while (std::getline(fileReader, line))
+	{
+		objectData data;
+		recive=SplitLine(line, dels);
+		data.objectName = recive[0];
+		data.objectTransform.position_.x = stof(recive[1]);
+		data.objectTransform.position_.y = stof(recive[2]);
+		data.objectTransform.position_.z = stof(recive[3]);
+	}
+	fileReader.close();
+	SetCurrentDirectory(currentDir);
 
-////更新
-//void SetObject::Update()
-//{
-//
-//}
-//
-//void SetObject::FixedUpdate()
-//{
-//
-//}
-//
-////描画
-//void SetObject::Draw()
-//{
-//
-//}
-
-void SetObject::Load()
-{
-	WCHAR objectFileName[MAX_PATH]=L"status.txt";
+	/*WCHAR objectFileName[MAX_PATH]=L"status.txt";
 
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -131,16 +142,72 @@ void SetObject::Load()
 		}
 		commaCount = 0;
 		objectDataList_.push_back(obj);
+	}*/
+}
+
+std::vector<std::string> SetObject::SplitLine(const std::string& line, const char& delimiter)
+{
+	std::vector<std::string>  ret;
+	std::istringstream st(line);
+	
+	//文字列の初期位置をカウントしておく
+	int first = 0;
+	//終了位置
+	int last = line.find_first_of(delimiter);
+	while (first<line.size())
+	{
+		//既存の文字列から範囲指定して文字列作る
+		std::string parts(line, first, last - first);
+		
+		//区切った文字列追加
+		ret.push_back(parts);
+		//初期位置更新
+		first=last+1;
+		
+		//終了位置更新
+		last = line.find_first_of(delimiter, first);
+
+		//find_first_of関数で見つからなかった場合
+		if (last == std::string::npos)
+			last = line.size();
+
 	}
+
+	return ret;
+}
+
+std::vector<std::string> SetObject::SplitLine(const std::string& line, std::vector<char> delimiters)
+{
+	std::vector<std::string> ret;
+	size_t first = 0;
+	size_t last = 0;
+	while (first<line.size())
+	{
+		size_t lastSub = 0;
+		size_t length = 9999999;
+		for (int i = 0; i < delimiters.size(); i++)
+		{
+			lastSub = line.find_first_of(delimiters[i], first);
+			if (lastSub != std::string::npos)
+			{
+
+				if (lastSub - first <= length)
+				{
+					last = lastSub;
+					length = lastSub - first;
+				}
+			}
+
+		}
+
+		std::string parts(line, first, last - first);
+		first=last+1;
+		ret.push_back(parts);
+	}
+	return ret;
 }
 
 void SetObject::ObjectSet()
-{
-
-}
-
-//開放
-void SetObject::Release()
 {
 
 }

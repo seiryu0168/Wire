@@ -1,37 +1,25 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h" 
 #include<vector>
-class SetObject : public GameObject
+class SetObject
 {
 private:
     struct objectData
     {
-        std::string objectClassName;
+        std::string objectName;
         Transform objectTransform;
     
     };
     std::vector<objectData> objectDataList_;
 public:
-    SetObject(GameObject* parent);
+    SetObject(GameObject* scene);
 
     //デストラクタ
     ~SetObject();
 
-    //初期化
-    void Initialize() override;
-
-    ////更新
-    //void Update() override;
-
-    //void FixedUpdate() override;
-    ////描画
-    //void Draw() override;
-
-    void Load();
-
+    void Load(std::string filePath);
+    std::vector<std::string> SplitLine(const std::string& line, const char& delimiter);
+    std::vector<std::string> SplitLine(const std::string& line, std::vector<char> delimiters);
     void ObjectSet();
-
-    //開放
-    void Release() override;
 };
 
