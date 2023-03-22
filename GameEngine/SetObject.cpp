@@ -3,6 +3,7 @@
 #include<sstream>
 #include"resource.h"
 SetObject::SetObject(GameObject* scene)
+	:pScene_(scene)
 {
 
 }
@@ -27,7 +28,11 @@ void SetObject::Load(std::string fileName)
 	//std::wstring extName;
 	//WCHAR fileName[FILENAME_MAX];
 	//_wsplitpath_s(path, nullptr, 0, dir, MAX_PATH, fileName, FILENAME_MAX, nullptr, 0);
-	SetCurrentDirectory(L"Assets");
+	
+	if (SetCurrentDirectory(L"Assets")==ERROR_FILE_NOT_FOUND)
+	{
+		return;
+	}
 	std::ifstream fileReader;
 	fileReader.open(fileName);
 	std::string line;
@@ -43,6 +48,7 @@ void SetObject::Load(std::string fileName)
 		data.objectTransform.position_.x = stof(recive[1]);
 		data.objectTransform.position_.y = stof(recive[2]);
 		data.objectTransform.position_.z = stof(recive[3]);
+		objectDataList_.push_back(data);
 	}
 	fileReader.close();
 	SetCurrentDirectory(currentDir);
@@ -185,18 +191,22 @@ std::vector<std::string> SetObject::SplitLine(const std::string& line, std::vect
 	{
 		size_t lastSub = 0;
 		size_t length = 9999999;
+		//ç≈Ç‡è¨Ç≥Ç≠ï™äÑÇ∑ÇÈ
 		for (int i = 0; i < delimiters.size(); i++)
 		{
 			lastSub = line.find_first_of(delimiters[i], first);
+			//ÉfÉäÉ~É^Ç™å©Ç¬Ç©Ç¡ÇΩÇÁ
 			if (lastSub != std::string::npos)
 			{
-
+				//lengthÇÊÇËè¨Ç≥Ç©Ç¡ÇΩÇÁ
 				if (lastSub - first <= length)
 				{
 					last = lastSub;
 					length = lastSub - first;
 				}
 			}
+			else
+				last = line.size();	
 
 		}
 
@@ -209,5 +219,13 @@ std::vector<std::string> SetObject::SplitLine(const std::string& line, std::vect
 
 void SetObject::ObjectSet()
 {
+	auto itr = pScene_->GetChildList()->begin();
+	for (int i = 0; i < objectDataList_.size(); i++)
+	{
 
+		(*itr)->SetPosition(objectDataList_[i].objectTransform.position_);
+		itr++;
+		if (itr == pScene_->GetChildList()->end())
+			break;
+	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
 #include"Engine/SceneManager.h"
+#include"SetObject.h"
 #include<list>
 class Player;
 class Enemy;
@@ -14,6 +15,7 @@ private:
     int hPict_;
     bool resultFrag_;
     std::string sceneName_;
+    SetObject* set_;
     SceneManager* pManager_;
     SCENE_ID nowSceneID_;
 public:

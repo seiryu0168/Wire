@@ -11,6 +11,7 @@ private:
     
     };
     std::vector<objectData> objectDataList_;
+    GameObject* pScene_;
 public:
     SetObject(GameObject* scene);
 

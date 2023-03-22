@@ -83,7 +83,7 @@ Player::Player(GameObject* parent)
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(this);
     //マーカーを生成
-    pPointer_=Instantiate<Pointer>(GetParent());
+    pPointer_=Instantiate<Pointer>(this);
 }
 
 //デストラクタ

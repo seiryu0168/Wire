@@ -27,6 +27,8 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_(nullptr),
 	hPict_(-1)
 {
+	set_ = new SetObject(GetParent());
+	set_->Load(GetParent()->GetObjectName()+".txt");
 	pManager_ = (SceneManager*)FindObject("SceneManager");
 	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
@@ -69,6 +71,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		enemys_.push_back(Instantiate<EnemyTutorial>(GetParent()));
 		Instantiate<TutorialUI>(GetParent());
 	}
+	set_->ObjectSet();
 }
 
 ObjectSetter::~ObjectSetter()
