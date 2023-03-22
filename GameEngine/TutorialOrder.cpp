@@ -33,7 +33,7 @@ void TutorialOrder::Update()
 
 void TutorialOrder::Draw()
 {
-	pText_->Draw();
+	//pText_->Draw();
 }
 
 void TutorialOrder::Release()

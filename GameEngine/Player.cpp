@@ -82,8 +82,6 @@ Player::Player(GameObject* parent)
     pScreen_ = Instantiate<PlayScreen>(this);
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(this);
-    //マーカーを生成
-    pPointer_=Instantiate<Pointer>(this);
 }
 
 //デストラクタ
@@ -104,6 +102,8 @@ void Player::Initialize()
     hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
     assert(hModel_ >= 0);
 
+    //マーカーを生成
+    pPointer_=Instantiate<Pointer>(GetParent());
     
     //ラインパーティクル生成
     pPointerLine_ = new LineParticle;
@@ -734,7 +734,7 @@ void Player::Aim(RayCastData* ray)
         rotateSpeed_ = 2.0f;
         XMFLOAT3 pointerPos;
         XMStoreFloat3(&pointerPos, ray->hitPos);
-        pPointer_->SetPointerPos(pointerPos);
+        pPointer_->SetPosition(pointerPos);
         pPointer_->SetDraw(ray->hit);
         
         pPointerLine_->AddPosition(bonePos);

@@ -77,9 +77,7 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 void Text::Draw()
 {
-	//D2D1_RECT_F rect = layoutRect_;
-	//rect.left += transform2D.x;
-	//rect.top += transform2D.y;
+	
 	D2D::GetRenderTarget()->BeginDraw();
 	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
 	D2D::GetRenderTarget()->EndDraw();
