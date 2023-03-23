@@ -8,7 +8,7 @@ TutorialOrder::TutorialOrder()
 {
 	pText_ = new Text();
 	TEXT_RECT rect = { 0,0,500,100 };
-	pText_->Load("チュートリアル", "Meiryo UI", rect,LEFT_TOP);
+	pText_->Load("チュートリアル", "Sitka Text", rect,LEFT_TOP);
 	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
 }
 
@@ -33,7 +33,7 @@ void TutorialOrder::Update()
 
 void TutorialOrder::Draw()
 {
-	//pText_->Draw();
+	pText_->Draw();
 }
 
 void TutorialOrder::Release()

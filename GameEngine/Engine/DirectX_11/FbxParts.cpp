@@ -111,7 +111,7 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		if (cb.isNormal)
 		{
 			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalMap->GetSRV();
-			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
+			Direct3D::pContext->PSSetShaderResources(2, 1, &pNormalSRV);
 		}
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//ÄŠJ
 
@@ -558,6 +558,7 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			FbxProperty IPropaty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
 			int normalMapCount = IPropaty.GetSrcObjectCount<FbxFileTexture>();
 
+			pMaterialList_[i].pNormalMap = new Texture;
 			if (normalMapCount != 0)
 			{
 				FbxFileTexture* textureInfo = IPropaty.GetSrcObject<FbxFileTexture>(0);
@@ -575,12 +576,11 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 				size_t ret;
 				mbstowcs_s(&ret, wtext, name, strlen(name));
 
-				pMaterialList_[i].pNormalMap = new Texture;
 				pMaterialList_[i].pNormalMap->Load(wtext);
 			}
 			else
 			{
-				pMaterialList_[i].pNormalMap = nullptr;
+				pMaterialList_[i].pNormalMap->Load(L"DefaultNormalMap.jpg");
 			}
 		}
 	}

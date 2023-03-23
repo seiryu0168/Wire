@@ -14,13 +14,13 @@ MissionOrder::MissionOrder(ObjectSetter* p)
 	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
 	assert(hPict_ >= 0);
 	pText_ = new Text();
-	pText_->Load("“G‚ð“|‚¹I", "Meiryo UI", rect1, LEFT_TOP);
+	pText_->Load("“G‚ð“|‚¹I", "Sitka Text", rect1, LEFT_TOP);
 	pSetter_ = p;
 	EnemyMax_=pSetter_->GetEnemyCount();
 	EnemyCount_=pSetter_->GetEnemyCount();
 	pCountText_ = new Text();
 	count_ = std::to_string(EnemyCount_);
-	pCountText_->Load("Žc”" + count_, "Mairyo UI", rect2, LEFT_TOP);
+	pCountText_->Load("Enemy:" + count_, "Sitka Text", rect2, LEFT_TOP);
 
 }
 
@@ -41,7 +41,7 @@ void MissionOrder::Update()
 	}
 	EnemyCount_ = pSetter_->GetEnemyCount();
 	count_ = std::to_string(EnemyCount_);
-	pCountText_->SetText("Žc”"+count_);
+	pCountText_->SetText("Enemy:"+count_);
 	//ƒeƒLƒXƒgˆÚ“®
 	pText_->SetRatio(Easing::EaseOutQuint(ratio_) * 0.4f, 0.45f);
 }

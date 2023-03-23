@@ -134,7 +134,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//¡‚ÌŽž‚ÆÅŒã‚ÉXV‚µ‚½Žž‚Ì·*60‚ª1000ˆÈã‚Å‚ ‚ê‚Î
 			if ((nowTime - lastUpdateTime) * 60.0f >= 1000.0f)
 			{
-#if true
+#ifdef _DEBUG
 				DebugUI::StartImGui();
 #endif
 				//ƒQ[ƒ€‚Ìˆ—
@@ -144,7 +144,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
-#if true
+#ifdef _DEBUG
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
 				DebugUI::Log();
 				ImGui::Render();
@@ -155,13 +155,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				pRootJob->DrawSub();
 
 				pRootJob->SecondDrawSub();
-#if true		
-				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-#endif
 
 				//D2D::EndDraw();
 				ImageManager::Draw();
 				pRootJob->ThirdDrawSub();
+#ifdef _DEBUG	
+				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
 				Direct3D::EndDraw();
 			}
 		}
