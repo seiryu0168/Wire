@@ -99,7 +99,7 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\TestBall.fbx");
+    hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
     assert(hModel_ >= 0);
 
     //マーカーを生成
