@@ -53,7 +53,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//視線ベクトル
 	float4 wPos = mul(pos, g_matW);
 	float4 wCameraPos = mul(g_cameraPosition, g_matW);
-	outData.eyeVector = normalize(wPos - wCameraPos);
+	outData.eyeVector = normalize(wPos - g_cameraPosition);
 
 	//法線
 	outData.normal = mul(normal, g_matNormal);
@@ -79,10 +79,10 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//ライトの向きをライトと各ベクトルで求める
 	float4 light = float4(0, -1, 0, 0);
 	//outData.light = light;
-	outData.light.x = dot(light, tangent);
-	outData.light.y = dot(light, biNormal);
-	outData.light.z = dot(light, normal);
-	outData.light.w	 = 0;
+	outData.light.x = dot(-light, tangent);
+	outData.light.y = dot(-light, biNormal);
+	outData.light.z = dot(-light, normal);
+	outData.light.w	 = 1;
 
 
 	//UV
@@ -102,7 +102,7 @@ float4 PS(VS_OUT inData) : SV_Target
 
 	float4 normal = g_normalTexture.Sample(g_sampler, inData.uv);// +inData.normal;
 	normal = normalize(normal);
-	normal.w = 0;
+	normal.w = 1;
 	//拡散反射光(ディフューズ)
 	
 	//法線とライトの方向の内積
@@ -110,7 +110,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	{
 		//normal = inData.normal;
 	}
-	float4 shade = saturate(dot(normal, -light));
+	float4 shade = saturate(dot(normal, light));
 	shade.a = 1;
 	//テクスチャ
 	float4 diffuse;
@@ -131,8 +131,8 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 speculer = float4(0, 0, 0, 0);
 	if (g_speculer.a != 0)
 	{
-		float4 vecReflect = reflect(inData.light, normal);
-		speculer = float4(1,1,1,0) * pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) * g_speculer;
+		float4 vecReflect = reflect(-inData.light, normal);
+		speculer = pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) * g_speculer;
 	}
 	float4 outColor;
 	outColor = diffuse * shade + diffuse * ambient + speculer;

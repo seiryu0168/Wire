@@ -96,7 +96,7 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
 		cb.customColor = lineColor;
-
+		XMVECTOR a = pVertices_[i].tangent;
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); //GPUからのデータアクセスを止める
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));			      //データを値を送る
@@ -224,12 +224,11 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			FbxVector4 Normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
-
-
 		}
 #if 1
 		if (mesh->GetElementTangentCount() > 0)
 		{
+			int cnt = mesh->GetElementTangentCount();
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
 				int index = mesh->GetPolygonVertex(poly, vertex);
@@ -237,6 +236,7 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 				FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
 				FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
 				pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+
 			}
 		}
 		else
@@ -584,6 +584,23 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			}
 		}
 	}
+}
+
+XMVECTOR FbxParts::CalcTangent(const VERTEX& vertex)
+{
+	XMFLOAT3 localPos = StoreFloat3(vertex.position);
+	XMFLOAT3 uv = StoreFloat3(vertex.uv);
+	XMFLOAT3 normal = StoreFloat3(vertex.normal);
+	std::vector<XMVECTOR> vPos[3];
+
+	vPos[0]={
+		XMVectorSet(localPos.x,uv.x,uv.y,0.0f),
+		XMVectorSet(localPos.y,uv.x,uv.y,0.0f),
+
+	}
+	localPos.x=
+
+	return XMVECTOR();
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
