@@ -92,7 +92,7 @@ private:
 	HRESULT CreateConstantBuffer();
 	HRESULT InitSkelton(FbxMesh* pMesh);
 	void InitMaterial(fbxsdk::FbxNode* pNode);
-	XMVECTOR CalcTangent(const VERTEX &vertex);
+	void CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX& vertex2);
 public:
 	FbxParts();
 	~FbxParts();

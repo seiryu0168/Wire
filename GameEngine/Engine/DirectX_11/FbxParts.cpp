@@ -586,21 +586,54 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 	}
 }
 
-XMVECTOR FbxParts::CalcTangent(const VERTEX& vertex)
+void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX& vertex2)
 {
-	XMFLOAT3 localPos = StoreFloat3(vertex.position);
-	XMFLOAT3 uv = StoreFloat3(vertex.uv);
-	XMFLOAT3 normal = StoreFloat3(vertex.normal);
-	std::vector<XMVECTOR> vPos[3];
+	//3頂点の必要な情報
+	XMFLOAT3 localPos[3] = { StoreFloat3(vertex0.position),
+							 StoreFloat3(vertex1.position),
+							 StoreFloat3(vertex2.position) };
 
-	vPos[0]={
-		XMVectorSet(localPos.x,uv.x,uv.y,0.0f),
-		XMVectorSet(localPos.y,uv.x,uv.y,0.0f),
+	XMFLOAT3 uv[3] =	   { StoreFloat3(vertex0.uv),	
+							 StoreFloat3(vertex1.uv),
+							 StoreFloat3(vertex2.uv) };
+	XMVECTOR vPos0[3] = {
+		XMVectorSet(localPos[0].x,uv[0].x,uv[0].y,0.0f),
+		XMVectorSet(localPos[0].y,uv[0].x,uv[0].y,0.0f),
+		XMVectorSet(localPos[0].z,uv[0].x,uv[0].y,0.0f)
+	};
+	XMVECTOR vPos1[3] = {
+		XMVectorSet(localPos[1].x,uv[1].x,uv[1].y,0.0f),
+		XMVectorSet(localPos[1].y,uv[1].x,uv[1].y,0.0f),
+		XMVectorSet(localPos[1].z,uv[1].x,uv[1].y,0.0f)
+	};
+	XMVECTOR vPos2[3] = {
+		XMVectorSet(localPos[2].x,uv[2].x,uv[2].y,0.0f),
+		XMVectorSet(localPos[2].y,uv[2].x,uv[2].y,0.0f),
+		XMVectorSet(localPos[2].z,uv[2].x,uv[2].y,0.0f)
+	};
 
+	float u[3];
+	float v[3];
+	for (int i = 0; i < 3; i++)
+	{
+		XMVECTOR V1 = vPos1[i] - vPos0[i];
+		XMVECTOR V2 = vPos2[i] - vPos1[i];
+		XMFLOAT3 normal;
+
+		normal=StoreFloat3(XMVector3Cross(V1, V2));
+
+		if (normal.x==0.0f)
+		{
+			//頂点座標かUV座標が完全に重なっているので縮退している
+			//計算が成り立たない
+			assert(false);
+			vertex0.tangent = XMVectorSet(0, 0, 0, 0);
+			return;
+		}
+		u[i] = -normal.y / normal.x;
+		v[i] = -normal.z / normal.x;
 	}
-	localPos.x=
-
-	return XMVECTOR();
+	vertex0.tangent = XMVectorSet(u[0], u[1], u[2], 0);
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
