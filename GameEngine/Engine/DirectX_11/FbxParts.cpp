@@ -225,7 +225,16 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		}
-#if 1
+
+		int index0 = mesh->GetPolygonVertex(poly, 0);
+		int index1 = mesh->GetPolygonVertex(poly, 1);
+		int index2 = mesh->GetPolygonVertex(poly, 2);
+
+		CalcTangent(pVertices_[index0], pVertices_[index1], pVertices_[index2]);
+		CalcTangent(pVertices_[index1], pVertices_[index2], pVertices_[index0]);
+		CalcTangent(pVertices_[index2], pVertices_[index0], pVertices_[index1]);
+
+#if 0
 		if (mesh->GetElementTangentCount() > 0)
 		{
 			int cnt = mesh->GetElementTangentCount();
@@ -621,19 +630,18 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 		XMFLOAT3 normal;
 
 		normal=StoreFloat3(XMVector3Cross(V1, V2));
-
 		if (normal.x==0.0f)
 		{
 			//頂点座標かUV座標が完全に重なっているので縮退している
 			//計算が成り立たない
-			assert(false);
+			//assert(false);
 			vertex0.tangent = XMVectorSet(0, 0, 0, 0);
 			return;
 		}
 		u[i] = -normal.y / normal.x;
 		v[i] = -normal.z / normal.x;
 	}
-	vertex0.tangent = XMVectorSet(u[0], u[1], u[2], 0);
+	vertex0.tangent = XMVector3Normalize(XMVectorSet(u[0], u[1], u[2], 0));
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
