@@ -635,9 +635,12 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 			//頂点座標かUV座標が完全に重なっているので縮退している
 			//計算が成り立たない
 			//assert(false);
-			vertex0.tangent = XMVectorSet(0, 0, 0, 0);
+			XMVECTOR tangent = vertex1.position - vertex0.position;
+			tangent = tangent - vertex0.normal * VectorDot(tangent, vertex0.normal);
+			vertex0.tangent = XMVector3Normalize(tangent);
 			return;
 		}
+	vertex0.normal = XMLoadFloat3(&normal);
 		u[i] = -normal.y / normal.x;
 		v[i] = -normal.z / normal.x;
 	}

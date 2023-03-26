@@ -99,7 +99,7 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\TestBox2.fbx");
+    hModel_ = ModelManager::Load("Assets\\water.fbx");
     assert(hModel_ >= 0);
 
     //マーカーを生成

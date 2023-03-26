@@ -55,14 +55,14 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	float4 wCameraPos = mul(g_cameraPosition, g_matW);
 	outData.eyeVector = normalize(wPos - g_cameraPosition);
 
-	//法線
-	outData.normal = mul(normal, g_matNormal);
-	outData.normal.w = 0;
 
 	tangent.w = 0;
 	//法線と接線を使って従法線を作る
 	//従法線
 	float3 biNormal = cross(normal, tangent);
+	//法線
+	outData.normal = mul(normal, g_matNormal);
+	outData.normal.w = 0;
 	
 	//法線を回転
 	normal = mul(normal, g_matNormal);
@@ -78,11 +78,11 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 
 	//ライトの向きをライトと各ベクトルで求める
 	float4 light = float4(0, -1, 0, 0);
-	//outData.light = light;
-	outData.light.x = dot(-light, tangent);
-	outData.light.y = dot(-light, biNormal);
-	outData.light.z = dot(-light, normal);
-	outData.light.w	 = 1;
+	outData.light.x = dot(light, tangent);
+	outData.light.y = dot(light, biNormal);
+	outData.light.z = dot(light, normal);
+	outData.light.w	 = 0;
+	outData.light = normalize(outData.light);
 
 
 	//UV
@@ -98,18 +98,20 @@ float4 PS(VS_OUT inData) : SV_Target
 {
 	inData.normal = normalize(inData.normal);
 	//ライトベクトル
-	float4 light = normalize(inData.light);
+	float4 light = -normalize(inData.light);
+	float4 normal;
+	if(g_isNormal)
+	{
+		 normal = g_normalTexture.Sample(g_sampler, inData.uv) * 2 - 1;
+	}
+	else
+		normal = inData.normal;
 
-	float4 normal = g_normalTexture.Sample(g_sampler, inData.uv);// +inData.normal;
 	normal = normalize(normal);
-	normal.w = 1;
+	normal.w = 0;
 	//拡散反射光(ディフューズ)
 	
 	//法線とライトの方向の内積
-	if (g_isNormal==false)
-	{
-		//normal = inData.normal;
-	}
 	float4 shade = saturate(dot(normal, light));
 	shade.a = 1;
 	//テクスチャ
@@ -131,9 +133,10 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 speculer = float4(0, 0, 0, 0);
 	if (g_speculer.a != 0)
 	{
-		float4 vecReflect = reflect(-inData.light, normal);
+		float4 vecReflect = reflect(inData.light, normal);
 		speculer = pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) * g_speculer;
 	}
+
 	float4 outColor;
 	outColor = diffuse * shade + diffuse * ambient + speculer;
 	return outColor;
