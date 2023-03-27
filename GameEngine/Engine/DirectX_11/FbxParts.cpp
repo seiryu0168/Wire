@@ -225,9 +225,10 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		}
+			int index0 = mesh->GetPolygonVertex(poly, 0);
+			int index1 = mesh->GetPolygonVertex(poly, 1);
+			int index2 = mesh->GetPolygonVertex(poly, 2);
 
-
-#if 1
 		if (mesh->GetElementTangentCount() > 0)
 		{
 			int cnt = mesh->GetElementTangentCount();
@@ -241,15 +242,27 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 
 			}
 		}
-		else
-		{
-			int index0 = mesh->GetPolygonVertex(poly, 0);
-			int index1 = mesh->GetPolygonVertex(poly, 1);
-			int index2 = mesh->GetPolygonVertex(poly, 2);
-
 			CalcTangent(pVertices_[index0], pVertices_[index1], pVertices_[index2]);
 			CalcTangent(pVertices_[index1], pVertices_[index2], pVertices_[index0]);
 			CalcTangent(pVertices_[index2], pVertices_[index0], pVertices_[index1]);
+
+
+#if 0
+			if (mesh->GetElementTangentCount() > 0)
+			{
+				int cnt = mesh->GetElementTangentCount();
+				for (int vertex = 0; vertex < 3; vertex++)
+				{
+					int index = mesh->GetPolygonVertex(poly, vertex);
+					//接線
+					FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
+					FbxVector4 tangent = t->GetDirectArray().GetAt(index).mData;
+					pVertices_[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+
+				}
+			}
+		else
+		{
 			//for (int vertex = 0; vertex < 3; vertex++)
 			//{
 			//	int index = mesh->GetPolygonVertex(poly, vertex);
@@ -639,10 +652,10 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 			//頂点座標かUV座標が完全に重なっているので縮退している
 			//計算が成り立たない
 			//assert(false);
-			XMVECTOR tangent = vertex1.position - vertex0.position;
-			tangent = tangent - vertex0.normal * VectorDot(tangent, vertex0.normal);
-			vertex0.tangent = XMVector3Normalize(tangent);
-			return;
+			//XMVECTOR tangent = vertex1.position - vertex0.position;
+			//tangent = tangent - vertex0.normal * VectorDot(tangent, vertex0.normal);
+			//vertex0.tangent = XMVector3Normalize(tangent);
+			//return;
 		}
 
 		u[i] = -normal.y / normal.x;

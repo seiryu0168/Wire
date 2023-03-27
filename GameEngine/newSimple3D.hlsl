@@ -54,7 +54,6 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//視線ベクトル
 	outData.wPos = mul(pos, g_matW);
 	float4 wCameraPos = mul(g_cameraPosition, g_matW);
-	//outData.eyeVector = normalize(g_cameraPosition-wPos);
 
 
 	tangent.w = 0;
@@ -78,7 +77,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	tangent = normalize(tangent);
 
 	//ライトの向きをライトベクトルと各ベクトルで求める
-	float4 light = float4(0, -1, 1, 0);
+	float4 light = float4(0, -1, 0, 0);
 	//outData.light.x = dot(-light, tangent);
 	//outData.light.y = dot(-light, biNormal);
 	//outData.light.z = dot(-light, normal);
@@ -99,7 +98,7 @@ float4 PS(VS_OUT inData) : SV_Target
 {
 	//ライトベクトル
 	//ライトを正規化
-	float4 light = -normalize(inData.light);
+	float4 light = normalize(inData.light);
 	float4 normal;
 	//ノーマルマップ使うなら
 	if(g_isNormal)
@@ -110,7 +109,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	//使わないならポリゴンのノーマル使う
 	//else
 
-		normal = inData.normal;
+	normal = inData.normal;
 	
 	//正規化
 	normal = normalize(normal);
@@ -118,7 +117,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	
 	//拡散反射光(ディフューズ)
 	//法線とライトの方向の内積
-	float4 shade = saturate(dot(light, normal));
+	float4 shade = saturate(dot(-light, normal));
 	shade.a = 1;
 
 	float4 diffuse;
@@ -143,13 +142,17 @@ float4 PS(VS_OUT inData) : SV_Target
 	if (g_speculer.a != 0)
 	{
 		//ライトベクトルとノーマルで正反射ベクトルを作る
-		float4 vecReflect = reflect(light, normal);
-		float4 vecView = g_cameraPosition - inData.wPos;
-		speculer = pow(saturate(dot(vecView, vecReflect)), g_shininess) * g_speculer;
+		//正反射ベクトル
+		float4 vecReflect = normalize(2 * normal * dot(normal, -light) - light);//reflect(light, normal);
+		//視線ベクトル
+		float4 vecView = normalize(g_cameraPosition - inData.wPos);
+		//スペキュラ
+		speculer = pow(saturate(dot(vecReflect, vecView)), g_shininess) * g_speculer;
 	}
-	//speculer.w = 1;
+
+	//speculer.w = 0;
 	float4 outColor;
-	outColor = diffuse * shade + diffuse * ambient;
+	outColor = diffuse * shade + diffuse * ambient+speculer;
 	
 	//outColor = speculer;
 	return outColor;
