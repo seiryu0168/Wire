@@ -36,6 +36,7 @@ struct VS_OUT
 	float4 eyeVector: TEXCOORD2;	//視線
 	float4 col		: COLOR0;		//カラー
 	float4 fog		: COLOR1;		//フォグ
+	float4 wPos     : COLOR2;		//
 	float2 uv		: TEXCOORD3;	//UV座標
 };
 
@@ -49,11 +50,11 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
 	outData.pos = mul(pos, g_matWVP);
-
+	
 	//視線ベクトル
-	float4 wPos = mul(pos, g_matW);
+	outData.wPos = mul(pos, g_matW);
 	float4 wCameraPos = mul(g_cameraPosition, g_matW);
-	outData.eyeVector = normalize(wPos - g_cameraPosition);
+	//outData.eyeVector = normalize(g_cameraPosition-wPos);
 
 
 	tangent.w = 0;
@@ -76,13 +77,13 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	tangent = mul(tangent, g_matNormal);
 	tangent = normalize(tangent);
 
-	//ライトの向きをライトと各ベクトルで求める
-	float4 light = float4(0, -1, 0, 0);
-	outData.light.x = dot(light, tangent);
-	outData.light.y = dot(light, biNormal);
-	outData.light.z = dot(light, normal);
-	outData.light.w	 = 0;
-	outData.light = normalize(outData.light);
+	//ライトの向きをライトベクトルと各ベクトルで求める
+	float4 light = float4(0, -1, 1, 0);
+	//outData.light.x = dot(-light, tangent);
+	//outData.light.y = dot(-light, biNormal);
+	//outData.light.z = dot(-light, normal);
+	//outData.light.w	 = 0;
+	outData.light = normalize(light);
 
 
 	//UV
@@ -96,30 +97,38 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	inData.normal = normalize(inData.normal);
 	//ライトベクトル
+	//ライトを正規化
 	float4 light = -normalize(inData.light);
 	float4 normal;
+	//ノーマルマップ使うなら
 	if(g_isNormal)
 	{
+		//ノーマルマップテクスチャからノーマル情報を取る
 		 normal = g_normalTexture.Sample(g_sampler, inData.uv) * 2 - 1;
 	}
-	else
-		normal = inData.normal;
+	//使わないならポリゴンのノーマル使う
+	//else
 
+		normal = inData.normal;
+	
+	//正規化
 	normal = normalize(normal);
 	normal.w = 0;
-	//拡散反射光(ディフューズ)
 	
+	//拡散反射光(ディフューズ)
 	//法線とライトの方向の内積
-	float4 shade = saturate(dot(normal, light));
+	float4 shade = saturate(dot(light, normal));
 	shade.a = 1;
-	//テクスチャ
+
 	float4 diffuse;
+	//テクスチャ使うなら
 	if (g_isTexture == true)
 	{
+		//テクスチャから情報取ってくる
 		diffuse = g_texture.Sample(g_sampler, inData.uv);
 	}
+	//使わないなら
 	else
 	{
 		diffuse = g_diffuseColor;
@@ -133,12 +142,16 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 speculer = float4(0, 0, 0, 0);
 	if (g_speculer.a != 0)
 	{
-		float4 vecReflect = reflect(inData.light, normal);
-		speculer = pow(saturate(dot(vecReflect, inData.eyeVector)), g_shininess) * g_speculer;
+		//ライトベクトルとノーマルで正反射ベクトルを作る
+		float4 vecReflect = reflect(light, normal);
+		float4 vecView = g_cameraPosition - inData.wPos;
+		speculer = pow(saturate(dot(vecView, vecReflect)), g_shininess) * g_speculer;
 	}
-
+	//speculer.w = 1;
 	float4 outColor;
-	outColor = diffuse * shade + diffuse * ambient + speculer;
+	outColor = diffuse * shade + diffuse * ambient;
+	
+	//outColor = speculer;
 	return outColor;
 }
 

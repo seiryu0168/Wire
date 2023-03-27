@@ -99,6 +99,7 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
+    hModel_ = ModelManager::Load("Assets\\TestBall.fbx");
     hModel_ = ModelManager::Load("Assets\\water.fbx");
     assert(hModel_ >= 0);
 
@@ -687,7 +688,7 @@ void Player::Aim(RayCastData* ray)
             //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
                 ModelManager::RayCast(*ray);
-            if (ray->hitModelList.begin()->hModel==pEnemy->GethModel()&&ray->hit)
+            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GethModel())
             {
                 lockOn_ = true;
             }

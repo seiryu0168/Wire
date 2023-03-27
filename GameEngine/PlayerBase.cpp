@@ -16,7 +16,7 @@ PlayerBase::~PlayerBase()
 
 void PlayerBase::Initialize()
 {
-	hModel_ = ModelManager::Load("Assets\\Player.fbx");
+	hModel_ = ModelManager::Load("Assets\\Player_Maya.fbx");
 	assert(hModel_ >= 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_LEFT)] = XMVectorSet(-3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_RIGHT)] = XMVectorSet(3.0f, -1.0f, 3.0f, 0);

@@ -51,7 +51,7 @@ void EnemyTurret::Initialize()
 	AddCollider(pCollider);
 	
 	//モデル読み込み
-	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
+	hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
 	assert(hModel_ >= 0);
 	//モデルセット
 	SethModel(hModel_);

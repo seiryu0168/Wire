@@ -226,15 +226,8 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 			pVertices_[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		}
 
-		int index0 = mesh->GetPolygonVertex(poly, 0);
-		int index1 = mesh->GetPolygonVertex(poly, 1);
-		int index2 = mesh->GetPolygonVertex(poly, 2);
 
-		CalcTangent(pVertices_[index0], pVertices_[index1], pVertices_[index2]);
-		CalcTangent(pVertices_[index1], pVertices_[index2], pVertices_[index0]);
-		CalcTangent(pVertices_[index2], pVertices_[index0], pVertices_[index1]);
-
-#if 0
+#if 1
 		if (mesh->GetElementTangentCount() > 0)
 		{
 			int cnt = mesh->GetElementTangentCount();
@@ -250,11 +243,18 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 		}
 		else
 		{
-			for (int vertex = 0; vertex < 3; vertex++)
-			{
-				int index = mesh->GetPolygonVertex(poly, vertex);
-				pVertices_[index].tangent = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-			}
+			int index0 = mesh->GetPolygonVertex(poly, 0);
+			int index1 = mesh->GetPolygonVertex(poly, 1);
+			int index2 = mesh->GetPolygonVertex(poly, 2);
+
+			CalcTangent(pVertices_[index0], pVertices_[index1], pVertices_[index2]);
+			CalcTangent(pVertices_[index1], pVertices_[index2], pVertices_[index0]);
+			CalcTangent(pVertices_[index2], pVertices_[index0], pVertices_[index1]);
+			//for (int vertex = 0; vertex < 3; vertex++)
+			//{
+			//	int index = mesh->GetPolygonVertex(poly, vertex);
+			//	pVertices_[index].tangent = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			//}
 		}
 #endif
 	}
@@ -629,9 +629,13 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 		XMVECTOR V2 = vPos2[i] - vPos1[i];
 		XMFLOAT3 normal;
 
-		normal=StoreFloat3(XMVector3Cross(V1, V2));
+		normal=StoreFloat3(XMVector3Normalize(XMVector3Cross(V1, V2)));
+		bool degnerate = max(normal.x, 0.0f);
+	    //vertex0.normal = XMVector3Cross(vertex1.position-vertex0.position,vertex2.position-vertex1.position);
+
 		if (normal.x==0.0f)
 		{
+			normal.x = 1.0f;
 			//頂点座標かUV座標が完全に重なっているので縮退している
 			//計算が成り立たない
 			//assert(false);
@@ -640,11 +644,13 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 			vertex0.tangent = XMVector3Normalize(tangent);
 			return;
 		}
-	vertex0.normal = XMLoadFloat3(&normal);
+
 		u[i] = -normal.y / normal.x;
 		v[i] = -normal.z / normal.x;
 	}
-	vertex0.tangent = XMVector3Normalize(XMVectorSet(u[0], u[1], u[2], 0));
+	XMVECTOR tan = XMVectorSet(u[0], u[1], u[2], 0);
+	//tan -= vertex0.normal * VectorDot(tan, vertex0.normal);
+	vertex0.tangent = XMVector3Normalize(tan);
 }
 
 bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
