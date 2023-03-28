@@ -53,7 +53,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	
 	//視線ベクトル
 	outData.wPos = mul(pos, g_matW);
-	float4 wCameraPos = mul(g_cameraPosition, g_matW);
+	//float4 wCameraPos = mul(g_cameraPosition, g_matW);
+	//視線ベクトル
 
 
 	tangent.w = 0;
@@ -76,14 +77,20 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	tangent = mul(tangent, g_matNormal);
 	tangent = normalize(tangent);
 
-	//ライトの向きをライトベクトルと各ベクトルで求める
+	//接空間におけるライトの向きをライトベクトルと各ベクトルで求める
 	float4 light = float4(0, -1, 0, 0);
-	//outData.light.x = dot(-light, tangent);
-	//outData.light.y = dot(-light, biNormal);
-	//outData.light.z = dot(-light, normal);
+	//outData.light.x = dot(light, tangent);
+	//outData.light.y = dot(light, biNormal);
+	//outData.light.z = dot(light, normal);
 	//outData.light.w	 = 0;
 	outData.light = normalize(light);
 
+	//接空間における視線ベクトルを視線ベクトルと各ベクトルで求める
+	//outData.eyeVector.x = dot(vecView, tangent);
+	//outData.eyeVector.y = dot(vecView, biNormal);
+	//outData.eyeVector.z = dot(vecView, normal);
+	//outData.eyeVector.w = 0;
+	//outData.eyeVector = vecView;
 
 	//UV
 	outData.uv = uv;
@@ -104,6 +111,8 @@ float4 PS(VS_OUT inData) : SV_Target
 	if(g_isNormal)
 	{
 		//ノーマルマップテクスチャからノーマル情報を取る
+		//ノーマルマップのRGBは0～1の情報だが、法線は各値が-1～1までの値をとるので
+		//2倍して1引く事で調整している
 		 normal = g_normalTexture.Sample(g_sampler, inData.uv) * 2 - 1;
 	}
 	//使わないならポリゴンのノーマル使う
@@ -144,9 +153,8 @@ float4 PS(VS_OUT inData) : SV_Target
 		//ライトベクトルとノーマルで正反射ベクトルを作る
 		//正反射ベクトル
 		float4 vecReflect = normalize(2 * normal * dot(normal, -light) - light);//reflect(light, normal);
-		//視線ベクトル
-		float4 vecView = normalize(g_cameraPosition - inData.wPos);
 		//スペキュラ
+		float4 vecView = normalize(g_cameraPosition - inData.wPos);
 		speculer = pow(saturate(dot(vecReflect, vecView)), g_shininess) * g_speculer;
 	}
 
