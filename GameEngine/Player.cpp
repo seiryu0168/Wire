@@ -7,6 +7,7 @@
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Particle.h"
 #include"PlayerBase.h"
+#include"Engine/ResourceManager/Audio.h"
 #include"PlayScreen.h"
 #include"Player.h"
 #include"InterSceneData.h"
@@ -113,6 +114,9 @@ void Player::Initialize()
     pPointerLine_->SetLineParameter(0.1f, 2);
     //ラインパーティクル用画像のロード
     pPointerLine_->Load("Assets\\Effect01.png");
+
+    //衝突音
+    hAudio_ = Audio::Load("Assets\\explosion.wav", 10);
 
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
@@ -627,6 +631,7 @@ void Player::OnCollision(GameObject* pTarget)
             godFlag_ = true;
             godTime_ = 30;
         }
+        Audio::PlayLoop(hAudio_);
     }
 
     if (pTarget->GetTag() == "EnemyBullet")
@@ -813,15 +818,17 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
 
 Enemy* Player::AimAssist(RayCastData* ray)
 {
-    //エネミーリストが空だったらnullptr1 返す
+    //エネミーリストが空だったらnullptrを返す
     if (enemyList_.empty())
         return nullptr;
 
     float minRange = 9999.0f;
     Enemy* pEnemy=nullptr;
     auto i = enemyList_.begin();
+    //エネミーのリストからエイムアシストの範囲にいるかどうか調べる
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {
+        //範囲内だったら
         if (IsAssistRange(*ray, (*itr)->GetPosition(), ray->distLimit))
         {
             XMFLOAT3 targetPos = (*itr)->GetPosition();
