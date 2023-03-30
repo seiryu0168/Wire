@@ -69,7 +69,7 @@ void Bullet::OnCollision(GameObject* target)
 {
 	if (target->GetObjectName() == "Player")
 	{
-		Audio::PlayLoop(hAudio_);
+		Audio::Play(hAudio_);
 		pParticle_ = Instantiate<Particle>(GetParent());
 
 		EmitterData data;

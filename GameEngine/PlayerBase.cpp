@@ -1,5 +1,6 @@
 #include "PlayerBase.h"
 #include"Engine/ResourceManager/Model.h"
+#include"Engine/ResourceManager/Audio.h"
 #include"Engine/DirectX_11/Particle.h"
 #include"Player.h"
 PlayerBase::PlayerBase(GameObject* parent)
@@ -18,6 +19,8 @@ void PlayerBase::Initialize()
 {
 	hModel_ = ModelManager::Load("Assets\\Player_Maya.fbx");
 	assert(hModel_ >= 0);
+    hAudio_ = Audio::Load("Assets\\move.wav");
+    assert(hAudio_ >= 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_LEFT)] = XMVectorSet(-3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_RIGHT)] = XMVectorSet(3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::BACK_LEFT)] = XMVectorSet(-3.0f, -1.0f, -3.0f, 0);
@@ -35,8 +38,11 @@ void PlayerBase::Update()
     bool f = ((Player*)GetParent())->IsFly();
     bool j = ((Player*)GetParent())->IsJump();
     bool a = ((Player*)GetParent())->IsAir();
-    if(((Player*)GetParent())->IsGround()&&VectorLength(moveVec_)>=0.2f)
+    if (((Player*)GetParent())->IsGround() && VectorLength(moveVec_) >= 0.2f)
+    {
     Spark();
+    Audio::Play(hAudio_);
+    }
 }
 
 void PlayerBase::Draw()

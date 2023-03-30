@@ -14,7 +14,7 @@ Wire::Wire()
 	vWidth_(XMVectorZero()),
 	vWire_(XMVectorZero())
 {
-	wireLine_.SetLineParameter(1.0f, splitCount_);
+	wireLine_.SetLineParameter(0.3f, splitCount_);
 	wireLine_.Load("Assets\\Effect01.png");
 }
 

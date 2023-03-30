@@ -644,7 +644,6 @@ void FbxParts::CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX&
 
 		normal=StoreFloat3(XMVector3Normalize(XMVector3Cross(V1, V2)));
 		bool degnerate = max(normal.x, 0.0f);
-	    //vertex0.normal = XMVector3Cross(vertex1.position-vertex0.position,vertex2.position-vertex1.position);
 
 		if (normal.x==0.0f)
 		{

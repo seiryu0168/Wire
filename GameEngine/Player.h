@@ -35,6 +35,7 @@ class Player : public GameObject
 
     int hModel_;
     int hAudio_;
+    int hAudioShoot_;
     int playerLife_;
     int stageNum_;
     int godTime_;

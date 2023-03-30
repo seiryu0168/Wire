@@ -13,7 +13,6 @@ EnemyTutorial::~EnemyTutorial()
 
 void EnemyTutorial::Initialize()
 {
-	//SetPosition({ 0,2,10 });
 	SetTag("Enemy");
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
 	assert(hModel_ >= 0);

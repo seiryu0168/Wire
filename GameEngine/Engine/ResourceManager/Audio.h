@@ -19,7 +19,7 @@ namespace Audio
 	/// Ä¶
 	/// </summary>
 	/// <param name="ID">–Â‚ç‚µ‚½‚¢‰¹‚Ì”Ô†</param>
-	void PlayLoop(int ID);
+	void Play(int ID);
 	void Releace();
 
 };

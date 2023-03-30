@@ -13,11 +13,12 @@ private:
 		BACK_RIGHT,
 		MAX
 	};
+	int hModel_;
+	int hAudio_;
 	Particle* pParticle_;
 	XMFLOAT3 prevPos_;
 	XMVECTOR moveVec_;
 	XMVECTOR vSparkPos_[4];
-	int hModel_;
 public:
 	PlayerBase(GameObject* parent);
 	~PlayerBase();

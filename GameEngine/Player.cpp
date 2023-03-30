@@ -45,6 +45,7 @@ Player::Player(GameObject* parent)
     gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
+    hAudioShoot_(-1),
     stageNum_(-1),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
@@ -100,8 +101,6 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    //hModel_ = ModelManager::Load("Assets\\TestBall.fbx");
-    //hModel_ = ModelManager::Load("Assets\\water.fbx");
     hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
     assert(hModel_ >= 0);
 
@@ -117,7 +116,13 @@ void Player::Initialize()
 
     //衝突音
     hAudio_ = Audio::Load("Assets\\explosion.wav", 10);
-
+    assert(hAudio_ >= 0);
+    
+    //射出音
+    hAudioShoot_ = Audio::Load("Assets\\shoot.wav",5);
+    assert(hAudioShoot_ >= 0);
+    
+    //当たり判定
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
@@ -199,7 +204,7 @@ void Player::Update()
             velocity_ = 0;
             //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
-            
+            Audio::Play(hAudioShoot_);
         }
         
     }
@@ -207,7 +212,6 @@ void Player::Update()
     if (wire_->GetWireState()==WIRE_STATE::EXTEND)
     {
         vFlyMove_ = wire_->GetWireVec() * maxSpeed_;
-        //if(lockOn_)
         SetStatus(ATC_ATTACK);
         
         pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
@@ -631,7 +635,7 @@ void Player::OnCollision(GameObject* pTarget)
             godFlag_ = true;
             godTime_ = 30;
         }
-        Audio::PlayLoop(hAudio_);
+        Audio::Play(hAudio_);
     }
 
     if (pTarget->GetTag() == "EnemyBullet")

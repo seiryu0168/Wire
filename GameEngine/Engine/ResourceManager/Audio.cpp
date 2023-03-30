@@ -102,7 +102,7 @@ int Audio::Load(std::string fileName, int svNum)
 
 }
 
-void Audio::PlayLoop(int ID)
+void Audio::Play(int ID)
 {
 	for (int i = 0; i < audioList_[ID].svNum; i++)
 	{
