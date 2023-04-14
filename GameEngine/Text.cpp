@@ -79,13 +79,13 @@ void Text::Draw()
 {
 	
 	D2D::GetRenderTarget()->BeginDraw();
-	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
-	D2D::GetRenderTarget()->EndDraw();
-	/*D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
+	//D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
+	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
 								    { transform2D.x + layoutRect_.left,
 									  transform2D.y + layoutRect_.top,
 									  transform2D.x + layoutRect_.right,
-									  transform2D.y + layoutRect_.bottom }, pColorBrush_);*/
+									  transform2D.y + layoutRect_.bottom }, pColorBrush_);
+	D2D::GetRenderTarget()->EndDraw();
 }
 void Text::SetColor(XMFLOAT4 color)
 {
