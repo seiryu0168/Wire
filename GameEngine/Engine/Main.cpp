@@ -4,7 +4,6 @@
 #include"DirectX_11/Direct3D.h"
 #include"DirectX_11/Direct2D.h"
 #include"GameObject/Camera.h"
-//#include"Engine/Quad.h"
 #include"DirectX_11/Sprite.h"
 #include"GameObject/Transform.h"
 #include"ResourceManager/ImageManager.h"
@@ -15,10 +14,6 @@
 #include"../ImGui/imgui_impl_dx11.h"
 #include"../ImGui/imgui_impl_win32.h"
 #include"ResourceManager/Audio.h"
-
-
-#include"..//Text.h"
-
 
 #pragma comment(lib, "winmm.lib")
 

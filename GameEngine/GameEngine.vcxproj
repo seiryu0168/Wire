@@ -188,6 +188,7 @@
     <ClCompile Include="Engine\ResourceManager\Audio.cpp" />
     <ClCompile Include="Engine\ResourceManager\ImageManager.cpp" />
     <ClCompile Include="Engine\ResourceManager\Model.cpp" />
+    <ClCompile Include="Engine\ResourceManager\Text.cpp" />
     <ClCompile Include="Engine\ResourceManager\TextureManager.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
     <ClCompile Include="HomingBullet.cpp" />
@@ -215,7 +216,6 @@
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="EnemyTutorial.cpp" />
@@ -256,6 +256,7 @@
     <ClInclude Include="Engine\ResourceManager\Audio.h" />
     <ClInclude Include="Engine\ResourceManager\ImageManager.h" />
     <ClInclude Include="Engine\ResourceManager\Model.h" />
+    <ClInclude Include="Engine\ResourceManager\Text.h" />
     <ClInclude Include="Engine\ResourceManager\TextureManager.h" />
     <ClInclude Include="Engine\SAFE_DELETE_RELEASE.h" />
     <ClInclude Include="Engine\SceneManager.h" />
@@ -288,7 +289,6 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TestScene.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="EnemyTutorial.h" />
