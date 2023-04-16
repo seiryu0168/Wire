@@ -1,5 +1,6 @@
 #include "Model.h"
 #include<vector>
+
 namespace ModelManager
 {
 	struct ModelData
@@ -30,9 +31,21 @@ namespace ModelManager
 			animSpeed_ = speed;
 		}
 	};
+	Texture* pNormalMap_;
 	std::vector<ModelData*> modelData_;
 	std::vector<int> polygonTestList_;
 };
+
+void ModelManager::Initialize()
+{
+	pNormalMap_ = new Texture;
+	WCHAR currentDirectory[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, currentDirectory);
+	SetCurrentDirectory(L"Assets");
+	pNormalMap_->Load(L"DefaultNormalMap.jpg");
+	SetCurrentDirectory(currentDirectory);
+
+}
 
 int ModelManager::Load(std::string fileName)
 {
@@ -211,6 +224,11 @@ void ModelManager::DeleteModelNum(int modelNum)
 void ModelManager::AllDeleteModelNum()
 {
 	polygonTestList_.clear();
+}
+
+Texture* ModelManager::GetNormalMap()
+{
+	return pNormalMap_;
 }
 
 XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)

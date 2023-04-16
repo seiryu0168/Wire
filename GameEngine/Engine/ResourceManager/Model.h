@@ -1,10 +1,12 @@
 #pragma once
 #include<string>
 #include"../DirectX_11/Fbx.h"
+#include"../DirectX_11/Texture.h"
 #include"../GameObject/Transform.h"
 #include<vector>
 namespace ModelManager
 {
+	void Initialize();
 	/// <summary>
 	/// ÉÇÉfÉãÇÃÉçÅ[Éh
 	/// </summary>
@@ -46,6 +48,7 @@ namespace ModelManager
 	/// <param name="modelNum"></param>
 	void DeleteModelNum(int modelNum);
 	void AllDeleteModelNum();
+	Texture* GetNormalMap();
 
 	XMFLOAT3 GetBonePosition(int modelNum,std::string boneName);
 	void Release();

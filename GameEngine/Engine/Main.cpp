@@ -7,6 +7,7 @@
 #include"DirectX_11/Sprite.h"
 #include"GameObject/Transform.h"
 #include"ResourceManager/ImageManager.h"
+#include"ResourceManager/Model.h"
 #include"../DebugUI.h"
 #include"DirectX_11/Input.h"
 #include"GameObject/RootJob.h"
@@ -88,6 +89,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	DebugUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
 	Input::Initialize(hWnd);
+	ModelManager::Initialize();
 	Camera::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Audio::Initialize();
 

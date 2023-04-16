@@ -1,5 +1,6 @@
 #include "FbxParts.h"
 #include"Math.h"
+#include"../ResourceManager/Model.h"
 #include"../GameObject/Camera.h"
 #include"Direct3D.h"
 
@@ -275,28 +276,39 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 	int UVNum = pUV->GetDirectArray().GetCount();
 	int UVCount = mesh->GetTextureUVCount();
 	int indexNum = pUV->GetIndexArray().GetCount();
-
+	if (vertexCount_ <= UVCount)
+	{
+		UVCount = vertexCount_;
+	}
 	if (pUV->GetMappingMode() == FbxLayerElement::eByControlPoint)
 	{
 		for (int i = 0; i < UVCount; i++)
 		{
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(i);
-			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(uv.mData[1]), 0.0f, 0.0f);
+			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(uv.mData[1]), 0.0f, 0.0f);;
 		}
 	}
-	//if (pUV->GetMappingMode() == FbxLayerElement::eByPolygonVertex)
-	//{
-	//	if (((FbxLayerElement*)pUV)->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-	//	{
-	//		//FbxLayerElement indeces = 
-	//		for (int i = 0; i < UVCount; i++)
-	//		{
-	//			int ind= pUV->GetIndexArray().GetAt(i);
-	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(ind);
-	//			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(uv.mData[1]), 0.0f, 0.0f);
-	//		}
-	//	}
-	//}
+	if (pUV->GetMappingMode() == FbxLayerElement::eByPolygonVertex)
+	{
+		if (((FbxLayerElement*)pUV)->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
+		{
+			//FbxLayerElement indeces = 
+			for (int i = 0; i < UVCount; i++)
+			{
+				int ind= pUV->GetIndexArray().GetAt(i);
+				FbxVector2  uv = pUV->GetDirectArray().GetAt(ind);
+				XMVECTOR UV = XMVectorZero();
+				UV= XMVectorSet((float)uv.mData[0], (float)(uv.mData[1]), 0.0f, 0.0f);
+				UV.m128_i8[0] = 0;
+				UV.m128_u8[0] = 0;
+				pVertices_[i].uv = UV;
+				if (sizeof(UV.m128_i8) > sizeof(pVertices_[i].uv.m128_i8))
+				{
+					int a = 0;
+				}
+			}
+		}
+	}
 
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = sizeof(VERTEX) * vertexCount_;
@@ -603,7 +615,7 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			}
 			else
 			{
-				pMaterialList_[i].pNormalMap->Load(L"DefaultNormalMap.jpg");
+				pMaterialList_[i].pNormalMap = ModelManager::GetNormalMap();
 			}
 		}
 	}
