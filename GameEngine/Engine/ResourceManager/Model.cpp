@@ -1,6 +1,9 @@
 #include "Model.h"
 #include<vector>
 
+//FBXのポインタを保存しておく所にする予定
+//モデルをコンポーネントにしてゲームオブジェクトが変数を持たないように改良する
+//ModelManager=Fbxの管理、ModelComponent=モデルのロードや各種操作
 namespace ModelManager
 {
 	struct ModelData

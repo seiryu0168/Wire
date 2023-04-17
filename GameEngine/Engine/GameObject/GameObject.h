@@ -4,12 +4,14 @@
 #include"../Collider/BoxCollider.h"
 #include"../Collider/SphereCollider.h"
 #include"../Collider/OBBCollider.h"
+#include<vector>
 #include"Transform.h"
 
 class GameObject
 {
 	friend class Collider;
 protected:
+	//std::vector<>
 	std::list<GameObject*> childList_;	//子リスト
 	std::list<Collider*> colliderList_; //コライダーリスト
 	Transform	transform_;				//オブジェクトの情報

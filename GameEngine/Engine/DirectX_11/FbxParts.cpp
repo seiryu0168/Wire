@@ -616,7 +616,7 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			}
 			else
 			{
-				pMaterialList_[i].pNormalMap = ModelManager::GetNormalMap();
+				pMaterialList_[i].pNormalMap->Load(L"DefaultNormalMap.jpg");
 			}
 		}
 	}

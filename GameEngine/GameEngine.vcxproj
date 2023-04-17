@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -201,6 +202,7 @@
     <ClCompile Include="InterSceneData.cpp" />
     <ClCompile Include="MissionOrder.cpp" />
     <ClCompile Include="MissionUI.cpp" />
+    <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="PlayButton.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -227,6 +229,7 @@
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />
@@ -272,6 +275,7 @@
     <ClInclude Include="InterSceneData.h" />
     <ClInclude Include="MissionOrder.h" />
     <ClInclude Include="MissionUI.h" />
+    <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ObjectSetter.h" />
     <ClInclude Include="PlayButton.h" />
     <ClInclude Include="Player.h" />
