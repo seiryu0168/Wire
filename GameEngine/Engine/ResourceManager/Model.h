@@ -13,6 +13,9 @@ namespace ModelManager
 	/// <param name="fileName">ƒtƒ@ƒCƒ‹–¼</param>
 	/// <returns></returns>
 	int Load(std::string fileName);
+	Fbx* LoadModel(std::string fileName);
+
+	void AddFbxModel(Fbx* pfbxModel);
 	/// <summary>
 	/// transform‚ğİ’è
 	/// </summary>

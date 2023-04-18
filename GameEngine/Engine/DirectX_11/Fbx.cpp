@@ -10,9 +10,6 @@ Fbx::Fbx()
 	animSpeed_ = 0;
 	pFbxManager_ = nullptr;
 	pFbxScene_ = nullptr;
-	vertexCount_ = 0;
-	polygonCount_ = 0;
-	materialCount_ = 0;
 }
 Fbx::~Fbx()
 {
@@ -49,13 +46,19 @@ HRESULT Fbx::Load(std::string fileName)
 	//fileNameからディレクトリを取得
 	wchar_t wtext[FILENAME_MAX];
 	size_t ret;
-	mbstowcs_s(&ret, wtext, fileName.c_str(), fileName.length());
-	WCHAR dir[MAX_PATH];
-	_wsplitpath_s(wtext, nullptr, 0, dir, MAX_PATH, nullptr, 0, nullptr, 0);
+	CHAR dir[MAX_PATH];
+	WCHAR wDir[MAX_PATH];
+	CHAR fName[FILENAME_MAX];
+	
+	//文字列を分割してディレクトリとファイル名を分ける
+	_splitpath_s(fileName.c_str(), nullptr, 0, dir, MAX_PATH, fName, FILENAME_MAX, nullptr, 0);
+	mbstowcs_s(&ret, wDir, dir, MAX_PATH);
+	//ファイル名
+	modelName_ = fName;
 	
 
 	//ディレクトリ変更
-	SetCurrentDirectory(dir);
+	SetCurrentDirectory(wDir);
 	
 	CheckNode(pNode, &parts_);
 	
@@ -493,6 +496,11 @@ XMFLOAT3 Fbx::GetBonePosition(std::string boneName)
 		}
 	}
 	return position;
+}
+
+std::string Fbx::GetModelName()
+{
+	return modelName_;
 }
 
 

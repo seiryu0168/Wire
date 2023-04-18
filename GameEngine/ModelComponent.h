@@ -4,21 +4,25 @@
 class ModelComponent : public Component
 {
 private:
-	
+
 	Fbx* pFbxModel_;
 	Transform transform_;
 	std::string fileName_;
+	SHADER_TYPE shaderType_;
+	//アニメーションのフレーム
+	float nowFrame_;
+	float animSpeed_;
+	int	  startFrame_;
+	int   endFrame_;
 
-		//アニメーションのフレーム
-		float nowFrame_;
-		float animSpeed_;
-		int	  startFrame_;
-		int   endFrame_;
-
-		void SetAnimFrame(int start, int end, float speed);
+	void SetAnimFrame(int start, int end, float speed);
 public:
-	ModelComponent(std::string modelName);
+	ModelComponent(std::string modelName, GameObject* obj);
 	~ModelComponent();
-	int GetModelHandle();
+	void Load(std::string fileName);
+	void SetTransform(const Transform* transform=nullptr);
+	void SetShader(SHADER_TYPE type);
+	void Update(bool active) override;
+	void Draw();
+	void Draw(const Transform* transform);
 };
-

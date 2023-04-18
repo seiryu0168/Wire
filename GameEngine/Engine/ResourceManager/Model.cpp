@@ -34,6 +34,7 @@ namespace ModelManager
 			animSpeed_ = speed;
 		}
 	};
+	std::vector<Fbx*> fbxModelList;
 	Texture* pNormalMap_;
 	std::vector<ModelData*> modelData_;
 	std::vector<int> polygonTestList_;
@@ -73,6 +74,35 @@ int ModelManager::Load(std::string fileName)
 	}
 	modelData_.push_back(pModelData);
 	return (int)modelData_.size() - 1;
+}
+
+Fbx* ModelManager::LoadModel(std::string fileName)
+{
+	char fName[FILENAME_MAX];
+	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, fName, FILENAME_MAX, nullptr, 0);
+
+	for (int i = 0; i < fbxModelList.size(); i++)
+	{
+		if (fName == fbxModelList[i]->GetModelName())
+			return fbxModelList[i];
+	}
+	Fbx* fbx = new Fbx;
+	fbx->Load(fileName);
+	fbxModelList.push_back(fbx);
+	return fbx;
+}
+
+void ModelManager::AddFbxModel(Fbx* pFbxModel)
+{
+	//配列の中に同じファイル名があるかどうか
+	for (int i = 0; i < fbxModelList.size(); i++)
+	{
+		//同じファイル名があればFbxは追加しない
+		if (fbxModelList[i]->GetModelName() == pFbxModel->GetModelName())
+			return;
+	}
+	//同じファイル無かったら追加
+	fbxModelList.push_back(pFbxModel);
 }
 
 void ModelManager::SetTransform(int modelNum, Transform transform)

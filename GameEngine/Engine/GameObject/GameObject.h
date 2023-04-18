@@ -4,14 +4,16 @@
 #include"../Collider/BoxCollider.h"
 #include"../Collider/SphereCollider.h"
 #include"../Collider/OBBCollider.h"
+#include"../../Component.h"
 #include<vector>
 #include"Transform.h"
 
 class GameObject
 {
 	friend class Collider;
+	friend class Component;
 protected:
-	//std::vector<>
+	std::vector<Component*> componentList_;
 	std::list<GameObject*> childList_;	//子リスト
 	std::list<Collider*> colliderList_; //コライダーリスト
 	Transform	transform_;				//オブジェクトの情報
@@ -44,6 +46,10 @@ public:
 	void SecondDrawSub();
 	void ThirdDrawSub();
 	void ReleaseSub();
+
+
+	void AddComponent(Component* comp);
+	Component* GetComponent(int compNum);
 
 	template<class T>
 	T* Instantiate(GameObject* parent)

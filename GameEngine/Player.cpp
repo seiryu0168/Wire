@@ -8,6 +8,7 @@
 #include"Engine/DirectX_11/Particle.h"
 #include"PlayerBase.h"
 #include"Engine/ResourceManager/Audio.h"
+#include"ModelComponent.h"
 #include"PlayScreen.h"
 #include"Player.h"
 #include"InterSceneData.h"
@@ -95,6 +96,8 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
+    ModelComponent* mComp = new ModelComponent("Assets\\TestBall.fbx",this);
+    AddComponent(mComp);
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得
@@ -313,6 +316,7 @@ void Player::Update()
 //描画
 void Player::Draw()
 {
+    ((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
     ModelManager::SetTransform(hModel_, transform_);
     ModelManager::Draw(hModel_); 
 }

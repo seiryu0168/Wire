@@ -87,6 +87,10 @@ void GameObject::DrawSub()
 {
 	if (drawFlag_ && startFlag_)
 	{
+		for (int i = 0; i < componentList_.size(); i++)
+		{
+			componentList_[i]->Update(true);
+		}
 		Draw();
 	}
 	for (auto i = childList_.begin(); i != childList_.end(); i++)
@@ -135,6 +139,16 @@ void GameObject::ReleaseSub()
 	}
 
 	Release();
+}
+
+void GameObject::AddComponent(Component* comp)
+{
+	componentList_.push_back(comp);
+}
+
+Component* GameObject::GetComponent(int compNum)
+{
+	return componentList_[compNum];
 }
 
 //////////////////////////“–‚½‚è”»’èŠÖŒW////////////////////
