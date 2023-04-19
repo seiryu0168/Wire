@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<typeinfo>
 #include<list>
 #include"../Collider/BoxCollider.h"
 #include"../Collider/SphereCollider.h"
@@ -49,7 +50,16 @@ public:
 
 
 	void AddComponent(Component* comp);
-	Component* GetComponent(int compNum);
+	template<class T>
+	T* GetComponent() 
+	{
+		for (auto&& i : componentList_)
+		{
+			if (typeid(T) == typeid(*i))
+				return (T*)i;
+		}
+		return nullptr;
+	}
 
 	template<class T>
 	T* Instantiate(GameObject* parent)

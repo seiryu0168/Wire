@@ -96,16 +96,18 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
-    ModelComponent* mComp = new ModelComponent("Assets\\TestBall.fbx",this);
-    AddComponent(mComp);
+    //ModelComponent* mComp = new ModelComponent("Assets\\TestBall.fbx",this);
+    ModelComponent* playerComp = new ModelComponent("Assets\\WireShooter_Maya.fbx",this);
+    //AddComponent(mComp);
+    AddComponent(playerComp);
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
-    assert(hModel_ >= 0);
+    //hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
+    //assert(hModel_ >= 0);
 
     //マーカーを生成
     pPointer_=Instantiate<Pointer>(GetParent());
@@ -316,9 +318,9 @@ void Player::Update()
 //描画
 void Player::Draw()
 {
-    ((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
-    ModelManager::SetTransform(hModel_, transform_);
-    ModelManager::Draw(hModel_); 
+    //((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
+    //ModelManager::SetTransform(hModel_, transform_);
+    //ModelManager::Draw(hModel_); 
 }
 
 void Player::SecondDraw()
@@ -677,7 +679,7 @@ void Player::Aim(RayCastData* ray)
     float toEnemyDist = -1.0f;
 
     //当たる位置の計算
-    XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
+    XMFLOAT3 bonePos = ((ModelComponent*)GetComponent<ModelComponent>())->GetBonPosition("shotPos");//ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
     XMVECTOR vPtrDir = vPlayerDir;
     ray->start = bonePos;

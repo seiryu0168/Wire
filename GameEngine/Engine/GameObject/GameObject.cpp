@@ -146,10 +146,10 @@ void GameObject::AddComponent(Component* comp)
 	componentList_.push_back(comp);
 }
 
-Component* GameObject::GetComponent(int compNum)
-{
-	return componentList_[compNum];
-}
+//Component* GameObject::GetComponent(int compNum)
+//{
+//	return componentList_[compNum];
+//}
 
 //////////////////////////“–‚½‚è”»’èŠÖŒW////////////////////
 

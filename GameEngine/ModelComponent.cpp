@@ -51,12 +51,23 @@ void ModelComponent::Update(bool active)
 	}
 }
 
+XMFLOAT3 ModelComponent::GetBonPosition(std::string boneName)
+{
+	XMFLOAT3 bonePos = pFbxModel_->GetBonePosition(boneName);
+	XMVECTOR vBonePos = XMLoadFloat3(&bonePos)*GetAttachObject()->GetWorldMatrix();
+	return StoreFloat3(vBonePos);
+}
+
 void ModelComponent::Draw()
 {
-	nowFrame_ += animSpeed_;
-	if (nowFrame_ > endFrame_)
-		nowFrame_ = startFrame_;
-	pFbxModel_->Draw(transform_ , shaderType_,(int)nowFrame_);
+	if (IsActive())
+	{
+		SetTransform();
+		nowFrame_ += animSpeed_;
+		if (nowFrame_ > endFrame_)
+			nowFrame_ = startFrame_;
+		pFbxModel_->Draw(transform_, shaderType_, (int)nowFrame_);
+	}
 }
 
 

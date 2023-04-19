@@ -23,6 +23,7 @@ public:
 	void SetTransform(const Transform* transform=nullptr);
 	void SetShader(SHADER_TYPE type);
 	void Update(bool active) override;
+	XMFLOAT3 GetBonPosition(std::string boneName);
 	void Draw();
 	void Draw(const Transform* transform);
 };
