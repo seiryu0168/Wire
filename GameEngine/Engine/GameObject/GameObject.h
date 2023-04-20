@@ -51,15 +51,22 @@ public:
 
 	void AddComponent(Component* comp);
 	template<class T>
-	T* GetComponent() 
+	T* GetComponent(int num=0) 
 	{
+		int compNum = 0;
 		for (auto&& i : componentList_)
 		{
 			if (typeid(T) == typeid(*i))
+			{
+				if(compNum == num)
 				return (T*)i;
+
+				compNum++;
+			}
 		}
 		return nullptr;
 	}
+	void DeleteComponent(Component* comp);
 
 	template<class T>
 	T* Instantiate(GameObject* parent)

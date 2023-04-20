@@ -44,9 +44,10 @@ void ModelComponent::SetTransform(const Transform* transform)
 		transform_ = *transform;
 }
 
-void ModelComponent::SetShader(SHADER_TYPE type)
+void ModelComponent::SetShader(SHADER_TYPE type, XMFLOAT4 color)
 {
 	shaderType_ = type;
+	color_ = color;
 }
 
 void ModelComponent::Update(bool active)
@@ -72,11 +73,24 @@ void ModelComponent::Draw()
 	nowFrame_ += animSpeed_;
 	if (nowFrame_ > endFrame_)
 		nowFrame_ = startFrame_;
-	pFbxModel_->Draw(transform_, shaderType_, (int)nowFrame_);
+	switch (shaderType_)
+	{
+	case SHADER_TYPE::SHADER_3D:
+		pFbxModel_->Draw(transform_, shaderType_, (int)nowFrame_); break;
+	case SHADER_TYPE::SHADER_OUTLINE:
+		pFbxModel_->DrawOutLine(transform_, (int)nowFrame_, color_); break;
+	case SHADER_TYPE::SHADER_TOON:
+		pFbxModel_->DrawToon(transform_, true, (int)nowFrame_); break;
+	default:
+		pFbxModel_->Draw(transform_, shaderType_, (int)nowFrame_); break;
+
+
+	}
 }
 
 void ModelComponent::Release()
 {
+	ModelManager::DeleteComponentList(this);
 }
 
 void ModelComponent::RayCast(ModelComponent* mComp, RayCastData& rayData)

@@ -45,7 +45,7 @@ void EnemyNormal::Initialize()
 	RayCastData ray;
 	ray.start = startPos;
 	ray.dir = XMFLOAT3(0, -1, 0);
-	ModelManager::RayCast(ray);
+	ModelManager::RayCastComponent(ray);
 	transform_.position_ = StoreFloat3(ray.hitPos);
 	transform_.position_.y += 10;
 	ChangeState(StateSearch::GetInstance());
@@ -60,6 +60,15 @@ void EnemyNormal::Update()
 		knockBackTime_--;
 	}
 	pState_->Update(*this);
+	////ModelManager::SetTransform(hModel_, transform_);
+	if (IsLockOned(this))
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
+	else if (GetPlayerPointer()->IsAim())
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
+	else
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 }
 
 void EnemyNormal::FixedUpdate()
@@ -70,15 +79,6 @@ void EnemyNormal::FixedUpdate()
 //•`‰æ
 void EnemyNormal::Draw()
 {
-	//ModelManager::SetTransform(hModel_, transform_);
-	if (IsLockOned(this))
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE);
-		//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
-	else if (GetPlayerPointer()->IsAim())
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE);
-		//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
-	//else
-	//	ModelManager::Draw(hModel_);
 }
 
 void EnemyNormal::EnemyMove()

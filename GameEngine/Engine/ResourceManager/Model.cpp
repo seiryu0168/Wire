@@ -270,19 +270,19 @@ void ModelManager::RayCastComponent(RayCastData& rayData)
 	XMFLOAT3 dir = rayData.dir;
 	int hitModel = -1;
 	rayData.hitModelList.clear();
-	//レイの発射位置ベクトル
-	XMVECTOR vStart = XMVectorSet(rayData.start.x,
-		rayData.start.y,
-		rayData.start.z, 0);
-	//方向のベクトル
-	XMVECTOR vPath = XMVectorSet(rayData.start.x + rayData.dir.x,
-		rayData.start.y + rayData.dir.y,
-		rayData.start.z + rayData.dir.z, 0);
 	for (auto&& comp : modelComponentList)
 	{
 
 		//対象のモデルのワールド行列の逆行列
 		XMMATRIX matInv = XMMatrixInverse(nullptr, comp->GetTransform().GetWorldMatrix());
+	//レイの発射位置ベクトル
+	XMVECTOR vStart = XMVectorSet(start.x,
+								  start.y,
+								  start.z, 0);
+	//方向のベクトル
+	XMVECTOR vPath = XMVectorSet(start.x + dir.x,
+								 start.y + dir.y,
+								 start.z + dir.z, 0);
 		//ベクトルを逆行列で回転
 		vStart = vStart * matInv;
 		vPath = vPath * matInv;
@@ -348,6 +348,21 @@ int ModelManager::AddMComponentList(ModelComponent* mComp)
 {
 	modelComponentList.push_back(mComp);
 	return modelComponentList.size() - 1;
+}
+
+void ModelManager::DeleteComponentList(ModelComponent* mComp)
+{
+	
+	for (auto itr = modelComponentList.begin();itr!=modelComponentList.end();itr++)
+	{
+		if ((*itr) == mComp)
+		{
+			modelComponentList.erase(itr);
+			SAFE_DELETE((*itr));
+			return;
+		}
+	}
+
 }
 
 XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)

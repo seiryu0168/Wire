@@ -56,6 +56,7 @@ namespace ModelManager
 	void AllDeleteModelNum();
 	Texture* GetNormalMap();
 	int AddMComponentList(ModelComponent* mComp);
+	void DeleteComponentList(ModelComponent* mComp);
 	XMFLOAT3 GetBonePosition(int modelNum,std::string boneName);
 	void Release();
 };

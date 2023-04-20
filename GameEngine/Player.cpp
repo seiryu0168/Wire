@@ -704,7 +704,7 @@ void Player::Aim(RayCastData* ray)
             //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
                 ModelManager::RayCastComponent(*ray);
-            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GethModel())
+            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GetComponent<ModelComponent>()->GetModelHandle())
             {
                 lockOn_ = true;
             }

@@ -1,5 +1,6 @@
 #include "EnemyBoss.h"
 //#include"Engine/ResourceManager/Model.h"
+#include"ModelComponent.h"
 #include"Bullet.h"
 #include"Pointer.h"
 #include"Engine/Collider/BoxCollider.h"
@@ -37,14 +38,19 @@ void EnemyBoss::Initialize()
 	AddCollider(pCollider);
 	
 	//コアのモデル読み込み
-	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
-	ModelManager::SetModelNum(hModelCore_);
-	assert(hModelCore_ >= 0);
+	ModelComponent* core = new ModelComponent("Assets\\EnemyBossCore.fbx", this);
+	AddComponent(core);
+	ModelComponent* shield = new ModelComponent("Assets\\EnemyBossShield.fbx", this);
+	AddComponent(shield);
+	SethModel(core->GetModelHandle());
+	//hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
+	//ModelManager::SetModelNum(hModelCore_);
+	//assert(hModelCore_ >= 0);
 	//シールドのモデル読み込み
-	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
-	SethModel(hModelShield_);
-	ModelManager::SetModelNum(hModelShield_);
-	assert(hModelShield_ >= 0);
+	//hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
+	//SethModel(hModelShield_);
+	//ModelManager::SetModelNum(hModelShield_);
+	//assert(hModelShield_ >= 0);
 	
 	//視覚の設定
 	sight.SetAngle((float)(M_PI*1.5f));
@@ -73,27 +79,28 @@ void EnemyBoss::FixedUpdate()
 void EnemyBoss::Draw()
 {
 	//座標設定
-	ModelManager::SetTransform(hModelCore_, transform_);
+	//ModelManager::SetTransform(hModelCore_, transform_);
 	//ロックオンされてるなら
 	if (IsLockOned(this))
-		ModelManager::DrawOutLine(hModelCore_, { 1,0,0,1 });
-	//PlayerがAimモードなら
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
 	else if (GetPlayerPointer()->IsAim())
-		ModelManager::DrawOutLine(hModelCore_, { 1,1,0,1 });
-	//それ以外
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
 	else
-		ModelManager::Draw(hModelCore_);
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 	//HPが3以上なら
 	if (GetLife() >= 3)
 	{
 		//上と同じ
-		ModelManager::SetTransform(hModelShield_, transform_);
 		if (IsLockOned(this))
-			ModelManager::DrawOutLine(hModelShield_, { 1,0,0,1 });
+			GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+		//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
 		else if (GetPlayerPointer()->IsAim())
-			ModelManager::DrawOutLine(hModelShield_, { 1,1,0,1 });
+			GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+		//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
 		else
-			ModelManager::Draw(hModelShield_);
+			GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_3D);
 	}
 }
 
@@ -190,15 +197,17 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
-				ModelManager::DeleteModelNum(hModelCore_);
+				GetComponent<ModelComponent>()->SetActive(false);
+				//ModelManager::DeleteModelNum(hModelCore_);
 				SetIsList(false);
 				KillMe();
 			}
 			else if (GetLife() < 3)
 			{
 				ChangeState(StateSecondMode::GetInstance());
-				ModelManager::DeleteModelNum(hModelShield_);
-				SethModel(hModelCore_);
+				GetComponent<ModelComponent>(1)->SetActive(false);
+				//ModelManager::DeleteModelNum(hModelShield_);
+				SethModel(GetComponent<ModelComponent>()->GetModelHandle());
 			}
 		}
 	}

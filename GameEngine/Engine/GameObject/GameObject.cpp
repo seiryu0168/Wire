@@ -146,6 +146,11 @@ void GameObject::AddComponent(Component* comp)
 	componentList_.push_back(comp);
 }
 
+void GameObject::DeleteComponent(Component* comp)
+{
+	comp->Release();
+}
+
 //Component* GameObject::GetComponent(int compNum)
 //{
 //	return componentList_[compNum];

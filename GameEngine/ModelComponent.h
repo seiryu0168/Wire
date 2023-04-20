@@ -8,6 +8,7 @@ private:
 
 	Fbx* pFbxModel_;
 	Transform transform_;
+	XMFLOAT4 color_;
 	std::string fileName_;
 	SHADER_TYPE shaderType_;
 	//アニメーションのフレーム
@@ -23,7 +24,7 @@ public:
 	~ModelComponent();
 	void Load(std::string fileName);
 	void SetTransform(const Transform* transform=nullptr);
-	void SetShader(SHADER_TYPE type);
+	void SetShader(SHADER_TYPE type, XMFLOAT4 color = {0,0,0,0});
 	void Update(bool active) override;
 	Transform GetTransform() { return transform_; }
 	Fbx* GetFbxModel() { return pFbxModel_; }
@@ -31,7 +32,7 @@ public:
 	XMFLOAT3 GetBonPosition(std::string boneName);
 	void Draw();
 	void Draw(const Transform* transform);
-	void Release();
+	void Release() override;
 
 	void RayCast(ModelComponent* mComp,RayCastData& rayData);
 };

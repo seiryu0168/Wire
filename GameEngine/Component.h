@@ -18,6 +18,7 @@ public:
 	void SetObject(GameObject* obj);
 	void SetActive(bool active);
 	bool IsActive() { return active_; }
+	virtual void Release() = 0;
 	GameObject* GetAttachObject();
 	COMPONENT_TYPE GetType();
 };
