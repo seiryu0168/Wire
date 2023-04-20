@@ -1,6 +1,7 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
 #include"EnemyState.h"
+#include"ModelComponent.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Player.h"
 

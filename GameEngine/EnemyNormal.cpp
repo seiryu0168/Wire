@@ -1,5 +1,6 @@
 #include "EnemyNormal.h"
 #include"Stage1.h"
+#include"ModelComponent.h"
 #include"Engine/Collider/SphereCollider.h"
 #include"Pointer.h"
 namespace
@@ -29,11 +30,13 @@ void EnemyNormal::Initialize()
 {
 	SetTag("Enemy");
 	SetPlayerPointer((Player*)FindObject("Player"));
-	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
-	SethModel(hModel_);
+	//hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
+	ModelComponent* pModelComponent = new ModelComponent("Assets\\EnemyBall.fbx", this);
+	AddComponent(pModelComponent);
+	SethModel(pModelComponent->GetModelHandle());
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
-	ModelManager::SetModelNum(hModel_);
+	//ModelManager::SetModelNum(hModel_);
 
 	XMFLOAT3 startPos = XMFLOAT3((float)((std::rand() % 3000) - 1500) / 10.0f, 0, (float)((std::rand() % 3000) - 1500) / 10.0f);
 	
@@ -67,13 +70,15 @@ void EnemyNormal::FixedUpdate()
 //•`‰æ
 void EnemyNormal::Draw()
 {
-	ModelManager::SetTransform(hModel_, transform_);
-	if(IsLockOned(this))
-		ModelManager::DrawOutLine(hModel_, {1,0,0,1});
+	//ModelManager::SetTransform(hModel_, transform_);
+	if (IsLockOned(this))
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE);
+		//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
 	else if (GetPlayerPointer()->IsAim())
-		ModelManager::DrawOutLine(hModel_, {1,1,0,1});
-	else
-		ModelManager::Draw(hModel_);
+		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE);
+		//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
+	//else
+	//	ModelManager::Draw(hModel_);
 }
 
 void EnemyNormal::EnemyMove()

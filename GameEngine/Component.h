@@ -12,7 +12,7 @@ private:
 	bool active_;
 public:
 	Component();
-	Component(COMPONENT_TYPE type, GameObject* obj);
+	Component(GameObject* obj);
 	virtual ~Component() {};
 	virtual void Update(bool active) = 0;
 	void SetObject(GameObject* obj);

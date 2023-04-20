@@ -3,6 +3,7 @@
 #include"../DirectX_11/Fbx.h"
 #include"../DirectX_11/Texture.h"
 #include"../GameObject/Transform.h"
+#include"../../ModelComponent.h"
 #include<vector>
 namespace ModelManager
 {
@@ -44,6 +45,8 @@ namespace ModelManager
 	/// 複数レイキャストに使うモデル番号の追加
 	/// </summary>
 	/// <param name="modelNum"></param>
+	void RayCast(ModelComponent* mComp, RayCastData& rayData);
+	void RayCastComponent(RayCastData& rayData);
 	void SetModelNum(int modelNum);
 	/// <summary>
 	/// 複数レイキャストに使うモデル番号の削除
@@ -52,7 +55,7 @@ namespace ModelManager
 	void DeleteModelNum(int modelNum);
 	void AllDeleteModelNum();
 	Texture* GetNormalMap();
-
+	int AddMComponentList(ModelComponent* mComp);
 	XMFLOAT3 GetBonePosition(int modelNum,std::string boneName);
 	void Release();
 };

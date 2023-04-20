@@ -35,6 +35,8 @@ namespace ModelManager
 		}
 	};
 	std::vector<Fbx*> fbxModelList;
+	std::vector<ModelComponent*> modelComponentList;
+
 	Texture* pNormalMap_;
 	std::vector<ModelData*> modelData_;
 	std::vector<int> polygonTestList_;
@@ -234,6 +236,84 @@ void ModelManager::RayCast(RayCastData& ray)
 	ray.normal = normal;
 }
 
+void ModelManager::RayCast(ModelComponent* mComp, RayCastData& rayData)
+{
+
+	//対象のモデルのワールド行列の逆行列
+	XMMATRIX matInv = XMMatrixInverse(nullptr, mComp->GetTransform().GetWorldMatrix());
+	//レイの発射位置ベクトル
+	XMVECTOR vStart = XMVectorSet(rayData.start.x,
+		rayData.start.y,
+		rayData.start.z, 0);
+	//方向のベクトル
+	XMVECTOR vPath = XMVectorSet(rayData.start.x + rayData.dir.x,
+		rayData.start.y + rayData.dir.y,
+		rayData.start.z + rayData.dir.z, 0);
+	//ベクトルを逆行列で回転
+	vStart = vStart * matInv;
+	vPath = vPath * matInv;
+	//startとdirに入れる
+	rayData.start = StoreFloat3(vStart);
+	rayData.dir = StoreFloat3(vPath - vStart);
+	Transform trans = mComp->GetTransform();
+	mComp->GetFbxModel()->RayCast(rayData, trans);
+}
+
+void ModelManager::RayCastComponent(RayCastData& rayData)
+{
+	bool isHit = false;
+	float length = 9999;
+	XMVECTOR hitPos = XMVectorSet(0, 0, 0, 0);
+	XMVECTOR normal = XMVectorSet(0, 0, 0, 0);
+
+	XMFLOAT3 start = rayData.start;
+	XMFLOAT3 dir = rayData.dir;
+	int hitModel = -1;
+	rayData.hitModelList.clear();
+	//レイの発射位置ベクトル
+	XMVECTOR vStart = XMVectorSet(rayData.start.x,
+		rayData.start.y,
+		rayData.start.z, 0);
+	//方向のベクトル
+	XMVECTOR vPath = XMVectorSet(rayData.start.x + rayData.dir.x,
+		rayData.start.y + rayData.dir.y,
+		rayData.start.z + rayData.dir.z, 0);
+	for (auto&& comp : modelComponentList)
+	{
+
+		//対象のモデルのワールド行列の逆行列
+		XMMATRIX matInv = XMMatrixInverse(nullptr, comp->GetTransform().GetWorldMatrix());
+		//ベクトルを逆行列で回転
+		vStart = vStart * matInv;
+		vPath = vPath * matInv;
+		//startとdirに入れる
+		rayData.start = StoreFloat3(vStart);
+		rayData.dir = StoreFloat3(vPath - vStart);
+		Transform trans = comp->GetTransform();
+		comp->GetFbxModel()->RayCast(rayData, trans);
+		//当たっていたら
+		if (rayData.hit)
+		{
+
+			if (length > rayData.dist)
+			{
+				isHit = rayData.hit;
+				length = rayData.dist;
+				hitPos = rayData.hitPos;
+				normal = rayData.normal;
+			}
+			rayData.hitModelList.push_back({ comp->GetModelHandle(), rayData.dist});
+		}
+	}
+	rayData.Adjust();
+	rayData.dir = dir;
+	rayData.start = start;
+	rayData.dist = length;
+	rayData.hit = isHit;
+	rayData.hitPos = hitPos;
+	rayData.normal = normal;
+}
+
 void ModelManager::SetModelNum(int modelNum)
 {
 	polygonTestList_.push_back(modelNum);
@@ -262,6 +342,12 @@ void ModelManager::AllDeleteModelNum()
 Texture* ModelManager::GetNormalMap()
 {
 	return pNormalMap_;
+}
+
+int ModelManager::AddMComponentList(ModelComponent* mComp)
+{
+	modelComponentList.push_back(mComp);
+	return modelComponentList.size() - 1;
 }
 
 XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)

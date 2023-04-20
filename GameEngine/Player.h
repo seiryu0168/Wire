@@ -11,6 +11,7 @@ class Wire;
 class Pointer;
 class ObjectSetter;
 class PlayScreen;
+class ModelComponent;
 class Player : public GameObject
 {
     enum STATUS
@@ -71,6 +72,7 @@ class Player : public GameObject
     Pointer*      pPointer_;
     PlayScreen*   pScreen_;
     ObjectSetter* pSetter_;
+    ModelComponent* modelComp_;
     std::list<Enemy*> enemyList_;
 
 

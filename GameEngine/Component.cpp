@@ -7,9 +7,8 @@ Component::Component()
 {
 }
 
-Component::Component(COMPONENT_TYPE type, GameObject* obj)
-	:componentType_(type),
-	pObject_(obj),
+Component::Component( GameObject* obj)
+	:pObject_(obj),
 	active_(true)
 {
 }
