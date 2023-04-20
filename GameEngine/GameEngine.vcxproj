@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Engine\ResourceManager\Audio.cpp" />
     <ClCompile Include="Engine\ResourceManager\ImageManager.cpp" />
     <ClCompile Include="Engine\ResourceManager\Model.cpp" />
+    <ClCompile Include="Engine\ResourceManager\Text.cpp" />
     <ClCompile Include="Engine\ResourceManager\TextureManager.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
     <ClCompile Include="HomingBullet.cpp" />
@@ -200,6 +202,7 @@
     <ClCompile Include="InterSceneData.cpp" />
     <ClCompile Include="MissionOrder.cpp" />
     <ClCompile Include="MissionUI.cpp" />
+    <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="PlayButton.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -215,7 +218,6 @@
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="Text.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="EnemyTutorial.cpp" />
@@ -227,6 +229,7 @@
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />
@@ -256,6 +259,7 @@
     <ClInclude Include="Engine\ResourceManager\Audio.h" />
     <ClInclude Include="Engine\ResourceManager\ImageManager.h" />
     <ClInclude Include="Engine\ResourceManager\Model.h" />
+    <ClInclude Include="Engine\ResourceManager\Text.h" />
     <ClInclude Include="Engine\ResourceManager\TextureManager.h" />
     <ClInclude Include="Engine\SAFE_DELETE_RELEASE.h" />
     <ClInclude Include="Engine\SceneManager.h" />
@@ -271,6 +275,7 @@
     <ClInclude Include="InterSceneData.h" />
     <ClInclude Include="MissionOrder.h" />
     <ClInclude Include="MissionUI.h" />
+    <ClInclude Include="ModelComponent.h" />
     <ClInclude Include="ObjectSetter.h" />
     <ClInclude Include="PlayButton.h" />
     <ClInclude Include="Player.h" />
@@ -288,7 +293,6 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TestScene.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="EnemyTutorial.h" />

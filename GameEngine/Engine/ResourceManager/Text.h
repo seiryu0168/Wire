@@ -1,5 +1,5 @@
 #pragma once
-#include"Engine/DirectX_11/Direct2D.h"
+#include"../DirectX_11/Direct2D.h"
 //#include"Engine/DirectX_11/Direct3D.h"
 #include<string>
 typedef D2D_RECT_F TEXT_RECT;//left top right bottom

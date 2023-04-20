@@ -60,9 +60,6 @@ struct RayCastData
 class Fbx
 {
 	std::vector<FbxParts*> parts_;
-	int vertexCount_;		//頂点数
-	int polygonCount_;		//ポリゴン数
-	int materialCount_;		//マテリアル数
 
 	FbxManager* pFbxManager_;
 	FbxScene* pFbxScene_;
@@ -70,7 +67,7 @@ class Fbx
 	float animSpeed_;
 	int startFrame_;
 	int endFrame_;
-
+	std::string modelName_;
 	HRESULT CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList);
 public:
 
@@ -79,6 +76,7 @@ public:
 	HRESULT Load(std::string fileName);
 	void RayCast(RayCastData& ray,Transform& transform);
 	XMFLOAT3 GetBonePosition(std::string boneName);
+	std::string GetModelName();
 	void    Draw(Transform& transform, SHADER_TYPE shaderType,int frame);
 	void	DrawOutLine(Transform& transform, int frame, XMFLOAT4 lineColor = {0,0,0,1});
 	void	DrawToon(Transform& transform, bool isOutLine, int frame);

@@ -1,15 +1,20 @@
 #pragma once
 #include<string>
+#include<typeinfo>
 #include<list>
 #include"../Collider/BoxCollider.h"
 #include"../Collider/SphereCollider.h"
 #include"../Collider/OBBCollider.h"
+#include"../../Component.h"
+#include<vector>
 #include"Transform.h"
 
 class GameObject
 {
 	friend class Collider;
+	friend class Component;
 protected:
+	std::vector<Component*> componentList_;
 	std::list<GameObject*> childList_;	//子リスト
 	std::list<Collider*> colliderList_; //コライダーリスト
 	Transform	transform_;				//オブジェクトの情報
@@ -42,6 +47,19 @@ public:
 	void SecondDrawSub();
 	void ThirdDrawSub();
 	void ReleaseSub();
+
+
+	void AddComponent(Component* comp);
+	template<class T>
+	T* GetComponent() 
+	{
+		for (auto&& i : componentList_)
+		{
+			if (typeid(T) == typeid(*i))
+				return (T*)i;
+		}
+		return nullptr;
+	}
 
 	template<class T>
 	T* Instantiate(GameObject* parent)

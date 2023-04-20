@@ -1,5 +1,6 @@
 #include "FbxParts.h"
 #include"Math.h"
+#include"../ResourceManager/Model.h"
 #include"../GameObject/Camera.h"
 #include"Direct3D.h"
 
@@ -271,31 +272,44 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 		}
 #endif
 	}
-
-	int UVCount = mesh->GetTextureUVCount();
 	FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
-	if (UVCount > 0 && pUV->GetMappingMode() == FbxLayerElement::eByControlPoint)
+	int UVNum = pUV->GetDirectArray().GetCount();
+	int UVCount = mesh->GetTextureUVCount();
+	int indexNum = pUV->GetIndexArray().GetCount();
+
+	//ˆê‚Â‚Ì’¸“_‚É•¡”‚ÌUVÀ•W‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å‚»‚±‚ç•Ó‚Ç‚¤‚É‚©‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢
+	if (vertexCount_ <= UVCount)
+	{
+		UVCount = vertexCount_;
+	}
+	if (pUV->GetMappingMode() == FbxLayerElement::eByControlPoint)
 	{
 		for (int i = 0; i < UVCount; i++)
 		{
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(i);
-			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], 1.0f-(float)(uv.mData[1]), 0.0f, 0.0f);;
 		}
 	}
-	//if (UVCount > 0 && pUV->GetMappingMode() == FbxLayerElement::eByPolygonVertex)
-	//{
-	//	//if (((FbxLayerElement*)pUV)->GetReferensMode() == FbxLayerElement::eIndexToDirect)
-	//	//{
-	//		//FbxLayerElement indeces = 
-	//	int indexCount = pUV->GetIndexArray().GetCount();
-	//		for (int i = 0; i < UVCount; i++)
-	//		{
-	//			int ind= pUV->GetIndexArray().GetAt(i);
-	//			FbxVector2  uv = pUV->GetDirectArray().GetAt(i);
-	//			pVertices_[i].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
-	//		}
-	//	//}
-	//}
+	if (pUV->GetMappingMode() == FbxLayerElement::eByPolygonVertex)
+	{
+		if (((FbxLayerElement*)pUV)->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
+		{
+			for (int i = 0; i < UVCount; i++)
+			{
+				int ind= pUV->GetIndexArray().GetAt(i);
+				FbxVector2  uv = pUV->GetDirectArray().GetAt(ind);
+				XMVECTOR UV = XMVectorZero();
+				UV= XMVectorSet((float)uv.mData[0], 1.0f-(float)(uv.mData[1]), 0.0f, 0.0f);
+				UV.m128_i8[0] = 0;
+				UV.m128_u8[0] = 0;
+				pVertices_[i].uv = UV;
+				if (sizeof(UV.m128_i8) > sizeof(pVertices_[i].uv.m128_i8))
+				{
+					int a = 0;
+				}
+			}
+		}
+	}
 
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = sizeof(VERTEX) * vertexCount_;

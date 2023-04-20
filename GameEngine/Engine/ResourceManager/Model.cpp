@@ -1,5 +1,9 @@
 #include "Model.h"
 #include<vector>
+
+//FBXのポインタを保存しておく所にする予定
+//モデルをコンポーネントにしてゲームオブジェクトが変数を持たないように改良する
+//ModelManager=Fbxの管理、ModelComponent=モデルのロードや各種操作
 namespace ModelManager
 {
 	struct ModelData
@@ -30,9 +34,22 @@ namespace ModelManager
 			animSpeed_ = speed;
 		}
 	};
+	std::vector<Fbx*> fbxModelList;
+	Texture* pNormalMap_;
 	std::vector<ModelData*> modelData_;
 	std::vector<int> polygonTestList_;
 };
+
+void ModelManager::Initialize()
+{
+	pNormalMap_ = new Texture;
+	WCHAR currentDirectory[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, currentDirectory);
+	SetCurrentDirectory(L"Assets");
+	pNormalMap_->Load(L"DefaultNormalMap.jpg");
+	SetCurrentDirectory(currentDirectory);
+
+}
 
 int ModelManager::Load(std::string fileName)
 {
@@ -57,6 +74,35 @@ int ModelManager::Load(std::string fileName)
 	}
 	modelData_.push_back(pModelData);
 	return (int)modelData_.size() - 1;
+}
+
+Fbx* ModelManager::LoadModel(std::string fileName)
+{
+	char fName[FILENAME_MAX];
+	_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, fName, FILENAME_MAX, nullptr, 0);
+
+	for (int i = 0; i < fbxModelList.size(); i++)
+	{
+		if (fName == fbxModelList[i]->GetModelName())
+			return fbxModelList[i];
+	}
+	Fbx* fbx = new Fbx;
+	fbx->Load(fileName);
+	fbxModelList.push_back(fbx);
+	return fbx;
+}
+
+void ModelManager::AddFbxModel(Fbx* pFbxModel)
+{
+	//配列の中に同じファイル名があるかどうか
+	for (int i = 0; i < fbxModelList.size(); i++)
+	{
+		//同じファイル名があればFbxは追加しない
+		if (fbxModelList[i]->GetModelName() == pFbxModel->GetModelName())
+			return;
+	}
+	//同じファイル無かったら追加
+	fbxModelList.push_back(pFbxModel);
 }
 
 void ModelManager::SetTransform(int modelNum, Transform transform)
@@ -211,6 +257,11 @@ void ModelManager::DeleteModelNum(int modelNum)
 void ModelManager::AllDeleteModelNum()
 {
 	polygonTestList_.clear();
+}
+
+Texture* ModelManager::GetNormalMap()
+{
+	return pNormalMap_;
 }
 
 XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)

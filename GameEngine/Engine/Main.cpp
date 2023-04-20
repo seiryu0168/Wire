@@ -4,10 +4,10 @@
 #include"DirectX_11/Direct3D.h"
 #include"DirectX_11/Direct2D.h"
 #include"GameObject/Camera.h"
-//#include"Engine/Quad.h"
 #include"DirectX_11/Sprite.h"
 #include"GameObject/Transform.h"
 #include"ResourceManager/ImageManager.h"
+#include"ResourceManager/Model.h"
 #include"../DebugUI.h"
 #include"DirectX_11/Input.h"
 #include"GameObject/RootJob.h"
@@ -15,10 +15,6 @@
 #include"../ImGui/imgui_impl_dx11.h"
 #include"../ImGui/imgui_impl_win32.h"
 #include"ResourceManager/Audio.h"
-
-
-#include"..//Text.h"
-
 
 #pragma comment(lib, "winmm.lib")
 
@@ -93,6 +89,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	DebugUI::Initialize(hWnd, Direct3D::GetDevice(), Direct3D::GetContext());
 	Input::Initialize(hWnd);
+	ModelManager::Initialize();
 	Camera::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Audio::Initialize();
 
