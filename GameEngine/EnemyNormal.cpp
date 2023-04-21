@@ -31,8 +31,6 @@ void EnemyNormal::Initialize()
 	SetTag("Enemy");
 	SetPlayerPointer((Player*)FindObject("Player"));
 	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
-	//ModelComponent* pModelComponent = new ModelComponent("Assets\\EnemyBall.fbx", this);
-	//AddComponent(pModelComponent);
 	SethModel(hModel_);
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
@@ -61,7 +59,6 @@ void EnemyNormal::Update()
 		knockBackTime_--;
 	}
 	pState_->Update(*this);
-	ModelManager::SetTransform(hModel_, transform_);
 }
 
 void EnemyNormal::FixedUpdate()
@@ -72,15 +69,16 @@ void EnemyNormal::FixedUpdate()
 //描画
 void EnemyNormal::Draw()
 {
+	ModelManager::SetTransform(hModel_, transform_);
+	//ロックオンされてたら
 	if (IsLockOned(this))
 		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
-	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
 		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
-	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	//何もなし
 	else
 		ModelManager::Draw(hModel_);
-		//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 }
 
 void EnemyNormal::EnemyMove()

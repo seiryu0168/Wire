@@ -52,8 +52,6 @@ void EnemyTurret::Initialize()
 	AddCollider(pCollider);
 	
 	//モデル読み込み
-	//ModelComponent* mComp = new ModelComponent("Assets\\EnemyTurret_Maya.fbx", this);
-	//AddComponent(mComp);
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
 	assert(hModel_ >= 0);
 	////モデルセット
@@ -122,15 +120,15 @@ void EnemyTurret::FixedUpdate()
 void EnemyTurret::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
+	//ロックオンされてたら
 	if (IsLockOned(this))
 		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
-	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
 		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
-	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	//何もなし
 	else
 		ModelManager::Draw(hModel_);
-		//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 }
 
 void EnemyTurret::Release()

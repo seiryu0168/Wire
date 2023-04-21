@@ -38,11 +38,6 @@ void EnemyBoss::Initialize()
 	AddCollider(pCollider);
 	
 	//コアのモデル読み込み
-	//ModelComponent* core = new ModelComponent("Assets\\EnemyBossCore.fbx", this);
-	//AddComponent(core);
-	//ModelComponent* shield = new ModelComponent("Assets\\EnemyBossShield.fbx", this);
-	//AddComponent(shield);
-	//SethModel(core->GetModelHandle());
 	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
 	ModelManager::SetModelNum(hModelCore_);
 	assert(hModelCore_ >= 0);
@@ -80,31 +75,26 @@ void EnemyBoss::Draw()
 {
 	//座標設定
 	ModelManager::SetTransform(hModelCore_, transform_);
-	//ロックオンされてるなら
+	//ロックオンされてたら
 	if (IsLockOned(this))
 		ModelManager::DrawOutLine(hModelCore_, {1,0,0,1});
-			//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
-		
 		ModelManager::DrawOutLine(hModelCore_, {1,1,0,1});
-			//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	//何もなし
 	else
 		ModelManager::Draw(hModelCore_);
-		//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
-	//HPが3以上なら
+	//HPが3以上ならシールドを表示
 	if (GetLife() >= 3)
 	{
 		//上と同じ
 			ModelManager::SetTransform(hModelShield_, transform_);
 		if (IsLockOned(this))
 			ModelManager::DrawOutLine(hModelShield_, { 1,0,0,1 });
-		//GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
 		else if (GetPlayerPointer()->IsAim())
 			ModelManager::DrawOutLine(hModelShield_, { 1,1,0,1 });
-		//GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
 		else
 			ModelManager::Draw(hModelShield_);
-			//GetComponent<ModelComponent>(1)->SetShader(SHADER_TYPE::SHADER_3D);
 	}
 }
 
