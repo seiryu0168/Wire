@@ -18,10 +18,10 @@ Stage1::~Stage1()
 //‰Šú‰»
 void Stage1::Initialize()
 {
-	ModelComponent* mComp = new ModelComponent("Assets\\NewStage_Maya.fbx", this);
-	AddComponent(mComp);
-	//hModel_ = ModelManager::Load("Assets\\NewStage_Maya.fbx");
-	//assert(hModel_ >= 0);
+	//ModelComponent* mComp = new ModelComponent("Assets\\NewStage_Maya.fbx", this);
+	//AddComponent(mComp);
+	hModel_ = ModelManager::Load("Assets\\NewStage_Maya.fbx");
+	assert(hModel_ >= 0);
 	transform_.position_ = XMFLOAT3(0, 0, 0);
 }
 
@@ -39,8 +39,8 @@ void Stage1::FixedUpdate()
 //•`‰æ
 void Stage1::Draw()
 {
-	//ModelManager::SetTransform(hModel_, transform_);
-	//ModelManager::Draw(hModel_);
+	ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::Draw(hModel_);
 }
 
 //ŠJ•ú

@@ -52,17 +52,17 @@ void EnemyTurret::Initialize()
 	AddCollider(pCollider);
 	
 	//モデル読み込み
-	ModelComponent* mComp = new ModelComponent("Assets\\EnemyTurret_Maya.fbx", this);
-	AddComponent(mComp);
-	//hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
-	//assert(hModel_ >= 0);
+	//ModelComponent* mComp = new ModelComponent("Assets\\EnemyTurret_Maya.fbx", this);
+	//AddComponent(mComp);
+	hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
+	assert(hModel_ >= 0);
 	////モデルセット
-	//SethModel(hModel_);
-	//ModelManager::SetModelNum(hModel_);
+	SethModel(hModel_);
+	ModelManager::SetModelNum(hModel_);
 	
 	//ステージのモデル取得
-	//int stageModelHandle = -1;
-	//stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
+	int stageModelHandle = -1;
+	stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
 	
 	//初期位置設定
 	XMFLOAT3 initPos = transform_.position_;
@@ -73,7 +73,7 @@ void EnemyTurret::Initialize()
 	RayCastData ray;
 	ray.start = initPos;
 	ray.dir = { 0,-1,0 };
-	ModelManager::RayCastComponent(ray);
+	ModelManager::RayCast(stageModelHandle,ray);
 	if (ray.hit)
 	{
 		initPos.y = (999 - ray.dist)+2.0f;
@@ -121,15 +121,16 @@ void EnemyTurret::FixedUpdate()
 //描画
 void EnemyTurret::Draw()
 {
-	//ModelManager::SetTransform(hModel_, transform_);
+	ModelManager::SetTransform(hModel_, transform_);
 	if (IsLockOned(this))
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
-	//ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
 	else if (GetPlayerPointer()->IsAim())
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
-		//ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
 	else
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
+		ModelManager::Draw(hModel_);
+		//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 }
 
 void EnemyTurret::Release()

@@ -1,6 +1,6 @@
 #include "EnemyNormal.h"
 #include"Stage1.h"
-#include"ModelComponent.h"
+//#include"ModelComponent.h"
 #include"Engine/Collider/SphereCollider.h"
 #include"Pointer.h"
 namespace
@@ -30,13 +30,13 @@ void EnemyNormal::Initialize()
 {
 	SetTag("Enemy");
 	SetPlayerPointer((Player*)FindObject("Player"));
-	//hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
-	ModelComponent* pModelComponent = new ModelComponent("Assets\\EnemyBall.fbx", this);
-	AddComponent(pModelComponent);
-	SethModel(pModelComponent->GetModelHandle());
+	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
+	//ModelComponent* pModelComponent = new ModelComponent("Assets\\EnemyBall.fbx", this);
+	//AddComponent(pModelComponent);
+	SethModel(hModel_);
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
-	//ModelManager::SetModelNum(hModel_);
+	ModelManager::SetModelNum(hModel_);
 
 	XMFLOAT3 startPos = XMFLOAT3((float)((std::rand() % 3000) - 1500) / 10.0f, 0, (float)((std::rand() % 3000) - 1500) / 10.0f);
 	
@@ -45,7 +45,8 @@ void EnemyNormal::Initialize()
 	RayCastData ray;
 	ray.start = startPos;
 	ray.dir = XMFLOAT3(0, -1, 0);
-	ModelManager::RayCastComponent(ray);
+	int stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
+	ModelManager::RayCast(stageModelHandle,ray);
 	transform_.position_ = StoreFloat3(ray.hitPos);
 	transform_.position_.y += 10;
 	ChangeState(StateSearch::GetInstance());
@@ -60,15 +61,7 @@ void EnemyNormal::Update()
 		knockBackTime_--;
 	}
 	pState_->Update(*this);
-	////ModelManager::SetTransform(hModel_, transform_);
-	if (IsLockOned(this))
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
-	//ModelManager::DrawOutLine(hModel_, {1,0,0,1});
-	else if (GetPlayerPointer()->IsAim())
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
-	//ModelManager::DrawOutLine(hModel_, {1,1,0,1});
-	else
-		GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
+	ModelManager::SetTransform(hModel_, transform_);
 }
 
 void EnemyNormal::FixedUpdate()
@@ -79,6 +72,15 @@ void EnemyNormal::FixedUpdate()
 //•`‰æ
 void EnemyNormal::Draw()
 {
+	if (IsLockOned(this))
+		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,0,0,1 });
+	else if (GetPlayerPointer()->IsAim())
+		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+	//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_OUTLINE, { 1,1,0,1 });
+	else
+		ModelManager::Draw(hModel_);
+		//GetComponent<ModelComponent>()->SetShader(SHADER_TYPE::SHADER_3D);
 }
 
 void EnemyNormal::EnemyMove()

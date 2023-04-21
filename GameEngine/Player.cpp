@@ -8,7 +8,7 @@
 #include"Engine/DirectX_11/Particle.h"
 #include"PlayerBase.h"
 #include"Engine/ResourceManager/Audio.h"
-#include"ModelComponent.h"
+//#include"ModelComponent.h"
 #include"PlayScreen.h"
 #include"Player.h"
 #include"InterSceneData.h"
@@ -97,17 +97,17 @@ Player::~Player()
 void Player::Initialize()
 {
     //ModelComponent* mComp = new ModelComponent("Assets\\TestBall.fbx",this);
-    ModelComponent* playerComp = new ModelComponent("Assets\\WireShooter_Maya.fbx",this);
+    //ModelComponent* playerComp = new ModelComponent("Assets\\WireShooter_Maya.fbx",this);
     //AddComponent(mComp);
-    AddComponent(playerComp);
+    //AddComponent(playerComp);
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    //hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
-    //assert(hModel_ >= 0);
+    hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
+    assert(hModel_ >= 0);
 
     //マーカーを生成
     pPointer_=Instantiate<Pointer>(GetParent());
@@ -130,7 +130,7 @@ void Player::Initialize()
     //当たり判定
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
-    modelComp_ = GetParent()->FindChild("Stage1")->GetComponent<ModelComponent>();
+    stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
     
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
@@ -139,6 +139,7 @@ void Player::Initialize()
     RayCastData firstRay;
     firstRay.start = transform_.position_;
        
+    
     XMStoreFloat3(&firstRay.dir, XMVectorSet(0, -1, 0, 0));
     ModelManager::RayCast(stageNum_, firstRay);
     ModelManager::SetModelNum(stageNum_);
@@ -319,8 +320,8 @@ void Player::Update()
 void Player::Draw()
 {
     //((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
-    //ModelManager::SetTransform(hModel_, transform_);
-    //ModelManager::Draw(hModel_); 
+    ModelManager::SetTransform(hModel_, transform_);
+    ModelManager::Draw(hModel_); 
 }
 
 void Player::SecondDraw()
@@ -426,27 +427,27 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData fMoveRay;
     XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[0]);
     XMStoreFloat3(&fMoveRay.dir, moveHolizon);
-    ModelManager::RayCast(modelComp_, fMoveRay);
+    ModelManager::RayCast(stageNum_, fMoveRay);
 
     //進行方向に見て右のレイ
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
     XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(float)(M_PI/2.0f))));
-    ModelManager::RayCast(modelComp_, lMoveRay);
+    ModelManager::RayCast(stageNum_, lMoveRay);
 
     //進行方向に見て左のレイ
     RayCastData rMoveRay;
     XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(float)(M_PI/2.0f))));
-    ModelManager::RayCast(modelComp_, rMoveRay);
+    ModelManager::RayCast(stageNum_, rMoveRay);
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
     XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
     
     XMStoreFloat3(&URay.dir, startVec[3]);    
     XMStoreFloat3(&DRay.dir, startVec[4]);    
-    ModelManager::RayCast(modelComp_, URay);
-    ModelManager::RayCast(modelComp_, DRay);
+    ModelManager::RayCast(stageNum_, URay);
+    ModelManager::RayCast(stageNum_, DRay);
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
     if (fMoveRay.dist < hitdist_)
@@ -679,7 +680,7 @@ void Player::Aim(RayCastData* ray)
     float toEnemyDist = -1.0f;
 
     //当たる位置の計算
-    XMFLOAT3 bonePos = ((ModelComponent*)GetComponent<ModelComponent>())->GetBonPosition("shotPos");//ModelManager::GetBonePosition(hModel_, "shotPos");
+    XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
     XMVECTOR vPtrDir = vPlayerDir;
     ray->start = bonePos;
@@ -703,8 +704,8 @@ void Player::Aim(RayCastData* ray)
 
             //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
-                ModelManager::RayCastComponent(*ray);
-            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GetComponent<ModelComponent>()->GetModelHandle())
+                ModelManager::RayCast(*ray);
+            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GethModel())
             {
                 lockOn_ = true;
             }
@@ -731,14 +732,14 @@ void Player::Aim(RayCastData* ray)
             XMStoreFloat3(&dir, vPlayerDir);
             ray->Init(bonePos, dir, ASSISTLIMIT);
             
-            ModelManager::RayCastComponent(*ray);
+            ModelManager::RayCast(*ray);
         }
 
         else
         {
             XMStoreFloat3(&dir, vPtrDir);
             ray->Init(bonePos, dir, ASSISTLIMIT);
-            ModelManager::RayCastComponent(*ray);
+            ModelManager::RayCast(*ray);
         }
     }
 
