@@ -169,6 +169,7 @@
     <ClCompile Include="Engine\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Collider\OBBCollider.cpp" />
+    <ClCompile Include="Engine\Collider\PolygonCollider.cpp" />
     <ClCompile Include="Engine\Collider\SphereCollider.cpp" />
     <ClCompile Include="Engine\DirectX_11\BillBoard.cpp" />
     <ClCompile Include="Engine\DirectX_11\Direct2D.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Engine\Collider\BoxCollider.h" />
     <ClInclude Include="Engine\Collider\Collider.h" />
     <ClInclude Include="Engine\Collider\OBBCollider.h" />
+    <ClInclude Include="Engine\Collider\PolygonCollider.h" />
     <ClInclude Include="Engine\Collider\SphereCollider.h" />
     <ClInclude Include="Engine\DirectX_11\BillBoard.h" />
     <ClInclude Include="Engine\DirectX_11\Direct2D.h" />

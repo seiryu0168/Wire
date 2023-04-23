@@ -9,12 +9,14 @@ class GameObject;
 class BoxCollider;
 class SphereCollider;
 class OBBCollider;
+class PolygonCollider;
 
 enum ColliderType
 {
 	BOX_COLLIDER,
 	SPHERE_COLLIDER,
-	OBB_COLLIDER
+	OBB_COLLIDER,
+
 };
 
 //当たり判定
@@ -24,6 +26,7 @@ class Collider
 	friend class BoxCollider;
 	friend class SphereCollider;
 	friend class OBBCollider;
+	friend class PolygonCollider;
 
 	GameObject*  pColObject_;	//当たり判定を付けるオブジェクト
 	ColliderType type_;		//コライダータイプ
@@ -64,6 +67,7 @@ public:
 	/// <returns></returns>
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
+	bool IsHitSphere_Polygon(SphereCollider* sphereA,std::vector<XMVECTOR> polyList);
 	/// <summary>
 	/// OBB同士の当たり判定
 	/// </summary>
@@ -79,6 +83,7 @@ public:
 	/// <param name="sphere">SphereCollider型</param>
 	/// <returns></returns>
 	bool IsHitOBB_Sphere(OBBCollider* obb, SphereCollider* sphere);
+
 
 	/// <summary>
 	/// 当たり判定を付けたオブジェクトを取得

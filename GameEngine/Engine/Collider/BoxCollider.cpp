@@ -18,5 +18,8 @@ bool BoxCollider::IsHit(Collider* target)
 
 	case SPHERE_COLLIDER:
 		return IsHitBox_Sphere(this, (SphereCollider*)target);
+		
+		//ŽŽŒ±“I‚Éƒ|ƒŠƒSƒ“‚Æ‚Ì“–‚½‚è”»’è‚ðŽÀ‘•‚µ‚Ä‚Ý‚é
+	//case 
 	}
 }

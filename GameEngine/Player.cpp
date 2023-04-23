@@ -709,10 +709,6 @@ void Player::Aim(RayCastData* ray)
             {
                 lockOn_ = true;
             }
-            //else
-            //{
-            //    lockOn_ = false;
-            //}
 
             enemyNumber_ = pEnemy->GetObjectID();
         }

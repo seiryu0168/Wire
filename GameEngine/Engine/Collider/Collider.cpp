@@ -2,9 +2,11 @@
 #include"BoxCollider.h"
 #include"SphereCollider.h"
 #include"OBBCollider.h"
+#include"PolygonCollider.h"
 #include"../GameObject/GameObject.h"
 #include"../../DebugUI.h"
-#include"../DirectX_11/Fbx.h"
+//#include"../DirectX_11/Fbx.h"
+#include"../ResourceManager/Model.h"
 
 Collider::Collider()
 {
@@ -73,6 +75,11 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 	}
 	return false;
 
+}
+
+bool Collider::IsHitSphere_Polygon(SphereCollider* sphereA, std::vector<XMVECTOR> polyList)
+{
+	return false;
 }
 
 bool Collider::IsHitOBB_OBB(OBBCollider* obbA, OBBCollider* obbB)
