@@ -77,10 +77,10 @@ bool Collider::IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* spher
 
 }
 
-bool Collider::IsHitSphere_Polygon(SphereCollider* sphereA, std::vector<XMVECTOR> polyList)
-{
-	return false;
-}
+//bool Collider::IsHitSphere_Polygon(SphereCollider* sphereA, std::vector<XMVECTOR> polyList)
+//{
+//	return false;
+//}
 
 bool Collider::IsHitOBB_OBB(OBBCollider* obbA, OBBCollider* obbB)
 {

@@ -16,5 +16,5 @@ bool PolygonCollider::IsHit(Collider* target)
 	//default:
 	//	break;
 	//}
-	
+	return false;
 }

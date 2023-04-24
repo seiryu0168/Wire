@@ -67,7 +67,7 @@ public:
 	/// <returns></returns>
 	bool IsHitSphere_Sphere(SphereCollider* sphereA, SphereCollider* sphereB);
 
-	bool IsHitSphere_Polygon(SphereCollider* sphereA,std::vector<XMVECTOR> polyList);
+	//bool IsHitSphere_Polygon(SphereCollider* sphereA,std::vector<XMVECTOR> polyList);
 	/// <summary>
 	/// OBB“¯Žm‚Ì“–‚½‚è”»’è
 	/// </summary>
