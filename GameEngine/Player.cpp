@@ -24,7 +24,7 @@
 namespace
 {
     static const std::vector<Enemy*> enemyList_;
-    static const float hitdist_   =2.001f;
+    static const float hitdist_   =3.001f;
     static const int   MAX_LIFE   = 10;
     static const float LIFE_OFFSET_X = -1800.0f;
     static const float LIFE_OFFSET_Y = -900.0f;
@@ -509,6 +509,9 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //‰ºƒŒƒC‚Ì‹——£(dist)‚ªmoveYˆÈ‰º‚É‚È‚Á‚½‚çy²‚ÌÀ•W‚ğ–ß‚·
     if (DRay.dist < hitdist_)
     {
+        wallzuri = moveVector + (DRay.normal * (1 - VectorDot(-moveVector, DRay.normal)));
+        XMVECTOR back = (XMLoadFloat3(&DRay.start) + (XMLoadFloat3(&DRay.dir) * 2)) - DRay.hitPos;
+        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
         if (signbit(moveY))
         {
             transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;
