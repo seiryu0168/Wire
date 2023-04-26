@@ -43,6 +43,7 @@ Player::Player(GameObject* parent)
     status_(STATE_GROUND),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
     playerLife_(MAX_LIFE),
+    prevHitBit_(0),
     gravity_(-0.06f),
     hModel_(-1),
     hAudio_(-1),
@@ -448,6 +449,13 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMStoreFloat3(&DRay.dir, startVec[4]);    
     ModelManager::RayCast(stageNum_, URay);
     ModelManager::RayCast(stageNum_, DRay);
+
+    char hitBit;
+    hitBit |= (fMoveRay.hit << 1);
+    hitBit |= (lMoveRay.hit << 2);
+    hitBit |= (rMoveRay.hit << 3);
+    hitBit |= (URay.hit << 4);
+    hitBit |= (DRay.hit << 5);
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
     if (fMoveRay.dist < hitdist_)
@@ -509,14 +517,14 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     //‰ºƒŒƒC‚Ì‹——£(dist)‚ªmoveYˆÈ‰º‚É‚È‚Á‚½‚çyŽ²‚ÌÀ•W‚ð–ß‚·
     if (DRay.dist < hitdist_)
     {
-        wallzuri = moveVector + (DRay.normal * (1 - VectorDot(-moveVector, DRay.normal)));
-        XMVECTOR back = (XMLoadFloat3(&DRay.start) + (XMLoadFloat3(&DRay.dir) * 2)) - DRay.hitPos;
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+        //wallzuri = moveVector + (DRay.normal * (1 - VectorDot(-moveVector, DRay.normal)));
+        //XMVECTOR back = (XMLoadFloat3(&DRay.start) + (XMLoadFloat3(&DRay.dir) * 2)) - DRay.hitPos;
+        //XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
         if (signbit(moveY))
         {
             transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;
             moveY = 0;
-            velocity_ = 0;
+            //velocity_ = 0;
             airFlag_ = false;
             groundFlag_ = true;
             if (flyFlag_)
@@ -555,12 +563,12 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         transform_.position_.z = 250.0f;
     }
-
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     moveDist.y = moveY;
     moveVector = XMLoadFloat3(&moveDist);
     
     moveVector += wallzuri;
+    prevHitBit_ = hitBit;
 }
 
 void Player::SetStatus(int type)

@@ -23,6 +23,7 @@ class Player : public GameObject
 
 
     char status_;
+    char prevHitBit_;
 
     const float gravity_;
     
@@ -33,6 +34,7 @@ class Player : public GameObject
     bool groundFlag_;
     bool godFlag_;
     bool lockOn_;
+
 
     int hModel_;
     int hAudio_;
@@ -54,6 +56,7 @@ class Player : public GameObject
     float angleX_;
     float lockOnAngleLimit_;
 
+    XMFLOAT3 prevPosition;
     XMVECTOR baseUpVec_;
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
