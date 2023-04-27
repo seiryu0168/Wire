@@ -49,6 +49,7 @@ Player::Player(GameObject* parent)
     hAudio_(-1),
     hAudioShoot_(-1),
     stageNum_(-1),
+    prevPosition(0,0,0),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
@@ -209,7 +210,6 @@ void Player::Update()
             flyTime_ = 1;
             transform_.position_.y += 0.2f;
             velocity_ = 0;
-            //vFlyMove_ = XMVector3Normalize(ray.hitPos - vPlayerPos_)* maxSpeed_;
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
             Audio::Play(hAudioShoot_);
         }
@@ -417,7 +417,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     moveDist.y = 0;                         //ベクトルのy軸を0にする
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
     XMVECTOR startVec[5] = { 0 };
-    startVec[0] = -XMVector3Normalize(moveHolizon);                                                //進行方向
+    startVec[0] = -XMVector3Normalize(moveHolizon);                                           //進行方向
     startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, (float)(M_PI/2.0f)));   //進行方向に見て右
     startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -(float)(M_PI/2.0f)));  //進行方向に見て左
     startVec[3] = baseUpVec_;                                                                      //上ベクトル
@@ -428,12 +428,14 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     RayCastData fMoveRay;
     XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[0]);
     XMStoreFloat3(&fMoveRay.dir, moveHolizon);
+    //fMoveRay.distLimit = hitdist_;
     ModelManager::RayCast(stageNum_, fMoveRay);
 
     //進行方向に見て右のレイ
     RayCastData lMoveRay;
     XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
     XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(float)(M_PI/2.0f))));
+    //lMoveRay.distLimit = hitdist_;
     ModelManager::RayCast(stageNum_, lMoveRay);
 
     //進行方向に見て左のレイ
@@ -444,29 +446,23 @@ void Player::CharactorControll(XMVECTOR &moveVector)
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
     XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
-    
+    //URay.distLimit = hitdist_;
+    //DRay.distLimit = hitdist_;
     XMStoreFloat3(&URay.dir, startVec[3]);    
     XMStoreFloat3(&DRay.dir, startVec[4]);    
     ModelManager::RayCast(stageNum_, URay);
     ModelManager::RayCast(stageNum_, DRay);
 
-    char hitBit;
-    hitBit |= (fMoveRay.hit << 1);
-    hitBit |= (lMoveRay.hit << 2);
-    hitBit |= (rMoveRay.hit << 3);
-    hitBit |= (URay.hit << 4);
-    hitBit |= (DRay.hit << 5);
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
-    if (fMoveRay.dist < hitdist_)
+    if (fMoveRay.dist<VectorLength(moveHolizon))
     {
+        
         vPlayerPos_ = XMLoadFloat3(&transform_.position_);
         moveDist = { 0,0,0 };
 
         //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
-        wallzuri = moveHolizon + (fMoveRay.normal * (1-XMVectorGetX(XMVector3Dot(-moveHolizon, fMoveRay.normal))));
-        XMVECTOR back = (XMLoadFloat3(&fMoveRay.start) + (XMLoadFloat3(&fMoveRay.dir) * 2)) -fMoveRay.hitPos;
-        XMStoreFloat3(&transform_.position_, vPlayerPos_+(-back));
+        wallzuri = MoveVectorControl(fMoveRay, moveHolizon);
         SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
@@ -474,12 +470,10 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
 
-    if(lMoveRay.dist < hitdist_)
+    if(lMoveRay.dist<hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveHolizon + (lMoveRay.normal * (1 - VectorDot(-moveHolizon, lMoveRay.normal)));
-        XMVECTOR back = (XMLoadFloat3(&lMoveRay.start) + (XMLoadFloat3(&lMoveRay.dir) * 2)) - lMoveRay.hitPos;
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+        wallzuri = MoveVectorControl(lMoveRay, moveHolizon);
         SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
@@ -487,12 +481,10 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
 
-    if(rMoveRay.dist < hitdist_)
+    if(rMoveRay.dist<hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveHolizon + (rMoveRay.normal * (1 - VectorDot(-moveHolizon, rMoveRay.normal)));
-        XMVECTOR back = (XMLoadFloat3(&rMoveRay.start) + (XMLoadFloat3(&rMoveRay.dir) * 2)) - rMoveRay.hitPos;
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+        wallzuri = MoveVectorControl(rMoveRay, moveHolizon);
         SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
@@ -501,12 +493,10 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //上レイの距離(dist)が1以下になったらy軸の座標を戻す
-    if (URay.dist < hitdist_)
+    if (URay.dist<hitdist_)
     {
         moveDist = { 0,0,0 };
-        wallzuri = moveVector + (URay.normal * (1 - VectorDot(-moveHolizon, URay.normal)));
-        XMVECTOR back = (XMLoadFloat3(&URay.start) + (XMLoadFloat3(&URay.dir) * 2)) - URay.hitPos;
-        XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+        wallzuri = MoveVectorControl(URay, moveHolizon);
         SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
@@ -515,27 +505,40 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
 
     //下レイの距離(dist)がmoveY以下になったらy軸の座標を戻す
-    if (DRay.dist < hitdist_)
+    if (DRay.dist<abs(moveY))
     {
-        //wallzuri = moveVector + (DRay.normal * (1 - VectorDot(-moveVector, DRay.normal)));
-        //XMVECTOR back = (XMLoadFloat3(&DRay.start) + (XMLoadFloat3(&DRay.dir) * 2)) - DRay.hitPos;
-        //XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
-        if (signbit(moveY))
+        if (DRay.dist < 1.0f)
         {
-            transform_.position_.y = DRay.start.y + transform_.scale_.y - DRay.dist;
-            moveY = 0;
-            //velocity_ = 0;
-            airFlag_ = false;
-            groundFlag_ = true;
-            if (flyFlag_)
-            {
-                flyFlag_ = false;
-            }
-            SetStatus(ATC_DEFAULT);
+            moveY = (1.0f - DRay.dist)+1;
         }
+        else
+        {
+            moveY = (moveY-(moveY - DRay.dist))+1;
+        }
+        //wallzuri = MoveVectorControl(DRay, moveVector);
+        //if (signbit(moveY))
+        //{
+        //    moveY = 0;
+        //    velocity_ = 0;
+        //}
+        //else
+        //{
+        //
+        // moveY = DRay.start.y - ((DRay.start.y - DRay.dist) +transform_.scale_.y);
+        //    airFlag_ = false;
+        //    groundFlag_ = true;
+        //    SetStatus(ATC_DEFAULT);
+        //    if (flyFlag_)
+        //    {
+        //        flyFlag_ = false;
+        //    }
+        //}
     }
     else
         groundFlag_ = false;
+
+    moveDist.y = moveY;
+    moveVector = XMLoadFloat3(&moveDist)+ wallzuri;
 
     if (transform_.position_.x <= -250.0f)
     {
@@ -564,11 +567,6 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.z = 250.0f;
     }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
-    moveDist.y = moveY;
-    moveVector = XMLoadFloat3(&moveDist);
-    
-    moveVector += wallzuri;
-    prevHitBit_ = hitBit;
 }
 
 void Player::SetStatus(int type)
@@ -804,9 +802,16 @@ void Player::DeleteTargetList(Enemy* target)
     }
 }
 
+XMVECTOR Player::MoveVectorControl(const RayCastData& data, const XMVECTOR& vec)
+{
+    XMVECTOR rubVec = vec + VectorDot(-vec, data.normal)* data.normal;
+    XMVECTOR back = (XMLoadFloat3(&data.start) + (XMLoadFloat3(&data.dir) * 2)) - data.hitPos;
+    XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+    return rubVec;
+}
+
 bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, float length)
 {
-    
     //自分からtargetPosまでのベクトル
     XMVECTOR targetVec = XMLoadFloat3(&targetPos) -
                          XMLoadFloat3(&transform_.position_); 

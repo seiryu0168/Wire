@@ -17,13 +17,14 @@ class Texture;
 
 struct RayCastData
 {
-	XMFLOAT3 start;
-	XMFLOAT3 dir;
-	float dist;
-	XMVECTOR hitPos;
-	XMVECTOR normal;
-	BOOL hit;
-	float distLimit;
+	XMFLOAT3 start;//レイの発射位置
+	XMFLOAT3 dir;//レイの発射方向
+	XMVECTOR hitPos;//当たった位置
+	XMVECTOR normal;//当たった位置の法線
+	float dist;//当たった距離
+	float angle;//当たった角度
+	BOOL hit;//当たったかどうか
+	float distLimit;//レイの有効距離
 	class hitData
 	{
 	public:
@@ -31,11 +32,11 @@ struct RayCastData
 		float hitDist;
 	};
 	std::list<hitData> hitModelList;
-	//bool fComp(const hitData& v1, const hitData& v2) { return v1.hitDist < v2.hitDist; }
 
 	RayCastData() :start(XMFLOAT3(0, 0, 0)),
 		dir(XMFLOAT3(0, 0, 0)),
 		dist(9999.0f),
+		angle(0),
 		hit(false),
 		hitPos(XMVectorSet(0, 0, 0, 0)),
 		normal(XMVectorSet(0, 0, 0, 0)),

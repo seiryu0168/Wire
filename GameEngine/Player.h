@@ -136,6 +136,7 @@ public:
     //敵をプレイヤーの認識リストから外す
     void DeleteTargetList(Enemy* target);
 
+    XMVECTOR MoveVectorControl(const RayCastData& data, const XMVECTOR& vec);
     //開放
     void Release() override;
 
