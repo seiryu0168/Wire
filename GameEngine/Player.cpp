@@ -507,19 +507,23 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     ModelManager::RayCast(stageNum_, DRay);
     if (DRay.dist<hitdist_)
     {
-        if (moveY<=0)
+        if (moveY <= 0)
         {
             moveY = 2.0f - DRay.dist;
             velocity_ = 0;
-        }
-        else
-        {
 
-        }
-        if (flyFlag_)
+            if (flyFlag_)
+            {
+                flyFlag_ = false;
+            }
+        }   
+        else if(DRay.dist<1.8f)
         {
+            moveY = 2.0f - DRay.dist;
             flyFlag_ = false;
+            
         }
+ 
         groundFlag_ =true;
         airFlag_ = false;
         //moveY = 0
