@@ -49,7 +49,7 @@ Player::Player(GameObject* parent)
     hAudio_(-1),
     hAudioShoot_(-1),
     stageNum_(-1),
-    prevPosition(0,0,0),
+    prevPositionVec(XMVectorSet(0,0,0,0)),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
@@ -65,7 +65,7 @@ Player::Player(GameObject* parent)
     godTime_(0),
     velocity_(0),
     rotateSpeed_(4.0f),
-    maxSpeed_(1.5f),
+    maxSpeed_(2.0f),
     wireLength_(100.0f),
     angleY_(0),
     angleX_(0),
@@ -312,7 +312,7 @@ void Player::Update()
     vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
-    XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
+    //XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
     transform_.rotate_.y = angleY_;
 }
@@ -442,11 +442,9 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(float)(M_PI/2.0f))));
    
     XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
-    XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
     //URay.distLimit = hitdist_;
     //DRay.distLimit = hitdist_;
     XMStoreFloat3(&URay.dir, startVec[3]);    
-    XMStoreFloat3(&DRay.dir, startVec[4]);    
 
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
@@ -459,7 +457,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
         //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
         wallzuri = MoveVectorControl(fMoveRay, moveHolizon);
-        SetStatus(ATC_DEFAULT);
+        //SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -471,7 +469,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         moveDist = { 0,0,0 };
         wallzuri = MoveVectorControl(lMoveRay, moveHolizon);
-        SetStatus(ATC_DEFAULT);
+        //SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -483,7 +481,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         moveDist = { 0,0,0 };
         wallzuri = MoveVectorControl(rMoveRay, moveHolizon);
-        SetStatus(ATC_DEFAULT);
+        //SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -503,38 +501,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }
     }
 
-    //下レイの距離(dist)がhitdist_以下になったらy軸の座標を戻す
-    ModelManager::RayCast(stageNum_, DRay);
-    if (DRay.dist<hitdist_)
-    {
-        if (moveY <= 0)
-        {
-            moveY = 2.0f - DRay.dist;
-            velocity_ = 0;
 
-            if (flyFlag_)
-            {
-                flyFlag_ = false;
-            }
-        }   
-        else if(DRay.dist<1.8f)
-        {
-            moveY = 2.0f - DRay.dist;
-            flyFlag_ = false;
-            
-        }
- 
-        groundFlag_ =true;
-        airFlag_ = false;
-        //moveY = 0
-        SetStatus(ATC_DEFAULT);
-    }
-    else
-    {
-        groundFlag_ = false;
-    }
-
-    moveDist.y = moveY;
     moveVector = XMLoadFloat3(&moveDist)+ wallzuri;
 
     if (transform_.position_.x <= -250.0f)
@@ -564,6 +531,51 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.z = 250.0f;
     }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
+    
+    XMStoreFloat3(&transform_.position_, vPlayerPos_ + moveVector);
+    //下レイの距離(dist)がhitdist_以下になったらy軸の座標を戻す
+    XMStoreFloat3(&DRay.dir, startVec[4]);    
+    XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
+    ModelManager::RayCast(stageNum_, DRay);
+    if (DRay.dist<hitdist_)
+    {
+        float d = 1.0f+cos(DRay.angle);
+        if (moveY <= 0)
+        {
+            moveY =  2.0f - DRay.dist;
+            velocity_ = 0;
+
+            if (flyFlag_)
+            {
+                flyFlag_ = false;
+            }
+            //SetStatus(ATC_DEFAULT);
+        }   
+        else if(DRay.dist<d)
+        {
+            moveY = 2.0f - DRay.dist;
+            flyFlag_ = false;
+        }
+
+        groundFlag_ =true;
+        airFlag_ = false;
+        //moveY = 0
+    }
+    else
+    {
+        groundFlag_ = false;
+    }
+        transform_.position_.y += moveY;
+        float speed = VectorLength(XMLoadFloat3(&transform_.position_) - prevPositionVec);
+        if (speed >= 1.8f)
+        {
+            SetStatus(ATC_ATTACK);
+        }
+        else
+            SetStatus(ATC_DEFAULT);
+
+        
+        prevPositionVec = XMLoadFloat3(&transform_.position_);
 }
 
 void Player::SetStatus(int type)
@@ -628,7 +640,7 @@ void Player::OnCollision(GameObject* pTarget)
         {
             OccurParticle();
             flyFlag_ = false;
-            vFlyMove_ = -vFlyMove_;
+            vFlyMove_ = -vFlyMove_*0.8f;
             XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             godFlag_ = true;
             godTime_ = 30;

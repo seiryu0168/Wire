@@ -136,11 +136,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 #endif
 				//ƒQ[ƒ€‚Ìˆ—
 				Input::Update();
-				Camera::Update();
 
 				lastUpdateTime = nowTime;
 				countFps++;
 				pRootJob->UpdateSub();
+				Camera::Update();
 #ifdef _DEBUG
 				DebugUI::Debug(pRootJob->FindChild("SceneManager"));
 				DebugUI::Log();

@@ -56,7 +56,7 @@ class Player : public GameObject
     float angleX_;
     float lockOnAngleLimit_;
 
-    XMFLOAT3 prevPosition;
+    XMVECTOR prevPositionVec;
     XMVECTOR baseUpVec_;
     XMVECTOR vCamPos_;
     XMVECTOR vPlayerPos_;
