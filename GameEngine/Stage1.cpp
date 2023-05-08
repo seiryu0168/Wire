@@ -20,6 +20,7 @@ void Stage1::Initialize()
 {
 	//ModelComponent* mComp = new ModelComponent("Assets\\NewStage_Maya.fbx", this);
 	//AddComponent(mComp);
+	//ステージテーブルからステージのモデル名をとってくる
 	hModel_ = ModelManager::Load("Assets\\NewStage_Maya.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_ = XMFLOAT3(0, 0, 0);

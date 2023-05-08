@@ -9,6 +9,8 @@ namespace
 {
 	static const float RANGE_NEAR = 75.0f;
 	static const float RANGE_FAR = 125.0f;
+	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
+	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
 }
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
@@ -77,10 +79,10 @@ void EnemyBoss::Draw()
 	ModelManager::SetTransform(hModelCore_, transform_);
 	//ロックオンされてたら
 	if (IsLockOned(this))
-		ModelManager::DrawOutLine(hModelCore_, {1,0,0,1});
+		ModelManager::DrawOutLine(hModelCore_, COLOR_RED);
 	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
-		ModelManager::DrawOutLine(hModelCore_, {1,1,0,1});
+		ModelManager::DrawOutLine(hModelCore_, COLOR_YELLOW);
 	//何もなし
 	else
 		ModelManager::Draw(hModelCore_);
@@ -90,9 +92,9 @@ void EnemyBoss::Draw()
 		//上と同じ
 			ModelManager::SetTransform(hModelShield_, transform_);
 		if (IsLockOned(this))
-			ModelManager::DrawOutLine(hModelShield_, { 1,0,0,1 });
+			ModelManager::DrawOutLine(hModelShield_, COLOR_RED);
 		else if (GetPlayerPointer()->IsAim())
-			ModelManager::DrawOutLine(hModelShield_, { 1,1,0,1 });
+			ModelManager::DrawOutLine(hModelShield_, COLOR_YELLOW);
 		else
 			ModelManager::Draw(hModelShield_);
 	}

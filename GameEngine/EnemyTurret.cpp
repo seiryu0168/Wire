@@ -11,6 +11,10 @@ namespace
 {
 	static const int SHOT_COUNT = 10;
 	static const int RELOAD = 90;
+	static const float MAX_TO_PLAYERDIST = 70.0f;
+	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
+	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
+	static const int MAX_RANDOM = 500;
 }
 void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
 {
@@ -64,7 +68,7 @@ void EnemyTurret::Initialize()
 	
 	//初期位置設定
 	XMFLOAT3 initPos = transform_.position_;
-	initPos = XMFLOAT3((float)((rand() % 1000)-500)/10.0f,0, (float)((rand() % 1000) - 500) / 10.0f);
+	initPos = XMFLOAT3(CalcRandomPosition(), 0, CalcRandomPosition());
 	AdjustStartPos(initPos);
 	initPos.y = 999.0f;
 	//レイキャストで地面を特定
@@ -122,13 +126,19 @@ void EnemyTurret::Draw()
 	ModelManager::SetTransform(hModel_, transform_);
 	//ロックオンされてたら
 	if (IsLockOned(this))
-		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+		ModelManager::DrawOutLine(hModel_, COLOR_RED);
 	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
-		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+		ModelManager::DrawOutLine(hModel_, COLOR_YELLOW);
 	//何もなし
 	else
 		ModelManager::Draw(hModel_);
+}
+
+float EnemyTurret::CalcRandomPosition()
+{
+	
+	return ((rand() % (MAX_RANDOM * 2)) - MAX_RANDOM) / 10.0f;
 }
 
 void EnemyTurret::Release()
@@ -173,7 +183,7 @@ void EnemyTurret::AdjustStartPos(XMFLOAT3& pos)
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	playerPos.y = 0;
 	//プレイヤーとの距離が70以上だったら離す
-	if (VectorLength(pos - playerPos) <= 70)
+	if (VectorLength(pos - playerPos) <= MAX_TO_PLAYERDIST)
 	{
 		pos = StoreFloat3(XMLoadFloat3(&pos) + (pos - playerPos));
 	}

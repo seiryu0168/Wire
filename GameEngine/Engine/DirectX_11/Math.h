@@ -1,5 +1,6 @@
 #pragma once
 #include<DirectXMath.h>
+#include<algorithm>
 //#include"Fbx.h"
 using namespace DirectX;
 
@@ -36,6 +37,11 @@ namespace Math
 	/// <returns>•\‚©‚Ç‚¤‚©</returns>
 	bool IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir);
 
+}
+inline float Clamp(const float& in, const float& low, const float& high)
+{
+	float out = std::min<float>(std::max<float>(in, low), high);
+	return out;
 }
 //----------------------------------------------------------------------------------------
 inline XMVECTOR operator*=(XMVECTOR& f1, const XMMATRIX& m1)

@@ -6,6 +6,9 @@
 namespace
 {
 	static const int KNOCKBACKTIME = 30;
+	static const float MAX_TO_PLAYERDIST = 70.0f;
+	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
+	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
 }
 
 
@@ -14,7 +17,8 @@ EnemyNormal::EnemyNormal(GameObject* parent)
 	:Enemy(parent, "EnemyNormal"),
 	hModel_(-1),
 	knockBackVec_(XMVectorZero()),
-	knockBackTime_(0)
+	knockBackTime_(0),
+	moveSpeed_(0.6f)
 {
 
 }
@@ -72,10 +76,10 @@ void EnemyNormal::Draw()
 	ModelManager::SetTransform(hModel_, transform_);
 	//ロックオンされてたら
 	if (IsLockOned(this))
-		ModelManager::DrawOutLine(hModel_, { 1,0,0,1 });
+		ModelManager::DrawOutLine(hModel_, COLOR_RED);
 	//ロックオンされてないが、プレイヤーがエイムモードになっている
 	else if (GetPlayerPointer()->IsAim())
-		ModelManager::DrawOutLine(hModel_, { 1,1,0,1 });
+		ModelManager::DrawOutLine(hModel_, COLOR_YELLOW);
 	//何もなし
 	else
 		ModelManager::Draw(hModel_);
@@ -94,7 +98,7 @@ void EnemyNormal::EnemyMove()
 	//角度を回転行列に変換
 	SetMatrixY(XMMatrixRotationY(transform_.rotate_.y));
 	//ベクトル調整
-	toVec *= 0.6f;
+	toVec *= moveSpeed_;
 	toVec+= GetPositionVec();
 	
 	//ノックバックベクトル計算
@@ -150,7 +154,7 @@ void EnemyNormal::AdjustStartPos(XMFLOAT3& pos)
 	XMFLOAT3 playerPos = GetPlayerPointer()->GetPosition();
 	playerPos.y = 0;
 	//プレイヤーとの距離が70以上だったら離す
-	if (VectorLength(pos - playerPos) <= 70)
+	if (VectorLength(pos - playerPos) <= MAX_TO_PLAYERDIST)
 	{
 		pos = StoreFloat3(XMLoadFloat3(&pos) + (pos - playerPos));
 	}

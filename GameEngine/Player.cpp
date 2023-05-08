@@ -26,6 +26,7 @@ namespace
     static const std::vector<Enemy*> enemyList_;
     static const float hitdist_   =3.001f;
     static const int   MAX_LIFE   = 10;
+    static const int   MAX_GODTIME = 30;
     static const float LIFE_OFFSET_X = -1800.0f;
     static const float LIFE_OFFSET_Y = -900.0f;
     static const float ACCEL_AOV     = 70.0f;
@@ -35,12 +36,14 @@ namespace
     static const float ANGLE_MIN     = -89.0f;
     static const float SHAKE_RATE = 1.5f;
     static const float ASSISTLIMIT = 100.0f;
+    static const float RAY_OFFSET = 2.0f;
+    static const float LOW_LIMIT = -100.0f;
+    static const XMFLOAT3 AREA_LIMIT = XMFLOAT3(250.0f,250.0f, 250.0f);
 }
 
 //コンストラクタ
 Player::Player(GameObject* parent)
     :GameObject(parent, "Player"),
-    status_(STATE_GROUND),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
     playerLife_(MAX_LIFE),
     prevHitBit_(0),
@@ -102,6 +105,7 @@ void Player::Initialize()
     //ModelComponent* playerComp = new ModelComponent("Assets\\WireShooter_Maya.fbx",this);
     //AddComponent(mComp);
     //AddComponent(playerComp);
+
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得
@@ -174,7 +178,7 @@ void Player::Update()
     }
     if(godTime_==0)
     {
-        cameraShake_ = XMVectorSet(0, 0, 0, 0);
+        cameraShake_ = XMVectorZero();
         godFlag_ = false;
     }
 
@@ -355,12 +359,12 @@ void Player::CameraMove(RayCastData ray)
     if (aimFlag_ == true)
     {
         aimTime_ += 0.05f;
-        aimTime_ = (float)min(aimTime_, 1);
+        aimTime_ = (float)min(aimTime_, 1.0f);
     }
     else
     {
         aimTime_ += -0.07f;
-        aimTime_ = (float)max(aimTime_, 0.5);
+        aimTime_ = (float)max(aimTime_, 0.5f);
     }
 
     //ワイヤーで飛んでいる時
@@ -371,11 +375,13 @@ void Player::CameraMove(RayCastData ray)
         aimTime_ = (float)max(aimTime_, 0);
     }
 
+    //カメラの回転角
     float cameraRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
-    Camera::SetAOV((float)(M_PI / 180.0) *cameraRate );
+    Camera::SetAOV((float)(M_PI / 180.0f) *cameraRate );
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
-
+    
+    //
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     XMVECTOR vMoveCam;
     XMVECTOR vTarCam;
@@ -391,12 +397,16 @@ void Player::CameraMove(RayCastData ray)
         angleX_ = ANGLE_MAX;
     }
 
-
-    matCamY_   = XMMatrixRotationX(angleX_ * (float)(M_PI / 180.0));
-    matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0));
+    //回転行列作成
+    matCamY_   = XMMatrixRotationX(angleX_ * (float)(M_PI / 180.0f));
+    matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0f));
+    
+    //カメラの基準となる位置ベクトル
     vNormalCam = vCamPos_*  matCamY_ * matCamX_* CAMERA_DIST;
+    //エイム時のベクトル
     vAimCam    = vBaseAim_* matCamY_ * matCamX_;
-    vTarCam    = vPlayerPos_+/*XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_)*/vBaseTarget_ * matCamY_* matCamX_ +cameraShake_;
+    //焦点
+    vTarCam    = vPlayerPos_+ vBaseTarget_ * matCamY_* matCamX_ +cameraShake_;
     
     vMoveCam   = XMVectorLerp(vNormalCam, vAimCam, aimTime_);
     
@@ -416,34 +426,30 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     moveY = moveDist.y;
     moveDist.y = 0;                         //ベクトルのy軸を0にする
     XMVECTOR moveHolizon = XMLoadFloat3(&moveDist);
-    XMVECTOR startVec[5] = { 0 };
-    startVec[0] = -XMVector3Normalize(moveHolizon);                                           //進行方向
-    startVec[1] = -XMVector3Rotate(-startVec[0],XMQuaternionRotationNormal(baseUpVec_, (float)(M_PI/2.0f)));   //進行方向に見て右
-    startVec[2] = -XMVector3Rotate(-startVec[0], XMQuaternionRotationNormal(baseUpVec_, -(float)(M_PI/2.0f)));  //進行方向に見て左
-    startVec[3] = baseUpVec_;                                                                      //上ベクトル
-    startVec[4] = -baseUpVec_;                                                                     //下ベクトル
-    XMVECTOR wallzuri = XMVectorSet(0, 0, 0, 0);
+    XMVECTOR startVec[(int)DIRECTION::DIR_MAX] = { 0 };
+    startVec[(int)DIRECTION::DIR_FRONT] = -XMVector3Normalize(moveHolizon);                                           //進行方向
+    startVec[(int)DIRECTION::DIR_RIGHT] = -XMVector3Rotate(-startVec[(int)DIRECTION::DIR_FRONT],XMQuaternionRotationNormal(baseUpVec_, (float)(M_PI/2.0f)));   //進行方向に見て右
+    startVec[(int)DIRECTION::DIR_LEFT] = -XMVector3Rotate(-startVec[(int)DIRECTION::DIR_FRONT], XMQuaternionRotationNormal(baseUpVec_, -(float)(M_PI/2.0f)));  //進行方向に見て左
+    startVec[(int)DIRECTION::DIR_UP] = baseUpVec_;                                                                      //上ベクトル
+    startVec[(int)DIRECTION::DIR_DOWN] = -baseUpVec_;                                                                     //下ベクトル
+    XMVECTOR wallzuri = XMVectorZero();
    
     //進行方向のレイ
     RayCastData fMoveRay;
-    XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[0]);
+    XMStoreFloat3(&fMoveRay.start, vPlayerPos_+startVec[(int)DIRECTION::DIR_FRONT]);
     XMStoreFloat3(&fMoveRay.dir, moveHolizon);
-    //fMoveRay.distLimit = hitdist_;
 
     //進行方向に見て右のレイ
     RayCastData lMoveRay;
-    XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[1]);
+    XMStoreFloat3(&lMoveRay.start, vPlayerPos_ + startVec[(int)DIRECTION::DIR_RIGHT]);
     XMStoreFloat3(&lMoveRay.dir, XMVector3Rotate(moveHolizon,XMQuaternionRotationNormal(-baseUpVec_,-(float)(M_PI/2.0f))));
-    //lMoveRay.distLimit = hitdist_;
-
+   
     //進行方向に見て左のレイ
     RayCastData rMoveRay;
-    XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[2]);
+    XMStoreFloat3(&rMoveRay.start, vPlayerPos_ + startVec[(int)DIRECTION::DIR_LEFT]);
     XMStoreFloat3(&rMoveRay.dir, XMVector3Rotate(moveHolizon, XMQuaternionRotationNormal(-baseUpVec_,(float)(M_PI/2.0f))));
    
-    XMStoreFloat3(&URay.start,vPlayerPos_+startVec[4]);
-    //URay.distLimit = hitdist_;
-    //DRay.distLimit = hitdist_;
+    XMStoreFloat3(&URay.start,vPlayerPos_+startVec[(int)DIRECTION::DIR_DOWN]);
     XMStoreFloat3(&URay.dir, startVec[3]);    
 
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
@@ -457,7 +463,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
         //壁ズリベクトル = レイが当たったポリゴンの法線*進行方向ベクトルと法線の内積
         wallzuri = MoveVectorControl(fMoveRay, moveHolizon);
-        //SetStatus(ATC_DEFAULT);
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -469,7 +475,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         moveDist = { 0,0,0 };
         wallzuri = MoveVectorControl(lMoveRay, moveHolizon);
-        //SetStatus(ATC_DEFAULT);
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -481,7 +487,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         moveDist = { 0,0,0 };
         wallzuri = MoveVectorControl(rMoveRay, moveHolizon);
-        //SetStatus(ATC_DEFAULT);
+        SetStatus(ATC_DEFAULT);
         if (flyFlag_)
         {
             flyFlag_ = false;
@@ -504,45 +510,45 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     moveVector = XMLoadFloat3(&moveDist)+ wallzuri;
 
-    if (transform_.position_.x <= -250.0f)
+    if (transform_.position_.x <= -AREA_LIMIT.x)
     {
-        transform_.position_.x = -250.0f;
+        transform_.position_.x = -AREA_LIMIT.x;
     }
-    if (transform_.position_.x >= 250.0f)
+    if (transform_.position_.x >= AREA_LIMIT.x)
     {
-        transform_.position_.x = 250.0f;
-    }
-
-    if (transform_.position_.y <= -250.0f)
-    {
-        transform_.position_.y = 5.0f;
-    }
-    if (transform_.position_.y >= 250.0f)
-    {
-        transform_.position_.y = 250.0f;
+        transform_.position_.x = AREA_LIMIT.x;
     }
 
-    if (transform_.position_.z <= -250.0f)
+    if (transform_.position_.y <= -AREA_LIMIT.y)
     {
-        transform_.position_.z = -250.0f;
+        transform_.position_.y = LOW_LIMIT;
     }
-    if (transform_.position_.z >= 250.0f)
+    if (transform_.position_.y >= AREA_LIMIT.y)
     {
-        transform_.position_.z = 250.0f;
+        transform_.position_.y = AREA_LIMIT.y;
+    }
+
+    if (transform_.position_.z <= -AREA_LIMIT.z)
+    {
+        transform_.position_.z = -AREA_LIMIT.z;
+    }
+    if (transform_.position_.z >= AREA_LIMIT.z)
+    {
+        transform_.position_.z = AREA_LIMIT.z;
     }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     
     XMStoreFloat3(&transform_.position_, vPlayerPos_ + moveVector);
     //下レイの距離(dist)がhitdist_以下になったらy軸の座標を戻す
-    XMStoreFloat3(&DRay.dir, startVec[4]);    
-    XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[3]);
+    XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[(int)DIRECTION::DIR_UP]);
+    XMStoreFloat3(&DRay.dir, startVec[(int)DIRECTION::DIR_DOWN]);
     ModelManager::RayCast(stageNum_, DRay);
     if (DRay.dist<hitdist_)
     {
         float d = 1.0f+cos(DRay.angle);
         if (moveY <= 0)
         {
-            moveY =  2.0f - DRay.dist;
+            moveY = RAY_OFFSET - DRay.dist;
             velocity_ = 0;
 
             if (flyFlag_)
@@ -553,7 +559,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         }   
         else if(DRay.dist<d)
         {
-            moveY = 2.0f - DRay.dist;
+            moveY = RAY_OFFSET - DRay.dist;
             flyFlag_ = false;
         }
 
@@ -643,7 +649,7 @@ void Player::OnCollision(GameObject* pTarget)
             vFlyMove_ = -vFlyMove_*0.8f;
             XMStoreFloat3(&transform_.position_ ,vPlayerPos_);
             godFlag_ = true;
-            godTime_ = 30;
+            godTime_ = MAX_GODTIME;
         }
         else if(godFlag_==false)
         {
@@ -658,7 +664,7 @@ void Player::OnCollision(GameObject* pTarget)
         if(godFlag_==false)
         {
             godFlag_ = true;
-            godTime_ = 30;
+            godTime_ = MAX_GODTIME;
         }
         Audio::Play(hAudio_);
     }
@@ -672,7 +678,7 @@ void Player::OnCollision(GameObject* pTarget)
                 playerLife_--;
                 playerLife_ = max(0, playerLife_);
                 godFlag_ = true;
-                godTime_ = 30;
+                godTime_ = MAX_GODTIME;
                 flyFlag_ = false;
                 flyTime_ = 1.0f;
                 vFlyMove_ = XMVector3Normalize(pTarget->GetPosition() - transform_.position_) * (-0.5f);
@@ -760,10 +766,6 @@ void Player::Aim(RayCastData* ray)
     //当たった位置にマーカー表示
     if (ray->hit && !flyFlag_)
     {
-        //if (toEnemyDist < ray->dist)
-        //{
-        //    lockOn_ = false;
-        //}
         rotateSpeed_ = 2.0f;
         XMFLOAT3 pointerPos;
         XMStoreFloat3(&pointerPos, ray->hitPos);
@@ -782,28 +784,12 @@ void Player::CheckTargetList()
         if ((*itr)->GetIsList() == false)
         {
             itr = enemyList_.erase(itr);
-            
         }
         else
         {
             itr++;
         }
 
-        if (enemyList_.empty())
-        {
-            return;
-        }
-    }
-}
-
-void Player::DeleteTargetList(Enemy* target)
-{
-    for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
-    {
-        if ((*itr) == target)
-        {
-            itr = enemyList_.erase(itr);
-        }
         if (enemyList_.empty())
         {
             return;
@@ -832,7 +818,7 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
         XMVECTOR dirVec = XMVector3Normalize(XMLoadFloat3(&ray.dir));
 
         //targetVecとdirVecの内積を求める
-        float angle = XMVectorGetX(XMVector3AngleBetweenNormals(dirVec, targetVec));
+        float angle = acosf(VectorDot(dirVec, targetVec));
 
         //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
         if (angle > -0.4f && angle < 0.4f)
@@ -858,6 +844,7 @@ Enemy* Player::AimAssist(RayCastData* ray)
     float minRange = 9999.0f;
     Enemy* pEnemy=nullptr;
     auto i = enemyList_.begin();
+
     //エネミーのリストからエイムアシストの範囲にいるかどうか調べる
     for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
     {

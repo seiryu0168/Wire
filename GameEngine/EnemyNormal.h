@@ -5,6 +5,7 @@ class EnemyNormal : public Enemy
 {
 private:
     int      hModel_;       //ƒ‚ƒfƒ‹”Ô†
+    float moveSpeed_;
     EnemyState<EnemyNormal>* pState_;
     
     class StateChase : public EnemyState<EnemyNormal>

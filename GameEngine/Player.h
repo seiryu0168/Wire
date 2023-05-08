@@ -14,14 +14,16 @@ class PlayScreen;
 class ModelComponent;
 class Player : public GameObject
 {
-    enum STATUS
+
+    enum class DIRECTION
     {
-        STATE_GROUND=0,
-        STATE_AIR,
-        STATE_FLY,
+        DIR_FRONT=0,
+        DIR_RIGHT,
+        DIR_LEFT,
+        DIR_UP,
+        DIR_DOWN,
+        DIR_MAX,
     };
-
-
     char status_;
     char prevHitBit_;
 
@@ -99,6 +101,8 @@ public:
 
     //キャラが壁をすり抜けないようにする
     void CharactorControll(XMVECTOR &moveVector);
+
+    XMVECTOR MoveVectorControl(const RayCastData& data, const XMVECTOR& vec);
     
     //カメラの挙動を制御
     void CameraMove(RayCastData ray);
@@ -133,10 +137,6 @@ public:
     //認識リストにいるかどうかチェック
     void CheckTargetList();
 
-    //敵をプレイヤーの認識リストから外す
-    void DeleteTargetList(Enemy* target);
-
-    XMVECTOR MoveVectorControl(const RayCastData& data, const XMVECTOR& vec);
     //開放
     void Release() override;
 

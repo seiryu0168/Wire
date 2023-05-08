@@ -67,6 +67,7 @@ public:
     void Shot(bool isShot);
     //•`‰æ
     void Draw() override;
+    float CalcRandomPosition();
 
     //‰ð•ú
     void Release() override;
