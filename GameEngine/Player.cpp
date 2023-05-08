@@ -27,17 +27,30 @@ namespace
     static const float hitdist_   =3.001f;
     static const int   MAX_LIFE   = 10;
     static const int   MAX_GODTIME = 30;
+    static const float DELTA_AIM_TIME = 0.05f;
+    //体力の定数
     static const float LIFE_OFFSET_X = -1800.0f;
     static const float LIFE_OFFSET_Y = -900.0f;
+    static const int   LIFE_INTERVAL = 105;
+    static const XMFLOAT3 LIFE_SIZE = { 0.2f,0.2f,1.0f };
+    //カメラの定数
     static const float ACCEL_AOV     = 70.0f;
     static const float NORMAL_AOV    = 45.0f;
     static const float CAMERA_DIST   = 1.5f;
+    static const float SHAKE_RATE = 1.5f;
     static const float ANGLE_MAX     = 69.0f;
     static const float ANGLE_MIN     = -89.0f;
-    static const float SHAKE_RATE = 1.5f;
+    static const float CAMERA_ROTATESPEED_NORMAL = 4.0f;
+
+    static const float MAX_VELOCITY = 2.0f;
+    static const float DELTA_FLY_TIME = 0.01f;
+    static const float LOW_SPEED = 0.3f;
     static const float ASSISTLIMIT = 100.0f;
     static const float RAY_OFFSET = 2.0f;
     static const float LOW_LIMIT = -100.0f;
+
+    static const XMFLOAT4 LINECOLOR_RED = { 1,0,0,1 };
+    static const XMFLOAT4 LINECOLOR_DEFAULT = { 1,1,1,1 };
     static const XMFLOAT3 AREA_LIMIT = XMFLOAT3(250.0f,250.0f, 250.0f);
 }
 
@@ -52,13 +65,13 @@ Player::Player(GameObject* parent)
     hAudio_(-1),
     hAudioShoot_(-1),
     stageNum_(-1),
-    prevPositionVec(XMVectorSet(0,0,0,0)),
+    prevPositionVec(XMVectorZero()),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
-    vPlayerPos_(XMVectorSet(0, 0, 0, 0)),
+    vPlayerPos_(XMVectorZero()),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
     vBaseAim_(XMVectorSet(3, 2, -4, 0)),
-    vFlyMove_(XMVectorSet(0,0,0,0)),
-    vPlayerMove_(XMVectorSet(0,0,0,0)),
+    vFlyMove_(XMVectorZero()),
+    vPlayerMove_(XMVectorZero()),
     cameraShake_(XMVectorZero()),
     matCamX_(XMMatrixIdentity()),
     matCamY_(XMMatrixIdentity()),
@@ -159,8 +172,8 @@ void Player::Initialize()
     for (int i = 0; i < MAX_LIFE; i++)
     {
         int hPict_ = ImageManager::Load("Assets\\LifeImage.png");
-        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+105*i, LIFE_OFFSET_Y, 0 });
-        ImageManager::SetImageSize(hPict_, { 0.2f,0.2f,1.0f });
+        ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+ LIFE_INTERVAL *i, LIFE_OFFSET_Y, 0 });
+        ImageManager::SetImageSize(hPict_, LIFE_SIZE);
 
         life_.push_back(hPict_);
     }
@@ -174,7 +187,7 @@ void Player::Update()
     {
         cameraShake_ = XMVectorSet((float)(rand() % 10)/10, (float)(rand() % 10) / 10, 0, 0)*SHAKE_RATE;
         godTime_--;
-        godTime_ = max(0, godTime_);
+        godTime_ = max(godTime_,0);
     }
     if(godTime_==0)
     {
@@ -183,9 +196,9 @@ void Player::Update()
     }
 
     //回転速度やらポジションの取得やらの処理
-    rotateSpeed_ = 4.0f;
+    rotateSpeed_ = CAMERA_ROTATESPEED_NORMAL;
     vPlayerPos_   = XMLoadFloat3(&transform_.position_);
-    XMVECTOR vFly = XMVectorSet(0, 0, 0, 0);
+    XMVECTOR vFly = XMVectorZero();
 
     pPointer_->SetDraw(false);
     RayCastData ray;
@@ -211,8 +224,7 @@ void Player::Update()
             groundFlag_ = false;
             airFlag_ = false;
             flyFlag_ = true;
-            flyTime_ = 1;
-            transform_.position_.y += 0.2f;
+            //flyTime_ = 1;
             velocity_ = 0;
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
             Audio::Play(hAudioShoot_);
@@ -243,9 +255,9 @@ void Player::Update()
         airFlag_ = true;
         groundFlag_ = false;
         //垂直方向の速度変更
-        velocity_ = 2;
-        vFlyMove_ *= 0.3f;
-        transform_.position_.y += 0.2f;
+        velocity_ = MAX_VELOCITY;
+        vFlyMove_ *= LOW_SPEED;
+        //transform_.position_.y += 0.2f;
     }
 
     //左スティックの入力値を入れる変数
@@ -260,19 +272,8 @@ void Player::Update()
     {
         moveX = Input::GetLStick_X();
         moveZ = Input::GetLStick_Y();
-        if (Input::IsKey(DIK_W))
-        {
-            moveZ = 1;
-        }
 
-        //空中にいて、ジャンプしてない状態の時移動を制限する
-        if (airFlag_ == true && jumpFlag_ == false&& groundFlag_==false)
-        {
-            moveX *= 0.3f;
-            moveZ *= 0.3f;
-        }
-
-        //地面についてる時落ちる
+        //地面についてない時重力が働く
         if (groundFlag_ != true)
         {
             velocity_ += gravity_;
@@ -283,28 +284,17 @@ void Player::Update()
     //L,Rスティックで移動
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
     
-    //スティックが傾いてれば徐々に加速し、傾いてなければ徐々に減速
-    if (abs(moveX) > 0 || abs(moveZ)>0)
-    {
-        moveTime_ += 0.1f;
-        moveTime_=min(moveTime_, 1);
-    }
-    else
-    {
-        moveTime_ -= 0.05f;
-        moveTime_=max(moveTime_, 0);
-    }
-
     //ワイヤーで飛んでいれば徐々に加速し、飛んでなければ徐々に減速
-    if (flyFlag_)
+   
+    if(flyFlag_==false)
     {
-        flyTime_ += 0.01f;
-        flyTime_=min(flyTime_, 1);
+        flyTime_ -= DELTA_FLY_TIME;
+        flyTime_=max(flyTime_, 0);
     }
     else
     {
-        flyTime_ -= 0.01f;
-        flyTime_=max(flyTime_, 0);
+        flyTime_ += DELTA_FLY_TIME*10;
+        flyTime_ = min(flyTime_, 1);
     }
     
     //行列で移動のベクトルをカメラの向きに変形
@@ -312,11 +302,10 @@ void Player::Update()
 
     //移動
     vPlayerMove_  = vMove;
-    velocity_     = max(velocity_, -2);
-    vPlayerMove_ += XMVectorLerp(XMVectorSet(0, 0, 0, 0), vFlyMove_, Easing::EaseOutQuad(flyTime_));
+    velocity_     = max(velocity_, -MAX_VELOCITY);
+    vPlayerMove_ += XMVectorLerp(XMVectorZero(), vFlyMove_, Easing::EaseOutQuad(flyTime_));
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
-    //XMStoreFloat3(&transform_.position_, vPlayerPos_+vPlayerMove_);
     CameraMove(ray);
     transform_.rotate_.y = angleY_;
 }
@@ -336,10 +325,10 @@ void Player::SecondDraw()
     {
         if (lockOn_)
         {
-            pPointerLine_->SetColor({ 1,0,0,1 });
+            pPointerLine_->SetColor(LINECOLOR_RED);
         }
         else
-            pPointerLine_->SetColor({ 1,1,1,1 });
+            pPointerLine_->SetColor(LINECOLOR_DEFAULT);
         pPointerLine_->Draw(&transform_);
     }
 }
@@ -348,7 +337,6 @@ void Player::SecondDraw()
 void Player::Release()
 {
     SAFE_DELETE(wire_);
-    //SAFE_DELETE(pPointer_);
     SAFE_RELEASE(pPointerLine_);
 }
 
@@ -358,12 +346,12 @@ void Player::CameraMove(RayCastData ray)
     //照準を定めている時
     if (aimFlag_ == true)
     {
-        aimTime_ += 0.05f;
+        aimTime_ += DELTA_AIM_TIME;
         aimTime_ = (float)min(aimTime_, 1.0f);
     }
     else
     {
-        aimTime_ += -0.07f;
+        aimTime_ += -DELTA_AIM_TIME;
         aimTime_ = (float)max(aimTime_, 0.5f);
     }
 
@@ -371,13 +359,13 @@ void Player::CameraMove(RayCastData ray)
     if (flyFlag_ == true)
     {
         aimFlag_ = false;
-        aimTime_ += -0.08f;
+        aimTime_ += -DELTA_AIM_TIME;
         aimTime_ = (float)max(aimTime_, 0);
     }
 
-    //カメラの回転角
-    float cameraRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
-    Camera::SetAOV((float)(M_PI / 180.0f) *cameraRate );
+    //カメラの画角
+    float AOVRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
+    Camera::SetAOV(XMConvertToRadians(AOVRate));
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
     
@@ -388,18 +376,18 @@ void Player::CameraMove(RayCastData ray)
     XMVECTOR vNormalCam;
     XMVECTOR vAimCam;
 
-    if (angleX_ <= -90)
+    if (angleX_ <= ANGLE_MIN)
     {
         angleX_ = ANGLE_MIN;
     }
-    if (angleX_ >= 70)
+    if (angleX_ >= ANGLE_MAX)
     {
         angleX_ = ANGLE_MAX;
     }
 
     //回転行列作成
-    matCamY_   = XMMatrixRotationX(angleX_ * (float)(M_PI / 180.0f));
-    matCamX_   = XMMatrixRotationY(angleY_ * (float)(M_PI / 180.0f));
+    matCamY_   = XMMatrixRotationX(XMConvertToRadians(angleX_));
+    matCamX_   = XMMatrixRotationY(XMConvertToRadians(angleY_));
     
     //カメラの基準となる位置ベクトル
     vNormalCam = vCamPos_*  matCamY_ * matCamX_* CAMERA_DIST;
@@ -519,9 +507,9 @@ void Player::CharactorControll(XMVECTOR &moveVector)
         transform_.position_.x = AREA_LIMIT.x;
     }
 
-    if (transform_.position_.y <= -AREA_LIMIT.y)
+    if (transform_.position_.y <= LOW_LIMIT)
     {
-        transform_.position_.y = LOW_LIMIT;
+        transform_.position_.y = 0;
     }
     if (transform_.position_.y >= AREA_LIMIT.y)
     {
@@ -555,17 +543,17 @@ void Player::CharactorControll(XMVECTOR &moveVector)
             {
                 flyFlag_ = false;
             }
-            //SetStatus(ATC_DEFAULT);
         }   
         else if(DRay.dist<d)
         {
             moveY = RAY_OFFSET - DRay.dist;
             flyFlag_ = false;
         }
-
-        groundFlag_ =true;
+        if(!jumpFlag_)
         airFlag_ = false;
-        //moveY = 0
+        
+        jumpFlag_ = false;
+        groundFlag_ =true;
     }
     else
     {

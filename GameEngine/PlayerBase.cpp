@@ -3,6 +3,10 @@
 #include"Engine/ResourceManager/Audio.h"
 #include"Engine/DirectX_11/Particle.h"
 #include"Player.h"
+namespace
+{
+    static const float IS_MOVE = 0.2f;
+}
 PlayerBase::PlayerBase(GameObject* parent)
     :GameObject(parent, "PlayerBase"),
     hModel_(-1),
@@ -38,7 +42,7 @@ void PlayerBase::Update()
     bool f = ((Player*)GetParent())->IsFly();
     bool j = ((Player*)GetParent())->IsJump();
     bool a = ((Player*)GetParent())->IsAir();
-    if (((Player*)GetParent())->IsGround() && VectorLength(moveVec_) >= 0.2f)
+    if (((Player*)GetParent())->IsGround() && VectorLength(moveVec_) >= IS_MOVE)
     {
     Spark();
     Audio::Play(hAudio_);
@@ -83,6 +87,4 @@ void PlayerBase::Spark()
         data.deltaColor = XMFLOAT4(0, 0, 0, -0.08f);
         pParticle_->ParticleStart(data);
     }
-
-
 }
