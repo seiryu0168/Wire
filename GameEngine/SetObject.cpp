@@ -222,7 +222,6 @@ void SetObject::ObjectSet()
 	auto itr = pScene_->GetChildList()->begin();
 	for (int i = 0; i < objectDataList_.size(); i++)
 	{
-
 		(*itr)->SetPosition(objectDataList_[i].objectTransform.position_);
 		itr++;
 		if (itr == pScene_->GetChildList()->end())

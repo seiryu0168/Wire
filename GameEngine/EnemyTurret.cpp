@@ -12,8 +12,11 @@ namespace
 	static const int SHOT_COUNT = 10;
 	static const int RELOAD = 90;
 	static const float MAX_TO_PLAYERDIST = 70.0f;
+	static const float COLLISION_SIZE = 3.0f;
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
+	static const float INIT_POS_Y = 2.0f;
+	static const float INIT_OFFSET = 999.0f;
 	static const int MAX_RANDOM = 500;
 }
 void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
@@ -52,13 +55,14 @@ void EnemyTurret::Initialize()
 	SetPlayerPointer((Player*)FindObject("Player"));
 	
 	//当たり判定設定
-	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0),3);
+	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0, 0, 0), COLLISION_SIZE);
 	AddCollider(pCollider);
 	
 	//モデル読み込み
 	hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
 	assert(hModel_ >= 0);
-	////モデルセット
+
+	//モデルセット
 	SethModel(hModel_);
 	ModelManager::SetModelNum(hModel_);
 	
@@ -68,9 +72,9 @@ void EnemyTurret::Initialize()
 	
 	//初期位置設定
 	XMFLOAT3 initPos = transform_.position_;
-	initPos = XMFLOAT3(CalcRandomPosition(), 0, CalcRandomPosition());
+	//initPos = XMFLOAT3(CalcRandomPosition(MAX_RANDOM), 0, CalcRandomPosition(MAX_RANDOM));
 	AdjustStartPos(initPos);
-	initPos.y = 999.0f;
+	initPos.y = INIT_OFFSET;
 	//レイキャストで地面を特定
 	RayCastData ray;
 	ray.start = initPos;
@@ -78,7 +82,7 @@ void EnemyTurret::Initialize()
 	ModelManager::RayCast(stageModelHandle,ray);
 	if (ray.hit)
 	{
-		initPos.y = (999 - ray.dist)+2.0f;
+		initPos.y = (INIT_OFFSET - ray.dist)+INIT_POS_Y;
 	}
 	transform_.position_ = initPos;
 	//捜索ステートに設定
@@ -135,10 +139,9 @@ void EnemyTurret::Draw()
 		ModelManager::Draw(hModel_);
 }
 
-float EnemyTurret::CalcRandomPosition()
+float EnemyTurret::CalcRandomPosition(int radius)
 {
-	
-	return ((rand() % (MAX_RANDOM * 2)) - MAX_RANDOM) / 10.0f;
+	return ((rand() % (radius * 2)) - radius) / 10.0f;
 }
 
 void EnemyTurret::Release()

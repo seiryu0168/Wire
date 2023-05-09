@@ -40,7 +40,7 @@ void EnemyNormal::Initialize()
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
 
-	XMFLOAT3 startPos = XMFLOAT3((float)((std::rand() % 3000) - 1500) / 10.0f, 0, (float)((std::rand() % 3000) - 1500) / 10.0f);
+	XMFLOAT3 startPos = transform_.position_;// XMFLOAT3((float)((std::rand() % 3000) - 1500) / 10.0f, 0, (float)((std::rand() % 3000) - 1500) / 10.0f);
 	
 	AdjustStartPos(startPos);
 	startPos.y = 999.0f;

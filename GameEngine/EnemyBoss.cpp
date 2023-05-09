@@ -9,6 +9,10 @@ namespace
 {
 	static const float RANGE_NEAR = 75.0f;
 	static const float RANGE_FAR = 125.0f;
+	static const int SECOND_MODE_LIFE = 3;
+	static const float SEARCH_ANGLE = 360.0f;
+	static const float SEARCH_RANGE = 200.0f;
+	static const XMFLOAT3 COLLISION_SIZE = { 5, 10, 5 };
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
 }
@@ -36,7 +40,7 @@ void EnemyBoss::Initialize()
 	//プレイヤーのポインター取得
 	SetPlayerPointer((Player*)FindObject("Player"));
 	//当たり判定設定
-	BoxCollider* pCollider = new BoxCollider({0,0,0}, XMFLOAT3(5, 10, 5));
+	BoxCollider* pCollider = new BoxCollider({0,0,0}, COLLISION_SIZE);
 	AddCollider(pCollider);
 	
 	//コアのモデル読み込み
@@ -50,8 +54,8 @@ void EnemyBoss::Initialize()
 	ModelManager::SetModelNum(hModelShield_);
 	
 	//視覚の設定
-	sight.SetAngle((float)(M_PI*1.5f));
-	sight.SetRange(200);
+	sight.SetAngle(XMConvertToRadians(SEARCH_RANGE));
+	sight.SetRange(SEARCH_RANGE);
 	
 	//HP設定
 	SetLife(5);
@@ -198,7 +202,7 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 				SetIsList(false);
 				KillMe();
 			}
-			else if (GetLife() < 3)
+			else if (GetLife() < SECOND_MODE_LIFE)
 			{
 				ChangeState(StateSecondMode::GetInstance());
 				//GetComponent<ModelComponent>(1)->SetActive(false);

@@ -161,6 +161,5 @@ public:
     bool IsGround(){return groundFlag_;}
 
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
-
 };
 

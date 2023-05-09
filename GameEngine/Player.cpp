@@ -41,7 +41,10 @@ namespace
     static const float ANGLE_MAX     = 69.0f;
     static const float ANGLE_MIN     = -89.0f;
     static const float CAMERA_ROTATESPEED_NORMAL = 4.0f;
+    static const float LOW_CAMERA_ROTATE_SPEED = 0.55f;
 
+    static const float AIM_ASSIST_ANGLE = XMConvertToRadians(30.0f);
+    static const float ATTACK_SPEED = 1.8f;
     static const float MAX_VELOCITY = 2.0f;
     static const float DELTA_FLY_TIME = 0.01f;
     static const float LOW_SPEED = 0.3f;
@@ -559,14 +562,15 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     {
         groundFlag_ = false;
     }
-        transform_.position_.y += moveY;
-        float speed = VectorLength(XMLoadFloat3(&transform_.position_) - prevPositionVec);
-        if (speed >= 1.8f)
-        {
-            SetStatus(ATC_ATTACK);
-        }
-        else
-            SetStatus(ATC_DEFAULT);
+    transform_.position_.y += moveY;
+
+    float speed = VectorLength(XMLoadFloat3(&transform_.position_) - prevPositionVec);
+    if (speed >= ATTACK_SPEED)
+    {
+        SetStatus(ATC_ATTACK);
+    }
+    else
+        SetStatus(ATC_DEFAULT);
 
         
         prevPositionVec = XMLoadFloat3(&transform_.position_);
@@ -754,10 +758,7 @@ void Player::Aim(RayCastData* ray)
     //当たった位置にマーカー表示
     if (ray->hit && !flyFlag_)
     {
-        rotateSpeed_ = 2.0f;
-        XMFLOAT3 pointerPos;
-        XMStoreFloat3(&pointerPos, ray->hitPos);
-        pPointer_->SetPosition(pointerPos);
+        pPointer_->SetPosition(StoreFloat3(ray->hitPos));
         pPointer_->SetDraw(ray->hit);
         
         pPointerLine_->AddPosition(bonePos);
@@ -787,9 +788,10 @@ void Player::CheckTargetList()
 
 XMVECTOR Player::MoveVectorControl(const RayCastData& data, const XMVECTOR& vec)
 {
+    //進行方向のベクトル+進行方向のベクトルと法線ベクトルの内積*法線ベクトル
     XMVECTOR rubVec = vec + VectorDot(-vec, data.normal)* data.normal;
     XMVECTOR back = (XMLoadFloat3(&data.start) + (XMLoadFloat3(&data.dir) * 2)) - data.hitPos;
-    XMStoreFloat3(&transform_.position_, vPlayerPos_ + (-back));
+    XMStoreFloat3(&transform_.position_, vPlayerPos_ + -back);
     return rubVec;
 }
 
@@ -809,9 +811,9 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
         float angle = acosf(VectorDot(dirVec, targetVec));
 
         //angle(ラジアン)が±0.4の時カメラの回転速度を遅くする
-        if (angle > -0.4f && angle < 0.4f)
+        if (angle > -AIM_ASSIST_ANGLE && angle < AIM_ASSIST_ANGLE)
         {
-            rotateSpeed_ = rotateSpeed_ * angle + 0.55f;
+            rotateSpeed_ = rotateSpeed_ * angle + LOW_CAMERA_ROTATE_SPEED;
         }
 
         //angle(ラジアン)がlockOnAngleLimit_以内だったらロックオン
