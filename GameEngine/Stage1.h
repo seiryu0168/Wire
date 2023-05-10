@@ -1,10 +1,12 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
+#include<vector>
 class Stage1 : public GameObject
 {
 private:
     int hModel_;
-
+    int stageNum_;
+    std::vector<std::string> stageName_;
 public:
     //コンストラクタ
     Stage1(GameObject* parent);
@@ -24,6 +26,8 @@ public:
 
     //開放
     void Release() override;
+
+    void LoadStageData();
 
     int GetModelHandle() { return hModel_; }
 };

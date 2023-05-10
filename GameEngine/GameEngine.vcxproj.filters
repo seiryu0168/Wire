@@ -470,6 +470,9 @@
     <ClInclude Include="Engine\Collider\PolygonCollider.h">
       <Filter>ソース ファイル\Engine\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManager\json.hpp">
+      <Filter>ソース ファイル\Engine\ResourceManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Simple3D.hlsl" />

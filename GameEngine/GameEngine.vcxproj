@@ -260,6 +260,7 @@
     <ClInclude Include="Engine\GameObject\Transform.h" />
     <ClInclude Include="Engine\ResourceManager\Audio.h" />
     <ClInclude Include="Engine\ResourceManager\ImageManager.h" />
+    <ClInclude Include="Engine\ResourceManager\json.hpp" />
     <ClInclude Include="Engine\ResourceManager\Model.h" />
     <ClInclude Include="Engine\ResourceManager\Text.h" />
     <ClInclude Include="Engine\ResourceManager\TextureManager.h" />

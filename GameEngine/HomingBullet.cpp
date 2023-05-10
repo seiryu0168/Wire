@@ -17,8 +17,8 @@ HomingBullet::HomingBullet(GameObject* parent)
 	hAudio_(-1),
 	life_(320),
 	period_(180),
-	position_(XMVectorSet(0, 0, 0, 0)),
-	velocity_(XMVectorSet(0, 0, 0, 0)),
+	position_(XMVectorZero()),
+	velocity_(XMVectorZero()),
 	pPlayer_(nullptr),
 	pBill_(nullptr),
 	pParticle_(nullptr)

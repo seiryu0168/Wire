@@ -77,7 +77,7 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 	float angle = VectorDot(base, fVec);
 	angle = acosf(Clamp(angle,-1, 1));
 	//buff.y‚ª•‰‚Ì’l‚¾‚Á‚½‚ç
-	if (IsNegative(buff.y))
+	if (signbit(buff.y))
 	{
 		angle *= -1;
 	}

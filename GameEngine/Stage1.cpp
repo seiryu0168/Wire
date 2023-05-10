@@ -1,6 +1,8 @@
 #include "Stage1.h"
 #include"Engine/ResourceManager/Model.h"
 #include"ModelComponent.h"
+#include"Engine/ResourceManager/json.hpp"
+using json = nlohmann::json;
 //コンストラクタ
 Stage1::Stage1(GameObject* parent)
 	:GameObject(parent,"Stage1"),
@@ -47,5 +49,18 @@ void Stage1::Draw()
 //開放
 void Stage1::Release()
 {
+
+}
+
+void Stage1::LoadStageData()
+{
+	json j;
+	j["stage1"] = "stage1.fbx";
+	std::string jstr = R"({"position":[{1,23,1.0f},{0,0,0},{1.0,1.0,1.0}]})";
+
+	j["transform"] = json::parse(jstr);
+
+
+
 
 }
