@@ -12,6 +12,7 @@ namespace
 	static const int SECOND_MODE_LIFE = 3;
 	static const float SEARCH_ANGLE = 360.0f;
 	static const float SEARCH_RANGE = 200.0f;
+	static const int LIFE = 5;
 	static const XMFLOAT3 COLLISION_SIZE = { 5, 10, 5 };
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
@@ -58,7 +59,7 @@ void EnemyBoss::Initialize()
 	sight.SetRange(SEARCH_RANGE);
 	
 	//HP設定
-	SetLife(5);
+	SetLife(LIFE);
 	//位置設定
 	transform_.position_ = { 110,10,110 };
 	
@@ -91,7 +92,7 @@ void EnemyBoss::Draw()
 	else
 		ModelManager::Draw(hModelCore_);
 	//HPが3以上ならシールドを表示
-	if (GetLife() >= 3)
+	if (GetLife() >= SECOND_MODE_LIFE)
 	{
 		//上と同じ
 			ModelManager::SetTransform(hModelShield_, transform_);

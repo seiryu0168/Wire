@@ -53,10 +53,7 @@ public:
     void TurnToPlayer(XMVECTOR vToPlayer);
     bool IsLockOned( Enemy* enemy);
 
-    
-   // void ChangeState(EnemyState* state);                                         //エネミーの状態変更
-    //void SetviewRange(float range) { enemyParameter_.viewRange = range; }        //見える距離設定
-    //void SetviewAngle(float angle) { enemyParameter_.viewAngle = angle; }        //視角設定
+    //視角設定
     void LoadModel(std::string fileName);                                          //モデルのロード
     void SetToPlayerVec(XMVECTOR vec) { enemyParameter_.toPlayerVec = vec; }     //プレイヤーに向かうベクトルの設定
     void SetPositionVec(XMVECTOR vec) { enemyParameter_.vPosition = vec; }       //ポジションベクトルの設定
@@ -70,8 +67,6 @@ public:
     void SetIsList(bool isList) { enemyParameter_.isTargetList = isList; }       //プレイヤーの認識リストに入ってるかどうかを設定
     void SethModel(int modelHandle) { enemyParameter_.hModel_ = modelHandle; }
 
-    //float    GetViewAngle() { return enemyParameter_.viewAngle; }       //見える距離取得
-    //float    GetViewRange() { return enemyParameter_.viewRange; }       //視角取得
     XMMATRIX GetMatrixX() { return enemyParameter_.matX; }              //X軸回転行列取得
     XMMATRIX GetMatrixY() { return enemyParameter_.matY; }              //Y軸回転行列取得
     XMVECTOR GetToPlayerVec() { return enemyParameter_.toPlayerVec; }   //プレイヤーに向かうベクトル取得

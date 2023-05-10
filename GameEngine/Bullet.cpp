@@ -4,6 +4,10 @@
 #include"Engine/Collider/SphereCollider.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/GameObject/Camera.h"
+namespace
+{
+	static const float COLLISION_SIZE = 0.3f;
+}
 //コンストラクタ
 Bullet::Bullet(GameObject* parent)
 	:GameObject(parent,"Bullet"),
@@ -27,9 +31,12 @@ Bullet::~Bullet()
 //初期化
 void Bullet::Initialize()
 {
+	//タグ設定
 	SetTag("EnemyBullet");
-	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0), 0.3f);
+	//当たり判定設定
+	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0), COLLISION_SIZE);
 	AddCollider(pCollision);
+	//ビルボード
 	pBill_ = new BillBoard();
 	if (pParent_ != nullptr)
 	{
@@ -37,6 +44,7 @@ void Bullet::Initialize()
 	}
 	else
 		KillMe();
+	//衝突音
 	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
 	assert(hAudio_ >= 0);
 

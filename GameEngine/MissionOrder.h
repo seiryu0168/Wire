@@ -9,6 +9,7 @@ private:
 	std::string count_;
 	int hPict_;
 	float ratio_;
+	float alpha_;
 	int EnemyMax_;
 	int EnemyCount_;
 	ObjectSetter* pSetter_;
@@ -18,6 +19,7 @@ public:
 	~MissionOrder();
 	void Update();
 	void Draw();
+	void EraseText();
 	void Release();
 };
 

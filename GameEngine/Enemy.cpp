@@ -1,12 +1,16 @@
 #include "Enemy.h"
 #include"Engine/ResourceManager/Model.h"
+namespace
+{
+	static const XMVECTOR UPVEC= XMVectorSet(0, 0, 1, 0);
+}
 //コンストラクタ
 Enemy::Enemy(GameObject* parent, std::string name)
 	:GameObject(parent, name)
 {
 	
 	enemyParameter_.life = 3;
-	enemyParameter_.toPlayerVec = XMVectorSet(0, 0, 0, 0);
+	enemyParameter_.toPlayerVec = XMVectorZero();
 	enemyParameter_.frontVec = XMVectorSet(0, 0, 1, 0);
 	enemyParameter_.upVec = XMVectorSet(0, 1, 0, 0);
 	enemyParameter_.matX = XMMatrixIdentity();
@@ -33,7 +37,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);					//正規化
 
 	//内積を求めて角度計算(1以上にならないようmin関数つけた)
-	float angle = acosf(min(VectorDot(GetFrontVec(), toPlayer), 1));
+	float angle = acosf(Clamp(VectorDot(GetFrontVec(), toPlayer),-1, 1));
 	if (toPlayerRange <= 2 * range)
 	{
 		enemyParameter_.pPlayer->AddTargetList(this);
@@ -59,27 +63,31 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 	XMFLOAT3 buff(0, 0, 0);
 	XMStoreFloat3(&buff, vToPlayer);
 	buff.y = 0;
+	
+	//向きベクトルを再設定
 	vToPlayer=XMLoadFloat3(&buff);
-	XMVECTOR base = XMVectorSet(0, 0, 1, 0);
-	XMVECTOR fVec = XMVectorSet(0, 0, 0, 0);
-	XMStoreFloat3(&buff, GetFrontVec());
-	buff.y = 0;
-	fVec = XMLoadFloat3(&buff);
-	float angle = XMVectorGetX(XMVector3Dot(base, fVec));
+	
+	//外積出すためのベクトルを作る
+	XMVECTOR base = UPVEC;
+	XMVECTOR fVec = XMVectorZero();
+	fVec = GetFrontVec();
+	
 	XMStoreFloat3(&buff, XMVector3Cross(base, fVec));
 	
-	angle = acosf(min(angle, 1));
-	if (buff.y < 0)
+	float angle = VectorDot(base, fVec);
+	angle = acosf(Clamp(angle,-1, 1));
+	//buff.yが負の値だったら
+	if (IsNegative(buff.y))
 	{
-		angle+=M_PI*2;
 		angle *= -1;
 	}
-	enemyParameter_.frontVec = vToPlayer;
-	transform_.rotate_.y = (180.0f/M_PI)*angle;
+	SetFrontVec(vToPlayer);
+	transform_.rotate_.y = XMConvertToDegrees(angle);
 }
 
 bool Enemy::IsLockOned(Enemy* enemy)
 {
+	//プレイヤーがターゲットを捕捉していなかったら
 	if (GetPlayerPointer()->GetTargetEnemyNum() == -1)
 		return false;
 	else if (GetPlayerPointer()->GetTargetEnemyNum() == enemy->GetObjectID())

@@ -10,15 +10,6 @@ MissionUI::~MissionUI()
 {
 }
 
-//void MissionUI::Update()
-//{
-//	
-//}
-
-//void MissionUI::Draw()
-//{
-//}
-
 void MissionUI::Release()
 {
 }

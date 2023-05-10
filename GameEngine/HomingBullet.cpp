@@ -6,7 +6,10 @@
 #include"Engine/Collider/SphereCollider.h"
 namespace
 {
-	static const float frame = 60.0f;	
+	static const float frame = 60.0f;
+	static const float SPEED = 1.1f;
+	static const int HOMING_TIME = 60;
+	static const XMVECTOR FIRST_SPEED= XMVectorSet(0, 2, 0, 0);
 }
 HomingBullet::HomingBullet(GameObject* parent)
 	:GameObject(parent, "HomingBullet"),
@@ -30,7 +33,7 @@ void HomingBullet::Initialize()
 {
 	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0),0.3f);
 	AddCollider(pCollision);
-
+	//Õ“Ë‰¹
 	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
 	assert(hAudio_ >= 0);
 	SetTag("EnemyBullet");
@@ -40,7 +43,7 @@ void HomingBullet::Initialize()
 	pParent_ = FindObject("PlayScene");
 	pPlayer_ = (Player*)FindObject("Player");
 	position_ = XMLoadFloat3(&transform_.position_);
-	velocity_ = XMVectorSet(0, 2, 0, 0);
+	velocity_ = FIRST_SPEED;
 }
 
 void HomingBullet::Update()
@@ -64,22 +67,22 @@ void HomingBullet::Homing()
 		KillMe();
 	}
 
-	XMVECTOR acceleration = XMVectorSet(0, 0, 0, 0);
+	XMVECTOR acceleration = XMVectorZero();
 	XMFLOAT3 targetPos = pPlayer_->GetPosition();
 	XMVECTOR diff = XMLoadFloat3(&targetPos) - position_;
 	acceleration += ((diff - velocity_ * (period_ / frame)) * 2.0f) / (((float)period_ / frame) * ((float)period_ / frame));
 	period_--;
-	if (period_ > 60)
+	if (period_ > HOMING_TIME)
 	{
 		
-		float a = XMVectorGetX(XMVector3Normalize(acceleration));
-		if (std::abs(a) > 0.8f)
-		{
-			acceleration = XMVector3Normalize(acceleration) * 0.8f;
-		}
-		velocity_ += acceleration * 0.08f;
+		//float a = XMVectorGetX(XMVector3Normalize(acceleration));
+		//if (std::abs(a) > 0.8f)
+		//{
+		//	acceleration = XMVector3Normalize(acceleration) * 0.8f;
+		//}
+		velocity_ += acceleration;
 	}
-	position_ += velocity_ * 0.08f;
+	position_ += XMVector3Normalize(velocity_) *SPEED;
 	XMStoreFloat3(&transform_.position_, position_);
 }
 

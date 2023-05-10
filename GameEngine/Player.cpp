@@ -117,11 +117,6 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
-    //ModelComponent* mComp = new ModelComponent("Assets\\TestBall.fbx",this);
-    //ModelComponent* playerComp = new ModelComponent("Assets\\WireShooter_Maya.fbx",this);
-    //AddComponent(mComp);
-    //AddComponent(playerComp);
-
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得

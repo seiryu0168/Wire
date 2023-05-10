@@ -8,6 +8,7 @@ namespace
 	static const int INTERVAL = 10;
 	static const int MAX_BUTTON = 2;
 	static const int DELAY = 90;
+	static const XMFLOAT2 BUTTON_FRAME_POS = { 800.0f,-500.0f };
 }
 
 TitleUI::TitleUI(GameObject* parent)
@@ -69,9 +70,8 @@ void TitleUI::Update()
 	{
 	case 0:
 		//プレイボタン
-		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1.9f, 1.9f, 1.9f, 1.0f));
 
-		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-800, -500, 0));
+		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-BUTTON_FRAME_POS.x, BUTTON_FRAME_POS.y, 0));
 		ImageManager::SetAlpha(hPictTutorial2_, 0);
 
 		ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1, 1, 1, 1));
@@ -84,10 +84,7 @@ void TitleUI::Update()
 		break;
 	case 1:
 		//チュートリアルボタン
-		//ImageManager::SetImageSize(hPictTutorial_, XMFLOAT3(1.2f, 1.2f, 1.2f));
-		ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1.9f, 1.9f, 1.9f, 1.0f));
-
-		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(800, -500, 0));
+		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(BUTTON_FRAME_POS.x,BUTTON_FRAME_POS.y, 0));
 		
 		ImageManager::SetAlpha(hPictTutorial2_, 1);
 		ImageManager::SetAlpha(hPictPlay2_, 0);

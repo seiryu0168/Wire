@@ -32,23 +32,32 @@ EnemyNormal::~EnemyNormal()
 //初期化
 void EnemyNormal::Initialize()
 {
+	//タグ設定
 	SetTag("Enemy");
+	//プレイヤーのポインタ設定
 	SetPlayerPointer((Player*)FindObject("Player"));
+	//モデルロード
 	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
 	SethModel(hModel_);
+	//当たり判定設定
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);
 	AddCollider(pCollider);
 	ModelManager::SetModelNum(hModel_);
 
-	XMFLOAT3 startPos = transform_.position_;// XMFLOAT3((float)((std::rand() % 3000) - 1500) / 10.0f, 0, (float)((std::rand() % 3000) - 1500) / 10.0f);
-	
+	XMFLOAT3 startPos = transform_.position_;
+	//初期位置調整
 	AdjustStartPos(startPos);
-	startPos.y = 999.0f;
 	RayCastData ray;
+
+	//レイの発射位置設定
+	startPos.y = 999.0f;
 	ray.start = startPos;
+	//レイの方向設定
 	ray.dir = XMFLOAT3(0, -1, 0);
 	int stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
 	ModelManager::RayCast(stageModelHandle,ray);
+	
+	//当たった位置から10上に配置
 	transform_.position_ = StoreFloat3(ray.hitPos);
 	transform_.position_.y += 10;
 	ChangeState(StateSearch::GetInstance());

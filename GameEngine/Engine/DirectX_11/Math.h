@@ -43,6 +43,24 @@ inline float Clamp(const float& in, const float& low, const float& high)
 	float out = std::min<float>(std::max<float>(in, low), high);
 	return out;
 }
+template<typename T>
+inline bool IsPositive(const T& in)
+{
+	if (in > 0)
+	{
+		return true;
+	}
+	return false;
+}
+template<typename T>
+inline bool IsNegative(const T& in)
+{
+	if (in < 0)
+	{
+		return true;
+	}
+	return false;
+}
 //----------------------------------------------------------------------------------------
 inline XMVECTOR operator*=(XMVECTOR& f1, const XMMATRIX& m1)
 {
