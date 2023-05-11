@@ -1,8 +1,8 @@
 #pragma once
 #include"Engine/ResourceManager/json.hpp"
-using json = nlohmann::json;
 class StageManager
 {
+	using json = nlohmann::json;
 private:
 	std::vector<std::string> stageName_;
 public:

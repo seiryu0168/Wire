@@ -1,6 +1,5 @@
 #include "StageManager.h"
 #include<d3d11.h>
-#include<typeinfo>
 #include<fstream>
 #include<sstream>
 #include"Engine/ResourceManager/Model.h"

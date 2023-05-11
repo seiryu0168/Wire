@@ -128,9 +128,9 @@ void DebugUI::ObjectCount(GameObject* object)
 
 
 
-		bool isDraw = object->GetDrawFlag();
+		bool isDraw = object->IsDraw();
 		ImGui::Checkbox("draw",&isDraw);
-		object->IsDraw(isDraw);
+		object->SetDrawFlag(isDraw);
 		//Ä‹A‚Å©•ª‚Ìq‚Ìî•ñ‚ğ•\¦
 		for (auto itr = object->GetChildList()->begin(); itr != object->GetChildList()->end(); itr++)
 		{

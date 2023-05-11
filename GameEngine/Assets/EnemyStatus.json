@@ -1,6 +1,5 @@
 {
   "Stage1EnemyStatus": [{
-      "EnemyCount": 5,
       "EnemyNormal": [{
           "ModelName": "EnemyBall",
           "Position": [ -130, 10, 10 ],

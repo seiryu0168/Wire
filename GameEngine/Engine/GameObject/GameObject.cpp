@@ -44,17 +44,21 @@ void GameObject::UpdateSub()
 	////////“–‚½‚è”»’è///////////
 	for (auto itr = childList_.begin(); itr != childList_.end();)
 	{
-		if ((*itr)->killFlag_ == true)
+		if (activeFlag_)
 		{
-			(*itr)->BeforeDeath();
-			(*itr)->ReleaseSub();
-			delete* itr;
-			itr = childList_.erase(itr);
-		}
-		else
-		{
-			(*itr)->Collision(GetParent());
-			itr++;
+
+			if ((*itr)->killFlag_ == true)
+			{
+				(*itr)->BeforeDeath();
+				(*itr)->ReleaseSub();
+				delete* itr;
+				itr = childList_.erase(itr);
+			}
+			else
+			{
+				(*itr)->Collision(GetParent());
+				itr++;
+			}
 		}
 	}
 }
@@ -304,6 +308,12 @@ GameObject* GameObject::FindChild(std::string name)
 	}	
 	//Œ©‚Â‚©‚ç‚È‚©‚Á‚½Žž
 	return nullptr;
+}
+
+GameObject* GameObject::GetScene()
+{
+	auto itr = GetRootJob()->GetChildList()->begin();
+	return (*(*itr)->GetChildList()->begin());
 }
 
 Transform GameObject::GetTransform()

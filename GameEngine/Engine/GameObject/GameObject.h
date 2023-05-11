@@ -81,9 +81,10 @@ public:
 	}
 
 	void KillMe() { killFlag_ = true; }
-	void IsDraw(bool flag) { drawFlag_ = flag; }
-	bool GetDrawFlag() { return drawFlag_; }
-
+	bool IsActive() { return activeFlag_; }
+	bool IsDraw() { return drawFlag_; }
+	void SetDrawFlag(bool flag) { drawFlag_ = flag; }
+	
 	///////////////////////////è’ìÀä÷òAÇÃä÷êî////////////////////////
 	virtual void OnCollision(GameObject* pTarget) {};
 			void Collision(GameObject* pTarget);
@@ -132,6 +133,7 @@ public:
 	GameObject* GetRootJob();
 	GameObject* FindObject(std::string name);
 	GameObject* FindChild(std::string name);
+	GameObject* GetScene();
 	XMMATRIX    GetWorldMatrix();
 
 

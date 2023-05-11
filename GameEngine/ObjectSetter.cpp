@@ -18,6 +18,7 @@
 namespace 
 {
 	static const int DELAY = 180;
+	static const std::string FILE_NAME = "EnemyStatus.json";
 }
 ObjectSetter::ObjectSetter(GameObject* parent)
 	:GameObject(parent, "ObjectSetter"),
@@ -27,6 +28,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_(nullptr),
 	hPict_(-1)
 {
+	EManager_.Initialize(FILE_NAME);
 	set_ = new SetObject(GetParent());
 	set_->Load(GetParent()->GetObjectName()+".txt");
 	pManager_ = (SceneManager*)FindObject("SceneManager");
@@ -45,12 +47,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		InterSceneData::DeleteData("Result");
 		Instantiate<Stage1>(GetParent());
 		pPlayer_ = Instantiate<Player>(GetParent());
-		for (int i = 0; i < 3; i++)
-		{
-			enemys_.push_back(Instantiate<EnemyNormal>(GetParent()));
-		}
-
-		enemys_.push_back(Instantiate<EnemyTurret>(GetParent()));
+		EManager_.SetEnemy();
 	}
 	//親がタイトルシーンだったら
 	if (sceneName_ == "TitleScene")

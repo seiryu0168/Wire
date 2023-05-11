@@ -5,14 +5,21 @@
 class Enemy;
 class EnemyManager
 {
+	using json = nlohmann::json;
 private:
 	GameObject* pObject_;
-	std::vector<Enemy*> enemyList_;
+	json* enemyData_;
+	std::list<Enemy*> enemyList_;
 public:
 	EnemyManager();
 	~EnemyManager();
+	void Initialize(std::string fileName);
 	void SetParentObject(GameObject* obj);
-	void LoadEnemyData(std::string );
+	void Update();
 	void SetEnemy();
+	int EnemyCount() { return enemyList_.size(); }
+	bool IsAllEnemyDestroy();
+	bool IsActiveEnemyDestroy();
+	Enemy* InstantiateEnemy(std::string enemyName);
 };
 
