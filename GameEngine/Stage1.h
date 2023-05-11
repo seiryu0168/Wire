@@ -1,12 +1,12 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
-#include<vector>
+#include"StageManager.h"
 class Stage1 : public GameObject
 {
 private:
     int hModel_;
     int stageNum_;
-    std::vector<std::string> stageName_;
+    StageManager stageTable_;
 public:
     //コンストラクタ
     Stage1(GameObject* parent);
