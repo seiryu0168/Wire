@@ -115,6 +115,7 @@ public:
 
 			void SetTag(std::string tagName) { objectTag_ = tagName; }
 			void SetActive(bool status) { activeFlag_ = status; }
+			void SetStart(bool status) { startFlag_ = status; }
 			std::string GetTag() { return objectTag_; }
 
 			Transform GetTransform();

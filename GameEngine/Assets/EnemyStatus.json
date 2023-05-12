@@ -1,17 +1,19 @@
 {
-  "Stage1EnemyStatus": [{
-      "EnemyNormal": [{
-          "ModelName": "EnemyBall",
-          "Position": [ -130, 10, 10 ],
-          "Rotate": [ 0, 30, 0 ],
-          "Scale": [ 1, 1, 1 ]
-        }
-      ]
+  "InitialEnemyStatus": [{
+    "EnemyNormal": [
+      {
+        "EnemyName": "EnemyNormal",
+        "Position": [ -130, 10, 10 ],
+        "Rotate": [ 0, 30, 0 ],
+        "Scale": [ 1, 1, 1 ]
+      }
+    ]
     },
     {
-      "EnemyNormal": [{
-          "ModelName": "EnemyBall",
-        "Position": [ 50, 10.2, 40.3 ],
+      "EnemyNormal": [
+        {
+          "EnemyName": "EnemyNormal",
+          "Position": [ 50, 10.2, 40.3 ],
           "Rotate": [ 0, 60, 0 ],
           "Scale": [ 1, 1, 1 ]
         }
@@ -20,7 +22,7 @@
     {
       "EnemyNormal": [
         {
-          "ModelName": "EnemyBall",
+          "EnemyName": "EnemyNormal",
           "Position": [ 100, 10, -120 ],
           "Rotate": [ 0, 10.5, 0 ],
           "Scale": [ 1, 1, 1 ]
@@ -30,7 +32,7 @@
     {
       "EnemyTurret": [
         {
-          "ModelName": "EnemyTurret_Maya",
+          "EnemyName": "EnemyTurret",
           "Position": [ -10, 10.6, 33.12 ],
           "Rotate": [ 0, 120.4, 0 ],
           "Scale": [ 1, 1, 1 ]
@@ -40,11 +42,10 @@
     {
       "EnemyBoss": [
         {
-          "ModelName": "EnemyBossCore",
-          "ModelName2": "EnemyBossShield",
+          "EnemyName": "EnemyBoss",
           "Position": [ 110, 10, 110 ],
           "Rotate": [ 0, 0, 0 ],
-          "Scale": [1,1,1]
+          "Scale": [ 1, 1, 1 ]
         }
       ]
     }

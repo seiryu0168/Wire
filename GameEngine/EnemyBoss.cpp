@@ -29,6 +29,7 @@ EnemyBoss::EnemyBoss(GameObject* parent)
 	RELOAD(90)
 {
 	SetActive(false);
+
 }
 
 EnemyBoss::~EnemyBoss()

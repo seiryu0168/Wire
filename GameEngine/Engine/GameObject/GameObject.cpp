@@ -32,7 +32,7 @@ void GameObject::UpdateSub()
 		this->Initialize();
 		this->startFlag_ = true;
 	}
-	else
+	else if(startFlag_&&activeFlag_)
 	Update();
 
 

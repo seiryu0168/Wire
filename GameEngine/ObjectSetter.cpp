@@ -28,7 +28,6 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_(nullptr),
 	hPict_(-1)
 {
-	EManager_.Initialize(FILE_NAME);
 	set_ = new SetObject(GetParent());
 	set_->Load(GetParent()->GetObjectName()+".txt");
 	pManager_ = (SceneManager*)FindObject("SceneManager");
@@ -42,6 +41,8 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	//親がプレイシーンだったら
 	if (sceneName_ == "PlayScene")
 	{
+		EManager_.SetParentObject(GetParent());
+	EManager_.Initialize(FILE_NAME);
 
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
