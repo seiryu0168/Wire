@@ -20,6 +20,8 @@ public:
 	int EnemyCount() { return enemyList_.size(); }
 	bool IsAllEnemyDestroy();
 	bool IsActiveEnemyDestroy();
+	void BootNotActiveEnemy();
+	std::list<Enemy*>* GetEnemyList() {return &enemyList_; }
 	Enemy* InstantiateEnemy(std::string enemyName);
 };
 

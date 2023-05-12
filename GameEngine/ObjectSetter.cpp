@@ -132,15 +132,7 @@ void ObjectSetter::TitleUpdate()
 
 void ObjectSetter::PlayUpdate()
 {
-	for (auto itr = enemys_.begin(); itr != enemys_.end(); )
-	{
-		if ((*itr)->GetLife() < 0)
-		{
-			itr = enemys_.erase(itr);
-		}
-		else
-			itr++;
-	}
+	EManager_.Update();
 	//プレイヤーのライフが0になったら
 	if (pPlayer_->GetLife() <= 0)
 	{
@@ -155,14 +147,8 @@ void ObjectSetter::PlayUpdate()
 
 		
 	}
-	//エネミーが全て倒されたらボス出現
-	if (enemys_.empty() && bossSpawn_ == false)
-	{
-		enemys_.push_back(Instantiate<EnemyBoss>(GetParent()));
-		bossSpawn_ = true;
-	}
 	//ボス含めてエネミーがすべて倒されたら
-	else if (bossSpawn_ && enemys_.empty())
+	if(EManager_.IsAllEnemyDestroy())
 	{
 		if (resultFrag_ == false)
 		{
@@ -174,6 +160,11 @@ void ObjectSetter::PlayUpdate()
 		pManager_->ChangeScene(SCENE_ID::SCENE_ID_RESULT, DELAY);
 
 		//ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
+	}
+	//エネミーが全て倒されたらボス出現
+	else if (EManager_.IsActiveEnemyDestroy())
+	{
+		EManager_.BootNotActiveEnemy();
 	}
 }
 
@@ -189,7 +180,7 @@ void ObjectSetter::BlackOutUpdate()
 void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
 {
 	
-	for (auto itr = enemys_.begin(); itr != enemys_.end(); itr++)
+	for (auto itr = EManager_.GetEnemyList()->begin(); itr != EManager_.GetEnemyList()->end(); itr++)
 	{
 		if ((*itr)->GetVisibleFrag())
 		{
@@ -200,6 +191,6 @@ void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
 
 int ObjectSetter::GetEnemyCount()
 {
-	return enemys_.size();
+	return EManager_.EnemyCount();
 }
 

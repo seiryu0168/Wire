@@ -70,17 +70,20 @@ void EnemyManager::SetEnemy()
 	//jsonファイルの名前から生成するエネミーを分岐し、エネミーリストに追加
 	for (auto& elem : enemyData_[0][INITIAL_ENEMY_STATUS].items())
 	{
+		//エネミーの名前取得
 		auto enemyName = elem.value().items().begin().key();
-		//auto a2 = a.begin().key();
-		//auto b = a.items().begin().value()["EnemyName"].get<std::string>();
+		//エネミー生成
 		pEnemy = InstantiateEnemy(enemyName);
+		//座標、回転、拡縮の情報取得
 		auto jPos = elem.value()[enemyName].items().begin().value()["Position"];
 		auto jRotate= elem.value()[enemyName].items().begin().value()["Rotate"];
 		auto jScale= elem.value()[enemyName].items().begin().value()["Scale"];
-		//pEnemy->LoadModel(elem.value()["ModelName"]);
+		
+		//代入
 		position = { jPos[0],    jPos[1],	 jPos[2] };
 		rotate	 = { jRotate[0], jRotate[1], jRotate[2] };
 		scale	 = { jScale[0],	 jScale[1],	 jScale[2] };
+		//生成したエネミーに設定する
 		pEnemy->SetPosition(position);
 		pEnemy->SetRotate(rotate);
 		pEnemy->SetScale(scale);
@@ -107,6 +110,17 @@ bool EnemyManager::IsActiveEnemyDestroy()
 		}
 	}
 	return true;
+}
+
+void EnemyManager::BootNotActiveEnemy()
+{
+	for (auto itr = enemyList_.begin(); itr != enemyList_.end(); itr++)
+	{
+		if ((*itr)->IsActive() == false)
+		{
+			(*itr)->SetActive(true);
+		}
+	}
 }
 
 Enemy* EnemyManager::InstantiateEnemy(std::string enemyName)
