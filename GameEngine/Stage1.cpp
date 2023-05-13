@@ -59,3 +59,8 @@ void Stage1::LoadStageData()
 {
 	//stageTable_.LoadStage(0);
 }
+
+void Stage1::SetStageNum(int stageNum)
+{
+	stageNum_ = stageNum;
+}

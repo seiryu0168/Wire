@@ -74,6 +74,31 @@ namespace InterSceneData
         }
     }
 
+    void SetData(std::string dataName, std::string* name, int* i, float* f, bool* b)
+    {
+        bool existData = false;
+        for (int it = 0; it < dataList_.size(); it++)
+        {
+            if (dataList_[it]->dataName == dataName)
+            {
+                existData = true;
+                if (name != nullptr)
+                    dataList_[it]->dataName = *name;
+                if (i != nullptr)
+                    dataList_[it]->i = i;
+                if (f != nullptr)
+                    dataList_[it]->f = f;
+                if (b != nullptr)
+                    dataList_[it]->b = b;
+            }
+        }
+
+        if (existData==false)
+        {
+            AddData(dataName, name, i, f, b);
+        }
+    }
+
     int GetintData(std::string dataName)
     {
         for (int i = 0; i < dataList_.size(); i++)

@@ -2,6 +2,7 @@
 #include"EnemyBoss.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
+#include"EnemyTutorial.h"
 #include<d3d11.h>
 #include<fstream>
 #include<sstream>
@@ -128,7 +129,6 @@ Enemy* EnemyManager::InstantiateEnemy(std::string enemyName)
 
 	if (enemyName == "EnemyNormal")
 	{
-		//GameObject* ob = pObject_->GetScene();
 		return pObject_->Instantiate<EnemyNormal>(pObject_);
 	}
 	else if (enemyName == "EnemyTurret")
@@ -138,5 +138,9 @@ Enemy* EnemyManager::InstantiateEnemy(std::string enemyName)
 	else if (enemyName == "EnemyBoss")
 	{
 		return pObject_->Instantiate<EnemyBoss>(pObject_);
+	}
+	else if (enemyName == "EnemyTutorial")
+	{
+		return pObject_->Instantiate<EnemyTutorial>(pObject_);
 	}
 }

@@ -18,8 +18,13 @@
 namespace 
 {
 	static const int DELAY = 180;
-	static const std::string FILE_NAME = "EnemyStatus.json";
+
+	static const std::string FILE_NAME[4] = { "TutorialStageEnemyStatus.json",
+											  "Stage1EnemyStatus.json",
+											  "Stage2EnemyStatus.json",
+											  "Stage3EnemyStatus.json" };
 }
+
 ObjectSetter::ObjectSetter(GameObject* parent)
 	:GameObject(parent, "ObjectSetter"),
 	pPlayer_(nullptr),
@@ -33,20 +38,22 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_ = (SceneManager*)FindObject("SceneManager");
 	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
-	//feildって名前にしといたほうがいい
 	
 	//親のオブジェクト名を取得
 	sceneName_ = GetParent()->GetObjectName();
 
+	int stageNum = InterSceneData::GetintData("StageNum");
 	//親がプレイシーンだったら
 	if (sceneName_ == "PlayScene")
 	{
+		
 		EManager_.SetParentObject(GetParent());
-	EManager_.Initialize(FILE_NAME);
+		EManager_.Initialize(FILE_NAME[stageNum]);
 
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
-		Instantiate<Stage1>(GetParent());
+		Stage1* p=Instantiate<Stage1>(GetParent());
+		p->SetStageNum(stageNum);
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
 	}
@@ -65,8 +72,9 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	{
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
-		
-		enemys_.push_back(Instantiate<EnemyTutorial>(GetParent()));
+		EManager_.SetParentObject(GetParent());
+		EManager_.Initialize(FILE_NAME[stageNum]);
+		EManager_.SetEnemy();
 		Instantiate<TutorialUI>(GetParent());
 	}
 	set_->ObjectSet();
@@ -127,7 +135,6 @@ void ObjectSetter::Release()
 
 void ObjectSetter::TitleUpdate()
 {
-
 }
 
 void ObjectSetter::PlayUpdate()

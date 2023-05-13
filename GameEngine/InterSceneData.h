@@ -33,6 +33,7 @@ namespace InterSceneData
 	}*/
 	int AddData(std::string dataName,std::string* name,int* i=nullptr,float* f=nullptr, bool* b = nullptr);
 	void DeleteData(std::string dataName);
+	void SetData(std::string dataName, std::string* name, int* i = nullptr, float* f = nullptr, bool* b = nullptr);
 	int GetintData(std::string dataName);
 	bool GetboolData(std::string dataName);
 	/*int AddData(bool b, std::string name);

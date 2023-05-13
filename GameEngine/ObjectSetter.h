@@ -48,7 +48,7 @@ public:
         void BlackOutUpdate();
 
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
-
+        void SetStageNum(int stageNum);
         std::string GetSceneName() { return sceneName_; };
         int GetEnemyCount();
 };

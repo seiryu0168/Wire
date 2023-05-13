@@ -28,6 +28,7 @@ public:
     void Release() override;
 
     void LoadStageData();
+    void SetStageNum(int stageNum);
 
     int GetModelHandle() { return hModel_; }
 };

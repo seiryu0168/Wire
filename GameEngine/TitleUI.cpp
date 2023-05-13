@@ -1,5 +1,6 @@
 #include "TitleUI.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"InterSceneData.h"
 #include"Engine/DirectX_11/Input.h"
 #include"Engine/SceneManager.h"
 
@@ -69,6 +70,20 @@ void TitleUI::Update()
 	switch (num)
 	{
 	case 0:
+		//チュートリアルボタン
+		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(BUTTON_FRAME_POS.x,BUTTON_FRAME_POS.y, 0));
+		
+		ImageManager::SetAlpha(hPictTutorial2_, 1);
+		ImageManager::SetAlpha(hPictPlay2_, 0);
+
+		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TUTORIAL, DELAY);
+		}
+		break;
+	case 1:
 		//プレイボタン
 
 		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-BUTTON_FRAME_POS.x, BUTTON_FRAME_POS.y, 0));
@@ -79,20 +94,8 @@ void TitleUI::Update()
 		
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
+			InterSceneData::SetData("StageNum", nullptr,&num,nullptr,nullptr);
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
-		}
-		break;
-	case 1:
-		//チュートリアルボタン
-		ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(BUTTON_FRAME_POS.x,BUTTON_FRAME_POS.y, 0));
-		
-		ImageManager::SetAlpha(hPictTutorial2_, 1);
-		ImageManager::SetAlpha(hPictPlay2_, 0);
-
-		ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-		{
-			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TUTORIAL, DELAY);
 		}
 		break;
 
