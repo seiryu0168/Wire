@@ -22,7 +22,7 @@ Stage1::~Stage1()
 //初期化
 void Stage1::Initialize()
 {
-	hModel_=stageTable_.LoadStage(0);
+	hModel_=stageTable_.LoadStage(stageNum_);
 	//ModelComponent* mComp = new ModelComponent("Assets\\NewStage_Maya.fbx", this);
 	//AddComponent(mComp);
 	//ステージテーブルからステージのモデル名をとってくる

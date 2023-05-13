@@ -98,6 +98,20 @@ void TitleUI::Update()
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 		}
 		break;
+	case 2:
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+		}
+		break;
+	case 3:
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+		}
+		break;
 
 	default:
 		break;
