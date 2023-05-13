@@ -3,6 +3,7 @@
 #include"Engine/SceneManager.h"
 #include"Engine/DirectX_11/Input.h"
 #include"InterSceneData.h"
+#include"InterSceneData.h"
 
 namespace
 {

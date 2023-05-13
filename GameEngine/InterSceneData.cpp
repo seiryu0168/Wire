@@ -83,13 +83,13 @@ namespace InterSceneData
             {
                 existData = true;
                 if (name != nullptr)
-                    dataList_[it]->dataName = *name;
+                    *(dataList_[it]->s) = *name;
                 if (i != nullptr)
-                    dataList_[it]->i = i;
+                    *(dataList_[it]->i) = *i;
                 if (f != nullptr)
-                    dataList_[it]->f = f;
+                    *(dataList_[it]->f) = *f;
                 if (b != nullptr)
-                    dataList_[it]->b = b;
+                    *(dataList_[it]->b) = *b;
             }
         }
 

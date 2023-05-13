@@ -1,6 +1,7 @@
 #include "TutorialUI.h"
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Engine/DirectX_11/Input.h"
+#include"InterSceneData.h"
 #include"Engine/SceneManager.h"
 
 namespace
@@ -29,6 +30,7 @@ void TutorialUI::Update()
 {
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
 	{
+		InterSceneData::SetData("StageNum", nullptr, 0,nullptr,nullptr);
 		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TITLE, DELAY);
 	}
 }
