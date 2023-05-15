@@ -1,8 +1,10 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
+#include"Engine/ResourceManager/json.hpp"
 
 class TitleUI : public GameObject
 {
+	using json = nlohmann::json;
 private:
 	enum class UI_MODE
 	{

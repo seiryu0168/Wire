@@ -5,10 +5,7 @@
 #include"Engine/SceneManager.h"
 #include<fstream>
 #include<sstream>
-#include"Engine/ResourceManager/json.hpp"
 #include"Easing.h"
-
-using json = nlohmann::json;
 
 namespace
 {
@@ -43,7 +40,7 @@ TitleUI::~TitleUI()
 
 void TitleUI::Initialize()
 {
-	
+	LoadImageFile();
 }
 
 void TitleUI::Update()
@@ -118,6 +115,10 @@ void TitleUI::MoveButton(int num)
 		buttonList_[i].position_.y += deltaPos;
 		ImageManager::SetImagePos(buttonList_[i].hButtonPict_,
 			XMFLOAT3(buttonList_[i].position_.x,
+				buttonList_[i].position_.y,
+				0));
+		ImageManager::SetImagePos(buttonList_[i].hMissionPict_,
+			XMFLOAT3(buttonList_[i].position_.x+1000,
 				buttonList_[i].position_.y,
 				0));
 	}
@@ -207,13 +208,22 @@ void TitleUI::LoadImageFile()
 	assert(hPictTitle_ >= 0);
 
 	//ボタン画像読み込み
-	for (auto elem :fileReader_[0][BUTTON_LIST_NAME].items())
+	int i = 0;
+	for (auto elem :fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
+		//画像の名前を取得
+		std::string buttonImageName = elem[0];
+		std::string missionName = elem[1];
+		//画像読み込み
 		button_ btn;
-		btn.hButtonPict_ = ImageManager::Load("Assets\\PlayImage.png");
+		btn.hButtonPict_ = ImageManager::Load("Assets\\"+buttonImageName);
 		assert(btn.hButtonPict_ >= 0);
-		btn.position_ = { -1400.0f,i * (float)(-MOVE),0.0f };
+		btn.hMissionPict_ = ImageManager::Load("Assets\\"+missionName);
+		assert(btn.hMissionPict_ >= 0);
+		//位置設定
+		btn.position_ = { -1400.0f,(i++) * (float)(-MOVE),0.0f };
 		ImageManager::SetImagePos(btn.hButtonPict_, btn.position_);
+		//
 		buttonList_.push_back(btn);
 	}
 	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
