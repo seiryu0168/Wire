@@ -3,6 +3,7 @@
 #include"InterSceneData.h"
 #include"Engine/DirectX_11/Input.h"
 #include"Engine/SceneManager.h"
+#include"Engine/ResourceManager/Text.h"
 #include<fstream>
 #include<sstream>
 #include"Easing.h"
@@ -27,7 +28,8 @@ TitleUI::TitleUI(GameObject* parent)
 	hPictTitle_(-1),
 	buttonMove_(0),
 	canPushButton_(true),
-	isMoveEnd_(true)
+	isMoveEnd_(true),
+	buttonCount_(0)
 
 {
 
@@ -106,21 +108,24 @@ void TitleUI::Update()
 	//}
 }
 
-void TitleUI::MoveButton(int num)
+void TitleUI::MoveButton(float ratio)
 {
 	int deltaPos = (MOVE / (MAX_MOVE_TIME-1)) * buttonMove_;
-
-	for (int i = 0; i < MAX_BUTTON; i++)
+	int delta = MOVE * ratio * buttonMove_;
+	for (auto& i : buttonList_)
 	{
-		buttonList_[i].position_.y += deltaPos;
-		ImageManager::SetImagePos(buttonList_[i].hButtonPict_,
-			XMFLOAT3(buttonList_[i].position_.x,
-				buttonList_[i].position_.y,
+		//ボタンを移動させる
+		//i.position_.y += deltaPos;
+		ImageManager::SetImagePos(i.hButtonPict_,
+			XMFLOAT3(i.position_.x,
+				i.position_.y + delta,
 				0));
-		ImageManager::SetImagePos(buttonList_[i].hMissionPict_,
-			XMFLOAT3(buttonList_[i].position_.x+1000,
-				buttonList_[i].position_.y,
+		ImageManager::SetImagePos(i.hMissionPict_,
+			XMFLOAT3(400.0f,
+					 i.position_.y+delta,
 				0));
+		i.buttonText_->SetPosition({ i.position_.x-i.buttonText_->GetRect().right,
+							   i.position_.y+i.buttonText_->GetRect().bottom + delta });
 	}
 
 	//ImageManager::SetImagePos(hPictButtonFrame_, {-800,0})
@@ -133,7 +138,7 @@ void TitleUI::MoveButton(int num)
 
 bool TitleUI::IsLimit(int buttonNum)
 {
-	if(buttonNum > 0 || buttonNum < (MAX_BUTTON - 1))
+	if(buttonNum > 0 || buttonNum < (buttonCount_ - 1))
 	return true;
 	else
 		return false;
@@ -152,13 +157,12 @@ void TitleUI::Input()
 		else if (Input::GetLStick_Y() <= -0.7f)
 		{
 			buttonMove_ = 1;
-			//buttonMoveSpeed_ = MOVE / INTERVAL;
-			if(buttonNum_<(MAX_BUTTON-1))
+			if(buttonNum_<(buttonCount_ -1))
 			uiMode_ = UI_MODE::MODE_MOVE;
 		}
 
 		buttonNum_ += buttonMove_;
-		buttonNum_ = Clamp(buttonNum_, 0, MAX_BUTTON-1);
+		buttonNum_ = Clamp(buttonNum_, 0, buttonCount_ -1);
 }
 
 void TitleUI::Move()
@@ -169,10 +173,14 @@ void TitleUI::Move()
 	{
 		uiMode_=UI_MODE::MODE_INPUT;
 		moveTime_ = 0;
+		for (auto& i : buttonList_)
+		{
+			i.position_.y += MOVE * buttonMove_;
+		}
 		return;
 	}
 
-		MoveButton(buttonNum_);
+		MoveButton(Easing::EaseInCubic((float)moveTime_/(float)(MAX_MOVE_TIME-1)));
 }
 
 
@@ -199,31 +207,48 @@ void TitleUI::ReadFile(std::string fileName)
 	SetCurrentDirectory(currentDir);
 }
 
+void TitleUI::ThirdDraw()
+{
+	for (auto& i : buttonList_)
+	{
+		i.buttonText_->Draw();
+	}
+}
+
 void TitleUI::LoadImageFile()
 {
-
-
 	//タイトル画像読み込み
 	hPictTitle_ = ImageManager::Load("Assets\\TitleImage2.png");
 	assert(hPictTitle_ >= 0);
-
+	ImageManager::SetAlpha(hPictTitle_, 0);
 	//ボタン画像読み込み
-	int i = 0;
+	TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem :fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
+		
 		//画像の名前を取得
 		std::string buttonImageName = elem[0];
 		std::string missionName = elem[1];
-		//画像読み込み
+		
+		/////////////////////////////ボタンの用意//////////////////////
 		button_ btn;
+		
+		//テキスト読み込み
+		btn.buttonText_ = new Text;
+		btn.buttonText_->Load("Stage" + std::to_string(buttonCount_), "Sitka Text", rect, LEFT_TOP);
+		
+		//画像読み込み
 		btn.hButtonPict_ = ImageManager::Load("Assets\\"+buttonImageName);
 		assert(btn.hButtonPict_ >= 0);
 		btn.hMissionPict_ = ImageManager::Load("Assets\\"+missionName);
 		assert(btn.hMissionPict_ >= 0);
 		//位置設定
-		btn.position_ = { -1400.0f,(i++) * (float)(-MOVE),0.0f };
+		btn.position_ = { -1400.0f,(buttonCount_++) * (float)(-MOVE),0.0f };
 		ImageManager::SetImagePos(btn.hButtonPict_, btn.position_);
-		//
+		ImageManager::SetImagePos(btn.hMissionPict_, { 400.0f,buttonCount_ * (float)(-MOVE),0.0f });
+		btn.buttonText_->SetPosition({ btn.position_.x-btn.buttonText_->GetRect().right,
+								 btn.position_.y+btn.buttonText_->GetRect().bottom});
+		//配列に入れる
 		buttonList_.push_back(btn);
 	}
 	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");

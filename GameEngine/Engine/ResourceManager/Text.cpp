@@ -98,6 +98,12 @@ void Text::SetRatio(float ratioX, float ratioY)
 	transform2D.y = Direct3D::GetScreenHeight() * ratioY;
 }
 
+void Text::SetPosition(XMFLOAT2 position)
+{
+	transform2D.x = 0.5f*position.x+0.5f*Direct3D::GetScreenWidth();
+	transform2D.y = -(0.5f * position.y)+ 0.5f * Direct3D::GetScreenHeight();
+}
+
 void Text::SetTextLayout()
 {
 	//pWriteFactory_->CreateTextLayout()

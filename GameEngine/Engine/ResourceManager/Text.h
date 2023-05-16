@@ -50,7 +50,9 @@ public:
 	void SetTransform(TEXT_POSITION pos);
 	void SetTextLayout();
 	void SetRatio(float ratioX,float ratioY);
+	void SetPosition(XMFLOAT2 position);
 	void SetRect(TEXT_RECT rect);
+	const TEXT_RECT& GetRect() { return layoutRect_; }
 	void Release();
 
 };

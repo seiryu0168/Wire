@@ -2,6 +2,7 @@
 #include"Engine/GameObject/GameObject.h"
 #include"Engine/ResourceManager/json.hpp"
 
+class Text;
 class TitleUI : public GameObject
 {
 	using json = nlohmann::json;
@@ -13,9 +14,11 @@ private:
 	};
 	struct button_
 	{
+		Text* buttonText_;
 		int hButtonPict_;
 		int hMissionPict_;
 		XMFLOAT3 position_;
+		//XMFLOAT3 missionPosition_;
 	};
 	short buttonMove_;
 	json* fileReader_;
@@ -24,6 +27,7 @@ private:
 	UI_MODE uiMode_;
 	int hPictTitle_;
 	int hPictButtonFrame_;
+	int buttonCount_;
 	int buttonNum_;
 	int prevNum_;
 	int moveTime_;
@@ -36,9 +40,10 @@ public:
 	~TitleUI();
 	void Initialize() override;
 	void Update() override;
-	void MoveButton(int num);
+	void MoveButton(float ratio);
 	bool IsLimit(int buttonNum);
 	void ReadFile(std::string fileName);
+	void ThirdDraw() override;
 	void LoadImageFile();
 	void Release() override;
 };
