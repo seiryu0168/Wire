@@ -6,6 +6,7 @@
 //#include"Engine/GameObject/GameObject.h"
 
 StageManager::StageManager()
+	:stageCount_(0)
 {
 }
 
@@ -34,6 +35,7 @@ void StageManager::Initialize(std::string fileName)
 		//jsonオブジェクトはキーを指定して配列や値を取る
 		for (auto& elem : stageNameArray["StageName"].items())
 		{
+			stageCount_++;
 			stageName_.push_back(elem.value());
 		}
 	}

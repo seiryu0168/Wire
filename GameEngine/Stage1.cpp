@@ -62,5 +62,8 @@ void Stage1::LoadStageData()
 
 void Stage1::SetStageNum(int stageNum)
 {
-	stageNum_ = stageNum;
+	if (stageNum < stageTable_.MaxStage())
+		stageNum_ = stageNum;
+	else
+		stageNum_ = (stageTable_.MaxStage() - 1);
 }

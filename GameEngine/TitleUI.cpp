@@ -34,12 +34,16 @@ TitleUI::TitleUI(GameObject* parent)
 	buttonCount_(0)
 
 {
-
 	ReadFile(UI_IMAGE_FILE);
 }
 
 TitleUI::~TitleUI()
 {
+	for (auto& i : buttonList_)
+	{
+		SAFE_RELEASE(i.buttonText_);
+	}
+		SAFE_DELETE(fileReader_);
 }
 
 void TitleUI::Initialize()
@@ -169,6 +173,8 @@ void TitleUI::Input()
 	//ボタンの番号を調整
 	buttonNum_ += buttonMove_;
 	buttonNum_ = Clamp(buttonNum_, 0, buttonCount_ - 1);
+
+	PushedButton(buttonNum_);
 }
 
 void TitleUI::Move()
@@ -221,6 +227,64 @@ void TitleUI::ThirdDraw()
 	{
 		i.buttonText_->Draw();
 	}
+}
+
+void TitleUI::PushedButton(int num)
+{
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	{
+		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+	}
+	//switch (num)
+	//{
+	//case 0:
+	//	//チュートリアルボタン
+	//	ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(BUTTON_FRAME_POS.x,BUTTON_FRAME_POS.y, 0));
+	//	
+	//	ImageManager::SetAlpha(hPictTutorial2_, 1);
+	//	ImageManager::SetAlpha(hPictPlay2_, 0);
+	//
+	//	ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
+	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	//	{
+	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TUTORIAL, DELAY);
+	//	}
+	//	break;
+	//case 1:
+	//	//プレイボタン
+	//
+	//	ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-BUTTON_FRAME_POS.x, BUTTON_FRAME_POS.y, 0));
+	//	ImageManager::SetAlpha(hPictTutorial2_, 0);
+	//
+	//	ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1, 1, 1, 1));
+	//	ImageManager::SetAlpha(hPictPlay2_, 1);
+	//	
+	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	//	{
+	//		InterSceneData::SetData("StageNum", nullptr,&num,nullptr,nullptr);
+	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+	//	}
+	//	break;
+	//case 2:
+	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	//	{
+	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+	//	}
+	//	break;
+	//case 3:
+	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	//	{
+	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
+	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+	//	}
+	//	break;
+	//
+	//default:
+	//	break;
+	//}
 }
 
 void TitleUI::LoadImageFile()

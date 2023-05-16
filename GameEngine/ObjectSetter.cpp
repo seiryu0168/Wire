@@ -47,13 +47,18 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	if (sceneName_ == "PlayScene")
 	{
 		
-		EManager_.SetParentObject(GetParent());
-		EManager_.Initialize(FILE_NAME[stageNum]);
 
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
 		Stage1* p=Instantiate<Stage1>(GetParent());
 		p->SetStageNum(stageNum);
+		EManager_.SetParentObject(GetParent());
+		int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
+		if(maxStageCount>stageNum)
+		EManager_.Initialize(FILE_NAME[stageNum]);
+		else
+		EManager_.Initialize(FILE_NAME[maxStageCount-1]);
+
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
 	}

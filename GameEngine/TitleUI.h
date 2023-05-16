@@ -40,10 +40,11 @@ public:
 	~TitleUI();
 	void Initialize() override;
 	void Update() override;
+	void ThirdDraw() override;
+	void PushedButton(int num);
 	void MoveButton(float ratio);
 	bool IsLimit(int buttonNum);
 	void ReadFile(std::string fileName);
-	void ThirdDraw() override;
 	void LoadImageFile();
 	void Release() override;
 };
