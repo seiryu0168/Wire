@@ -13,6 +13,8 @@ namespace
 	static const std::string UI_IMAGE_FILE = "StageSelectUIImage.json";
 	static const std::string BUTTON_LIST_NAME = "StageSelectUIImageList";
 	static const int INTERVAL = 1;
+	static const short UP = -1;
+	static const short DOWN = 1;
 	static const int MAX_BUTTON = 5;
 	static const int DELAY = 90;
 	static const int MOVE = 500;
@@ -146,41 +148,47 @@ bool TitleUI::IsLimit(int buttonNum)
 
 void TitleUI::Input()
 {
-		buttonMove_ = 0;
-		if (Input::GetLStick_Y() >= 0.7f)
-		{
-			buttonMove_ = -1;
-			if(buttonNum_>0)
+	//ボタンの処理
+	buttonMove_ = 0;
+	//上に移動
+	if (Input::GetLStick_Y() >= 0.7f)
+	{
+		buttonMove_ = UP;
+		//ボタンが
+		if (buttonNum_ > 0)
 			uiMode_ = UI_MODE::MODE_MOVE;
-			//buttonMoveSpeed_ = -(MOVE / INTERVAL);
-		}
-		else if (Input::GetLStick_Y() <= -0.7f)
-		{
-			buttonMove_ = 1;
-			if(buttonNum_<(buttonCount_ -1))
+	}
+	//下に移動
+	else if (Input::GetLStick_Y() <= -0.7f)
+	{
+		buttonMove_ = DOWN;
+		//ボタンの番号が最後尾じゃなかったら移動モードに切り替える
+		if (buttonNum_ < (buttonCount_ - 1))
 			uiMode_ = UI_MODE::MODE_MOVE;
-		}
-
-		buttonNum_ += buttonMove_;
-		buttonNum_ = Clamp(buttonNum_, 0, buttonCount_ -1);
+	}
+	//ボタンの番号を調整
+	buttonNum_ += buttonMove_;
+	buttonNum_ = Clamp(buttonNum_, 0, buttonCount_ - 1);
 }
 
 void TitleUI::Move()
 {
 	moveTime_++;
 	moveTime_ = min(moveTime_, MAX_MOVE_TIME);
+	//動き終わったか
 	if (moveTime_ >= MAX_MOVE_TIME)
 	{
 		uiMode_=UI_MODE::MODE_INPUT;
 		moveTime_ = 0;
+		//動かしたセレクト画面の位置を確定させる
 		for (auto& i : buttonList_)
 		{
 			i.position_.y += MOVE * buttonMove_;
 		}
 		return;
 	}
-
-		MoveButton(Easing::EaseInCubic((float)moveTime_/(float)(MAX_MOVE_TIME-1)));
+	//セレクト画面を動かす
+	MoveButton(Easing::EaseInCubic((float)moveTime_ / (float)(MAX_MOVE_TIME - 1)));
 }
 
 
