@@ -19,18 +19,8 @@ MissionOrder::MissionOrder(GameObject* parent)
 	alpha_(1.0f)
 
 {
-	TEXT_RECT rect1 = { 0,0,500,100 };
-	TEXT_RECT rect2 = { 0,0,700,200 };
 	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
 	assert(hPict_ >= 0);
-	pText_ = new Text();
-	pText_->Load(ORDER, "Sitka Text", rect1, LEFT_TOP);
-	pSetter_ = (ObjectSetter*)parent;
-	EnemyMax_=pSetter_->GetEnemyCount();
-	EnemyCount_=pSetter_->GetEnemyCount();
-	pCountText_ = new Text();
-	count_ = std::to_string(EnemyCount_);
-	pCountText_->Load(ENEMY + count_, "Sitka Text", rect2, LEFT_TOP);
 
 }
 
@@ -40,6 +30,16 @@ MissionOrder::~MissionOrder()
 
 void MissionOrder::Initialize()
 {
+	TEXT_RECT rect1 = { 0,0,500,100 };
+	TEXT_RECT rect2 = { 0,0,700,200 };
+	pText_ = new Text();
+	pText_->Load(ORDER, "Sitka Text", rect1, LEFT_TOP);
+	pCountText_ = new Text();
+	pCountText_->Load(ENEMY + count_, "Sitka Text", rect2, LEFT_TOP);
+	pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
+	EnemyMax_=pSetter_->GetEnemyCount();
+	EnemyCount_=pSetter_->GetEnemyCount();
+	count_ = std::to_string(EnemyCount_);
 }
 
 void MissionOrder::Update()
@@ -61,6 +61,10 @@ void MissionOrder::Update()
 
 void MissionOrder::Draw()
 {
+	for (auto i : textList)
+	{
+		i->Draw();
+	}
 	pCountText_->Draw();
 	pText_->Draw();
 }

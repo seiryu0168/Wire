@@ -49,11 +49,11 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		p->SetStageNum(stageNum);
 		EManager_.SetParentObject(GetParent());
 		int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
-		if (maxStageCount > stageNum)
+		if (maxStageCount < stageNum)
 			stageNum = maxStageCount - 1;
 		EManager_.Initialize(FILE_NAME[stageNum]);
 		UManager_.SetParentObject(GetParent());
-		UManager_.LoadFile("UIData.json");
+		UManager_.Initialize("Stage1UIData.json");
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
 		UManager_.SetUI();

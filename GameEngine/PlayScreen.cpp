@@ -43,7 +43,7 @@ void PlayScreen::Initialize()
 
 void PlayScreen::Update()
 {
-	pUI->Update();
+	//pUI->Update();
 }
 
 void PlayScreen::Draw()
@@ -51,12 +51,12 @@ void PlayScreen::Draw()
 }
 void PlayScreen::ThirdDraw()
 {
-	pUI->Draw();
+	//pUI->Draw();
 }
 
 void PlayScreen::Release()
 {
-	pUI->Release();
+	//pUI->Release();
 }
 
 void PlayScreen::SetDir(XMFLOAT2 dir)

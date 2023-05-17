@@ -21,8 +21,34 @@ void UIManager::Initialize(std::string fileName)
 	LoadFile(fileName);
 	for (auto& elem : uiData_[0][UI_DATA].items())
 	{
-		elem.value().items().begin().key();
-		uiList_
+		MissionParam mission;
+		std::string uiName = elem.value().begin().key();
+		auto i = elem.value()[uiName].items().begin().value()["TextList"];
+		auto j = elem.value()[uiName].items().begin().value()["ImageList"];
+		if (i.is_object())
+		{
+
+			for (auto& txtData : i)
+			{
+				Text* pText = new Text();
+				TEXT_RECT rect = { 0,0,500,500 };
+				auto k = txtData.begin().value().get<std::string>();
+				pText->Load(k, "Sitka Text", rect, LEFT_TOP);
+				mission.textList_.push_back(pText);
+
+			}
+		}
+		if (j.is_object())
+		{
+
+			for (auto& imgData : j)
+			{
+				auto k = imgData[0];
+				//mission.textList_.push_back()
+					//uiList_
+			}
+		}
+		uiList_.push_back(mission);
 	}
 }
 
@@ -56,26 +82,26 @@ void UIManager::LoadFile(std::string fileName)
 
 MissionUI* UIManager::CreateUI(std::string uiName)
 {
-	MissionUI* p = nullptr;
 	if (uiName == "MissionOrder")
 	{
-		p=pObject_->Instantiate<MissionOrder>(pObject_);
+		return pObject_->Instantiate<MissionOrder>(pObject_);
 	}
 	if (uiName == "TutorialOrder")
 	{
-		p = pObject_->Instantiate<TutorialOrder>(pObject_);
+		return pObject_->Instantiate<TutorialOrder>(pObject_);
 	}
-	if (p == nullptr)
 		return nullptr;
-	
-	return p;
 }
 
 void UIManager::SetUI()
 {
-	for (auto& elem : uiData_[0]["uiDataList"].items())
+	int i = 0;
+	for (auto& elem : uiData_[0]["UIData"].items())
 	{
 		std::string uiName = elem.value().items().begin().key();
-		//CreateUI()
+		MissionUI* pMission;
+		pMission=CreateUI(uiName);
+		pMission->SetText(uiList_[i].textList_);
+		i++;
 	}
 }
