@@ -216,18 +216,21 @@
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
+    <ClCompile Include="TestUI.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="EnemyTutorial.cpp" />
     <ClCompile Include="TutorialOrder.cpp" />
     <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TutorialUI.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Wire.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -294,6 +297,7 @@
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SelectScene.h" />
     <ClInclude Include="SetObject.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="StageManager.h" />
@@ -301,12 +305,14 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="TestScene.h" />
+    <ClInclude Include="TestUI.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="EnemyTutorial.h" />
     <ClInclude Include="TutorialOrder.h" />
     <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TutorialUI.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="Wire.h" />
     <ClInclude Include="PlayerState.h" />
   </ItemGroup>

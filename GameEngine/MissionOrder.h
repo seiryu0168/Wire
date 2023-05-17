@@ -15,11 +15,12 @@ private:
 	ObjectSetter* pSetter_;
 
 public:
-	MissionOrder( ObjectSetter* p);
+	MissionOrder(GameObject* parent);
 	~MissionOrder();
-	void Update();
-	void Draw();
+	void Initialize() override;
+	void Update() override;
+	void Draw() override;
 	void EraseText();
-	void Release();
+	void Release() override;
 };
 

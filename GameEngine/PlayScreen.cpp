@@ -31,14 +31,14 @@ void PlayScreen::Initialize()
 	ImageManager::SetImagePos(hPict_[3], { 1410,10,0 });
 	ObjectSetter* p = (ObjectSetter*)FindObject("ObjectSetter");
 	
-	if (p->GetSceneName() == "PlayScene")
+	/*if (p->GetSceneName() == "PlayScene")
 	{
 		pUI = new MissionOrder(p);
 	}
 	else if (p->GetSceneName() == "TutorialScene")
 	{
 		pUI = new TutorialOrder();
-	}
+	}*/
 }
 
 void PlayScreen::Update()

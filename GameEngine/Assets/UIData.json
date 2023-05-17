@@ -1,0 +1,41 @@
+{
+  "UIData": [
+    {
+      "MissionOrder": [
+        {
+          "TextList": {
+            "Text1": [
+              "Enemy",
+              [ 0, 0 ]
+            ],
+            "Text2": [
+              "Enemy2",
+              [100,100]
+            ]
+          },
+          "Image": [ null, null ]
+        }
+      ]
+      //"TutorialOrder": [
+      //  {
+      //    "TextList": {
+      //      "Text1": [
+      //        null,
+      //        null
+      //      ]
+      //    },
+      //    "ImageNameList": {
+      //      "Image1": [
+      //        "Button1.png",
+      //        [ 0, 0 ]
+      //      ],
+      //      "Image2": [
+      //        "Button2.png",
+      //        [100,100]
+      //      ]
+      //    }
+      //  }
+      //]
+    }
+  ]
+}

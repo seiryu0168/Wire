@@ -38,42 +38,38 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	pManager_ = (SceneManager*)FindObject("SceneManager");
 	nowSceneID_ = pManager_->GetNextSceneID();
 	//オブジェクト設置クラスでエネミーのパラメータを設定するようにする
-	
-	//親のオブジェクト名を取得
-	sceneName_ = GetParent()->GetObjectName();
 
 	int stageNum = InterSceneData::GetintData("StageNum");
 	//親がプレイシーンだったら
-	if (sceneName_ == "PlayScene")
+	if (nowSceneID_ == SCENE_ID::SCENE_ID_PLAY)
 	{
-		
-
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
 		Stage1* p=Instantiate<Stage1>(GetParent());
 		p->SetStageNum(stageNum);
 		EManager_.SetParentObject(GetParent());
 		int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
-		if(maxStageCount>stageNum)
+		if (maxStageCount > stageNum)
+			stageNum = maxStageCount - 1;
 		EManager_.Initialize(FILE_NAME[stageNum]);
-		else
-		EManager_.Initialize(FILE_NAME[maxStageCount-1]);
-
+		UManager_.SetParentObject(GetParent());
+		UManager_.LoadFile("UIData.json");
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
+		UManager_.SetUI();
 	}
 	//親がタイトルシーンだったら
-	if (sceneName_ == "TitleScene")
+	if (nowSceneID_ == SCENE_ID::SCENE_ID_TITLE)
 	{
 		Instantiate<TitleUI>(GetParent());
 	}
 	//親がリザルトシーンだったら
-	if (sceneName_ == "ResultScene")
+	if (nowSceneID_ == SCENE_ID::SCENE_ID_RESULT)
 	{
 		Instantiate<ResultUI>(GetParent());
 	}
 	//親がチュートリアルシーンだったら
-	if (sceneName_ == "TutorialScene")
+	if (nowSceneID_ == SCENE_ID::SCENE_ID_TUTORIAL)
 	{
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
@@ -87,6 +83,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 
 ObjectSetter::~ObjectSetter()
 {
+	SAFE_DELETE(set_);
 }
 
 void ObjectSetter::Initialize()

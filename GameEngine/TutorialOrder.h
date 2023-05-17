@@ -8,12 +8,14 @@ private:
 	float ratio_;
 	float alpha_;
 	int hPict_;
+
 public:
-	TutorialOrder();
+	TutorialOrder(GameObject* parent);
 	~TutorialOrder();
+	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void EraseText();
-	void Release();
+	void Release() override;
 };
 

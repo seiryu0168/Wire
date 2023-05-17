@@ -1,8 +1,9 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
 #include"Engine/SceneManager.h"
-#include"SetObject.h"
+#include"UIManager.h"
 #include"EnemyManager.h"
+#include"SetObject.h"
 #include<list>
 class Player;
 class Enemy;
@@ -10,6 +11,7 @@ class ObjectSetter : public GameObject
 {
 private:
     EnemyManager EManager_;
+    UIManager UManager_;
     std::list<Enemy*> enemys_;
     Player* pPlayer_;
     int countDown_;

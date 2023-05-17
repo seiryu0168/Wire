@@ -7,8 +7,9 @@ namespace
 	static const float DELTA_RATIO = 0.015f;
 	static const float DELTA_ALPHA = 0.01f;
 }
-TutorialOrder::TutorialOrder()
-	:pText_(nullptr),
+TutorialOrder::TutorialOrder(GameObject* parent)
+	:MissionUI(parent,"TutorialOrder"),
+	pText_(nullptr),
 	ratio_(0),
 	hPict_(-1),
 	alpha_(1)
@@ -20,6 +21,10 @@ TutorialOrder::TutorialOrder()
 }
 
 TutorialOrder::~TutorialOrder()
+{
+}
+
+void TutorialOrder::Initialize()
 {
 }
 

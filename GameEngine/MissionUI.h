@@ -1,15 +1,17 @@
 #pragma once
-
+#include "Engine/GameObject/GameObject.h"
 #include"Engine/ResourceManager/Text.h"
-class MissionUI
+class MissionUI : public GameObject
 {
 public:
-	MissionUI();
-	~MissionUI();
-	
-	virtual void Update() {};
-	virtual void Draw() {};
+	std::vector<Text*> textList;
+	std::vector<int> imageList;
 
+	MissionUI(GameObject* parent,std::string uiName);
+	~MissionUI();
+
+	void SetText(std::vector<Text*> txtList);
+	void SetImage(std::vector<int> imgList);
 	void Release();
 };
 

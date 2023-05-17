@@ -10,8 +10,9 @@ namespace
 	static const float DELTA_RATIO = 0.015f;
 	static const float DELTA_ALPHA = 0.01f;
 }
-MissionOrder::MissionOrder(ObjectSetter* p)
-	:ratio_(0),
+MissionOrder::MissionOrder(GameObject* parent)
+	:MissionUI(parent,"MissionOrder"),
+	ratio_(0),
 	pText_(nullptr),
 	pCountText_(nullptr),
 	hPict_(-1),
@@ -24,7 +25,7 @@ MissionOrder::MissionOrder(ObjectSetter* p)
 	assert(hPict_ >= 0);
 	pText_ = new Text();
 	pText_->Load(ORDER, "Sitka Text", rect1, LEFT_TOP);
-	pSetter_ = p;
+	pSetter_ = (ObjectSetter*)parent;
 	EnemyMax_=pSetter_->GetEnemyCount();
 	EnemyCount_=pSetter_->GetEnemyCount();
 	pCountText_ = new Text();
@@ -34,6 +35,10 @@ MissionOrder::MissionOrder(ObjectSetter* p)
 }
 
 MissionOrder::~MissionOrder()
+{
+}
+
+void MissionOrder::Initialize()
 {
 }
 
