@@ -54,9 +54,9 @@ void MissionOrder::Update()
 	}
 	EnemyCount_ = pSetter_->GetEnemyCount();
 	count_ = std::to_string(EnemyCount_);
-	pCountText_->SetText(ENEMY +count_);
+	textList[1]->SetText(ENEMY + count_);
 	//テキスト移動
-	pText_->SetRatio(Easing::EaseOutQuint(ratio_) * TEXT_POS.x, TEXT_POS.y);
+	textList[0]->SetRatio(Easing::EaseOutQuint(ratio_) * TEXT_POS.x, TEXT_POS.y);
 }
 
 void MissionOrder::Draw()
@@ -65,13 +65,13 @@ void MissionOrder::Draw()
 	{
 		i->Draw();
 	}
-	pCountText_->Draw();
-	pText_->Draw();
+	//pCountText_->Draw();
+	//pText_->Draw();
 }
 
 void MissionOrder::EraseText()
 {
-	pText_->SetColor({ 1,1,1,alpha_ });
+	textList[0]->SetColor({ 1,1,1,alpha_ });
 	ImageManager::SetAlpha(hPict_, alpha_);
 	alpha_ -= DELTA_ALPHA;
 }

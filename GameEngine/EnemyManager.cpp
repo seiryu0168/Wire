@@ -9,6 +9,10 @@
 namespace
 {
 	static const std::string INITIAL_ENEMY_STATUS = "InitialEnemyStatus";
+	static const std::string FILE_NAME[4] = { "TutorialStageEnemyStatus.json",
+											  "Stage1EnemyStatus.json",
+											  "Stage2EnemyStatus.json",
+											  "Stage3EnemyStatus.json" };
 }
 EnemyManager::EnemyManager()
 {
@@ -20,7 +24,17 @@ EnemyManager::~EnemyManager()
 	SAFE_RELEASE(pObject_);
 }
 
-void EnemyManager::Initialize(std::string fileName)
+void EnemyManager::Initialize(int stageNum)
+{
+	//ステージ番号がファイルの最大数以上だったらファイルの最大数に直す
+	int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
+	if (maxStageCount < stageNum)
+		stageNum = maxStageCount - 1;
+	bool loadSuccess = LoadFile(FILE_NAME[stageNum]);
+	assert(loadSuccess);
+}
+
+bool EnemyManager::LoadFile(std::string fileName)
 {
 	//カレントディレクトリ取得
 	WCHAR currentDir[MAX_PATH];
@@ -30,18 +44,20 @@ void EnemyManager::Initialize(std::string fileName)
 
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{
-		return;
+		return false;
 	}
 	std::ifstream fileReader;
 	fileReader.open(fileName.c_str());
-	if (fileReader.good())
+	if (fileReader.good() == false)
 	{
+		return false;
+	}
 		enemyData_ = new json;
 		*enemyData_ = json::parse(fileReader);
 		//fileReader >> (*enemyData_);
-	}
 	fileReader.close();
 	SetCurrentDirectory(currentDir);
+	return true;
 }
 
 void EnemyManager::SetParentObject(GameObject* obj)

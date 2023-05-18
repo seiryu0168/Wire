@@ -18,7 +18,7 @@ public:
 	UIManager();
 	~UIManager();
 
-	void Initialize(std::string fileName);
+	void Initialize(int stageNum);
 	void SetParentObject(GameObject* parent);
 	void LoadFile(std::string fileName);
 	MissionUI* CreateUI(std::string uiName);

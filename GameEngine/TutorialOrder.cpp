@@ -39,17 +39,18 @@ void TutorialOrder::Update()
 	}
 
 	//テキスト移動
-	pText_->SetRatio(Easing::EaseInOutQuint(ratio_)* TEXT_POS.x, TEXT_POS.y);
+	textList[0]->SetRatio(Easing::EaseInOutQuint(ratio_) * TEXT_POS.x, TEXT_POS.y);
 }
 
 void TutorialOrder::Draw()
 {
-	pText_->Draw();
+	textList[0]->Draw();
+	ImageManager::Draw(imageList[0]);
 }
 
 void TutorialOrder::EraseText()
 {
-	pText_->SetColor({ 1,1,1,alpha_ });
+	textList[0]->SetColor({ 1,1,1,alpha_ });
 	ImageManager::SetAlpha(hPict_,alpha_);
 	alpha_ -= DELTA_ALPHA;
 }

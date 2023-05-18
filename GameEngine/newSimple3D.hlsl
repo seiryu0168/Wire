@@ -143,7 +143,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	}
 	
 	//環境光(アンビエント)
-	float4 ambient = float4(0.2, 0.2, 0.2, 1.0f);// g_ambient;
+	float4 ambient =  g_ambient;
 	ambient.a = 1;
 
 	//鏡面反射光(スペキュラー)

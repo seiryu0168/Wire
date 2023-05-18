@@ -18,11 +18,6 @@
 namespace 
 {
 	static const int DELAY = 180;
-
-	static const std::string FILE_NAME[4] = { "TutorialStageEnemyStatus.json",
-											  "Stage1EnemyStatus.json",
-											  "Stage2EnemyStatus.json",
-											  "Stage3EnemyStatus.json" };
 }
 
 ObjectSetter::ObjectSetter(GameObject* parent)
@@ -48,12 +43,9 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		Stage1* p=Instantiate<Stage1>(GetParent());
 		p->SetStageNum(stageNum);
 		EManager_.SetParentObject(GetParent());
-		int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
-		if (maxStageCount < stageNum)
-			stageNum = maxStageCount - 1;
-		EManager_.Initialize(FILE_NAME[stageNum]);
+		EManager_.Initialize(stageNum);
 		UManager_.SetParentObject(GetParent());
-		UManager_.Initialize("Stage1UIData.json");
+		UManager_.Initialize(stageNum);
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
 		UManager_.SetUI();
@@ -74,7 +66,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		Instantiate<Stage1>(GetParent());
 		Instantiate<Player>(GetParent());
 		EManager_.SetParentObject(GetParent());
-		EManager_.Initialize(FILE_NAME[stageNum]);
+		EManager_.Initialize(stageNum);
 		EManager_.SetEnemy();
 		Instantiate<TutorialUI>(GetParent());
 	}

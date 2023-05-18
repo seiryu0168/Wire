@@ -13,7 +13,8 @@ private:
 public:
 	EnemyManager();
 	~EnemyManager();
-	void Initialize(std::string fileName);
+	void Initialize(int stageNum);
+	bool LoadFile(std::string fileName);
 	void SetParentObject(GameObject* obj);
 	void Update();
 	void SetEnemy();

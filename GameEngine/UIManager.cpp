@@ -1,4 +1,5 @@
 #include "UIManager.h"
+#include"Engine/ResourceManager/ImageManager.h"
 #include "MissionOrder.h"
 #include"TutorialOrder.h"
 #include<d3d11.h>
@@ -7,7 +8,10 @@
 namespace
 {
 	static const std::string UI_DATA = "UIData";
+	static const std::string FILE_NAME[2] = { "TutorialStageUIData.json",
+											  "Stage1UIData.json" };
 }
+
 UIManager::UIManager()
 {
 }
@@ -16,9 +20,13 @@ UIManager::~UIManager()
 {
 }
 
-void UIManager::Initialize(std::string fileName)
+void UIManager::Initialize(int stageNum)
 {
-	LoadFile(fileName);
+	//ステージ番号がファイルの最大数以上だったらファイルの最大数に直す
+	int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
+	if (maxStageCount <= stageNum)
+		stageNum = maxStageCount - 1;
+	LoadFile(FILE_NAME[stageNum]);
 	for (auto& elem : uiData_[0][UI_DATA].items())
 	{
 		MissionParam mission;
@@ -31,21 +39,32 @@ void UIManager::Initialize(std::string fileName)
 			for (auto& txtData : i)
 			{
 				Text* pText = new Text();
-				TEXT_RECT rect = { 0,0,500,500 };
-				auto k = txtData.begin().value().get<std::string>();
-				pText->Load(k, "Sitka Text", rect, LEFT_TOP);
+				bool isRectData = txtData[1].is_array();
+				assert(isRectData);
+				auto rectData = txtData[1];
+				auto text = txtData[0].get<std::string>();
+				
+				//jsonファイルからRectの配列を取ってきてrect型変数に入れる
+				TEXT_RECT rect = { rectData.at(0).get<int>(),
+								   rectData.at(1).get<int>(),
+								   rectData.at(2).get<int>(),
+								   rectData.at(3).get<int>() };
+				pText->Load(text, "Sitka Text", rect, LEFT_TOP);
 				mission.textList_.push_back(pText);
-
 			}
 		}
 		if (j.is_object())
 		{
-
 			for (auto& imgData : j)
 			{
-				auto k = imgData[0];
-				//mission.textList_.push_back()
-					//uiList_
+				auto imageName = imgData[0].get<std::string>();
+				auto imagePosArray = imgData[1];
+				XMFLOAT3 imagePos = { imagePosArray.at(0).get<float>(),
+									  imagePosArray.at(1).get<float>(),
+									  imagePosArray.at(2).get<float>() };
+				int imageHandle = ImageManager::Load("Assets\\" + imageName);
+				ImageManager::SetImagePos(imageHandle,imagePos);
+				mission.imageList_.push_back(imageHandle);
 			}
 		}
 		uiList_.push_back(mission);
@@ -98,10 +117,16 @@ void UIManager::SetUI()
 	int i = 0;
 	for (auto& elem : uiData_[0]["UIData"].items())
 	{
+		//取得した名前をもとにUIオブジェクト生成
 		std::string uiName = elem.value().items().begin().key();
 		MissionUI* pMission;
 		pMission=CreateUI(uiName);
-		pMission->SetText(uiList_[i].textList_);
-		i++;
+		//テキストリストの設定
+		if (uiList_.size() > i)
+		{
+			pMission->SetText(uiList_[i].textList_);
+			pMission->SetImage(uiList_[i].imageList_);
+			i++;
+		}
 	}
 }
