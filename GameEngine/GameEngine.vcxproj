@@ -165,6 +165,7 @@
     <ClCompile Include="DebugUI.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBoss.cpp" />
+    <ClCompile Include="EnemyLastBoss.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyNormal.cpp" />
     <ClCompile Include="EnemyTurret.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InterSceneData.cpp" />
+    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="MissionOrder.cpp" />
     <ClCompile Include="MissionUI.cpp" />
     <ClCompile Include="ModelComponent.cpp" />
@@ -242,6 +244,7 @@
     <ClInclude Include="DebugUI.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBoss.h" />
+    <ClInclude Include="EnemyLastBoss.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyNormal.h" />
     <ClInclude Include="EnemyState.h" />
@@ -285,6 +288,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InterSceneData.h" />
+    <ClInclude Include="ItemManager.h" />
     <ClInclude Include="MissionOrder.h" />
     <ClInclude Include="MissionUI.h" />
     <ClInclude Include="ModelComponent.h" />

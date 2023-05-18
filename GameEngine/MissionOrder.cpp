@@ -44,7 +44,6 @@ void MissionOrder::Initialize()
 
 void MissionOrder::Update()
 {
-
 	ratio_ += DELTA_RATIO;
 	//ratio_‚ª1ˆÈã‚É‚È‚Á‚½‚ç
 	if (ratio_ >= 1.0f)

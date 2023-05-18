@@ -180,7 +180,6 @@ void ObjectSetter::BlackOutUpdate()
 
 void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
 {
-	
 	for (auto itr = EManager_.GetEnemyList()->begin(); itr != EManager_.GetEnemyList()->end(); itr++)
 	{
 		if ((*itr)->GetVisibleFrag())
