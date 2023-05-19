@@ -46,9 +46,12 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		EManager_.Initialize(stageNum);
 		UManager_.SetParentObject(GetParent());
 		UManager_.Initialize(stageNum);
+		IManager_.SetParentObject(GetParent());
+		IManager_.Initialize(stageNum);
 		pPlayer_ = Instantiate<Player>(GetParent());
 		EManager_.SetEnemy();
 		UManager_.SetUI();
+		IManager_.SetItem();
 	}
 	//親がタイトルシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_TITLE)

@@ -17,6 +17,16 @@ int ItemBase::GetLifeTime()
 	return lifeTime_;
 }
 
+void ItemBase::SubtractTime()
+{
+	lifeTime_--;
+}
+
+bool ItemBase::IsAttach()
+{
+	return isAttached_;
+}
+
 void ItemBase::SetItemType(ITEM_TYPE type)
 {
 	itemType_ = type;
@@ -25,4 +35,9 @@ void ItemBase::SetItemType(ITEM_TYPE type)
 void ItemBase::SetLifeTime(int time)
 {
 	lifeTime_ = time;
+}
+
+void ItemBase::AttachItem()
+{
+	isAttached_ = true;
 }

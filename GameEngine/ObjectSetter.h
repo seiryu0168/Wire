@@ -3,6 +3,7 @@
 #include"Engine/SceneManager.h"
 #include"UIManager.h"
 #include"EnemyManager.h"
+#include"ItemManager.h"
 #include"SetObject.h"
 #include<list>
 class Player;
@@ -12,6 +13,7 @@ class ObjectSetter : public GameObject
 private:
     EnemyManager EManager_;
     UIManager UManager_;
+    ItemManager IManager_;
     std::list<Enemy*> enemys_;
     Player* pPlayer_;
     int countDown_;

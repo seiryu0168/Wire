@@ -15,15 +15,18 @@ class ItemBase : public GameObject
 {
 private:
 	ITEM_TYPE itemType_;
-	int lifeTime_;
 	bool isAttached_;
+	int lifeTime_;
 public:
 	ItemBase(GameObject* parent, std::string itemName);
 	virtual ~ItemBase() {};
 	void SetItemType(ITEM_TYPE type);
 	void SetLifeTime(int time);
+	void AttachItem();
 	ITEM_TYPE GetItemType();
 	int GetLifeTime();
+	void SubtractTime();
+	bool IsAttach();
 
 };
 

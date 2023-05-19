@@ -206,6 +206,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InterSceneData.cpp" />
     <ClCompile Include="ItemBase.cpp" />
+    <ClCompile Include="ItemGetter.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="MissionOrder.cpp" />
     <ClCompile Include="MissionUI.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InterSceneData.h" />
     <ClInclude Include="ItemBase.h" />
+    <ClInclude Include="ItemGetter.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="MissionOrder.h" />
     <ClInclude Include="MissionUI.h" />

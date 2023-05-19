@@ -12,6 +12,7 @@ private:
 		XMFLOAT3 position_;
 	};
 	std::vector<ItemData*> itemDatas_;
+	GameObject* pObject_;
 	int itemCount_;
 	json fileReader_;
 public:
@@ -19,8 +20,9 @@ public:
 	~ItemManager();
 	void Initialize(int stageNum);
 	void Update();
-	void LoadFile(std::string fileName);
+	bool LoadFile(std::string fileName);
 	ItemBase* CreateItem(std::string itemName);
 	void SetItem();
+	void SetParentObject(GameObject* parent);
 };
 

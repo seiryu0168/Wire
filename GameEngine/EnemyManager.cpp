@@ -80,13 +80,13 @@ void EnemyManager::Update()
 
 void EnemyManager::SetEnemy()
 {
-	Enemy* pEnemy;
 	XMFLOAT3 position;
 	XMFLOAT3 rotate;
 	XMFLOAT3 scale;
 	//jsonファイルの名前から生成するエネミーを分岐し、エネミーリストに追加
 	for (auto& elem : enemyData_[0][INITIAL_ENEMY_STATUS].items())
 	{
+		Enemy* pEnemy;
 		//エネミーの名前取得
 		auto enemyName = elem.value().items().begin().key();
 		//エネミー生成
