@@ -32,3 +32,11 @@ void EnemyLastBoss::Update()
 void EnemyLastBoss::Draw()
 {
 }
+
+void EnemyLastBoss::StateFirstMode::Init(EnemyLastBoss& enemy)
+{
+}
+
+void EnemyLastBoss::StateFirstMode::Update(EnemyLastBoss& enemy)
+{
+}

@@ -57,7 +57,8 @@ class Player : public GameObject
     float angleY_;
     float angleX_;
     float lockOnAngleLimit_;
-
+    
+    XMFLOAT4 areaLimit_;
     XMVECTOR prevPositionVec;
     XMVECTOR baseUpVec_;
     XMVECTOR vCamPos_;
@@ -159,7 +160,7 @@ public:
     bool IsJump() { return jumpFlag_; }
     bool IsAir() { return airFlag_; }
     bool IsGround(){return groundFlag_;}
-
+    void SetAreaLimit(XMFLOAT4 limit);
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
 };
 

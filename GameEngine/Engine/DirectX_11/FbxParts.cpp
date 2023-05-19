@@ -243,10 +243,12 @@ HRESULT FbxParts::InitVertex(fbxsdk::FbxMesh* mesh)
 
 			}
 		}
+		else
+		{
 			CalcTangent(pVertices_[index0], pVertices_[index1], pVertices_[index2]);
 			CalcTangent(pVertices_[index1], pVertices_[index2], pVertices_[index0]);
 			CalcTangent(pVertices_[index2], pVertices_[index0], pVertices_[index1]);
-
+		}
 
 #if 0
 			if (mesh->GetElementTangentCount() > 0)

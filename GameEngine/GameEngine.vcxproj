@@ -205,6 +205,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InterSceneData.cpp" />
+    <ClCompile Include="ItemBase.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="MissionOrder.cpp" />
     <ClCompile Include="MissionUI.cpp" />
@@ -221,6 +222,7 @@
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="SetObject.cpp" />
+    <ClCompile Include="SpeedUpItem.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Test.cpp" />
@@ -288,6 +290,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InterSceneData.h" />
+    <ClInclude Include="ItemBase.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="MissionOrder.h" />
     <ClInclude Include="MissionUI.h" />
@@ -305,6 +308,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SelectScene.h" />
     <ClInclude Include="SetObject.h" />
+    <ClInclude Include="SpeedUpItem.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="State.h" />

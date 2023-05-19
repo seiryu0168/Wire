@@ -148,7 +148,7 @@ void Player::Initialize()
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
     stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
-    
+    areaLimit_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetStageAreaLimit();
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
    
@@ -338,6 +338,11 @@ void Player::Release()
     SAFE_RELEASE(pPointerLine_);
 }
 
+void Player::SetAreaLimit(XMFLOAT4 limit)
+{
+    areaLimit_ = limit;
+}
+
 void Player::CameraMove(RayCastData ray)
 {
     
@@ -496,31 +501,31 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     moveVector = XMLoadFloat3(&moveDist)+ wallzuri;
 
-    if (transform_.position_.x <= -AREA_LIMIT.x)
+    if (transform_.position_.x <= -areaLimit_.x)
     {
-        transform_.position_.x = -AREA_LIMIT.x;
+        transform_.position_.x = -areaLimit_.x;
     }
-    if (transform_.position_.x >= AREA_LIMIT.x)
+    if (transform_.position_.x >= areaLimit_.x)
     {
-        transform_.position_.x = AREA_LIMIT.x;
+        transform_.position_.x = areaLimit_.x;
     }
 
-    if (transform_.position_.y <= LOW_LIMIT)
+    if (transform_.position_.y <= areaLimit_.w)
     {
         transform_.position_.y = 0;
     }
-    if (transform_.position_.y >= AREA_LIMIT.y)
+    if (transform_.position_.y >= areaLimit_.y)
     {
-        transform_.position_.y = AREA_LIMIT.y;
+        transform_.position_.y = areaLimit_.y;
     }
 
-    if (transform_.position_.z <= -AREA_LIMIT.z)
+    if (transform_.position_.z <= -areaLimit_.z)
     {
-        transform_.position_.z = -AREA_LIMIT.z;
+        transform_.position_.z = -areaLimit_.z;
     }
-    if (transform_.position_.z >= AREA_LIMIT.z)
+    if (transform_.position_.z >= areaLimit_.z)
     {
-        transform_.position_.z = AREA_LIMIT.z;
+        transform_.position_.z = areaLimit_.z;
     }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     

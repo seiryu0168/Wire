@@ -67,3 +67,8 @@ void Stage1::SetStageNum(int stageNum)
 	else
 		stageNum_ = (stageTable_.MaxStage() - 1);
 }
+
+XMFLOAT4 Stage1::GetStageAreaLimit()
+{
+	return stageTable_.GetAreaLimit(stageNum_);
+}

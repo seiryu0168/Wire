@@ -29,7 +29,7 @@ public:
 
     void LoadStageData();
     void SetStageNum(int stageNum);
-
+    XMFLOAT4 GetStageAreaLimit();
     int GetModelHandle() { return hModel_; }
 };
 

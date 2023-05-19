@@ -35,17 +35,31 @@ void StageManager::Initialize(std::string fileName)
 		//jsonオブジェクトはキーを指定して配列や値を取る
 		for (auto& elem : stageNameArray["StageName"].items())
 		{
+			StageData* data = new StageData;
 			stageCount_++;
-			stageName_.push_back(elem.value());
+			
+			data->areaLimit_ = { elem.value()[1][0],
+								 elem.value()[1][1],
+								 elem.value()[1][2],
+								 elem.value()[1][3] };
+			data->stageName_=elem.value()[0];
+			stageDatas_.push_back(data);
 		}
 	}
 	fileReader.close();
 	SetCurrentDirectory(currentDir);
 }
 
+const XMFLOAT4& StageManager::GetAreaLimit(int stageNum)
+{
+	if (stageDatas_.size() < stageNum)
+		return XMFLOAT4(1, 1, 1, 1);
+	return stageDatas_[stageNum]->areaLimit_;
+}
+
 int StageManager::LoadStage(int stageNum)
 {
-	std::string filePath = "Assets\\" + stageName_[stageNum] + ".fbx";
+	std::string filePath = "Assets\\" + stageDatas_[stageNum]->stageName_ + ".fbx";
 	int hModel = ModelManager::Load(filePath);
 	assert(hModel >= 0);
 	return hModel;
