@@ -17,9 +17,9 @@ int ItemBase::GetLifeTime()
 	return lifeTime_;
 }
 
-void ItemBase::SubtractTime()
+void ItemBase::SubtractTime(int time)
 {
-	lifeTime_--;
+	lifeTime_-=time;
 }
 
 bool ItemBase::IsAttach()

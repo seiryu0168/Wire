@@ -13,6 +13,7 @@ public:
 	void ItemAttach(ItemBase* item);
 	void ItemRemove(ItemBase* item);
 	void Apply(ItemBase* item);
+	bool CheckSameItem(ITEM_TYPE type);
 	void RemoveItemEffect(ItemBase* item);
 };
 

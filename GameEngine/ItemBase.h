@@ -4,10 +4,8 @@
 enum class ITEM_TYPE
 {
 	ITEM_NONE = 0,
-	UP_SPEED,
-	UP_SEARCH,
-	DOWN_SPEED,
-	DOWN_SEARCH,
+	SPEED,
+	SEARCH,
 	ITEM_MAX,
 };
 
@@ -29,7 +27,7 @@ public:
 	void SetLifeTime(int time);
 	void SetDefaultParameter(float param);
 	bool IsAttach();
-	void SubtractTime();
+	void SubtractTime(int time=1);
 
 };
 

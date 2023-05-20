@@ -816,7 +816,7 @@ bool Player::IsAssistRange(const RayCastData& ray, const XMFLOAT3& targetPos, fl
         //targetVec‚ÆdirVec‚Ì“àÏ‚ð‹‚ß‚é
         float angle = acosf(VectorDot(dirVec, targetVec));
 
-        //angle(ƒ‰ƒWƒAƒ“)‚ª}0.4‚ÌŽžƒJƒƒ‰‚Ì‰ñ“]‘¬“x‚ð’x‚­‚·‚é
+        //angle(ƒ‰ƒWƒAƒ“)‚ª”ÍˆÍ“à‚ÌŽžƒJƒƒ‰‚Ì‰ñ“]‘¬“x‚ð’x‚­‚·‚é
         if (angle > -AIM_ASSIST_ANGLE && angle < AIM_ASSIST_ANGLE)
         {
             rotateSpeed_ = rotateSpeed_ * angle + LOW_CAMERA_ROTATE_SPEED;

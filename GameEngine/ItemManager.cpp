@@ -1,14 +1,15 @@
 #include "ItemManager.h"
 #include"SpeedUpItem.h"
+#include"SearchUpItem.h"
 #include<d3d11.h>
 #include<fstream>
 #include<sstream>
 namespace
 {
-	static const std::string FILE_NAME[4]{ "Stage1ItemData.json",
+	static const std::string FILE_NAME[4]{ "TutorialStageItemData.json",
+										   "Stage1ItemData.json",
 										   "Stage2ItemData.json",
-										   "Stage3ItemData.json",
-										   "Stage4ItemData.json", };
+										   "Stage3ItemData.json", };
 }
 ItemManager::ItemManager()
 {
@@ -73,6 +74,10 @@ ItemBase* ItemManager::CreateItem(std::string itemName)
 	if (itemName == "SpeedUpItem")
 	{
 		return pObject_->Instantiate<SpeedUpItem>(pObject_);
+	}
+	if (itemName == "SearchUpItem")
+	{
+		return pObject_->Instantiate<SearchUpItem>(pObject_);
 	}
 	return nullptr;
 }

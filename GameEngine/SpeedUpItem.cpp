@@ -22,7 +22,7 @@ void SpeedUpItem::Initialize()
 	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 1,1,1 });
 	AddCollider(pCollision);
 	hModel_ = ModelManager::Load("Assets\\AAA.fbx");
-	SetItemType(ITEM_TYPE::UP_SPEED);
+	SetItemType(ITEM_TYPE::SPEED);
 }
 
 void SpeedUpItem::Update()

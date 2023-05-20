@@ -156,6 +156,7 @@ public:
     XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
     Pointer* GetPointer() { return pPointer_; }
     float GetSpeed() { return speed_; }
+    float GetLockOnAngleLimit() { return lockOnAngleLimit_; }
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
     int GetLife() { return (int)playerLife_; }
     int GetTargetEnemyNum() { return enemyNumber_; }
@@ -168,5 +169,5 @@ public:
     void SetAreaLimit(XMFLOAT4 limit);
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
     void SetSpeed(float speed) { speed_ = speed; }
+    void SetLockOnAngleLimit(float limit) { lockOnAngleLimit_ = limit; }
 };
-
