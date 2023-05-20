@@ -4,13 +4,15 @@
 class ItemGetter
 {
 private:
-	std::vector<ItemBase*> itemList_;
+	std::list<ItemBase*> itemList_;
 	GameObject* attachObject_;
 public:
 	ItemGetter(GameObject* object);
 	~ItemGetter();
-	void ItemAttach();
-	void ItemRemove();
-
+	void Update();
+	void ItemAttach(ItemBase* item);
+	void ItemRemove(ItemBase* item);
+	void Apply(ItemBase* item);
+	void RemoveItemEffect(ItemBase* item);
 };
 

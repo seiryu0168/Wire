@@ -5,6 +5,7 @@
 #include"Engine/DirectX_11/LineParticle.h"
 
 
+
 class Particle;
 class Enemy;
 class Wire;
@@ -12,6 +13,7 @@ class Pointer;
 class ObjectSetter;
 class PlayScreen;
 class ModelComponent;
+class ItemGetter;
 class Player : public GameObject
 {
 
@@ -52,6 +54,7 @@ class Player : public GameObject
     float flyTime_;
     float velocity_;
     float rotateSpeed_;
+    float speed_;
     float maxSpeed_;
     float wireLength_;
     float angleY_;
@@ -79,6 +82,7 @@ class Player : public GameObject
     PlayScreen*   pScreen_;
     ObjectSetter* pSetter_;
     ModelComponent* modelComp_;
+    ItemGetter* pItemGetter_;
     std::list<Enemy*> enemyList_;
 
 
@@ -151,6 +155,7 @@ public:
     XMMATRIX GetCameraMatrixY() { return matCamY_; }
     XMMATRIX GetCameraMatrix() { return matCamY_*matCamX_; }
     Pointer* GetPointer() { return pPointer_; }
+    float GetSpeed() { return speed_; }
     std::list<Enemy*> GetEnemyList() { return enemyList_; }
     int GetLife() { return (int)playerLife_; }
     int GetTargetEnemyNum() { return enemyNumber_; }
@@ -162,5 +167,6 @@ public:
     bool IsGround(){return groundFlag_;}
     void SetAreaLimit(XMFLOAT4 limit);
     void SetRotateSpeed(float rotateSpeed) { rotateSpeed_ = rotateSpeed; }
+    void SetSpeed(float speed) { speed_ = speed; }
 };
 

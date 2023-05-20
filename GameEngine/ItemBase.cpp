@@ -27,6 +27,11 @@ bool ItemBase::IsAttach()
 	return isAttached_;
 }
 
+void ItemBase::SetDefaultParameter(float param)
+{
+	defaultParameter_ = param;
+}
+
 void ItemBase::SetItemType(ITEM_TYPE type)
 {
 	itemType_ = type;

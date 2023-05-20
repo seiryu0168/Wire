@@ -9,6 +9,7 @@
 #include"PlayerBase.h"
 #include"Engine/ResourceManager/Audio.h"
 //#include"ModelComponent.h"
+#include"ItemGetter.h"
 #include"PlayScreen.h"
 #include"Player.h"
 #include"InterSceneData.h"
@@ -54,7 +55,6 @@ namespace
 
     static const XMFLOAT4 LINECOLOR_RED = { 1,0,0,1 };
     static const XMFLOAT4 LINECOLOR_DEFAULT = { 1,1,1,1 };
-    static const XMFLOAT3 AREA_LIMIT = XMFLOAT3(250.0f,250.0f, 250.0f);
 }
 
 //コンストラクタ
@@ -84,6 +84,7 @@ Player::Player(GameObject* parent)
     godTime_(0),
     velocity_(0),
     rotateSpeed_(4.0f),
+    speed_(1),
     maxSpeed_(2.0f),
     wireLength_(100.0f),
     angleY_(0),
@@ -106,6 +107,7 @@ Player::Player(GameObject* parent)
     pScreen_ = Instantiate<PlayScreen>(this);
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(this);
+    pItemGetter_ = new ItemGetter(this);
 }
 
 //デストラクタ
@@ -306,6 +308,7 @@ void Player::Update()
     CharactorControll(vPlayerMove_);
     CameraMove(ray);
     transform_.rotate_.y = angleY_;
+    pItemGetter_->Update();
 }
 
 //描画
@@ -334,6 +337,7 @@ void Player::SecondDraw()
 //開放
 void Player::Release()
 {
+    SAFE_DELETE(pItemGetter_);
     SAFE_DELETE(wire_);
     SAFE_RELEASE(pPointerLine_);
 }
@@ -446,7 +450,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     float da = XMVectorGetX(XMVector3Length(moveHolizon));
     
     ModelManager::RayCast(stageNum_, fMoveRay);
-    if (fMoveRay.dist<VectorLength(moveHolizon))
+    if (fMoveRay.dist<VectorLength(moveHolizon)*speed_)
     {
         
         vPlayerPos_ = XMLoadFloat3(&transform_.position_);
@@ -529,7 +533,7 @@ void Player::CharactorControll(XMVECTOR &moveVector)
     }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     
-    XMStoreFloat3(&transform_.position_, vPlayerPos_ + moveVector);
+    XMStoreFloat3(&transform_.position_, vPlayerPos_ + moveVector* speed_);
     //下レイの距離(dist)がhitdist_以下になったらy軸の座標を戻す
     XMStoreFloat3(&DRay.start, vPlayerPos_ + startVec[(int)DIRECTION::DIR_UP]);
     XMStoreFloat3(&DRay.dir, startVec[(int)DIRECTION::DIR_DOWN]);
@@ -614,7 +618,6 @@ void Player::OccurParticle()
         data.deltaColor = XMFLOAT4(0, 0, 0, -0.08f);
         pParticle_->ParticleStart(data);
     }
-
 }
 
 void Player::AddTargetList(Enemy* target)
@@ -675,9 +678,13 @@ void Player::OnCollision(GameObject* pTarget)
                 flyTime_ = 1.0f;
                 vFlyMove_ = XMVector3Normalize(pTarget->GetPosition() - transform_.position_) * (-0.5f);
                 ImageManager::SetAlpha(life_[playerLife_], 0);
-
             }
         }
+    }
+
+    if (pTarget->GetTag() == "Item")
+    {
+        pItemGetter_->ItemAttach((ItemBase*)pTarget);
     }
 
     if (playerLife_ <= 0)
@@ -734,7 +741,6 @@ void Player::Aim(RayCastData* ray)
              enemyNumber_ = -1;
              lockOn_ = false;
          }
-
     }
     
     {

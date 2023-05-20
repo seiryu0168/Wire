@@ -17,16 +17,19 @@ private:
 	ITEM_TYPE itemType_;
 	bool isAttached_;
 	int lifeTime_;
+	float defaultParameter_;
 public:
 	ItemBase(GameObject* parent, std::string itemName);
 	virtual ~ItemBase() {};
-	void SetItemType(ITEM_TYPE type);
-	void SetLifeTime(int time);
 	void AttachItem();
 	ITEM_TYPE GetItemType();
 	int GetLifeTime();
-	void SubtractTime();
+	float GetDefaultParameter() { return defaultParameter_; }
+	void SetItemType(ITEM_TYPE type);
+	void SetLifeTime(int time);
+	void SetDefaultParameter(float param);
 	bool IsAttach();
+	void SubtractTime();
 
 };
 
