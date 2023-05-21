@@ -223,10 +223,12 @@
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SearchUpItem.cpp" />
     <ClCompile Include="SelectScene.cpp" />
+    <ClCompile Include="SelectUI.cpp" />
     <ClCompile Include="SetObject.cpp" />
     <ClCompile Include="SpeedUpItem.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="StageSelectScene.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="TestScene.cpp" />
@@ -311,10 +313,12 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SearchUpItem.h" />
     <ClInclude Include="SelectScene.h" />
+    <ClInclude Include="SelectUI.h" />
     <ClInclude Include="SetObject.h" />
     <ClInclude Include="SpeedUpItem.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="StageManager.h" />
+    <ClInclude Include="StageSelectScene.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="EngineTime.h" />

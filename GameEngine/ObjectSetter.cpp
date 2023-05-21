@@ -5,7 +5,7 @@
 #include"ResultUI.h"
 #include"TutorialUI.h"
 #include"Player.h"
-#include"TitleUI.h"
+#include"SelectUI.h"
 #include"EnemyTutorial.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
@@ -56,7 +56,12 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	//親がタイトルシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_TITLE)
 	{
-		Instantiate<TitleUI>(GetParent());
+		pManager_->ChangeScene(SCENE_ID::SCENE_ID_SELECT);
+	}
+	//親がセレクトシーンだったら
+	if (nowSceneID_ == SCENE_ID::SCENE_ID_SELECT)
+	{
+		Instantiate<SelectUI>(GetParent());
 	}
 	//親がリザルトシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_RESULT)
@@ -73,7 +78,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		EManager_.SetEnemy();
 		Instantiate<TutorialUI>(GetParent());
 	}
-	set_->ObjectSet();
+	//set_->ObjectSet();
 }
 
 ObjectSetter::~ObjectSetter()

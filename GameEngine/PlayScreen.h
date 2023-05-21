@@ -8,6 +8,7 @@ class PlayScreen : public GameObject
 {
 private:
 	int hPict_[4];
+	int hLowHPPict_;
 	MissionUI* pUI;
 public:
 	PlayScreen(GameObject* parent);

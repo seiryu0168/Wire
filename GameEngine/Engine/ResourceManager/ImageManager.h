@@ -17,7 +17,7 @@ namespace ImageManager
 	/// </summary>
 	/// <param name="imageHandle">画像番号</param>
 	void Draw(int imgHandle);
-	void Draw();
+	void DrawUI();
 	
 	/// <summary>
 	/// 画像の切り抜き範囲リセット
@@ -63,6 +63,8 @@ namespace ImageManager
 	/// <param name="imgHandle">画像番号</param>
 	/// <param name="size">サイズ</param>
 	void  SetImageSize(int imgHandle, XMFLOAT3 size);
+
+	void SetUIList(int imgHandle);
 
 	void Release(int imgHandle);
 	void AllRelease();

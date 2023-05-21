@@ -21,6 +21,7 @@ namespace ImageManager
 	};
 
 	std::vector<imageData*> imageList_;
+	std::vector<int> uiImageList_;
 }
 int ImageManager::Load(std::string fileName)
 {
@@ -68,9 +69,9 @@ void ImageManager::Draw(int imgHandle)
 	imageList_[imgHandle]->pSprite_->Draw(imageList_[imgHandle]->transform_, imageList_[imgHandle]->rect_, imageList_[imgHandle]->changeColor_,imageList_[imgHandle]->alpha_);
 }
 
-void ImageManager::Draw()
+void ImageManager::DrawUI()
 {
-	for (int i = 0; i < imageList_.size(); i++)
+	for (int i : uiImageList_)
 	{
 		Draw(i);
 	}
@@ -155,6 +156,11 @@ void ImageManager::SetImageSize(int imgHandle, XMFLOAT3 size)
 	imageList_[imgHandle]->transform_.scale_ = size;
 }
 
+void ImageManager::SetUIList(int imgHandle)
+{
+	uiImageList_.push_back(imgHandle);
+}
+
 void ImageManager::Release(int imgHandle)
 {
 	if (imgHandle < 0 || imgHandle > imageList_.size())
@@ -187,5 +193,6 @@ void ImageManager::AllRelease()
 	{
 		Release(i);
 	}
+	uiImageList_.clear();
 	imageList_.clear();
 }

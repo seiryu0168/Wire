@@ -174,7 +174,7 @@ void Player::Initialize()
         int hPict_ = ImageManager::Load("Assets\\LifeImage.png");
         ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+ LIFE_INTERVAL *i, LIFE_OFFSET_Y, 0 });
         ImageManager::SetImageSize(hPict_, LIFE_SIZE);
-
+        ImageManager::SetUIList(hPict_);
         life_.push_back(hPict_);
     }
 }

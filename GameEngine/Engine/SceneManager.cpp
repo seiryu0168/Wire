@@ -1,10 +1,11 @@
 #include"GameObject/RootJob.h"
 #include "SceneManager.h"
 #include"../TestScene.h"
-#include"../PlayScene.h"
 #include"../TitleScene.h"
-#include"../ResultScene.h"
+#include"../StageSelectScene.h"
+#include"../PlayScene.h"
 #include"../TutorialScene.h"
+#include"../ResultScene.h"
 #include"ResourceManager/Model.h"
 #include"ResourceManager/ImageManager.h"
 
@@ -35,6 +36,7 @@ void SceneManager::Update()
 		switch ((SCENE_ID)nextSceneID_)
 		{
 		case SCENE_ID::SCENE_ID_TITLE:p = Instantiate<TitleScene>(this); break;
+		case SCENE_ID::SCENE_ID_SELECT:p = Instantiate<StageSelectScene>(this); break;
 		case SCENE_ID::SCENE_ID_PLAY:p = Instantiate<PlayScene>(this); break;
 		case SCENE_ID::SCENE_ID_RESULT:p = Instantiate<ResultScene>(this); break;
 		case SCENE_ID::SCENE_ID_TUTORIAL:p = Instantiate<TutorialScene>(this); break;

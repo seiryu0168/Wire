@@ -1,12 +1,24 @@
 #include "PlayScreen.h"
 #include"Engine/ResourceManager/ImageManager.h"
+#include"Player.h"
 #include"ObjectSetter.h"
 #include"TutorialOrder.h"
 #include"MissionOrder.h"
+namespace
+{
+	static const int LOW_HP = 3;
+
+}
 PlayScreen::PlayScreen(GameObject* parent)
 	:GameObject(parent,"PlayScreen"),
-	pUI(nullptr)
+	pUI(nullptr),
+	hLowHPPict_(-1)
 {
+	for (int i : hPict_)
+	{
+		i = -1;
+
+	}
 }
 
 PlayScreen::~PlayScreen()
@@ -23,12 +35,19 @@ void PlayScreen::Initialize()
 	assert(hPict_[2] >= 0);
 	hPict_[3] = ImageManager::Load("Assets\\ScreenFrameRight2.png");
 	assert(hPict_[3] >= 0);
+	hLowHPPict_ = ImageManager::Load("Assets\\LowHPScreen.png");
+	assert(hLowHPPict_ >= 0);
+
 
 	//データを外部に出せるようになったら変える
 	ImageManager::SetImagePos(hPict_[0], { 0,580,0 });
 	ImageManager::SetImagePos(hPict_[1], { 0,-580,0 });
 	ImageManager::SetImagePos(hPict_[2], { -1410,10,0 });
 	ImageManager::SetImagePos(hPict_[3], { 1410,10,0 });
+	for (int i : hPict_)
+	{
+		ImageManager::SetUIList(i);
+	}
 	ObjectSetter* p = (ObjectSetter*)FindObject("ObjectSetter");
 	
 	/*if (p->GetSceneName() == "PlayScene")
@@ -48,6 +67,10 @@ void PlayScreen::Update()
 
 void PlayScreen::Draw()
 {
+	if (((Player*)GetParent())->GetLife() <= LOW_HP)
+	{
+		ImageManager::Draw(hLowHPPict_);
+	}
 }
 void PlayScreen::ThirdDraw()
 {

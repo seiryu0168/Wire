@@ -1,0 +1,8 @@
+{
+  "ResultUIDataList": [
+    {
+      "Button1": [ "StageSelect", "Return to selectmenu" ],
+      "Button2": [ "Retry", "Start orver" ]
+    }
+  ]
+}
