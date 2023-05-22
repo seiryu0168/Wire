@@ -6,6 +6,7 @@ class TitleUI : public GameObject
 private:
 	int hPictTitle_;
 	int hPictMessage_;
+	int flashingTime_;
 public:
 	TitleUI(GameObject* parent);
 	~TitleUI();
