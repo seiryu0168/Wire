@@ -30,8 +30,6 @@ SelectUI::SelectUI(GameObject* parent)
 	moveTime_(0),
 	hPictBackGround_(-1),
 	buttonMove_(0),
-	canPushButton_(true),
-	isMoveEnd_(true),
 	buttonCount_(0)
 
 {

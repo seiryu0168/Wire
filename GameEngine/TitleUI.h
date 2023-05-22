@@ -7,6 +7,7 @@ private:
 	int hPictTitle_;
 	int hPictMessage_;
 	int flashingTime_;
+	bool isButtonPush_;
 public:
 	TitleUI(GameObject* parent);
 	~TitleUI();

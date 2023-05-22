@@ -6,7 +6,7 @@ namespace
 	static const std::string FILE_NAME = "Stagename.json";
 }
 //コンストラクタ
-Stage1::Stage1(GameObject* parent)
+Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage1"),
 	hModel_(-1)
 {
@@ -14,13 +14,13 @@ Stage1::Stage1(GameObject* parent)
 }
 
 //デストラクタ
-Stage1::~Stage1()
+Stage::~Stage()
 {
 
 }
 
 //初期化
-void Stage1::Initialize()
+void Stage::Initialize()
 {
 	hModel_=stageTable_.LoadStage(stageNum_);
 	//ModelComponent* mComp = new ModelComponent("Assets\\NewStage_Maya.fbx", this);
@@ -32,35 +32,35 @@ void Stage1::Initialize()
 }
 
 //更新
-void Stage1::Update() 
+void Stage::Update() 
 {
 
 }
 
-void Stage1::FixedUpdate()
+void Stage::FixedUpdate()
 {
 
 }
 
 //描画
-void Stage1::Draw()
+void Stage::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
 	ModelManager::Draw(hModel_);
 }
 
 //開放
-void Stage1::Release()
+void Stage::Release()
 {
 
 }
 
-void Stage1::LoadStageData()
+void Stage::LoadStageData()
 {
 	//stageTable_.LoadStage(0);
 }
 
-void Stage1::SetStageNum(int stageNum)
+void Stage::SetStageNum(int stageNum)
 {
 	if (stageNum < stageTable_.MaxStage())
 		stageNum_ = stageNum;
@@ -68,7 +68,7 @@ void Stage1::SetStageNum(int stageNum)
 		stageNum_ = (stageTable_.MaxStage() - 1);
 }
 
-XMFLOAT4 Stage1::GetStageAreaLimit()
+XMFLOAT4 Stage::GetStageAreaLimit()
 {
 	return stageTable_.GetAreaLimit(stageNum_);
 }

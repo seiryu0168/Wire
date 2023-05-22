@@ -3,7 +3,7 @@
 #include"Engine/ResourceManager/json.hpp"
 
 class Text;
-class SelectUI : public GameObject
+class PauseUI : public GameObject
 {
 	using json = nlohmann::json;
 private:
@@ -15,10 +15,9 @@ private:
 	struct button_
 	{
 		Text* buttonText_;
-		int hButtonPict_;
-		int hMissionPict_;
 		XMFLOAT3 position_;
 	};
+	XMFLOAT3 framePos_;
 	short buttonMove_;
 	json* fileReader_;
 	UI_MODE uiMode_;
@@ -32,8 +31,8 @@ private:
 	void Move();
 	std::vector<button_> buttonList_;
 public:
-	SelectUI(GameObject* parent);
-	~SelectUI();
+	PauseUI(GameObject* parent);
+	~PauseUI();
 	void Initialize() override;
 	void Update() override;
 	void ThirdDraw() override;

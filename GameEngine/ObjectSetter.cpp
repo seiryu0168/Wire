@@ -7,6 +7,7 @@
 #include"SelectUI.h"
 #include"Player.h"
 #include"ResultUI.h"
+#include"PauseUI.h"
 #include"EnemyTutorial.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
@@ -39,9 +40,10 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	//親がプレイシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_PLAY)
 	{
+		Instantiate<PauseUI>(GetParent());
 		//リザルトデータ削除
 		InterSceneData::DeleteData("Result");
-		Stage1* p=Instantiate<Stage1>(GetParent());
+		Stage* p=Instantiate<Stage>(GetParent());
 		p->SetStageNum(stageNum);
 		EManager_.SetParentObject(GetParent());
 		EManager_.Initialize(stageNum);
@@ -72,7 +74,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	//親がチュートリアルシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_TUTORIAL)
 	{
-		Instantiate<Stage1>(GetParent());
+		Instantiate<Stage>(GetParent());
 		Instantiate<Player>(GetParent());
 		EManager_.SetParentObject(GetParent());
 		EManager_.Initialize(stageNum);

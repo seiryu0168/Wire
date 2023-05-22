@@ -54,7 +54,7 @@ void EnemyNormal::Initialize()
 	ray.start = startPos;
 	//レイの方向設定
 	ray.dir = XMFLOAT3(0, -1, 0);
-	int stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
+	int stageModelHandle = ((Stage*)FindObject("Stage1"))->GetModelHandle();
 	ModelManager::RayCast(stageModelHandle,ray);
 	
 	//当たった位置から10上に配置

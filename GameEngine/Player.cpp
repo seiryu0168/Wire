@@ -149,8 +149,8 @@ void Player::Initialize()
     //“–‚½‚è”»’è
     SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),2);
     AddCollider(pCollider);
-    stageNum_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetModelHandle();
-    areaLimit_ = ((Stage1*)GetParent()->FindChild("Stage1"))->GetStageAreaLimit();
+    stageNum_ = ((Stage*)GetParent()->FindChild("Stage1"))->GetModelHandle();
+    areaLimit_ = ((Stage*)GetParent()->FindChild("Stage1"))->GetStageAreaLimit();
     pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     transform_.position_ = XMFLOAT3(0, 20,0);
    

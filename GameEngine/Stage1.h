@@ -1,7 +1,7 @@
 #pragma once
 #include"Engine/GameObject/GameObject.h"
 #include"StageManager.h"
-class Stage1 : public GameObject
+class Stage : public GameObject
 {
 private:
     int hModel_;
@@ -9,10 +9,10 @@ private:
     StageManager stageTable_;
 public:
     //コンストラクタ
-    Stage1(GameObject* parent);
+    Stage(GameObject* parent);
 
     //デストラクタ
-    ~Stage1();
+    ~Stage();
 
     //初期化
     void Initialize() override;

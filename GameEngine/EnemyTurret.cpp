@@ -68,7 +68,7 @@ void EnemyTurret::Initialize()
 	
 	//ステージのモデル取得
 	int stageModelHandle = -1;
-	stageModelHandle = ((Stage1*)FindObject("Stage1"))->GetModelHandle();
+	stageModelHandle = ((Stage*)FindObject("Stage1"))->GetModelHandle();
 	
 	//初期位置設定
 	XMFLOAT3 initPos = transform_.position_;
