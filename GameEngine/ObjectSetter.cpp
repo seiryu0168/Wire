@@ -2,10 +2,11 @@
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/DirectX_11/Fbx.h"
 #include"Engine/ResourceManager/ImageManager.h"
-#include"ResultUI.h"
+#include"TitleUI.h"
 #include"TutorialUI.h"
-#include"Player.h"
 #include"SelectUI.h"
+#include"Player.h"
+#include"ResultUI.h"
 #include"EnemyTutorial.h"
 #include"EnemyNormal.h"
 #include"EnemyTurret.h"
@@ -56,7 +57,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 	//親がタイトルシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_TITLE)
 	{
-		pManager_->ChangeScene(SCENE_ID::SCENE_ID_SELECT);
+		Instantiate<TitleUI>(GetParent());
 	}
 	//親がセレクトシーンだったら
 	if (nowSceneID_ == SCENE_ID::SCENE_ID_SELECT)

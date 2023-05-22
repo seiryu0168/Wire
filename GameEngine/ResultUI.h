@@ -13,9 +13,7 @@ class ResultUI : public GameObject
 	using json = nlohmann::json;
 private:
 	int hPictResult_;
-	int hPictTitle2_;
 	int hPictRetry_;
-	int hPictRetry2_;
 	int hPictButtonFrame_;
 	short buttonMove_;
 

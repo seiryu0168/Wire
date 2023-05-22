@@ -37,7 +37,7 @@ bool Enemy::IsVisible( float visibleAngle, float range)
 	toPlayer = XMVector3Normalize(enemyParameter_.toPlayerVec);					//³‹K‰»
 
 	//“àÏ‚ğ‹‚ß‚ÄŠp“xŒvZ(1ˆÈã‚É‚È‚ç‚È‚¢‚æ‚¤minŠÖ”‚Â‚¯‚½)
-	float angle = acosf(Clamp(VectorDot(GetFrontVec(), toPlayer),-1, 1));
+	float angle = acosf(Clamp<float>(VectorDot(GetFrontVec(), toPlayer),-1, 1));
 	if (toPlayerRange <= 2 * range)
 	{
 		enemyParameter_.pPlayer->AddTargetList(this);
@@ -75,7 +75,7 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 	XMStoreFloat3(&buff, XMVector3Cross(base, fVec));
 	
 	float angle = VectorDot(base, fVec);
-	angle = acosf(Clamp(angle,-1, 1));
+	angle = acosf(Clamp<float>(angle,-1, 1));
 	//buff.y‚ª•‰‚Ì’l‚¾‚Á‚½‚ç
 	if (signbit(buff.y))
 	{

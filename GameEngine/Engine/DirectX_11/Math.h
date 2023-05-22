@@ -38,9 +38,11 @@ namespace Math
 	bool IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir);
 
 }
-inline float Clamp(const float& in, const float& low, const float& high)
+
+template <typename T>
+inline T Clamp(const T& in, const T& low, const T& high)
 {
-	float out = std::min<float>(std::max<float>(in, low), high);
+	T out = std::min<T>(std::max<T>(in, low), high);
 	return out;
 }
 //template<typename T>

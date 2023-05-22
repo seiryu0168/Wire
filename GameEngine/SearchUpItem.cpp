@@ -47,7 +47,7 @@ void SearchUpItem::Release()
 
 void SearchUpItem::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetTag() == "Player");
+	if (pTarget->GetTag() == "Player")
 	{
 		DelCollider(*this);
 	}

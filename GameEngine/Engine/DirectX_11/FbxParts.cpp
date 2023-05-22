@@ -729,7 +729,7 @@ void FbxParts::RayCast(RayCastData& rayData,Transform& transform)
 			XMVECTOR hitPosition;
 			float dist;
 			XMVECTOR normal = XMVector3Normalize(XMVector3Cross(nmlVec1, nmlVec2));
-			float angle = acosf(Clamp(VectorDot(normal, -vDir),-1,1));
+			float angle = acosf(Clamp<float>(VectorDot(normal, -vDir),-1,1));
 			if (Math::Intersect(rayData.start, rayData.dir, v0, v1, v2, dist, hitPosition) && dist < rayData.dist && dist < rayData.distLimit && Math::IsFrontSurface(normal, XMLoadFloat3(&rayData.dir)))
 			{
 				rayData.normal = normal;

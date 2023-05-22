@@ -40,7 +40,6 @@ void Wire::SetWire(XMVECTOR startPos, XMVECTOR endPos)
 //çXêV
 void Wire::Update()
 {
-	XMFLOAT3 pos;
 	switch (wireStatus_)
 	{
 	case WIRE_STATE::HOUSE:
@@ -85,7 +84,7 @@ void Wire::Stretch()
 		for (int i = 0; i < splitCount_; i++)
 		{
 			XMStoreFloat3(&pos, (startPos_ + (vWire_ * split_ * i*Easing::EaseINOutQuad((float)(FRAME-extendFrame_)/(float)FRAME))) + vWidth_ * CalcWidthSize());
-			vWidth_ *= -1;
+			vWidth_ *= -1.0f;
 			wireLine_.AddPosition(pos);
 		}
 		vWidth_ *= -1;
@@ -110,8 +109,8 @@ void Wire::Release()
 
 int Wire::CalcWidthSize()
 {
-	float widthSize = ((float)extendFrame_ / (float)FRAME) * Easing::EaseOutQuad((float)splitCount_ / 5.0f) * 3;
-	return widthSize;
+	float widthSize = ((float)extendFrame_ / (float)FRAME) * Easing::EaseOutQuad((float)splitCount_ / 5.0f) * 3.0f;
+	return (int)widthSize;
 }
 
 void Wire::ExtendWire(const float& extendLength, XMMATRIX rotateMat)

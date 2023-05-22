@@ -126,7 +126,7 @@ void ResultUI::Input()
 	}
 	//ボタンの番号を調整
 	buttonNum_ += buttonMove_;
-	buttonNum_ = Clamp(buttonNum_, 0, buttonCount_ - 1);
+	buttonNum_ = Clamp<float>((float)buttonNum_, 0.0f, (float)(buttonCount_ - 1));
 
 	PushedButton(buttonNum_);
 }
@@ -157,8 +157,6 @@ void ResultUI::ReadFile(std::string fileName)
 	//カレントディレクトリ取得
 	WCHAR currentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDir);
-
-	WCHAR path[FILENAME_MAX];
 
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{

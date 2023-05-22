@@ -15,6 +15,8 @@ namespace
 											  "Stage3EnemyStatus.json" };
 }
 EnemyManager::EnemyManager()
+	:pObject_(nullptr),
+	enemyData_(nullptr)
 {
 }
 
@@ -39,8 +41,6 @@ bool EnemyManager::LoadFile(std::string fileName)
 	//カレントディレクトリ取得
 	WCHAR currentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDir);
-
-	WCHAR path[FILENAME_MAX];
 
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{
@@ -159,4 +159,6 @@ Enemy* EnemyManager::InstantiateEnemy(std::string enemyName)
 	{
 		return pObject_->Instantiate<EnemyTutorial>(pObject_);
 	}
+	else
+		return nullptr;
 }

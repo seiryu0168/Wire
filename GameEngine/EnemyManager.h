@@ -18,7 +18,7 @@ public:
 	void SetParentObject(GameObject* obj);
 	void Update();
 	void SetEnemy();
-	int EnemyCount() { return enemyList_.size(); }
+	int EnemyCount() { return (int)enemyList_.size(); }
 	bool IsAllEnemyDestroy();
 	bool IsActiveEnemyDestroy();
 	void BootNotActiveEnemy();

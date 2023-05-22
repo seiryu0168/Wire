@@ -13,6 +13,8 @@ namespace
 }
 
 UIManager::UIManager()
+	:uiData_(nullptr),
+	pObject_(nullptr)
 {
 }
 
@@ -81,8 +83,6 @@ void UIManager::LoadFile(std::string fileName)
 	//カレントディレクトリ取得
 	WCHAR currentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDir);
-
-	WCHAR path[FILENAME_MAX];
 
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{

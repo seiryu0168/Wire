@@ -25,7 +25,7 @@ private:
 	bool isMoveEnd_;
 	bool canPushButton_;
 	UI_MODE uiMode_;
-	int hPictTitle_;
+	int hPictBackGround_;
 	int hPictButtonFrame_;
 	int buttonCount_;
 	int buttonNum_;

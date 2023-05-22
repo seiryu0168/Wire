@@ -28,7 +28,7 @@ SelectUI::SelectUI(GameObject* parent)
 	:GameObject(parent, "SelectUI"),
 	inputInterval_(INTERVAL),
 	moveTime_(0),
-	hPictTitle_(-1),
+	hPictBackGround_(-1),
 	buttonMove_(0),
 	canPushButton_(true),
 	isMoveEnd_(true),
@@ -67,8 +67,8 @@ void SelectUI::Update()
 
 void SelectUI::MoveButton(float ratio)
 {
-	int deltaPos = (MOVE / (MAX_MOVE_TIME - 1)) * buttonMove_;
-	int delta = MOVE * ratio * buttonMove_;
+	float deltaPos = (MOVE / (MAX_MOVE_TIME - 1)) * buttonMove_;
+	float delta = MOVE * ratio * buttonMove_;
 	for (auto& i : buttonList_)
 	{
 		//ボタンを移動させる
@@ -148,8 +148,6 @@ void SelectUI::ReadFile(std::string fileName)
 	WCHAR currentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDir);
 
-	WCHAR path[FILENAME_MAX];
-
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{
 		return;
@@ -167,6 +165,9 @@ void SelectUI::ReadFile(std::string fileName)
 
 void SelectUI::ThirdDraw()
 {
+	ImageManager::Draw(hPictBackGround_);
+	ImageManager::Draw(hPictButtonFrame_);
+
 	for (auto& i : buttonList_)
 	{
 		i.buttonText_->Draw();
@@ -180,63 +181,14 @@ void SelectUI::PushedButton(int num)
 		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
 		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 	}
-	//switch (num)
-	//{
-	//case 0:
-	//	//チュートリアルボタン
-	//	ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(BUTTON_FRAME_POS.x,BUTTON_FRAME_POS.y, 0));
-	//	
-	//	ImageManager::SetAlpha(hPictTutorial2_, 1);
-	//	ImageManager::SetAlpha(hPictPlay2_, 0);
-	//
-	//	ImageManager::ChangeColor(hPictPlay_, XMFLOAT4(1, 1, 1, 1));
-	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-	//	{
-	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
-	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TUTORIAL, DELAY);
-	//	}
-	//	break;
-	//case 1:
-	//	//プレイボタン
-	//
-	//	ImageManager::SetImagePos(hPictButtonFrame_, XMFLOAT3(-BUTTON_FRAME_POS.x, BUTTON_FRAME_POS.y, 0));
-	//	ImageManager::SetAlpha(hPictTutorial2_, 0);
-	//
-	//	ImageManager::ChangeColor(hPictTutorial_, XMFLOAT4(1, 1, 1, 1));
-	//	ImageManager::SetAlpha(hPictPlay2_, 1);
-	//	
-	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-	//	{
-	//		InterSceneData::SetData("StageNum", nullptr,&num,nullptr,nullptr);
-	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
-	//	}
-	//	break;
-	//case 2:
-	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-	//	{
-	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
-	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
-	//	}
-	//	break;
-	//case 3:
-	//	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-	//	{
-	//		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
-	//		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
-	//	}
-	//	break;
-	//
-	//default:
-	//	break;
-	//}
 }
 
 void SelectUI::LoadImageFile()
 {
 	//タイトル画像読み込み
-	hPictTitle_ = ImageManager::Load("Assets\\TitleImage2.png");
-	assert(hPictTitle_ >= 0);
-	ImageManager::SetAlpha(hPictTitle_, 0);
+	hPictBackGround_ = ImageManager::Load("Assets\\Black.png");
+	assert(hPictBackGround_ >= 0);
+	//ImageManager::SetAlpha(hPictBackGround_, 0);
 	//ボタン画像読み込み
 	TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())

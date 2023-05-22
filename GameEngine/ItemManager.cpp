@@ -21,9 +21,11 @@ ItemManager::~ItemManager()
 
 void ItemManager::Initialize(int stageNum)
 {
-	int maxStageCount = sizeof(FILE_NAME) / sizeof(std::string);
-	if (maxStageCount < stageNum)
-		stageNum = maxStageCount-1;
+	//ファイル数を超える番号が入力されたら調整
+	int maxFileCount = sizeof(FILE_NAME) / sizeof(std::string);
+	if (maxFileCount < stageNum)
+		stageNum = maxFileCount - 1;
+	//ファイルを読み込む
 	bool success = LoadFile(FILE_NAME[stageNum]);
 	assert(success);
 }
@@ -40,10 +42,12 @@ bool ItemManager::LoadFile(std::string fileName)
 
 	WCHAR path[FILENAME_MAX];
 
+	//ディレクトリを移動(できなかったら失敗)
 	if (SetCurrentDirectory(L"Assets") == ERROR_FILE_NOT_FOUND)
 	{
 		return false;
 	}
+	//ファイルを読み取り、データを配列に入れていく
 	std::ifstream file;
 	file.open(fileName.c_str());
 	if (file.good())
@@ -65,6 +69,7 @@ bool ItemManager::LoadFile(std::string fileName)
 	}
 	else
 		return false;
+	//ファイルを閉じ、ディレクトリを元に戻す
 	file.close();
 	SetCurrentDirectory(currentDir);
 }
