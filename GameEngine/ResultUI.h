@@ -12,25 +12,26 @@ class ResultUI : public GameObject
 {
 	using json = nlohmann::json;
 private:
+	json* fileReader_;
+	UI_MODE uiMode_;
+
 	int hPictResult_;
 	int hPictRetry_;
 	int hPictButtonFrame_;
 	short buttonMove_;
 
-	bool isMoveEnd_;
-	bool canPushButton_;
-	json* fileReader_;
-	UI_MODE uiMode_;
 	int hPictTitle_;
 	int buttonCount_;
 	int buttonNum_;
 	int prevNum_;
 	int moveTime_;
 	int inputInterval_;
+	bool isMoveEnd_;
+	bool canPushButton_;
+	XMFLOAT3 buttonFramePos_;
 	struct button_
 	{
 		Text* buttonText_;
-		Text* informationText_;
 		XMFLOAT3 position_;
 	};
 	void Input();

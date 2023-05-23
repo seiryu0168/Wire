@@ -23,7 +23,7 @@ namespace
 	static const int DELAY = 90;
 	static const int MOVE = 500;
 	static const int MAX_MOVE_TIME = 11;
-	static const XMFLOAT3 BUTTON_FIRST_POS = { -1400.0f,-500.0f,0.0f };
+	static const XMFLOAT3 BUTTON_FIRST_POS = { 0.0f,-100.0f,0.0f };
 }
 
 
@@ -35,7 +35,8 @@ ResultUI::ResultUI(GameObject* parent)
 	buttonMove_(0),
 	canPushButton_(true),
 	isMoveEnd_(true),
-	buttonCount_(0)
+	buttonCount_(0),
+	buttonFramePos_(BUTTON_FIRST_POS)
 
 {
 	ReadFile(UI_IMAGE_FILE);
@@ -82,18 +83,12 @@ void ResultUI::Update()
 void ResultUI::MoveButton(float ratio)
 {
 	int deltaPos = (MOVE / (MAX_MOVE_TIME - 1)) * buttonMove_;
-	int delta = MOVE * ratio * buttonMove_;
-	for (auto& i : buttonList_)
-	{
+	int delta = -(MOVE * ratio * buttonMove_);
 		//ボタンを移動させる
-			XMFLOAT3(i.position_.x,
-					 i.position_.y + delta,
-					 0);
-		i.buttonText_->SetPosition({ i.position_.x - i.buttonText_->GetRect().right,
-							   i.position_.y + i.buttonText_->GetRect().bottom + delta });
-		i.informationText_->SetPosition({ i.position_.x - i.informationText_->GetRect().right+ INFORMATION_OFFSET,
-										  i.position_.y + i.informationText_->GetRect().bottom + delta });
-	}
+		ImageManager::SetImagePos(hPictButtonFrame_,
+								  {buttonFramePos_.x,
+								   buttonFramePos_.y+ delta,
+								   buttonFramePos_.z });
 }
 
 bool ResultUI::IsLimit(int buttonNum)
@@ -138,13 +133,11 @@ void ResultUI::Move()
 	//動き終わったか
 	if (moveTime_ >= MAX_MOVE_TIME)
 	{
+		//UIモード切替え
 		uiMode_ = UI_MODE::MODE_INPUT;
 		moveTime_ = 0;
 		//動かしたセレクト画面の位置を確定させる
-		for (auto& i : buttonList_)
-		{
-			i.position_.y += MOVE * buttonMove_;
-		}
+		buttonFramePos_.y += -(MOVE * buttonMove_);
 		return;
 	}
 	//セレクト画面を動かす
@@ -179,8 +172,6 @@ void ResultUI::ThirdDraw()
 	{
 		i.buttonText_->Draw();
 	}
-
-		buttonList_[buttonNum_].informationText_->Draw();
 }
 
 void ResultUI::PushedButton(int num)
@@ -201,42 +192,42 @@ void ResultUI::PushedButton(int num)
 
 void ResultUI::LoadImageFile()
 {
+	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	assert(hPictButtonFrame_ >= 0);
+
+	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
+	ImageManager::SetUIList(hPictButtonFrame_);
 	//ImageManager::SetImagePos()
 	//ボタン画像読み込み
-	TEXT_RECT rect = { 0,0,500,100 };
+	//TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
-
+		std::string type = elem[0];
+		if (type == "Button")
+		{
+			buttonCount_++;
+		}
 		//画像の名前を取得
-		std::string button = elem[0];
-		std::string information = elem[1];
+		std::string button = elem[1];
 
+		TEXT_RECT rect = { 0 };
+		rect = { elem[2][0],elem[2][1],elem[2][2],elem[2][3] };
 		/////////////////////////////ボタンの用意//////////////////////
 		button_ btn;
 
 		//テキスト読み込み
 		btn.buttonText_ = new Text;
 		btn.buttonText_->Load(button, "Sitka Text", rect, LEFT_TOP);
-		btn.informationText_ = new Text;
-		btn.informationText_->Load(information, "Sitka Text", rect, LEFT_TOP);
-
+		//btn.informationText_->Load(information, "Sitka Text", rect, LEFT_TOP);
 
 		//位置設定
-		btn.position_ = { BUTTON_FIRST_POS.x,
-						  BUTTON_FIRST_POS.y+(buttonCount_++) * (float)(-MOVE),
-						  0.0f };
+		btn.position_ = { elem[3][0],
+						  elem[3][1],
+						  elem[3][2]};
 		btn.buttonText_->SetPosition({ btn.position_.x - btn.buttonText_->GetRect().right,
 									   btn.position_.y + btn.buttonText_->GetRect().bottom });
-		btn.informationText_->SetPosition({ btn.position_.x - btn.informationText_->GetRect().right+ INFORMATION_OFFSET,
-											btn.position_.y + btn.informationText_->GetRect().bottom });
-		//配列に入れる
 		buttonList_.push_back(btn);
 	}
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
-	assert(hPictButtonFrame_ >= 0);
-
-	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
-	ImageManager::SetUIList(hPictButtonFrame_);
 }
 
 void ResultUI::Release()
