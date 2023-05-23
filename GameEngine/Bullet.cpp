@@ -48,7 +48,7 @@ void Bullet::Initialize()
 	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
 	assert(hAudio_ >= 0);
 
-	pParent_ = GetParent()->GetParent();
+	pParent_ = GetScene();
 	pBill_->Load("Assets\\Effect01.png");
 }
 

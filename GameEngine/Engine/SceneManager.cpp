@@ -11,7 +11,10 @@
 
 
 SceneManager::SceneManager(GameObject* parent) 
-	: GameObject(parent, "SceneManager"),currentSceneID_(SCENE_ID::SCENE_ID_TITLE),nextSceneID_(SCENE_ID::SCENE_ID_TITLE)
+	: GameObject(parent, "SceneManager"),
+	currentSceneID_(SCENE_ID::SCENE_ID_TITLE),
+	nextSceneID_(SCENE_ID::SCENE_ID_TITLE),
+	isSceneChange_(false)
 {
 	currentSceneID_ = SCENE_ID::SCENE_ID_TITLE;
 	nextSceneID_ = currentSceneID_;
@@ -25,7 +28,7 @@ void SceneManager::Initialize()
 
 void SceneManager::Update()
 {
-	if (currentSceneID_ != nextSceneID_&&countDown_ == 0)
+	if (/*currentSceneID_ != nextSceneID_*/isSceneChange_&&countDown_ == 0)
 	{
 		KillAllChildren();
 		ModelManager::AllDeleteModelNum();
@@ -42,6 +45,7 @@ void SceneManager::Update()
 		case SCENE_ID::SCENE_ID_TUTORIAL:p = Instantiate<TutorialScene>(this); break;
 		}
 
+		isSceneChange_ = false;
 		currentSceneID_ = nextSceneID_;
 	}
 	countDown_--;
@@ -60,4 +64,5 @@ void SceneManager::ChangeScene(SCENE_ID sceneID,UINT count)
 {
 	nextSceneID_ = sceneID;
 	countDown_ = count;
+	isSceneChange_ = true;
 }

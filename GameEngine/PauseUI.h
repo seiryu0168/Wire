@@ -9,14 +9,17 @@ class PauseUI : public GameObject
 private:
 	enum class UI_MODE
 	{
-		MODE_INPUT = 0,
+		MODE_INVALID = 0,
+		MODE_INPUT,
 		MODE_MOVE,
+		MODE_SELECTED,
 	};
 	struct button_
 	{
 		Text* buttonText_;
 		XMFLOAT3 position_;
 	};
+	bool isPause_;
 	XMFLOAT3 framePos_;
 	short buttonMove_;
 	json* fileReader_;
@@ -27,8 +30,12 @@ private:
 	int buttonNum_;
 	int moveTime_;
 	int inputInterval_;
+	void GameStop();
+	void GameResume();
+	void Invalid();
 	void Input();
 	void Move();
+	void Selected();
 	std::vector<button_> buttonList_;
 public:
 	PauseUI(GameObject* parent);

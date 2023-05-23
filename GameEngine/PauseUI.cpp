@@ -29,17 +29,19 @@ namespace
 
 PauseUI::PauseUI(GameObject* parent)
 	:GameObject(parent, "PauseUI"),
+	uiMode_(UI_MODE::MODE_INVALID),
 	inputInterval_(INTERVAL),
 	moveTime_(0),
 	hPictBackGround_(-1),
 	hPictButtonFrame_(-1),
 	buttonMove_(0),
 	buttonCount_(0),
-	framePos_(BUTTON_FIRST_POS)
-
+	framePos_(BUTTON_FIRST_POS),
+	isPause_(false)
 {
 	ReadFile(UI_DATA_FILE);
 }
+
 
 PauseUI::~PauseUI()
 {
@@ -57,15 +59,22 @@ void PauseUI::Initialize()
 
 void PauseUI::Update()
 {
-	switch (uiMode_)
-	{
-	case UI_MODE::MODE_INPUT:
-		Input();
-		break;
-	case UI_MODE::MODE_MOVE:
-		Move();
-		break;
-	}
+
+		switch (uiMode_)
+		{
+		case UI_MODE::MODE_INVALID:
+			Invalid();
+			break;
+		case UI_MODE::MODE_INPUT:
+			Input();
+			break;
+		case UI_MODE::MODE_MOVE:
+			Move();
+			break;
+		case UI_MODE::MODE_SELECTED:
+			Selected();
+			break;
+		}
 }
 
 void PauseUI::MoveButton(float ratio)
@@ -85,31 +94,73 @@ bool PauseUI::IsLimit(int buttonNum)
 		return false;
 }
 
+
+void PauseUI::GameStop()
+{
+	GameObject* p = GetScene();
+	for (auto i : *(GetScene()->GetChildList()))
+	{
+		if (i->GetObjectName() != this->GetObjectName()&&
+			i->GetObjectName()!="ObjectSetter")
+		{
+			i->SetUpdate(false);
+		}
+	}
+}
+
+void PauseUI::GameResume()
+{
+	for (auto i : *(GetScene()->GetChildList()))
+	{
+		i->SetUpdate(true);
+	}
+	uiMode_ = UI_MODE::MODE_INVALID;
+}
+
 void PauseUI::Input()
 {
-	//ボタンの処理
-	buttonMove_ = 0;
-	//右に移動
-	if (Input::GetLStick_X() >= STICK_TILT)
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
 	{
-		buttonMove_ = RIGHT;
-		//ボタンが最後尾じゃなかったら移動モードに切り替える
-		if (buttonNum_ < (buttonCount_ - 1))
-			uiMode_ = UI_MODE::MODE_MOVE;
+		isPause_ = false;
+		GameResume();
 	}
-	//左に移動
-	else if (Input::GetLStick_X() <= -STICK_TILT)
-	{
-		buttonMove_ = LEFT;
-		//ボタンの番号が最初じゃなかったら移動モードに切り替え
-		if (buttonNum_ >0)
-			uiMode_ = UI_MODE::MODE_MOVE;
-	}
-	//ボタンの番号を調整
-	buttonNum_ += buttonMove_;
-	buttonNum_ = Clamp<float>((float)buttonNum_, 0.0f, (float)(buttonCount_ - 1));
 
-	PushedButton(buttonNum_);
+	if (isPause_)
+	{
+		//ボタンの処理
+		buttonMove_ = 0;
+		//右に移動
+		if (Input::GetLStick_X() >= STICK_TILT)
+		{
+			buttonMove_ = RIGHT;
+			//ボタンが最後尾じゃなかったら移動モードに切り替える
+			if (buttonNum_ < (buttonCount_ - 1))
+				uiMode_ = UI_MODE::MODE_MOVE;
+		}
+		//左に移動
+		else if (Input::GetLStick_X() <= -STICK_TILT)
+		{
+			buttonMove_ = LEFT;
+			//ボタンの番号が最初じゃなかったら移動モードに切り替え
+			if (buttonNum_ > 0)
+				uiMode_ = UI_MODE::MODE_MOVE;
+		}
+		//ボタンの番号を調整
+		buttonNum_ += buttonMove_;
+		buttonNum_ = Clamp<float>((float)buttonNum_, 0.0f, (float)(buttonCount_ - 1));
+
+		PushedButton(buttonNum_);
+	}
+}
+
+void PauseUI::Invalid()
+{
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
+	{
+		uiMode_ = UI_MODE::MODE_INPUT;
+		isPause_ = true;
+		GameStop();
+	}
 }
 
 void PauseUI::Move()
@@ -129,6 +180,10 @@ void PauseUI::Move()
 	MoveButton(Easing::EaseInCubic((float)moveTime_ / (float)(MAX_MOVE_TIME - 1)));
 }
 
+void PauseUI::Selected()
+{
+
+}
 
 void PauseUI::ReadFile(std::string fileName)
 {
@@ -153,10 +208,14 @@ void PauseUI::ReadFile(std::string fileName)
 
 void PauseUI::ThirdDraw()
 {
-	ImageManager::Draw(hPictBackGround_);
-	for (auto& i : buttonList_)
+	if (isPause_)
 	{
-		i.buttonText_->Draw();
+		ImageManager::Draw(hPictBackGround_);
+		ImageManager::Draw(hPictButtonFrame_);
+		for (auto& i : buttonList_)
+		{
+			i.buttonText_->Draw();
+		}
 	}
 }
 
@@ -173,13 +232,21 @@ void PauseUI::PushedButton(int num)
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 			break;
 		}
+		uiMode_ = UI_MODE::MODE_SELECTED;
 	}
 }
 
 void PauseUI::LoadImageFile()
 {
-	hPictBackGround_ = ImageManager::Load("Assets\\LowHPScreen.png");
+	//ポーズ画面背景画像読み込み
+	hPictBackGround_ = ImageManager::Load("Assets\\Black.png");
+	ImageManager::SetAlpha(hPictBackGround_, 0.2f);
 	assert(hPictBackGround_ >= 0);
+	//ボタンのフレーム画像読み込み
+	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	assert(hPictButtonFrame_ >= 0);
+
+	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
 	//ボタン画像読み込み
 	TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
@@ -204,11 +271,6 @@ void PauseUI::LoadImageFile()
 		//配列に入れる
 		buttonList_.push_back(btn);
 	}
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
-	assert(hPictButtonFrame_ >= 0);
-
-	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
-	ImageManager::SetUIList(hPictButtonFrame_);
 }
 
 void PauseUI::Release()

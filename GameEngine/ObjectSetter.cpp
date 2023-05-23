@@ -98,7 +98,7 @@ void ObjectSetter::Initialize()
 
 void ObjectSetter::Update()
 {
-	if (nowSceneID_ == (SCENE_ID)pManager_->GetNextSceneID())
+	if (pManager_->IsSceneChange()==false)
 	{
 
 		switch ((SCENE_ID)pManager_->GetCurrentSceneID())

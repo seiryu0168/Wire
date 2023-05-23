@@ -24,6 +24,7 @@ protected:
 	std::string objectTag_;				//オブジェクトに任意でつけられる識別用の名前
 	bool killFlag_;						//キルするかどうか
 	bool activeFlag_;					//オブジェクトがアクティブ(Update呼ばれる)かどうか
+	bool isUpdate_;
 	bool startFlag_;					//一回もアクティブになってない場合false
 	bool drawFlag_;						//描画するかどうか
 
@@ -82,6 +83,7 @@ public:
 
 	void KillMe() { killFlag_ = true; }
 	bool IsActive() { return activeFlag_; }
+	bool IsUpdate() { return isUpdate_; }
 	bool IsDraw() { return drawFlag_; }
 	void SetDrawFlag(bool flag) { drawFlag_ = flag; }
 	
@@ -114,8 +116,10 @@ public:
 			void SetScale(XMFLOAT3 scale) { transform_.scale_ = scale; }
 
 			void SetTag(std::string tagName) { objectTag_ = tagName; }
-			void SetActive(bool status) { activeFlag_ = status; }
+			void SetActive(bool status);
+			void SetUpdate(bool status) { isUpdate_ = status; };
 			void SetStart(bool status) { startFlag_ = status; }
+			void SetParent(GameObject* parent);
 			std::string GetTag() { return objectTag_; }
 
 			Transform GetTransform();

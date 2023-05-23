@@ -6,6 +6,7 @@ namespace
 {
 	static const float FLASH_INTERVAL = 2.5f;
 	static const XMFLOAT3 MESSAGE_POS = { 0.0f,-300.0f,0.0f };
+	static const int DELAY = 90;
 }
 TitleUI::TitleUI(GameObject* parent)
 	:GameObject(parent,"TitleUI"),
@@ -35,7 +36,7 @@ void TitleUI::Update()
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&& isButtonPush_ ==false)
 	{
 		SceneManager* pManager = ((SceneManager*)FindObject("SceneManager"));
-		pManager->ChangeScene(SCENE_ID::SCENE_ID_SELECT,180);
+		pManager->ChangeScene(SCENE_ID::SCENE_ID_SELECT, DELAY);
 		isButtonPush_ = true;
 	}
 	ImageManager::SetAlpha(hPictMessage_,sinf(XMConvertToRadians(flashingTime_ * FLASH_INTERVAL)));

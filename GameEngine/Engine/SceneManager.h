@@ -15,6 +15,7 @@ class SceneManager : public GameObject
 {
 	SCENE_ID currentSceneID_;
 	SCENE_ID nextSceneID_;
+	bool isSceneChange_;
 	UINT countDown_;
 public:
 	SceneManager(GameObject* parent);
@@ -28,6 +29,7 @@ public:
 	int GetCountDown() { return countDown_; }
 	SCENE_ID GetCurrentSceneID() { return currentSceneID_; }
 	SCENE_ID GetNextSceneID() { return nextSceneID_; }
+	bool IsSceneChange() { return isSceneChange_; }
 	GameObject* CurrentScene();
 };
 

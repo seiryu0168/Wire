@@ -11,6 +11,7 @@ GameObject::GameObject(GameObject* parent, const std::string& name)
 	objectTag_(""),
 	killFlag_(0),
 	activeFlag_(true),
+	isUpdate_(true),
 	startFlag_(false),
 	drawFlag_(true),
 	objectID_(-1)
@@ -32,7 +33,9 @@ void GameObject::UpdateSub()
 		this->Initialize();
 		this->startFlag_ = true;
 	}
-	else if(startFlag_&&activeFlag_)
+	else if(startFlag_&&
+			activeFlag_&&
+			isUpdate_)
 	Update();
 
 
@@ -314,6 +317,17 @@ GameObject* GameObject::GetScene()
 {
 	auto itr = GetRootJob()->GetChildList()->begin();
 	return (*(*itr)->GetChildList()->begin());
+}
+
+void GameObject::SetActive(bool status)
+{
+	this->activeFlag_ = status;
+}
+
+void GameObject::SetParent(GameObject* parent)
+{
+	pParent_ = parent;
+	GetParent()->PushBackChild(pParent_);
 }
 
 Transform GameObject::GetTransform()
