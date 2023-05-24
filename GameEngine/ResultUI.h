@@ -7,6 +7,7 @@ class Text;
 	{
 		MODE_INPUT = 0,
 		MODE_MOVE,
+		MODE_SELECTED,
 	};
 class ResultUI : public GameObject
 {

@@ -95,6 +95,9 @@ public:
 
     //パーティクル発生
     int ParticleStart(EmitterData data);
+    
+    //エミッター消去
+    void KillEmitter(int hEmitter);
 
     void FixedUpdate() override;
 

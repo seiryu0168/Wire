@@ -2,9 +2,12 @@
 
 ItemBase::ItemBase(GameObject* parent, std::string itemName)
 	:GameObject(parent,itemName),
-	itemType_(ITEM_TYPE::ITEM_NONE)
+	itemType_(ITEM_TYPE::ITEM_NONE),
+	pParticle_(nullptr),
+	attacheObject_(nullptr)
 {
 	SetTag("Item");
+	pParticle_ = Instantiate<Particle>(this);
 }
 
 ITEM_TYPE ItemBase::GetItemType()
@@ -27,6 +30,16 @@ bool ItemBase::IsAttach()
 	return isAttached_;
 }
 
+void ItemBase::SetCollision()
+{
+	isCollision_ = true;
+}
+
+bool ItemBase::IsCollision()
+{
+	return isCollision_;
+}
+
 void ItemBase::SetDefaultParameter(float param)
 {
 	defaultParameter_ = param;
@@ -42,7 +55,8 @@ void ItemBase::SetLifeTime(int time)
 	lifeTime_ = time;
 }
 
-void ItemBase::AttachItem()
+void ItemBase::AttachItem(GameObject* target)
 {
+	attacheObject_ = target;
 	isAttached_ = true;
 }

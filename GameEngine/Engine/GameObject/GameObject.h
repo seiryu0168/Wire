@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include<typeinfo>
+#include<memory>
 #include<list>
 #include"../Collider/BoxCollider.h"
 #include"../Collider/SphereCollider.h"
@@ -90,6 +91,7 @@ public:
 	///////////////////////////è’ìÀä÷òAÇÃä÷êî////////////////////////
 	virtual void OnCollision(GameObject* pTarget) {};
 			void Collision(GameObject* pTarget);
+			void CheckLillCollider(GameObject*);
 			void AddCollider(Collider* collider);
 			void DelCollider(const GameObject& obj);
 

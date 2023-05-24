@@ -36,7 +36,8 @@ ResultUI::ResultUI(GameObject* parent)
 	canPushButton_(true),
 	isMoveEnd_(true),
 	buttonCount_(0),
-	buttonFramePos_(BUTTON_FIRST_POS)
+	buttonFramePos_(BUTTON_FIRST_POS),
+	uiMode_(UI_MODE::MODE_INPUT)
 
 {
 	ReadFile(UI_IMAGE_FILE);
@@ -76,6 +77,8 @@ void ResultUI::Update()
 		break;
 	case UI_MODE::MODE_MOVE:
 		Move();
+		break;
+	case UI_MODE::MODE_SELECTED:
 		break;
 	}
 }
@@ -188,6 +191,7 @@ void ResultUI::PushedButton(int num)
 			break;
 		}
 	}
+	uiMode_ = UI_MODE::MODE_SELECTED;
 }
 
 void ResultUI::LoadImageFile()

@@ -11,6 +11,7 @@ private:
 	{
 		MODE_INPUT = 0,
 		MODE_MOVE,
+		MODE_SELECTED,
 	};
 	struct button_
 	{

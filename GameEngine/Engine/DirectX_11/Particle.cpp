@@ -165,7 +165,7 @@ void Particle::UpdateEmitter()
 int Particle::ParticleStart(EmitterData data)
 {
 	int handle = 0;
-	for (auto emitterCount = emitterList_.begin(); emitterCount != emitterList_.end(); emitterCount++)
+	for (auto emitterCount : emitterList_)
 	{
 		handle++;
 	}
@@ -173,13 +173,27 @@ int Particle::ParticleStart(EmitterData data)
 	Emitter* pEmitter = new Emitter;
 
 	pEmitter->data = data;
-	pEmitter->hParticle = handle;
 	pEmitter->frameCount = 0;
 
 	pEmitter->pBillBoard = new BillBoard;
 	pEmitter->pBillBoard->Load(data.textureFileName);
 	emitterList_.push_back(pEmitter);
+	handle = emitterList_.size() - 1;
+	pEmitter->hParticle = handle;
 	return handle;
+	//return handle;
+}
+
+void Particle::KillEmitter(int hEmitter)
+{
+	for (auto itr : emitterList_)
+	{
+		if (itr->hParticle == hEmitter)
+		{
+			itr->isDead = true;
+			return;
+		}
+	}
 }
 
 void Particle::FixedUpdate()

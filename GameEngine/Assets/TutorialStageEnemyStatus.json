@@ -3,7 +3,7 @@
     "EnemyTutorial": [
       {
         "EnemyName": "EnemyTutorial",
-        "Position": [ 0,0,0 ],
+        "Position": [ 0,1,40 ],
         "Rotate": [ 0, 0, 0 ],
         "Scale": [ 1, 1, 1 ]
       }

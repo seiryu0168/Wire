@@ -60,6 +60,8 @@ void SelectUI::Update()
 	case UI_MODE::MODE_MOVE:
 		Move();
 		break;
+	case UI_MODE::MODE_SELECTED:
+		break;
 	}
 }
 
@@ -139,7 +141,6 @@ void SelectUI::Move()
 	MoveButton(Easing::EaseInCubic((float)moveTime_ / (float)(MAX_MOVE_TIME - 1)));
 }
 
-
 void SelectUI::ReadFile(std::string fileName)
 {
 	//カレントディレクトリ取得
@@ -178,11 +179,17 @@ void SelectUI::PushedButton(int num)
 	{
 		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
 		((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
+		uiMode_ = UI_MODE::MODE_SELECTED;
 	}
 }
 
 void SelectUI::LoadImageFile()
 {
+	//ボタンのフレーム画像読み込み
+	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	assert(hPictButtonFrame_ >= 0);
+
+	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FRAME_POS);
 	//タイトル画像読み込み
 	hPictBackGround_ = ImageManager::Load("Assets\\Black.png");
 	assert(hPictBackGround_ >= 0);
@@ -192,16 +199,17 @@ void SelectUI::LoadImageFile()
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
 
+		std::string buttonText = elem[0];
 		//画像の名前を取得
-		std::string buttonImageName = elem[0];
-		std::string missionName = elem[1];
+		std::string buttonImageName = elem[1];
+		std::string missionName = elem[2];
 
 		/////////////////////////////ボタンの用意//////////////////////
 		button_ btn;
 
 		//テキスト読み込み
 		btn.buttonText_ = new Text;
-		btn.buttonText_->Load("Stage" + std::to_string(buttonCount_), "Sitka Text", rect, LEFT_TOP);
+		btn.buttonText_->Load(buttonText, "Sitka Text", rect, LEFT_TOP);
 
 		//画像読み込み
 		btn.hButtonPict_ = ImageManager::Load("Assets\\" + buttonImageName);
@@ -217,10 +225,6 @@ void SelectUI::LoadImageFile()
 		//配列に入れる
 		buttonList_.push_back(btn);
 	}
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
-	assert(hPictButtonFrame_ >= 0);
-
-	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FRAME_POS);
 }
 
 void SelectUI::Release()

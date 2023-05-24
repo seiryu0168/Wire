@@ -33,6 +33,7 @@ class Collider
 	XMFLOAT3     center_;		//Œ´“_
 	XMFLOAT3     size_;			//‘å‚«‚³
 	Transform    transform_;
+	bool		 isKill_;
 
 
 public:
@@ -103,5 +104,7 @@ public:
 		center_ = center;
 		size_ = size;
 	}
+	void KillCollider() { isKill_ = true; }
+	bool IsKill() { return isKill_; }
 };
 

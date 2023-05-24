@@ -34,9 +34,10 @@ void ItemGetter::ItemAttach(ItemBase* item)
 	{
 		return;
 	}
-		//アイテムの効果を有効にする
-		item->AttachItem();
-		Apply(item);
+	//アイテムの効果を有効にする
+	item->AttachItem(attachObject_);
+		
+	Apply(item);
 		//アイテムリストに追加
 		itemList_.push_back(item);
 }
