@@ -15,8 +15,7 @@ void ItemGetter::Update()
 {
 	for (auto itr=itemList_.begin();itr!=itemList_.end();)
 	{
-
-		if ((*itr)->GetLifeTime() == 0)
+		if ((*itr)->GetLifeTime() <= 0)
 		{
 			RemoveItemEffect((*itr));
 			(*itr)->KillMe();

@@ -25,9 +25,9 @@ SearchUpItem::~SearchUpItem()
 void SearchUpItem::Initialize()
 {
 	SetLifeTime(LIFE);
-	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 1,1,1 });
+	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 2,2,2 });
 	AddCollider(pCollision);
-	hModel_ = ModelManager::Load("Assets\\Mark.fbx");
+	hModel_ = ModelManager::Load("Assets\\SearchUpItem.fbx");
 	SetItemType(ITEM_TYPE::SEARCH);
 	pData_ = std::make_unique<EmitterData>();
 	PlayParticle(transform_.position_);

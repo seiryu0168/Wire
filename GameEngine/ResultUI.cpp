@@ -190,8 +190,8 @@ void ResultUI::PushedButton(int num)
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 			break;
 		}
+		uiMode_ = UI_MODE::MODE_SELECTED;
 	}
-	uiMode_ = UI_MODE::MODE_SELECTED;
 }
 
 void ResultUI::LoadImageFile()
@@ -201,9 +201,8 @@ void ResultUI::LoadImageFile()
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
 	ImageManager::SetUIList(hPictButtonFrame_);
-	//ImageManager::SetImagePos()
+	
 	//ボタン画像読み込み
-	//TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
 		std::string type = elem[0];
@@ -214,15 +213,15 @@ void ResultUI::LoadImageFile()
 		//画像の名前を取得
 		std::string button = elem[1];
 
+		//テキスト用矩形
 		TEXT_RECT rect = { 0 };
 		rect = { elem[2][0],elem[2][1],elem[2][2],elem[2][3] };
-		/////////////////////////////ボタンの用意//////////////////////
+		
+		//ボタン情報
 		button_ btn;
-
 		//テキスト読み込み
 		btn.buttonText_ = new Text;
 		btn.buttonText_->Load(button, "Sitka Text", rect, LEFT_TOP);
-		//btn.informationText_->Load(information, "Sitka Text", rect, LEFT_TOP);
 
 		//位置設定
 		btn.position_ = { elem[3][0],

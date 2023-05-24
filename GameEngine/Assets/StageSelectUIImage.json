@@ -4,9 +4,7 @@
       "Button1": [ "Tutorial", "Button1.png", "Mission1.png" ],
       "Button2": [ "Stage:1", "Button2.png", "Mission2.png" ],
       "Button3": [ "Stage:2", "Button3.png", "Mission3.png" ],
-      "Button4": [ "Stage:3", "Button4.png", "Mission4.png" ],
-      "Button5": [ "Stage:4", "Button5.png", "Mission5.png" ],
-      "Button6": [ "Stage:5", "Button6.png", "Mission6.png" ]
+      "Button4": [ "Stage:3", "Button4.png", "Mission4.png" ]
     }
   ]
 }
