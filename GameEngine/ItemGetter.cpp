@@ -2,7 +2,7 @@
 #include"SpeedUpItem.h"
 #include"SearchUpItem.h"
 #include"Player.h"
-#include"MissionOrder.h"
+#include"MissionUI.h"
 namespace
 {
 	static const XMFLOAT2 NOTICE_POS = { -1800.0f,-400.0f };
@@ -11,7 +11,7 @@ namespace
 ItemGetter::ItemGetter(GameObject* object)
 	:attachObject_(object)
 {
-	mOrder_ = (MissionOrder*)attachObject_->FindObject("MissionOrder");
+	order_ = (MissionUI*)attachObject_->FindObjectAtTag("UI");
 }
 
 ItemGetter::~ItemGetter()
@@ -21,13 +21,15 @@ ItemGetter::~ItemGetter()
 
 void ItemGetter::Update()
 {
+	//アイテムの効果が切れていないかどうか確認
 	for (auto itr=itemList_.begin();itr!=itemList_.end();)
 	{
 		if ((*itr)->GetLifeTime() <= 0)
 		{
 			RemoveItemEffect((*itr));
 			(*itr)->KillMe();
-			mOrder_->DelNotice((*itr)->GetObjectName());
+			//アイテム情報の通知を消す
+			order_->DelNotice((*itr)->GetObjectName());
 			itr = itemList_.erase(itr);
 		}
 		else
@@ -41,14 +43,16 @@ void ItemGetter::Update()
 void ItemGetter::ItemAttach(ItemBase* item)
 {
 	//同じアイテムを既に取得していたら
-	if (CheckSameItem(item->GetItemType()))
+	ItemBase* itm=CheckSameItem(item->GetItemType());
+	if (itm!=nullptr)
 	{
+		itm->Reset();
 		return;
 	}
 	//アイテムの効果を有効にする
 	item->AttachItem(attachObject_);
-
 	Apply(item);
+	//アイテム情報を生成、UIに通知
 	CreateItemText(item);
 	
 	//アイテムリストに追加
@@ -63,6 +67,7 @@ void ItemGetter::ItemRemove(ItemBase* item)
 
 void ItemGetter::Apply(ItemBase* item)
 {
+	//アイテムのタイプによってプレイヤーのステータスを変える
 	switch (item->GetItemType())
 	{
 	case ITEM_TYPE::SPEED:
@@ -79,14 +84,15 @@ void ItemGetter::Apply(ItemBase* item)
 
 }
 
-bool ItemGetter::CheckSameItem(ITEM_TYPE type)
+ItemBase* ItemGetter::CheckSameItem(ITEM_TYPE type)
 {
+	//同じアイテムがないかどうか調べる
 	for (auto i : itemList_)
 	{
 		if (i->GetItemType() == type)
-			return true;
+			return i;
 	}
-	return false;
+	return nullptr;
 }
 
 void ItemGetter::CreateItemText(ItemBase* item)
@@ -103,12 +109,9 @@ void ItemGetter::CreateItemText(ItemBase* item)
 	TEXT_RECT rect = { 0,0,500,250 };
 	text->Load(txt, "Sitka Text", rect, LEFT_TOP);
 	text->SetPosition(NOTICE_POS);
-	int j = text->GetTextSize();
-	HRESULT hr=text->SetTextSize(10, 0, txt.size());
-	int q = text->GetTextSize();
-
-
-	mOrder_->AddNotice(effectName, text);
+	HRESULT hr = text->SetTextSize(40);
+	text->SetColor({ 0,0,0,1 });
+	order_->AddNotice(effectName, text);
 }
 
 
@@ -116,7 +119,7 @@ void ItemGetter::UpdateText(ItemBase* item)
 {
 	std::string effectName = item->GetObjectName();
 	std::string effectTime = std::to_string(item->GetLifeTime() / 60);
-	mOrder_->ChangeNotice(item->GetObjectName(), effectName + ":" + effectTime + "sec");
+	order_->ChangeNotice(item->GetObjectName(), effectName + ":" + effectTime + "sec");
 }
 
 void ItemGetter::RemoveItemEffect(ItemBase* item)

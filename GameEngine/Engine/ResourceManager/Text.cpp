@@ -36,8 +36,8 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	//フォント名用の配列用意
 	size_t ret;
 	FontData data;
-	pFontName_ = new wchar_t[fontName.length() + 1];
-	data.pFontName_ = pFontName_;
+	//pFontName_ = new wchar_t[fontName.length() + 1];
+	data.pFontName_ = new wchar_t[fontName.length() + 1];
 	int a=mbstowcs_s(&ret, data.pFontName_, fontName.length() + 1, fontName.c_str(), fontName.length());
 	size_t textSize;
 
@@ -48,6 +48,8 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	//現在のロケール取得
 	std::string locale= setlocale(LC_CTYPE, NULL);
 	
+	data.pLocale_ = new wchar_t[locale.size()*2];
+	data.pLocale_ = (wchar_t*)L"en-us";
 	//ロケールを日本語に変更
 	setlocale(LC_CTYPE, "ja-jp");
 	//描画するテキストをstringからwstringに変換
@@ -60,19 +62,28 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
 	//テキストフォーマットにフォントを設定
 	hr=SetFont(data);
-	assert(hr==S_OK);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 	//pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"ja-jp", &pTextFormat_);
 	//アライメント設定
 	SetAlinmentType(type);
 	//描画のためのブラシ作成
-	D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+	hr=D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 	//テキスト表示の領域設定
 	layoutRect_ = rect;
 	
 	//テキストレイアウト作成
 	hr=pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
-	assert(hr==S_OK);
-
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 
 	return 0;
 }
@@ -132,17 +143,38 @@ HRESULT Text::SetFontWeight(DWRITE_FONT_WEIGHT weightType, UINT32 startPos, UINT
 
 HRESULT Text::SetTextSize(float size, UINT32 startPos, UINT32 length)
 {
+	HRESULT hr;
 	if (startPos + length >= textLength_)
 	{
 		length = startPos + length - textLength_;
 	}
+	hr = pLayout_->SetFontSize(size, { startPos,length });
+	return hr;
+}
+HRESULT Text::SetTextSize(float size)
+{
+	HRESULT hr;
+	UINT32 fontNameSize = pTextFormat_->GetFontFamilyNameLength() * 2;
+	UINT32 localeSize = pTextFormat_->GetLocaleNameLength() * 2;
+
+	//フォントデータ作成
 	FontData data;
+
 	data.fontSize_ = size;
-	data.pFontName_ = pFontName_;
-	size_t size = 0;
-	pTextFormat_->GetLocaleName(data.pLocale_,size);
-	pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_, data.fontStyle_, data.fontStretch_, data.fontSize_, data.pLocale_, &pTextFormat_);
-	return pLayout_->SetFontSize(size, { startPos,length });
+	data.pFontName_ = new wchar_t[fontNameSize];
+	hr = pTextFormat_->GetFontFamilyName(data.pFontName_, fontNameSize);
+	if (FAILED(hr))
+		return hr;
+	data.pLocale_ = new wchar_t[localeSize];
+	hr = pTextFormat_->GetLocaleName(data.pLocale_, localeSize);
+	if (FAILED(hr))
+		return hr;
+	//書式設定
+	hr = pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_, data.fontStyle_, data.fontStretch_, data.fontSize_, data.pLocale_, &pTextFormat_);
+	if (FAILED(hr))
+		return hr;
+	hr = pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
+		return hr;
 }
 
 HRESULT Text::SetFont(const FontData& data)

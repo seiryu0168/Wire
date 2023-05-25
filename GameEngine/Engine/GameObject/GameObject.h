@@ -139,7 +139,11 @@ public:
 	GameObject* GetParent();
 	GameObject* GetRootJob();
 	GameObject* FindObject(std::string name);
+	GameObject* FindObjectAtTag(std::string tagName);
+
 	GameObject* FindChild(std::string name);
+	GameObject* FindChildAtTag(std::string tagName);
+	
 	GameObject* GetScene();
 	XMMATRIX    GetWorldMatrix();
 

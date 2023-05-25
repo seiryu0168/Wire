@@ -285,6 +285,12 @@ GameObject* GameObject::FindObject(std::string name)
 	return obj;
 }
 
+GameObject* GameObject::FindObjectAtTag(std::string tagName)
+{
+	GameObject* obj = GetRootJob()->FindChildAtTag(tagName);
+	return obj;
+}
+
 GameObject* GameObject::FindChild(std::string name)
 {
 	//Žq‚ª‚¢‚È‚©‚Á‚½‚çnullptr•Ô‚·
@@ -309,6 +315,29 @@ GameObject* GameObject::FindChild(std::string name)
 			return obj;
 		}
 	}	
+	//Œ©‚Â‚©‚ç‚È‚©‚Á‚½Žž
+	return nullptr;
+}
+
+GameObject* GameObject::FindChildAtTag(std::string tagName)
+{
+	if (this->childList_.empty())
+	{
+		return nullptr;
+	}
+	//“¯‚¶ƒ^ƒO‚ª‚ ‚Á‚½‚ç•Ô‚·
+	for (auto i : this->childList_)
+	{
+		if (i->GetTag() == tagName)
+		{
+			return i;
+		}
+		//‘·‚à’²‚×‚é
+		GameObject* obj = i->FindChildAtTag(tagName);
+		if (obj != nullptr)
+			return obj;
+	}
+
 	//Œ©‚Â‚©‚ç‚È‚©‚Á‚½Žž
 	return nullptr;
 }

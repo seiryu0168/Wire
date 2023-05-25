@@ -8,6 +8,7 @@ namespace
 MissionUI::MissionUI(GameObject* parent, std::string uiName)
 	:GameObject(parent,uiName)
 {
+	SetTag("UI");
 }
 
 MissionUI::~MissionUI()
@@ -55,7 +56,8 @@ void MissionUI::CalcTextDistance()
 	for (auto itr = noticeTextList_.begin(); itr != noticeTextList_.end(); itr++)
 	{
 		totalMove += move;
-		(*itr).second->SetPosition({ 0, FIRST_NOTICE_POS.y+totalMove });
+		(*itr).second->SetPosition({ FIRST_NOTICE_POS.x,
+									 FIRST_NOTICE_POS.y+totalMove });
 		move = (*itr).second->GetRect().bottom;
 	}
 }

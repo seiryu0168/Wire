@@ -46,6 +46,10 @@ void TutorialOrder::Draw()
 {
 	textList[0]->Draw();
 	ImageManager::Draw(imageList[0]);
+	for (auto& i : noticeTextList_)
+	{
+		i.second->Draw();
+	}
 }
 
 void TutorialOrder::EraseText()

@@ -52,6 +52,7 @@ void ItemBase::SetItemType(ITEM_TYPE type)
 
 void ItemBase::SetLifeTime(int time)
 {
+	SetIniTime(time);
 	lifeTime_ = time;
 }
 

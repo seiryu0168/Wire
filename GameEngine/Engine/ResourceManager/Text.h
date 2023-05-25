@@ -19,8 +19,8 @@ class Text
 		FontData()
 		{
 			fontSize_ = 72.0f;
-			pFontName_ = (wchar_t*)L"Gabliora";
-			pLocale_ = (wchar_t*)L"en-us";
+			pFontName_ = nullptr;
+			pLocale_ = nullptr;
 			fontWaight_ = DWRITE_FONT_WEIGHT_REGULAR;
 			fontStyle_ = DWRITE_FONT_STYLE_NORMAL;
 			fontStretch_ = DWRITE_FONT_STRETCH_NORMAL;
@@ -46,6 +46,7 @@ public:
 	HRESULT SetFont(const FontData& data);
 	void SetColor(XMFLOAT4 color);
 	HRESULT SetTextSize(float size,UINT32 startPos,UINT32 length);
+	HRESULT SetTextSize(float size);
 	HRESULT SetFontWeight(DWRITE_FONT_WEIGHT weightType,UINT32 startPos,UINT32 length);
 	HRESULT SetText(std::string text);
 	void SetTransform(TEXT_POSITION pos);

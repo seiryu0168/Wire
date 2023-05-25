@@ -51,7 +51,6 @@ void MissionOrder::Update()
 	{
 		//テキストと背景を徐々に薄くしていく
 		EraseText();
-		textList[0]->SetTextSize(10, 0, 10);
 	}
 	EnemyCount_ = pSetter_->GetEnemyCount();
 	count_ = std::to_string(EnemyCount_);
