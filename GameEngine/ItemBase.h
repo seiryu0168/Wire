@@ -16,9 +16,11 @@ private:
 	ITEM_TYPE itemType_;
 	bool isCollision_;
 	bool isAttached_;
+	int iniTime_;
 	int lifeTime_;
 	GameObject* attacheObject_;
 	float defaultParameter_;
+	void SetIniTime(int time) { iniTime_ = time; }
 public:
 	Particle* pParticle_;
 	ItemBase(GameObject* parent, std::string itemName);
@@ -34,6 +36,7 @@ public:
 	bool IsAttach();
 	void SetCollision();
 	bool IsCollision();
+	void Reset() { lifeTime_ = iniTime_; }
 	virtual void PlayParticle(XMFLOAT3 pos) {};
 	void SubtractTime(int time=1);
 

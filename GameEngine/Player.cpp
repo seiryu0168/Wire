@@ -107,7 +107,6 @@ Player::Player(GameObject* parent)
     pScreen_ = Instantiate<PlayScreen>(this);
     //パーティクルオブジェクト生成
     pParticle_ = Instantiate<Particle>(this);
-    pItemGetter_ = new ItemGetter(this);
 }
 
 //デストラクタ
@@ -119,6 +118,7 @@ Player::~Player()
 //初期化
 void Player::Initialize()
 {
+    pItemGetter_ = new ItemGetter(this);
     //タグ設定
     SetTag("Player");
     //セッターのポインター取得

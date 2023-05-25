@@ -85,7 +85,7 @@ void ResultUI::Update()
 
 void ResultUI::MoveButton(float ratio)
 {
-	int deltaPos = (MOVE / (MAX_MOVE_TIME - 1)) * buttonMove_;
+	//Å‘åˆÚ“®—Ê–Š„‡–•ûŒü
 	int delta = -(MOVE * ratio * buttonMove_);
 		//ƒ{ƒ^ƒ“‚ğˆÚ“®‚³‚¹‚é
 		ImageManager::SetImagePos(hPictButtonFrame_,

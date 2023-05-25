@@ -26,6 +26,7 @@ MissionOrder::MissionOrder(GameObject* parent)
 
 MissionOrder::~MissionOrder()
 {
+	Release();
 }
 
 void MissionOrder::Initialize()
@@ -50,6 +51,7 @@ void MissionOrder::Update()
 	{
 		//テキストと背景を徐々に薄くしていく
 		EraseText();
+		textList[0]->SetTextSize(10, 0, 10);
 	}
 	EnemyCount_ = pSetter_->GetEnemyCount();
 	count_ = std::to_string(EnemyCount_);
@@ -60,12 +62,17 @@ void MissionOrder::Update()
 
 void MissionOrder::Draw()
 {
-	for (auto i : textList)
+	for (auto& i : textList)
 	{
 		i->Draw();
 	}
-	//pCountText_->Draw();
-	//pText_->Draw();
+
+	//通知テキスト
+	for (auto& i : noticeTextList_)
+	{
+
+		i.second->Draw();
+	}
 }
 
 void MissionOrder::EraseText()

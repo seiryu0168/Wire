@@ -11,11 +11,17 @@ Text::Text()
 	pColorBrush_   = nullptr;
 	pWriteFactory_ = nullptr;
 	pTextFormat_   = nullptr;
+	pLayout_	   = nullptr;
 
 }
 Text::~Text()
 {
 	Release();	
+}
+
+int Text::GetTextSize()
+{
+	return pLayout_->GetFontSize();
 }
 
 void Text::Release()
@@ -27,17 +33,11 @@ void Text::Release()
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)
 {
-	
-	////パス名をファイル名と拡張子だけにする
-	//char name[_MAX_FNAME];	//ファイル名
-	//char ext[_MAX_EXT];		//拡張子
-	//_splitpath_s(fontName.c_str(), nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);//ファイルパス(フルパス)をファイル名、拡張子に分ける
-	//sprintf_s(name, "%s%s", name, ext);
-
 	//フォント名用の配列用意
 	size_t ret;
 	FontData data;
-	data.pFontName_ = new wchar_t[fontName.length()+1];
+	pFontName_ = new wchar_t[fontName.length() + 1];
+	data.pFontName_ = pFontName_;
 	int a=mbstowcs_s(&ret, data.pFontName_, fontName.length() + 1, fontName.c_str(), fontName.length());
 	size_t textSize;
 
@@ -59,7 +59,8 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 	HRESULT hr=DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&pWriteFactory_));
 	//テキストフォーマットにフォントを設定
-	SetFont(data);
+	hr=SetFont(data);
+	assert(hr==S_OK);
 	//pWriteFactory_->CreateTextFormat(pFontName_, NULL, DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,72.0f, L"ja-jp", &pTextFormat_);
 	//アライメント設定
 	SetAlinmentType(type);
@@ -69,7 +70,8 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	layoutRect_ = rect;
 	
 	//テキストレイアウト作成
-	pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
+	hr=pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
+	assert(hr==S_OK);
 
 
 	return 0;
@@ -79,12 +81,12 @@ void Text::Draw()
 {
 	
 	D2D::GetRenderTarget()->BeginDraw();
-	//D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
-	D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
-								    { transform2D.x + layoutRect_.left,
-									  transform2D.y + layoutRect_.top,
-									  transform2D.x + layoutRect_.right,
-									  transform2D.y + layoutRect_.bottom }, pColorBrush_);
+	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
+	//D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
+	//							    { transform2D.x + layoutRect_.left,
+	//								  transform2D.y + layoutRect_.top,
+	//								  transform2D.x + layoutRect_.right,
+	//								  transform2D.y + layoutRect_.bottom }, pColorBrush_);
 	D2D::GetRenderTarget()->EndDraw();
 }
 void Text::SetColor(XMFLOAT4 color)
@@ -109,7 +111,7 @@ void Text::SetTextLayout()
 	//pWriteFactory_->CreateTextLayout()
 }
 
-void Text::SetText(std::string text)
+HRESULT Text::SetText(std::string text)
 {
 	size_t textSize;
 	textLength_ = text.length() + 1;
@@ -120,26 +122,34 @@ void Text::SetText(std::string text)
 	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
 	setlocale(LC_CTYPE, locale.c_str());
 	textLength_ = textSize;
-	pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
+	return pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
 }
 
-void Text::SetFontWeight(DWRITE_FONT_WEIGHT weightType, UINT32 startPos, UINT32 length)
+HRESULT Text::SetFontWeight(DWRITE_FONT_WEIGHT weightType, UINT32 startPos, UINT32 length)
 {
-	pLayout_->SetFontWeight(weightType, { startPos,length });
+	return pLayout_->SetFontWeight(weightType, { startPos,length });
 }
 
-void Text::SetTextSize(float size, UINT32 startPos, UINT32 length)
+HRESULT Text::SetTextSize(float size, UINT32 startPos, UINT32 length)
 {
 	if (startPos + length >= textLength_)
 	{
 		length = startPos + length - textLength_;
 	}
-	pLayout_->SetFontSize(size, { startPos,length });
+	FontData data;
+	data.fontSize_ = size;
+	data.pFontName_ = pFontName_;
+	size_t size = 0;
+	pTextFormat_->GetLocaleName(data.pLocale_,size);
+	pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_, data.fontStyle_, data.fontStretch_, data.fontSize_, data.pLocale_, &pTextFormat_);
+	return pLayout_->SetFontSize(size, { startPos,length });
 }
 
-void Text::SetFont(const FontData& data)
+HRESULT Text::SetFont(const FontData& data)
 {
-	pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_/*DWRITE_FONT_WEIGHT_REGULAR*/, data.fontStyle_/*DWRITE_FONT_STYLE_NORMAL*/, data.fontStretch_/*DWRITE_FONT_STRETCH_NORMAL*/, data.fontSize_, data.pLocale_, &pTextFormat_);
+	HRESULT hr= pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_/*DWRITE_FONT_WEIGHT_REGULAR*/, data.fontStyle_/*DWRITE_FONT_STYLE_NORMAL*/, data.fontStretch_/*DWRITE_FONT_STRETCH_NORMAL*/, data.fontSize_, data.pLocale_, &pTextFormat_);
+	assert(hr==S_OK);
+	return hr;
 }
 void Text::SetTransform(TEXT_POSITION pos)
 {

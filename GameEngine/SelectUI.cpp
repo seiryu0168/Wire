@@ -229,4 +229,9 @@ void SelectUI::LoadImageFile()
 
 void SelectUI::Release()
 {
+	for (auto& i : buttonList_)
+	{
+		SAFE_RELEASE(i.buttonText_);
+	}
+	SAFE_DELETE(fileReader_);
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include"MissionUI.h"
 class ObjectSetter;
+class ItemGetter;
 class MissionOrder : public MissionUI
 {
 private:
@@ -14,12 +15,16 @@ private:
 	int EnemyCount_;
 	ObjectSetter* pSetter_;
 
+
 public:
 	MissionOrder(GameObject* parent);
 	~MissionOrder();
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
+	/// <summary>
+	/// テキストをだんだん薄くする
+	/// </summary>
 	void EraseText();
 	void Release() override;
 };
