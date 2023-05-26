@@ -43,8 +43,11 @@ void MissionUI::DelNotice(std::string key)
 {
 	auto itr = noticeTextList_.find(key);
 	if (itr != noticeTextList_.end())
+	{
+		SAFE_RELEASE(itr->second);
+		noticeTextList_.erase(itr);
+	}
 
-	noticeTextList_.erase(itr);
 	CalcTextDistance();
 }
 

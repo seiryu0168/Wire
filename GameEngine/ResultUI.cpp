@@ -15,13 +15,15 @@ namespace
 	static const float STICK_TILT = 0.7f;
 	static const int INFORMATION_OFFSET = 1400;
 	static const int INTERVAL = 1;
+
 	static const int TITLE = 0;
-	static const int PLAY = 1;
+	static const int SELECT = 1;
+	static const int PLAY = 2;
 	static const short UP = -1;
 	static const short DOWN = 1;
 	static const int MAX_BUTTON = 5;
 	static const int DELAY = 90;
-	static const int MOVE = 500;
+	static const int MOVE = 300;
 	static const int MAX_MOVE_TIME = 11;
 	static const XMFLOAT3 BUTTON_FIRST_POS = { 0.0f,-100.0f,0.0f };
 }
@@ -45,15 +47,19 @@ ResultUI::ResultUI(GameObject* parent)
 
 ResultUI::~ResultUI()
 {
+
+	//解放処理
 	for (auto& i : buttonList_)
 	{
 		SAFE_RELEASE(i.buttonText_);
 	}
 	SAFE_DELETE(fileReader_);
+	buttonList_.clear();
 }
 
 void ResultUI::Initialize()
 {
+	//クリアしたかどうか
 	bool isClear=InterSceneData::GetboolData("Result");
 	if (isClear)
 	{
@@ -63,6 +69,7 @@ void ResultUI::Initialize()
 	{
 		hPictResult_ = ImageManager::Load("Assets\\GameOver2.png");
 	}
+	//
 	ImageManager::SetUIList(hPictResult_);
 	assert(hPictResult_ >= 0);
 	LoadImageFile();
@@ -70,6 +77,7 @@ void ResultUI::Initialize()
 
 void ResultUI::Update()
 {
+	//入力モードか移動モードか選択モードか
 	switch (uiMode_)
 	{
 	case UI_MODE::MODE_INPUT:
@@ -184,8 +192,12 @@ void ResultUI::PushedButton(int num)
 		switch (num)
 		{
 		case TITLE:
+			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_TITLE, DELAY);
+			break;
+		case SELECT:
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_SELECT, DELAY);
 			break;
+
 		case PLAY:
 			((SceneManager*)FindObject("SceneManager"))->ChangeScene(SCENE_ID::SCENE_ID_PLAY, DELAY);
 			break;

@@ -7,6 +7,7 @@
 namespace
 {
 	static const int LOW_HP = 3;
+	static const float TILT = 0.4f;
 
 }
 PlayScreen::PlayScreen(GameObject* parent)
@@ -49,20 +50,6 @@ void PlayScreen::Initialize()
 		ImageManager::SetUIList(i);
 	}
 	ObjectSetter* p = (ObjectSetter*)FindObject("ObjectSetter");
-	
-	/*if (p->GetSceneName() == "PlayScene")
-	{
-		pUI = new MissionOrder(p);
-	}
-	else if (p->GetSceneName() == "TutorialScene")
-	{
-		pUI = new TutorialOrder();
-	}*/
-}
-
-void PlayScreen::Update()
-{
-	//pUI->Update();
 }
 
 void PlayScreen::Draw()
@@ -89,19 +76,19 @@ void PlayScreen::SetDir(XMFLOAT2 dir)
 	ImageManager::SetAlpha(hPict_[2], 0);
 	ImageManager::SetAlpha(hPict_[3], 0);
 
-	if (dir.x >= 0.4)
+	if (dir.x >= TILT)
 	{
 		ImageManager::SetAlpha(hPict_[3], 1);
 	}
-	if (dir.x <= -0.4)
+	if (dir.x <= -TILT)
 	{
 		ImageManager::SetAlpha(hPict_[2], 1);
 	}
-	if (dir.y >= 0.4)
+	if (dir.y >= TILT)
 	{
 		ImageManager::SetAlpha(hPict_[0], 1);
 	}
-	if (dir.y <= -0.4)
+	if (dir.y <= -TILT)
 	{
 		ImageManager::SetAlpha(hPict_[1], 1);
 	}

@@ -16,6 +16,7 @@ ItemGetter::ItemGetter(GameObject* object)
 
 ItemGetter::~ItemGetter()
 {
+	SAFE_RELEASE(order_);
 	itemList_.clear();
 }
 

@@ -14,6 +14,7 @@ namespace
 	static const std::string UI_IMAGE_FILE = "StageSelectUIImage.json";
 	static const std::string BUTTON_LIST_NAME = "StageSelectUIImageList";
 	static const int INTERVAL = 1;
+	static const float TILT = 0.7f;
 	static const short UP = -1;
 	static const short DOWN = 1;
 	static const int MAX_BUTTON = 5;
@@ -67,22 +68,20 @@ void SelectUI::Update()
 
 void SelectUI::MoveButton(float ratio)
 {
-	float deltaPos = (MOVE / (MAX_MOVE_TIME - 1)) * buttonMove_;
 	float delta = MOVE * ratio * buttonMove_;
 	for (auto& i : buttonList_)
 	{
 		//ボタンを移動させる
-		//i.position_.y += deltaPos;
 		ImageManager::SetImagePos(i.hButtonPict_,
 			XMFLOAT3(i.position_.x,
 				i.position_.y + delta,
 				0));
 		ImageManager::SetImagePos(i.hMissionPict_,
 			XMFLOAT3(400.0f,
-				i.position_.y + delta,
+				(i.position_.y + delta)*3.0f,
 				0));
 		i.buttonText_->SetPosition({ i.position_.x - i.buttonText_->GetRect().right,
-							   i.position_.y + i.buttonText_->GetRect().bottom + delta });
+									 i.position_.y + i.buttonText_->GetRect().bottom + delta });
 	}
 }
 
@@ -99,7 +98,7 @@ void SelectUI::Input()
 	//ボタンの処理
 	buttonMove_ = 0;
 	//上に移動
-	if (Input::GetLStick_Y() >= 0.7f)
+	if (Input::GetLStick_Y() >= TILT)
 	{
 		buttonMove_ = UP;
 		//ボタンが
@@ -107,7 +106,7 @@ void SelectUI::Input()
 			uiMode_ = UI_MODE::MODE_MOVE;
 	}
 	//下に移動
-	else if (Input::GetLStick_Y() <= -0.7f)
+	else if (Input::GetLStick_Y() <= -TILT)
 	{
 		buttonMove_ = DOWN;
 		//ボタンの番号が最後尾じゃなかったら移動モードに切り替える
@@ -164,17 +163,20 @@ void SelectUI::ReadFile(std::string fileName)
 
 void SelectUI::ThirdDraw()
 {
+	//背景とボタンの描画、テキストの描画
 	ImageManager::Draw(hPictBackGround_);
 	ImageManager::Draw(hPictButtonFrame_);
 
 	for (auto& i : buttonList_)
 	{
 		i.buttonText_->Draw();
+		ImageManager::Draw(i.hMissionPict_);
 	}
 }
 
 void SelectUI::PushedButton(int num)
 {
+	//ボタンが押されたらステージ番号をプレイシーンに送る
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 	{
 		InterSceneData::SetData("StageNum", nullptr, &num, nullptr, nullptr);
@@ -196,7 +198,7 @@ void SelectUI::LoadImageFile()
 	//ImageManager::SetAlpha(hPictBackGround_, 0);
 	//ボタン画像読み込み
 	TEXT_RECT rect = { 0,0,500,100 };
-	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
+	for (auto& elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
 
 		std::string buttonText = elem[0];
@@ -216,10 +218,11 @@ void SelectUI::LoadImageFile()
 		assert(btn.hButtonPict_ >= 0);
 		btn.hMissionPict_ = ImageManager::Load("Assets\\" + missionName);
 		assert(btn.hMissionPict_ >= 0);
+		
 		//位置設定
 		btn.position_ = { -1400.0f,(buttonCount_++) * (float)(-MOVE),0.0f };
 		ImageManager::SetImagePos(btn.hButtonPict_, btn.position_);
-		ImageManager::SetImagePos(btn.hMissionPict_, { 400.0f,buttonCount_ * (float)(-MOVE),0.0f });
+		ImageManager::SetImagePos(btn.hMissionPict_, { 400.0f,(buttonCount_ * (float)(-MOVE))*3,0.0f });
 		btn.buttonText_->SetPosition({ btn.position_.x - btn.buttonText_->GetRect().right,
 								 btn.position_.y + btn.buttonText_->GetRect().bottom });
 		//配列に入れる

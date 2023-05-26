@@ -248,14 +248,15 @@ void PauseUI::LoadImageFile()
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
 	//ボタン画像読み込み
-	TEXT_RECT rect = { 0,0,500,100 };
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
 	{
 		buttonCount_++;
 		//画像の名前を取得
-		std::string button = elem[0];
-		XMFLOAT3 pos = { elem[1][0],elem[1][1] ,elem[1][2] };
+		std::string button = elem[1];
 
+		TEXT_RECT rect;
+		rect = { elem[2][0],elem[2][1],elem[2][2] ,elem[2][3] };
+		XMFLOAT3 pos = { elem[3][0],elem[3][1] ,elem[3][2] };
 		/////////////////////////////ボタンの用意//////////////////////
 		button_ btn;
 

@@ -24,6 +24,7 @@ SearchUpItem::~SearchUpItem()
 
 void SearchUpItem::Initialize()
 {
+	//効果時間やらアイテムタイプの設定など
 	SetLifeTime(LIFE);
 	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 2,2,2 });
 	AddCollider(pCollision);
@@ -35,6 +36,7 @@ void SearchUpItem::Initialize()
 
 void SearchUpItem::Update()
 {
+	//プレイヤーに効果が適用されていたら
 	if (IsAttach())
 	{
 		SubtractTime();
@@ -45,6 +47,7 @@ void SearchUpItem::Update()
 
 void SearchUpItem::Draw()
 {
+	//プレイヤーと一度も当たってなかったら
 	if (IsCollision()==false)
 	{
 		ModelManager::SetTransform(hModel_, transform_);
@@ -78,17 +81,18 @@ void SearchUpItem::PlayParticle(XMFLOAT3 pos)
 }
 void SearchUpItem::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetTag() == "Player")
-	{
 		if (pTarget->GetTag() == "Player")
 		{
+			//エフェクトの変数を変える
 			pData_->firstSpeed = EFFECT_SPEED;
 			pData_->positionErr = posErr;
 			pData_->number = PARTICLE_NUM;
 			pData_->delay = DELAY;
 			pParticle_->KillEmitter(hEmitter_);
+
+			//当たったフラグを立てる(いい名前思いつかなかった)
 			SetCollision();
+			//当たり判定を消す
 			DelCollider(*this);
 		}
-	}
 }

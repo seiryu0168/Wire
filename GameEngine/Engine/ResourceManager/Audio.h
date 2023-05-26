@@ -20,6 +20,7 @@ namespace Audio
 	/// </summary>
 	/// <param name="ID">–Â‚ç‚µ‚½‚¢‰¹‚Ì”Ô†</param>
 	void Play(int ID);
+	void ReleaseAudio();
 	void Releace();
 
 };

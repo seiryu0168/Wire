@@ -70,7 +70,7 @@ void MissionOrder::Draw()
 	for (auto& i : noticeTextList_)
 	{
 
-		i.second->Draw();
+		//i.second->Draw();
 	}
 }
 

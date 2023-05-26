@@ -14,7 +14,6 @@ public:
 	PlayScreen(GameObject* parent);
 	~PlayScreen();
 	void Initialize() override;
-	void Update() override;
 	void Draw() override;
 	void ThirdDraw() override;
 	void Release() override;

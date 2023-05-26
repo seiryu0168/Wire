@@ -8,6 +8,7 @@
 #include"../ResultScene.h"
 #include"ResourceManager/Model.h"
 #include"ResourceManager/ImageManager.h"
+#include"ResourceManager/Audio.h"
 
 
 SceneManager::SceneManager(GameObject* parent) 
@@ -34,6 +35,7 @@ void SceneManager::Update()
 		ModelManager::AllDeleteModelNum();
 		ModelManager::Release();
 		ImageManager::AllRelease();
+		
 
 		SceneBase* p = nullptr;
 		switch ((SCENE_ID)nextSceneID_)

@@ -90,7 +90,6 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 void Text::Draw()
 {
-	
 	D2D::GetRenderTarget()->BeginDraw();
 	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
 	//D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
@@ -126,6 +125,7 @@ HRESULT Text::SetText(std::string text)
 {
 	size_t textSize;
 	textLength_ = text.length() + 1;
+	SAFE_DELETE(pText_);
 	pText_ = new wchar_t[textLength_];
 
 	std::string locale = setlocale(LC_CTYPE, NULL);
@@ -133,6 +133,7 @@ HRESULT Text::SetText(std::string text)
 	mbstowcs_s(&textSize, pText_, textLength_, text.c_str(), text.length());
 	setlocale(LC_CTYPE, locale.c_str());
 	textLength_ = textSize;
+	SAFE_RELEASE(pLayout_);
 	return pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
 }
 
@@ -161,6 +162,7 @@ HRESULT Text::SetTextSize(float size)
 	FontData data;
 
 	data.fontSize_ = size;
+	
 	data.pFontName_ = new wchar_t[fontNameSize];
 	hr = pTextFormat_->GetFontFamilyName(data.pFontName_, fontNameSize);
 	if (FAILED(hr))
@@ -170,9 +172,11 @@ HRESULT Text::SetTextSize(float size)
 	if (FAILED(hr))
 		return hr;
 	//‘Ž®Ý’è
+	SAFE_RELEASE(pTextFormat_);
 	hr = pWriteFactory_->CreateTextFormat(data.pFontName_, data.pCollection_, data.fontWaight_, data.fontStyle_, data.fontStretch_, data.fontSize_, data.pLocale_, &pTextFormat_);
 	if (FAILED(hr))
 		return hr;
+	SAFE_RELEASE(pLayout_);
 	hr = pWriteFactory_->CreateTextLayout(pText_, textLength_, pTextFormat_, (layoutRect_.right - layoutRect_.left), (layoutRect_.bottom - layoutRect_.top), &pLayout_);
 		return hr;
 }

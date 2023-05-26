@@ -26,9 +26,14 @@ namespace Audio
 
 void Audio::Initialize()
 {
-	CoInitializeEx(0, COINIT_MULTITHREADED);
-	XAudio2Create(&pXAudio_);
-	pXAudio_->CreateMasteringVoice(&pMastaringVoice_);
+	HRESULT hr;
+	hr=CoInitialize(nullptr);
+	if (FAILED(hr))
+	{
+		int a = 0;
+	}
+	hr=XAudio2Create(&pXAudio_);
+	hr=pXAudio_->CreateMasteringVoice(&pMastaringVoice_);
 }
 
 int Audio::Load(std::string fileName, int svNum)

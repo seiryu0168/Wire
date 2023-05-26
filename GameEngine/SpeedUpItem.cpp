@@ -22,10 +22,12 @@ SpeedUpItem::~SpeedUpItem()
 
 void SpeedUpItem::Initialize()
 {
+	//効果時間設定
 	SetLifeTime(LIFE);
-	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 1,1,1 });
+	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 2,2,2 });
 	AddCollider(pCollision);
-	hModel_ = ModelManager::Load("Assets\\AAA.fbx");
+	hModel_ = ModelManager::Load("Assets\\SpeedUpItem.fbx");
+	//アイテムタイプ設定
 	SetItemType(ITEM_TYPE::SPEED);
 	pData_ = std::make_unique<EmitterData>();
 	PlayParticle(transform_.position_);
@@ -87,6 +89,7 @@ void SpeedUpItem::Release()
 
 void SpeedUpItem::OnCollision(GameObject* pTarget)
 {
+	//プレイヤーに当たったかどうか
 	if (pTarget->GetTag() == "Player")
 	{
 		pData_->firstSpeed = EFFECT_SPEED;
@@ -94,6 +97,8 @@ void SpeedUpItem::OnCollision(GameObject* pTarget)
 		pData_->number = PARTICLE_NUM;
 		pData_->delay = DELAY;
 		pParticle_->KillEmitter(hEmitter_);
+
+		//プレイヤーに当たったフラグを立てる
 		SetCollision();
 		DelCollider(*this);
 	}

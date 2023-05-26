@@ -81,7 +81,7 @@ class Player : public GameObject
     Pointer*      pPointer_;
     PlayScreen*   pScreen_;
     ObjectSetter* pSetter_;
-    ModelComponent* modelComp_;
+    //ModelComponent* modelComp_;
     ItemGetter* pItemGetter_;
     std::list<Enemy*> enemyList_;
 
