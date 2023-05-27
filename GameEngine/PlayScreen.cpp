@@ -8,6 +8,11 @@ namespace
 {
 	static const int LOW_HP = 3;
 	static const float TILT = 0.4f;
+	static const std::string SCREEN_FRAME_UP = "Assets\\Image\\ScreenFrameUp2.png";
+	static const std::string SCREEN_FRAME_DOWN = "Assets\\Image\\ScreenFrameDown2.png";
+	static const std::string SCREEN_FRAME_LEFT = "Assets\\Image\\ScreenFrameLeft2.png";
+	static const std::string SCREEN_FRAME_RIGHT = "Assets\\Image\\ScreenFrameRight2.png";
+	static const std::string LOW_SCREEN_IMAGE = "Assets\\Image\\LowHPScreen.png";
 
 }
 PlayScreen::PlayScreen(GameObject* parent)
@@ -28,15 +33,15 @@ PlayScreen::~PlayScreen()
 
 void PlayScreen::Initialize()
 {
-	hPict_[0] = ImageManager::Load("Assets\\ScreenFrameUp2.png");
+	hPict_[0] = ImageManager::Load(SCREEN_FRAME_UP);
 	assert(hPict_[0] >= 0);
-	hPict_[1] = ImageManager::Load("Assets\\ScreenFrameDown2.png");
+	hPict_[1] = ImageManager::Load(SCREEN_FRAME_DOWN);
 	assert(hPict_[1] >= 0);
-	hPict_[2] = ImageManager::Load("Assets\\ScreenFrameLeft2.png");
+	hPict_[2] = ImageManager::Load(SCREEN_FRAME_LEFT);
 	assert(hPict_[2] >= 0);
-	hPict_[3] = ImageManager::Load("Assets\\ScreenFrameRight2.png");
+	hPict_[3] = ImageManager::Load(SCREEN_FRAME_RIGHT);
 	assert(hPict_[3] >= 0);
-	hLowHPPict_ = ImageManager::Load("Assets\\LowHPScreen.png");
+	hLowHPPict_ = ImageManager::Load(LOW_SCREEN_IMAGE);
 	assert(hLowHPPict_ >= 0);
 
 

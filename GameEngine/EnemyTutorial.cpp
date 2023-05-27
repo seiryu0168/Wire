@@ -1,6 +1,11 @@
 #include "EnemyTutorial.h"
 #include"Engine/ResourceManager/Model.h"
 #include"Engine/Collider/SphereCollider.h"
+
+namespace
+{
+	static const std::string ENEMY_MODEL = "Assets\\Model\\EnemyTurret.fbx";
+}
 EnemyTutorial::EnemyTutorial(GameObject* parent)
 	:Enemy(parent,"TutorialEnemy"),
 	hModel_(-1)
@@ -14,7 +19,7 @@ EnemyTutorial::~EnemyTutorial()
 void EnemyTutorial::Initialize()
 {
 	SetTag("Enemy");
-	hModel_ = ModelManager::Load("Assets\\EnemyTurret.fbx");
+	hModel_ = ModelManager::Load(ENEMY_MODEL);
 	assert(hModel_ >= 0);
 	SethModel(hModel_);
 	ModelManager::SetModelNum(hModel_);

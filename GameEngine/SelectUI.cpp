@@ -22,6 +22,9 @@ namespace
 	static const int MOVE = 500;
 	static const int MAX_MOVE_TIME = 11;
 	static const XMFLOAT3 BUTTON_FRAME_POS = { -1400.0f,0.0f,0.0f };
+	static const std::string BUTTONFRAME_IMAGE = "Assets\\Image\\ButtonFrame.png";
+	static const std::string BLACK_IMAGE = "Assets\\Image\\Black.png";
+	static const std::string SCREEN_FRAME = "Assets\\Image\\StageSelectFrame.png";
 }
 
 
@@ -30,6 +33,8 @@ SelectUI::SelectUI(GameObject* parent)
 	inputInterval_(INTERVAL),
 	moveTime_(0),
 	hPictBackGround_(-1),
+	hPictButtonFrame_(-1),
+	hPictScreenFrame_(-1),
 	buttonMove_(0),
 	buttonCount_(0)
 
@@ -172,6 +177,7 @@ void SelectUI::ThirdDraw()
 		i.buttonText_->Draw();
 		ImageManager::Draw(i.hMissionPict_);
 	}
+	ImageManager::Draw(hPictScreenFrame_);
 }
 
 void SelectUI::PushedButton(int num)
@@ -188,14 +194,15 @@ void SelectUI::PushedButton(int num)
 void SelectUI::LoadImageFile()
 {
 	//ボタンのフレーム画像読み込み
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	hPictButtonFrame_ = ImageManager::Load(BUTTONFRAME_IMAGE);
 	assert(hPictButtonFrame_ >= 0);
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FRAME_POS);
-	//タイトル画像読み込み
-	hPictBackGround_ = ImageManager::Load("Assets\\Black.png");
+	hPictBackGround_ = ImageManager::Load(BLACK_IMAGE);
 	assert(hPictBackGround_ >= 0);
-	//ImageManager::SetAlpha(hPictBackGround_, 0);
+
+	hPictScreenFrame_ = ImageManager::Load(SCREEN_FRAME);
+	assert(hPictScreenFrame_ >= 0);
 	//ボタン画像読み込み
 	TEXT_RECT rect = { 0,0,500,100 };
 	for (auto& elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
@@ -214,19 +221,21 @@ void SelectUI::LoadImageFile()
 		btn.buttonText_->Load(buttonText, "Sitka Text", rect, LEFT_TOP);
 
 		//画像読み込み
-		btn.hButtonPict_ = ImageManager::Load("Assets\\" + buttonImageName);
+		btn.hButtonPict_ = ImageManager::Load("Assets\\Image\\" + buttonImageName);
 		assert(btn.hButtonPict_ >= 0);
-		btn.hMissionPict_ = ImageManager::Load("Assets\\" + missionName);
+		btn.hMissionPict_ = ImageManager::Load("Assets\\Image\\" + missionName);
 		assert(btn.hMissionPict_ >= 0);
 		
 		//位置設定
-		btn.position_ = { -1400.0f,(buttonCount_++) * (float)(-MOVE),0.0f };
+		btn.position_ = { -1400.0f,(buttonCount_) * (float)(-MOVE),0.0f };
 		ImageManager::SetImagePos(btn.hButtonPict_, btn.position_);
+
 		ImageManager::SetImagePos(btn.hMissionPict_, { 400.0f,(buttonCount_ * (float)(-MOVE))*3,0.0f });
 		btn.buttonText_->SetPosition({ btn.position_.x - btn.buttonText_->GetRect().right,
 								 btn.position_.y + btn.buttonText_->GetRect().bottom });
 		//配列に入れる
 		buttonList_.push_back(btn);
+		buttonCount_++;
 	}
 }
 

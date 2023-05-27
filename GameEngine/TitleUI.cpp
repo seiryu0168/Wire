@@ -7,6 +7,8 @@ namespace
 	static const float FLASH_INTERVAL = 2.5f;
 	static const XMFLOAT3 MESSAGE_POS = { 0.0f,-300.0f,0.0f };
 	static const int DELAY = 90;
+	static const std::string TITLE_IMAGE = "Assets\\Image\\TitleImage.png";
+	static const std::string MESSAGE_IMAGE = "Assets\\Image\\TitleMessageImage.png";
 }
 TitleUI::TitleUI(GameObject* parent)
 	:GameObject(parent,"TitleUI"),
@@ -23,9 +25,9 @@ TitleUI::~TitleUI()
 
 void TitleUI::Initialize()
 {
-	hPictTitle_ = ImageManager::Load("Assets\\TitleImage.png");
+	hPictTitle_ = ImageManager::Load(TITLE_IMAGE);
 	assert(hPictTitle_ >= 0);
-	hPictMessage_ = ImageManager::Load("Assets\\TitleMessageImage.png");
+	hPictMessage_ = ImageManager::Load(MESSAGE_IMAGE);
 	assert(hPictTitle_ >= 0);
 	ImageManager::SetImagePos(hPictMessage_, MESSAGE_POS);
 }

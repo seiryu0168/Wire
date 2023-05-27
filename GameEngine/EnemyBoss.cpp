@@ -16,6 +16,9 @@ namespace
 	static const XMFLOAT3 COLLISION_SIZE = { 5, 10, 5 };
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
+	static const std::string CORE_MODEL = "Assets\\Model\\EnemyBossCore.fbx";
+	static const std::string SHIELD_MODEL = "Assets\\Model\\EnemyBossShield.fbx";
+
 }
 EnemyBoss::EnemyBoss(GameObject* parent)
 	:Enemy(parent,"EnemyBoss"),
@@ -47,11 +50,11 @@ void EnemyBoss::Initialize()
 	AddCollider(pCollider);
 	
 	//コアのモデル読み込み
-	hModelCore_ = ModelManager::Load("Assets\\EnemyBossCore.fbx");
+	hModelCore_ = ModelManager::Load(CORE_MODEL);
 	ModelManager::SetModelNum(hModelCore_);
 	assert(hModelCore_ >= 0);
 	//シールドのモデル読み込み
-	hModelShield_ = ModelManager::Load("Assets\\EnemyBossShield.fbx");
+	hModelShield_ = ModelManager::Load(SHIELD_MODEL);
 	assert(hModelShield_ >= 0);
 	SethModel(hModelShield_);
 	ModelManager::SetModelNum(hModelShield_);

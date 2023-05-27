@@ -10,14 +10,11 @@ TestScene::TestScene(GameObject* parent)
 //‰Šú‰»
 void TestScene::Initialize()
 {
-	pLine_ = new LineParticle;
-	pLine_->Load("Assets\\Effect01.png");
 }
 
 //XV
 void TestScene::Update()
 {
-	pLine_->AddPosition(transform_.position_);
 }
 void TestScene::FixedUpdate()
 {

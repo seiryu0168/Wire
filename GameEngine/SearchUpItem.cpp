@@ -10,6 +10,9 @@ namespace
 	static const float EFFECT_SPEED = 0.03f;
 	static const XMFLOAT3 posErr = { 3.0f,0.0f,3.0f };
 	static const int DELAY = 0;
+
+	static const std::string ITEM_MODEL = "Assets\\Model\\SearchUpItem.fbx";
+	static const std::string PARTICLE_IMAGE = "Assets\\Image\\Smoke.png";
 }
 SearchUpItem::SearchUpItem(GameObject* parent)
 	:ItemBase(parent, "SearchUpItem"),
@@ -28,7 +31,7 @@ void SearchUpItem::Initialize()
 	SetLifeTime(LIFE);
 	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 2,2,2 });
 	AddCollider(pCollision);
-	hModel_ = ModelManager::Load("Assets\\SearchUpItem.fbx");
+	hModel_ = ModelManager::Load(ITEM_MODEL);
 	SetItemType(ITEM_TYPE::SEARCH);
 	pData_ = std::make_unique<EmitterData>();
 	PlayParticle(transform_.position_);
@@ -61,7 +64,7 @@ void SearchUpItem::Release()
 
 void SearchUpItem::PlayParticle(XMFLOAT3 pos)
 {
-	pData_->textureFileName = "Assets\\Smoke.png";
+	pData_->textureFileName = PARTICLE_IMAGE;
 	pData_->position = pos;
 	pData_->positionErr = XMFLOAT3(1.0f, 0, 1.0f);
 	pData_->delay = 10;

@@ -10,6 +10,10 @@ namespace
 	static const float SPEED = 1.1f;
 	static const int HOMING_TIME = 60;
 	static const XMVECTOR FIRST_SPEED= XMVectorSet(0, 2, 0, 0);
+	static const std::string COLLISION_AUDIO = "Assets\\Audio\\explosion.wav";
+	static const std::string BULLET_IMAGE = "Assets\\Image\\Effect01.png";
+	static const std::string PARTICLE_IMAGE = "Assets\\Image\\Smoke.png";
+
 }
 HomingBullet::HomingBullet(GameObject* parent)
 	:GameObject(parent, "HomingBullet"),
@@ -34,12 +38,12 @@ void HomingBullet::Initialize()
 	SphereCollider* pCollision = new SphereCollider(XMFLOAT3(0, 0, 0),0.3f);
 	AddCollider(pCollision);
 	//Õ“Ë‰¹
-	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
+	hAudio_ = Audio::Load(COLLISION_AUDIO,10);
 	assert(hAudio_ >= 0);
 	SetTag("EnemyBullet");
 	pBill_ = new BillBoard;
 	transform_.position_ = pParent_->GetPosition();
-	pBill_->Load("Assets\\Effect01.png");
+	pBill_->Load(BULLET_IMAGE);
 	pParent_ = FindObject("PlayScene");
 	pPlayer_ = (Player*)FindObject("Player");
 	position_ = XMLoadFloat3(&transform_.position_);
@@ -100,7 +104,7 @@ void HomingBullet::BeforeDeath()
 
 	EmitterData data;
 
-	data.textureFileName = "Assets\\Smoke.png";
+	data.textureFileName = PARTICLE_IMAGE;
 	data.position = transform_.position_;
 	data.positionErr = XMFLOAT3(0.2f, 0, 0.2f);
 	data.delay = 0;

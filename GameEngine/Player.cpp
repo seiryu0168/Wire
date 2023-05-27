@@ -55,6 +55,13 @@ namespace
 
     static const XMFLOAT4 LINECOLOR_RED = { 1,0,0,1 };
     static const XMFLOAT4 LINECOLOR_DEFAULT = { 1,1,1,1 };
+
+    static const std::string PLAYER_MODEL = "Assets\\Model\\WireShooter_Maya.fbx";
+    static const std::string LIFE_IMAGE = "Assets\\Image\\LifeImage.png";
+    static const std::string LINEPARTICLE_IMAGE = "Assets\\Image\\Effect01.png";
+    static const std::string COLLISION_AUDIO = "Assets\\Audio\\explosion.wav";
+    static const std::string SHOT_AUDIO = "Assets\\Audio\\shoot.wav";
+
 }
 
 //コンストラクタ
@@ -125,7 +132,7 @@ void Player::Initialize()
     pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
     
     //モデルロード
-    hModel_ = ModelManager::Load("Assets\\WireShooter_Maya.fbx");
+    hModel_ = ModelManager::Load(PLAYER_MODEL);
     assert(hModel_ >= 0);
 
     //マーカーを生成
@@ -136,14 +143,14 @@ void Player::Initialize()
     //パラメータ設定
     pPointerLine_->SetLineParameter(0.1f, 2);
     //ラインパーティクル用画像のロード
-    pPointerLine_->Load("Assets\\Effect01.png");
+    pPointerLine_->Load(LINEPARTICLE_IMAGE);
 
     //衝突音
-    hAudio_ = Audio::Load("Assets\\explosion.wav", 10);
+    hAudio_ = Audio::Load(COLLISION_AUDIO, 10);
     assert(hAudio_ >= 0);
     
     //射出音
-    hAudioShoot_ = Audio::Load("Assets\\shoot.wav",5);
+    hAudioShoot_ = Audio::Load(SHOT_AUDIO,5);
     assert(hAudioShoot_ >= 0);
     
     //当たり判定
@@ -171,7 +178,7 @@ void Player::Initialize()
     wire_ = new Wire;
     for (int i = 0; i < MAX_LIFE; i++)
     {
-        int hPict_ = ImageManager::Load("Assets\\LifeImage.png");
+        int hPict_ = ImageManager::Load(LIFE_IMAGE);
         ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+ LIFE_INTERVAL *i, LIFE_OFFSET_Y, 0 });
         ImageManager::SetImageSize(hPict_, LIFE_SIZE);
         ImageManager::SetUIList(hPict_);
@@ -594,7 +601,7 @@ void Player::OccurParticle()
     if (status_ & ATC_ATTACK)
     {
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-        data.textureFileName = "Assets\\Effect01.png";
+        data.textureFileName = "Assets\\Image\\Effect01.png";
         XMFLOAT3 particlePos;
         XMStoreFloat3(&particlePos, pos + (XMVector3Normalize(vPlayerMove_)));
         data.position = particlePos;

@@ -26,6 +26,9 @@ namespace
 	static const int MOVE = 300;
 	static const int MAX_MOVE_TIME = 11;
 	static const XMFLOAT3 BUTTON_FIRST_POS = { 0.0f,-100.0f,0.0f };
+
+	static const std::string CLEAR_IMAGE = "Assets\\Image\\Clear.png";
+	static const std::string GAMEOVER_IMAGE = "Assets\\Image\\GameOver.png";
 }
 
 
@@ -63,11 +66,11 @@ void ResultUI::Initialize()
 	bool isClear=InterSceneData::GetboolData("Result");
 	if (isClear)
 	{
-		hPictResult_ = ImageManager::Load("Assets\\Clear2.png");
+		hPictResult_ = ImageManager::Load(CLEAR_IMAGE);
 	}
 	else
 	{
-		hPictResult_ = ImageManager::Load("Assets\\GameOver2.png");
+		hPictResult_ = ImageManager::Load(GAMEOVER_IMAGE);
 	}
 	//
 	ImageManager::SetUIList(hPictResult_);
@@ -208,7 +211,7 @@ void ResultUI::PushedButton(int num)
 
 void ResultUI::LoadImageFile()
 {
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	hPictButtonFrame_ = ImageManager::Load("Assets\\Image\\ButtonFrame.png");
 	assert(hPictButtonFrame_ >= 0);
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);

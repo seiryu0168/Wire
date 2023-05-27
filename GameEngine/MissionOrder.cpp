@@ -9,6 +9,7 @@ namespace
 	static const std::string ENEMY = "Enemy:";
 	static const float DELTA_RATIO = 0.015f;
 	static const float DELTA_ALPHA = 0.01f;
+	static const std::string BACKGROUND_IMAGE = "Assets\\Image\\TextBackGround.png";
 }
 MissionOrder::MissionOrder(GameObject* parent)
 	:MissionUI(parent,"MissionOrder"),
@@ -19,7 +20,7 @@ MissionOrder::MissionOrder(GameObject* parent)
 	alpha_(1.0f)
 
 {
-	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
+	hPict_ = ImageManager::Load(BACKGROUND_IMAGE);
 	assert(hPict_ >= 0);
 
 }
@@ -61,6 +62,7 @@ void MissionOrder::Update()
 
 void MissionOrder::Draw()
 {
+	ImageManager::Draw(hPict_);
 	for (auto& i : textList)
 	{
 		i->Draw();

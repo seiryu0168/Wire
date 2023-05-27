@@ -6,6 +6,9 @@
 namespace
 {
     static const float IS_MOVE = 0.2f;
+    static const std::string BASE_MODEL = "Assets\\Model\\Player_Maya.fbx";
+    static const std::string MOVE_AUDIO = "Assets\\Audio\\move.wav";
+    static const std::string PARTICLE_IMAGE = "Assets\\Image\\Effect01.png";
 }
 PlayerBase::PlayerBase(GameObject* parent)
     :GameObject(parent, "PlayerBase"),
@@ -21,9 +24,9 @@ PlayerBase::~PlayerBase()
 
 void PlayerBase::Initialize()
 {
-	hModel_ = ModelManager::Load("Assets\\Player_Maya.fbx");
+	hModel_ = ModelManager::Load(BASE_MODEL);
 	assert(hModel_ >= 0);
-    hAudio_ = Audio::Load("Assets\\move.wav");
+    hAudio_ = Audio::Load(MOVE_AUDIO);
     assert(hAudio_ >= 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_LEFT)] = XMVectorSet(-3.0f, -1.0f, 3.0f, 0);
     vSparkPos_[static_cast<int>(SPARKPOS::FRONT_RIGHT)] = XMVectorSet(3.0f, -1.0f, 3.0f, 0);
@@ -67,7 +70,7 @@ void PlayerBase::Spark()
     {
         XMVECTOR VPos = vSparkPos_[i] * GetParent()->GetTransform().GetWorldRotateMatrix();
         XMFLOAT3 playerPos = GetParent()->GetPosition();
-        data.textureFileName = "Assets\\Effect01.png";
+        data.textureFileName =PARTICLE_IMAGE;
         data.position = StoreFloat3(XMLoadFloat3(&playerPos) + VPos);
         data.positionErr = XMFLOAT3(0.2f, 0, 0.2f);
         data.delay = 0;

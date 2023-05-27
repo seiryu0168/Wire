@@ -58,6 +58,7 @@ namespace ModelManager
 	int AddMComponentList(ModelComponent* mComp);
 	void DeleteComponentList(ModelComponent* mComp);
 	XMFLOAT3 GetBonePosition(int modelNum,std::string boneName);
+	std::string GetModelName(int modelNum);
 	void Release();
 };
 

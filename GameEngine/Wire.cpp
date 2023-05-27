@@ -3,7 +3,7 @@
 namespace
 {
 	static const int FRAME = 15;
-
+	static const std::string WIRE_IMAGE = "Assets\\IMage\\Effect01.png";
 }
 Wire::Wire()
 	:splitCount_(5),
@@ -15,7 +15,7 @@ Wire::Wire()
 	vWire_(XMVectorZero())
 {
 	wireLine_.SetLineParameter(0.3f, splitCount_);
-	wireLine_.Load("Assets\\Effect01.png");
+	wireLine_.Load(WIRE_IMAGE);
 }
 
 Wire::~Wire()

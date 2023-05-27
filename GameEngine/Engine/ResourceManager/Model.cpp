@@ -48,7 +48,7 @@ void ModelManager::Initialize()
 	WCHAR currentDirectory[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDirectory);
 	SetCurrentDirectory(L"Assets");
-	pNormalMap_->Load(L"DefaultNormalMap.jpg");
+	pNormalMap_->Load(L"Image\\DefaultNormalMap.jpg");
 	SetCurrentDirectory(currentDirectory);
 
 }
@@ -376,6 +376,11 @@ XMFLOAT3 ModelManager::GetBonePosition(int modelNum,std::string boneName)
 	XMVECTOR vBone = XMVector3TransformCoord(XMLoadFloat3(&pos), modelData_[modelNum]->transform_.GetWorldMatrix());
 	XMStoreFloat3(&pos, vBone);
 	return pos;
+}
+
+std::string ModelManager::GetModelName(int modelNum)
+{
+	return modelData_[modelNum]->fileName_;
 }
 
 //複数のポインタが同じアドレスを参照してるから参照してない所までmodelData_を進めなきゃいけない

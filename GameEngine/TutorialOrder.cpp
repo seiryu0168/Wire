@@ -6,6 +6,7 @@ namespace
 	static const XMFLOAT2 TEXT_POS = { 0.4f,0.45f };
 	static const float DELTA_RATIO = 0.015f;
 	static const float DELTA_ALPHA = 0.01f;
+	static const std::string BACKGROUND_IMAGE = "Assets\\Image\\TextBackGround.png";
 }
 TutorialOrder::TutorialOrder(GameObject* parent)
 	:MissionUI(parent,"TutorialOrder"),
@@ -17,7 +18,7 @@ TutorialOrder::TutorialOrder(GameObject* parent)
 	pText_ = new Text();
 	TEXT_RECT rect = { 0,0,500,100 };
 	pText_->Load("チュートリアル", "Sitka Text", rect,LEFT_TOP);
-	hPict_ = ImageManager::Load("Assets\\TextBackGround.png");
+	hPict_ = ImageManager::Load(BACKGROUND_IMAGE);
 }
 
 TutorialOrder::~TutorialOrder()

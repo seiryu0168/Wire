@@ -8,6 +8,8 @@ namespace
 	static const float EFFECT_SPEED = 0.03f;
 	static const XMFLOAT3 posErr = { 3.0f,0.0f,3.0f };
 	static const int DELAY = 0;
+	static const std::string ITEM_MODEL = "Assets\\Model\\SpeedUpItem.fbx";
+	static const std::string PARTICLE_IMAGE = "Assets\\Image\\Smoke.png";
 }
 SpeedUpItem::SpeedUpItem(GameObject* parent)
 	:ItemBase(parent,"SpeedUpItem"),
@@ -26,7 +28,7 @@ void SpeedUpItem::Initialize()
 	SetLifeTime(LIFE);
 	BoxCollider* pCollision = new BoxCollider({ 0,0,0 }, { 2,2,2 });
 	AddCollider(pCollision);
-	hModel_ = ModelManager::Load("Assets\\SpeedUpItem.fbx");
+	hModel_ = ModelManager::Load(ITEM_MODEL);
 	//アイテムタイプ設定
 	SetItemType(ITEM_TYPE::SPEED);
 	pData_ = std::make_unique<EmitterData>();
@@ -63,7 +65,7 @@ void SpeedUpItem::UnAttachedUpdate()
 
 void SpeedUpItem::PlayParticle(XMFLOAT3 pos)
 {
-	pData_->textureFileName = "Assets\\Smoke.png";
+	pData_->textureFileName = PARTICLE_IMAGE;
 	pData_->position = pos;
 	pData_->positionErr = XMFLOAT3(1.0f, 0, 1.0f);
 	pData_->delay = 10;

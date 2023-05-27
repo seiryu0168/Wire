@@ -19,7 +19,7 @@ void Pointer::Initialize()
 {
 	//SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 3);
 	//AddCollider(pCollision);
-	hModel_ = ModelManager::Load("Assets\\Mark.fbx");
+	hModel_ = ModelManager::Load("Assets\\Model\\Mark.fbx");
 	assert(hModel_ >= 0);
 }
 

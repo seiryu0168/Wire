@@ -161,6 +161,11 @@ void ImageManager::SetUIList(int imgHandle)
 	uiImageList_.push_back(imgHandle);
 }
 
+std::string ImageManager::GetImageName(int imgHandle)
+{
+	return imageList_[imgHandle]->fileName_;
+}
+
 void ImageManager::Release(int imgHandle)
 {
 	if (imgHandle < 0 || imgHandle > imageList_.size())

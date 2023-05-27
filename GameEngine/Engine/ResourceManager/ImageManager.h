@@ -65,7 +65,7 @@ namespace ImageManager
 	void  SetImageSize(int imgHandle, XMFLOAT3 size);
 
 	void SetUIList(int imgHandle);
-
+	std::string GetImageName(int imgHandle);
 	void Release(int imgHandle);
 	void AllRelease();
 };

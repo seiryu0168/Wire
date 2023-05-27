@@ -9,6 +9,7 @@ namespace
 	static const float MAX_TO_PLAYERDIST = 70.0f;
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };
+	static const std::string ENEMY_MODEL = "Assets\\Model\\EnemyBall.fbx";
 }
 
 
@@ -37,7 +38,7 @@ void EnemyNormal::Initialize()
 	//プレイヤーのポインタ設定
 	SetPlayerPointer((Player*)FindObject("Player"));
 	//モデルロード
-	hModel_ = ModelManager::Load("Assets\\EnemyBall.fbx");
+	hModel_ = ModelManager::Load(ENEMY_MODEL);
 	SethModel(hModel_);
 	//当たり判定設定
 	SphereCollider* pCollider = new SphereCollider(XMFLOAT3(0,0,0),3);

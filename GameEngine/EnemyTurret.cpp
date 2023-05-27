@@ -18,6 +18,7 @@ namespace
 	static const float INIT_POS_Y = 2.0f;
 	static const float INIT_OFFSET = 999.0f;
 	static const int MAX_RANDOM = 500;
+	static const std::string TURRET_MODEL = "Assets\\Model\\EnemyTurret_Maya.fbx";
 }
 void EnemyTurret::ChangeSatate(EnemyState<EnemyTurret>* state)
 {
@@ -59,7 +60,7 @@ void EnemyTurret::Initialize()
 	AddCollider(pCollider);
 	
 	//モデル読み込み
-	hModel_ = ModelManager::Load("Assets\\EnemyTurret_Maya.fbx");
+	hModel_ = ModelManager::Load(TURRET_MODEL);
 	assert(hModel_ >= 0);
 
 	//モデルセット

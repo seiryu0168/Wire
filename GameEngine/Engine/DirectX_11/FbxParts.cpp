@@ -59,7 +59,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 {
 	FbxMesh* mesh = pNode->GetMesh();
 	pToonTexture_ = new Texture;
-	pToonTexture_->Load("ToonTexture.jpg");
+	pToonTexture_->Load("../Image\\ToonTexture.jpg");
 	
 	//各情報の個数を取得
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
@@ -576,9 +576,11 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			size_t ret;
 			mbstowcs_s(&ret, wtext, name, strlen(name));
 
+			std::wstring fName = wtext;
+			fName = L"../Image\\" + fName;
 			//ファイルからテクスチャ作成
 			pMaterialList_[i].pTexture = new Texture;
-			pMaterialList_[i].pTexture->Load(wtext);
+			pMaterialList_[i].pTexture->Load(fName.c_str());
 		}
 
 		//テクスチャ無し
@@ -618,7 +620,7 @@ void FbxParts::InitMaterial(fbxsdk::FbxNode* pNode)
 			}
 			else
 			{
-				pMaterialList_[i].pNormalMap->Load(L"DefaultNormalMap.jpg");
+				pMaterialList_[i].pNormalMap->Load(L"../Image\\DefaultNormalMap.jpg");
 			}
 		}
 	}

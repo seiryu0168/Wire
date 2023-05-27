@@ -24,6 +24,8 @@ namespace
 	static const int MOVE = 1200;
 	static const int MAX_MOVE_TIME = 11;
 	static const XMFLOAT3 BUTTON_FIRST_POS = { -600.0f,-400.0f,0.0f };
+	static const std::string BACKGROUND_IMAGE = "Assets\\Image\\Black.png";
+	static const std::string BUTTONFLAME_IMAGE = "Assets\\Image\\ButtonFrame.png";
 }
 
 
@@ -239,11 +241,11 @@ void PauseUI::PushedButton(int num)
 void PauseUI::LoadImageFile()
 {
 	//ポーズ画面背景画像読み込み
-	hPictBackGround_ = ImageManager::Load("Assets\\Black.png");
+	hPictBackGround_ = ImageManager::Load(BACKGROUND_IMAGE);
 	ImageManager::SetAlpha(hPictBackGround_, 0.2f);
 	assert(hPictBackGround_ >= 0);
 	//ボタンのフレーム画像読み込み
-	hPictButtonFrame_ = ImageManager::Load("Assets\\ButtonFrame.png");
+	hPictButtonFrame_ = ImageManager::Load(BUTTONFLAME_IMAGE);
 	assert(hPictButtonFrame_ >= 0);
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);

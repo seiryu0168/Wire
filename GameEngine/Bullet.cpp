@@ -7,6 +7,9 @@
 namespace
 {
 	static const float COLLISION_SIZE = 0.3f;
+	static const std::string COLLISION_AUDIO = "Assets\\Audio\\explosion.wav";
+	static const std::string BULLET_IMAGE = "Assets\\Image\\Effect01.png";
+	static const std::string PARTICLE_IMAGE = "Assets\\Image\\Smoke.png";
 }
 //コンストラクタ
 Bullet::Bullet(GameObject* parent)
@@ -45,11 +48,11 @@ void Bullet::Initialize()
 	else
 		KillMe();
 	//衝突音
-	hAudio_ = Audio::Load("Assets\\explosion.wav",10);
+	hAudio_ = Audio::Load(COLLISION_AUDIO,10);
 	assert(hAudio_ >= 0);
 
 	pParent_ = GetScene();
-	pBill_->Load("Assets\\Effect01.png");
+	pBill_->Load(BULLET_IMAGE);
 }
 
 //更新
@@ -82,7 +85,7 @@ void Bullet::OnCollision(GameObject* target)
 
 		EmitterData data;
 
-		data.textureFileName = "Assets\\Smoke.png";
+		data.textureFileName = PARTICLE_IMAGE;
 		data.position = transform_.position_;
 		data.positionErr = XMFLOAT3(0.2f, 0.0f, 0.2f);
 		data.delay = 0;

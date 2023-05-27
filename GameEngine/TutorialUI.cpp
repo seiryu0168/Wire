@@ -7,6 +7,7 @@
 namespace
 {
 	static const int DELAY = 120;
+	static const std::string CONTROL_IMAGE = "Assets\\Image\\ControlImage.png";
 }
 TutorialUI::TutorialUI(GameObject* parent)
 	:GameObject(parent,"TutorialScene"),
@@ -20,7 +21,7 @@ TutorialUI::~TutorialUI()
 
 void TutorialUI::Initialize()
 {
-	hPict_ = ImageManager::Load("Assets\\ControlImage.png");
+	hPict_ = ImageManager::Load(CONTROL_IMAGE);
 	assert(hPict_ >= 0);
 
 	ImageManager::SetImagePos(hPict_, { 1400,0,0 });

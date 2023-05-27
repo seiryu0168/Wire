@@ -59,7 +59,7 @@ const XMFLOAT4& StageManager::GetAreaLimit(int stageNum)
 
 int StageManager::LoadStage(int stageNum)
 {
-	std::string filePath = "Assets\\" + stageDatas_[stageNum]->stageName_ + ".fbx";
+	std::string filePath = "Assets\\Model\\" + stageDatas_[stageNum]->stageName_ + ".fbx";
 	int hModel = ModelManager::Load(filePath);
 	assert(hModel >= 0);
 	return hModel;

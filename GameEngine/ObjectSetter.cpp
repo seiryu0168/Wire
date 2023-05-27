@@ -20,6 +20,7 @@
 namespace 
 {
 	static const int DELAY = 180;
+	static const std::string BLACK_IMAGE = "Assets\\Image\\Black.png";
 }
 
 ObjectSetter::ObjectSetter(GameObject* parent)
@@ -91,7 +92,7 @@ ObjectSetter::~ObjectSetter()
 
 void ObjectSetter::Initialize()
 {
-	hPict_ = ImageManager::Load("Assets\\Black.png");
+	hPict_ = ImageManager::Load(BLACK_IMAGE);
 	assert(hPict_ >= 0);
 	ImageManager::SetAlpha(hPict_,0.0f);
 }

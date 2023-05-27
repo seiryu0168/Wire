@@ -64,7 +64,7 @@ void UIManager::Initialize(int stageNum)
 				XMFLOAT3 imagePos = { imagePosArray.at(0).get<float>(),
 									  imagePosArray.at(1).get<float>(),
 									  imagePosArray.at(2).get<float>() };
-				int imageHandle = ImageManager::Load("Assets\\" + imageName);
+				int imageHandle = ImageManager::Load("Assets\\Image\\" + imageName);
 				ImageManager::SetImagePos(imageHandle,imagePos);
 				mission.imageList_.push_back(imageHandle);
 			}

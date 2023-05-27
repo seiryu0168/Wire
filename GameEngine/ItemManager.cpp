@@ -72,6 +72,7 @@ bool ItemManager::LoadFile(std::string fileName)
 	//ファイルを閉じ、ディレクトリを元に戻す
 	file.close();
 	SetCurrentDirectory(currentDir);
+	return true;
 }
 
 ItemBase* ItemManager::CreateItem(std::string itemName)
