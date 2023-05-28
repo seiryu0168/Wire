@@ -37,7 +37,7 @@ void MissionOrder::Initialize()
 	pText_ = new Text();
 	pText_->Load(ORDER, "Sitka Text", rect1, LEFT_TOP);
 	pCountText_ = new Text();
-	pCountText_->Load(ENEMY + count_, "Sitka Text", rect2, LEFT_TOP);
+	pCountText_->Load(ENEMY + count_, "Sitka Text", rect2, LEFT_TOP,90);
 	pSetter_ = (ObjectSetter*)FindObject("ObjectSetter");
 	EnemyMax_=pSetter_->GetEnemyCount();
 	EnemyCount_=pSetter_->GetEnemyCount();
@@ -72,12 +72,13 @@ void MissionOrder::Draw()
 	for (auto& i : noticeTextList_)
 	{
 
-		//i.second->Draw();
+		i.second->Draw();
 	}
 }
 
 void MissionOrder::EraseText()
 {
+	//アルファ値減らしていく
 	textList[0]->SetColor({ 1,1,1,alpha_ });
 	ImageManager::SetAlpha(hPict_, alpha_);
 	alpha_ -= DELTA_ALPHA;

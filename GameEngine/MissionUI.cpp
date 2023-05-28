@@ -3,7 +3,7 @@
 #include"Easing.h"
 namespace
 {
-	static const XMFLOAT2 FIRST_NOTICE_POS = { -1800.0f,-400.0f };
+	static const XMFLOAT2 FIRST_NOTICE_POS = { -1800.0f,-700.0f };
 }
 MissionUI::MissionUI(GameObject* parent, std::string uiName)
 	:GameObject(parent,uiName)
@@ -29,18 +29,21 @@ void MissionUI::SetImage(std::vector<int> imgList)
 
 void MissionUI::AddNotice(std::string key, Text* text)
 {
+	//通知追加
 	noticeTextList_[key] = text;
 	CalcTextDistance();
 }
 
 void MissionUI::ChangeNotice(std::string key, std::string text)
 {
+	//通知内容を更新する
 	if (noticeTextList_.find(key) != noticeTextList_.end())
 		noticeTextList_[key]->SetText(text);
 }
 
 void MissionUI::DelNotice(std::string key)
 {
+	//通知を消す
 	auto itr = noticeTextList_.find(key);
 	if (itr != noticeTextList_.end())
 	{
@@ -55,7 +58,8 @@ void MissionUI::CalcTextDistance()
 {
 	int totalMove = 0;
 	int move = 0;
-
+	
+	//基準の位置からの距離を計算して順に並べる
 	for (auto itr = noticeTextList_.begin(); itr != noticeTextList_.end(); itr++)
 	{
 		totalMove += move;

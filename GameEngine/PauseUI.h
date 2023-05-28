@@ -45,7 +45,6 @@ public:
 	void ThirdDraw() override;
 	void PushedButton(int num);
 	void MoveButton(float ratio);
-	bool IsLimit(int buttonNum);
 	void ReadFile(std::string fileName);
 	void LoadImageFile();
 	void Release() override;

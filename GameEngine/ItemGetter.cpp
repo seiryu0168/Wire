@@ -107,7 +107,7 @@ void ItemGetter::CreateItemText(ItemBase* item)
 	std::string txt = effectName + ":" + effectTime + "sec";
 	
 	//テキスト用矩形
-	TEXT_RECT rect = { 0,0,500,250 };
+	TEXT_RECT rect = { 0,0,500,100 };
 	text->Load(txt, "Sitka Text", rect, LEFT_TOP);
 	text->SetPosition(NOTICE_POS);
 	HRESULT hr = text->SetTextSize(40);
@@ -118,6 +118,7 @@ void ItemGetter::CreateItemText(ItemBase* item)
 
 void ItemGetter::UpdateText(ItemBase* item)
 {
+	//テキスト情報更新
 	std::string effectName = item->GetObjectName();
 	std::string effectTime = std::to_string(item->GetLifeTime() / 60);
 	order_->ChangeNotice(item->GetObjectName(), effectName + ":" + effectTime + "sec");
@@ -125,6 +126,7 @@ void ItemGetter::UpdateText(ItemBase* item)
 
 void ItemGetter::RemoveItemEffect(ItemBase* item)
 {
+	//アイテムタイプによってプレイヤーに与える効果を変える
 	switch (item->GetItemType())
 	{
 	case ITEM_TYPE::SPEED:

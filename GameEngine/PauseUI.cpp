@@ -88,18 +88,11 @@ void PauseUI::MoveButton(float ratio)
 	ImageManager::SetImagePos(hPictButtonFrame_, pos);
 }
 
-bool PauseUI::IsLimit(int buttonNum)
-{
-	if (buttonNum > 0 || buttonNum < (buttonCount_ - 1))
-		return true;
-	else
-		return false;
-}
-
-
 void PauseUI::GameStop()
 {
+
 	GameObject* p = GetScene();
+	//シーン内の特定オブジェクトを除いて更新を無効にする
 	for (auto i : *(GetScene()->GetChildList()))
 	{
 		if (i->GetObjectName() != this->GetObjectName()&&
@@ -112,6 +105,7 @@ void PauseUI::GameStop()
 
 void PauseUI::GameResume()
 {
+	//シーン内のオブジェクトの更新を有効にする
 	for (auto i : *(GetScene()->GetChildList()))
 	{
 		i->SetUpdate(true);
@@ -121,6 +115,7 @@ void PauseUI::GameResume()
 
 void PauseUI::Input()
 {
+	//スタートボタン押されたらゲームの更新を再開
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
 	{
 		isPause_ = false;
@@ -157,6 +152,7 @@ void PauseUI::Input()
 
 void PauseUI::Invalid()
 {
+	//スタートボタン押したらUIモードにしてゲームの更新を止める
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
 	{
 		uiMode_ = UI_MODE::MODE_INPUT;

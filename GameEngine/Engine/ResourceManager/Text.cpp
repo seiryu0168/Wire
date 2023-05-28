@@ -31,7 +31,7 @@ void Text::Release()
 	SAFE_RELEASE(pColorBrush_);
 }
 
-int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type)
+int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type, int size)
 {
 	//フォント名用の配列用意
 	size_t ret;
@@ -47,7 +47,7 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 
 	//現在のロケール取得
 	std::string locale= setlocale(LC_CTYPE, NULL);
-	
+	data.fontSize_ = size;
 	data.pLocale_ = new wchar_t[locale.size()*2];
 	data.pLocale_ = (wchar_t*)L"en-us";
 	//ロケールを日本語に変更
