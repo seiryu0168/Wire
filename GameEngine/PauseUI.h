@@ -30,12 +30,16 @@ private:
 	int buttonNum_;
 	int moveTime_;
 	int inputInterval_;
+	//ゲームの更新を止める
 	void GameStop();
+	//ゲームの更新を再開する
 	void GameResume();
+	//Aボタンが押されたらゲームの更新を止める
 	void Invalid();
+	//UIモードがINPUTならこの関数が呼ばれる
 	void Input();
+	//UIモードがMOVEならこの関数が呼ばれる
 	void Move();
-	void Selected();
 	std::vector<button_> buttonList_;
 public:
 	PauseUI(GameObject* parent);
@@ -43,9 +47,21 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void ThirdDraw() override;
+	/// <summary>
+	/// ボタン押した時の反応
+	/// </summary>
 	void PushedButton(int num);
+	/// <summary>
+	/// ボタン移動
+	/// </summary>
 	void MoveButton(float ratio);
+	/// <summary>
+	/// ファイル読み込み
+	/// </summary>
 	void ReadFile(std::string fileName);
+	/// <summary>
+	/// 読み込んだファイルから画像とテキスト情報を取り出す
+	/// </summary>
 	void LoadImageFile();
 	void Release() override;
 };

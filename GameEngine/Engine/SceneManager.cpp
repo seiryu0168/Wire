@@ -29,7 +29,7 @@ void SceneManager::Initialize()
 
 void SceneManager::Update()
 {
-	if (/*currentSceneID_ != nextSceneID_*/isSceneChange_&&countDown_ == 0)
+	if (isSceneChange_&&countDown_ == 0)
 	{
 		KillAllChildren();
 		ModelManager::AllDeleteModelNum();

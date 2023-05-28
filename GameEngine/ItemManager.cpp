@@ -30,10 +30,6 @@ void ItemManager::Initialize(int stageNum)
 	assert(success);
 }
 
-void ItemManager::Update()
-{
-}
-
 bool ItemManager::LoadFile(std::string fileName)
 {
 	//カレントディレクトリ取得
@@ -77,6 +73,7 @@ bool ItemManager::LoadFile(std::string fileName)
 
 ItemBase* ItemManager::CreateItem(std::string itemName)
 {
+	//アイテム名によって生成するものを変える
 	if (itemName == "SpeedUpItem")
 	{
 		return pObject_->Instantiate<SpeedUpItem>(pObject_);
@@ -90,6 +87,7 @@ ItemBase* ItemManager::CreateItem(std::string itemName)
 
 void ItemManager::SetItem()
 {
+	//アイテム生成と位置設定
 	for (auto& i : itemDatas_)
 	{
 		ItemBase* pItem;

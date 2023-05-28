@@ -79,12 +79,12 @@ void SelectUI::MoveButton(float ratio)
 		//ƒ{ƒ^ƒ“‚ðˆÚ“®‚³‚¹‚é
 		ImageManager::SetImagePos(i.hButtonPict_,
 			XMFLOAT3(i.position_.x,
-				i.position_.y + delta,
-				0));
+					 i.position_.y + delta,
+					 0));
 		ImageManager::SetImagePos(i.hMissionPict_,
 			XMFLOAT3(400.0f,
-				(i.position_.y + delta)*3.0f,
-				0));
+					(i.position_.y + delta)*3.0f,
+					 0));
 		i.buttonText_->SetPosition({ i.position_.x - i.buttonText_->GetRect().right,
 									 i.position_.y + i.buttonText_->GetRect().bottom + delta });
 	}

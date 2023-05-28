@@ -15,10 +15,13 @@ private:
 public:
 	StageManager();
 	~StageManager();
-
+	//ステージ名読み込み
 	void Initialize(std::string fileName);
+	//ステージの最大数取得
 	int MaxStage() { return stageCount_; }
+	//ステージの範囲取得
 	const XMFLOAT4& GetAreaLimit(int stageNum);
+	//ステージのモデル読み込み
 	int LoadStage(int stageNum);
 
 };

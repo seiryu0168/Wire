@@ -52,6 +52,7 @@ void StageManager::Initialize(std::string fileName)
 
 const XMFLOAT4& StageManager::GetAreaLimit(int stageNum)
 {
+	//ステージの範囲を取得
 	if (stageDatas_.size() < stageNum)
 		return XMFLOAT4(1, 1, 1, 1);
 	return stageDatas_[stageNum]->areaLimit_;
@@ -59,6 +60,7 @@ const XMFLOAT4& StageManager::GetAreaLimit(int stageNum)
 
 int StageManager::LoadStage(int stageNum)
 {
+	//ステージのモデル読み込み
 	std::string filePath = "Assets\\Model\\" + stageDatas_[stageNum]->stageName_ + ".fbx";
 	int hModel = ModelManager::Load(filePath);
 	assert(hModel >= 0);

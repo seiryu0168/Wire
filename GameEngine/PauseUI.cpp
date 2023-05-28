@@ -74,7 +74,6 @@ void PauseUI::Update()
 			Move();
 			break;
 		case UI_MODE::MODE_SELECTED:
-			Selected();
 			break;
 		}
 }
@@ -90,7 +89,6 @@ void PauseUI::MoveButton(float ratio)
 
 void PauseUI::GameStop()
 {
-
 	GameObject* p = GetScene();
 	//シーン内の特定オブジェクトを除いて更新を無効にする
 	for (auto i : *(GetScene()->GetChildList()))
@@ -176,11 +174,6 @@ void PauseUI::Move()
 	}
 	//セレクト画面を動かす
 	MoveButton(Easing::EaseInCubic((float)moveTime_ / (float)(MAX_MOVE_TIME - 1)));
-}
-
-void PauseUI::Selected()
-{
-
 }
 
 void PauseUI::ReadFile(std::string fileName)

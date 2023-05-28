@@ -18,11 +18,15 @@ private:
 public:
 	ItemManager();
 	~ItemManager();
+	//番号を調整してファイルを読み込む
 	void Initialize(int stageNum);
-	void Update();
+	//ファイル読み込み
 	bool LoadFile(std::string fileName);
+	//アイテム生成
 	ItemBase* CreateItem(std::string itemName);
+	//アイテム設置
 	void SetItem();
+	//アイテムを置く親オブジェクトを設定
 	void SetParentObject(GameObject* parent);
 };
 
