@@ -400,6 +400,7 @@ void ModelManager::Release()
 		//‚à‚¤ŽQÆ‚³‚ê‚Ä‚È‚¢‚È‚ç‰ð•ú
 		if (isRef==false)
 		{
+			SAFE_RELEASE(modelData_[i]->pfbx_)
 			SAFE_DELETE(modelData_[i]->pfbx_);
 		}
 

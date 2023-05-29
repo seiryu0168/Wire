@@ -30,7 +30,7 @@ void Particle::UpdateParticle()
 	for (auto particleCount = particleList_.begin(); particleCount != particleList_.end();)
 	{
 		//パーティクルの寿命がなくなったら
-		if ((*particleCount)->life == 0)
+		if ((*particleCount)->life <= 0)
 		{
 			(*particleCount)->pEmitter->particleCount--;
 			SAFE_DELETE(*particleCount);
@@ -152,7 +152,7 @@ void Particle::UpdateEmitter()
 			}
 
 			//パーティクルの発射間隔が0フレームの場合、一発出して削除
-			if ((*emitterCount)->data.delay == 0)
+			if ((*emitterCount)->data.delay <= 0)
 			{
 				(*emitterCount)->isDead = true;
 			}
@@ -181,7 +181,6 @@ int Particle::ParticleStart(EmitterData data)
 	handle = emitterList_.size() - 1;
 	pEmitter->hParticle = handle;
 	return handle;
-	//return handle;
 }
 
 void Particle::KillEmitter(int hEmitter)
