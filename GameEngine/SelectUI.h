@@ -25,6 +25,7 @@ private:
 	UI_MODE uiMode_;
 	int hPictBackGround_;
 	int hPictButtonFrame_;
+	int hPictMissionFrame_;
 	int hPictScreenFrame_;
 	int buttonCount_;
 	int buttonNum_;

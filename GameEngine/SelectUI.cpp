@@ -21,11 +21,14 @@ namespace
 	static const int DELAY = 90;
 	static const int MOVE = 500;
 	static const int MAX_MOVE_TIME = 11;
-	static const XMFLOAT3 BUTTON_FRAME_POS = { -1400.0f,0.0f,0.0f };
+	static const XMFLOAT3 BUTTON_FRAME_POS = { -1700.0f,0.0f,0.0f };
+	static const XMFLOAT3 MISSION_FRAME_POS = { 400.0f,0.0f,0.0f };
 	static const std::string BUTTONFRAME_IMAGE = "Assets\\Image\\ButtonFrame.png";
-	static const std::string BLACK_IMAGE = "Assets\\Image\\Black.png";
+	static const std::string BLACK_IMAGE = "Assets\\Image\\SelectSceneBackGroundImage.jpg";
 	static const std::string SCREEN_FRAME = "Assets\\Image\\StageSelectFrame.png";
+	static const std::string MISSION_FRAME = "Assets\\Image\\MissionImageFrame.png";
 }
+
 
 
 SelectUI::SelectUI(GameObject* parent)
@@ -172,6 +175,7 @@ void SelectUI::ThirdDraw()
 	ImageManager::Draw(hPictBackGround_);
 	ImageManager::Draw(hPictButtonFrame_);
 
+	ImageManager::Draw(hPictMissionFrame_);
 	for (auto& i : buttonList_)
 	{
 		i.buttonText_->Draw();
@@ -196,8 +200,12 @@ void SelectUI::LoadImageFile()
 	//ボタンのフレーム画像読み込み
 	hPictButtonFrame_ = ImageManager::Load(BUTTONFRAME_IMAGE);
 	assert(hPictButtonFrame_ >= 0);
+	//ミッション画像のフレーム読み込み
+	hPictMissionFrame_ = ImageManager::Load(MISSION_FRAME);
+	assert(hPictMissionFrame_ >= 0);
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FRAME_POS);
+	ImageManager::SetImagePos(hPictMissionFrame_, MISSION_FRAME_POS);
 	hPictBackGround_ = ImageManager::Load(BLACK_IMAGE);
 	assert(hPictBackGround_ >= 0);
 

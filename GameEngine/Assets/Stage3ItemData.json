@@ -2,19 +2,19 @@
   "ItemData": [
     [
       "SpeedUpItem",
-      [ 100, 0, 33 ]
+      [ 100, 2, 33 ]
     ],
     [
       "SpeedUpItem",
-      [ 30, 0, 50 ]
+      [ 30, 2, 50 ]
+    ],
+    [
+      "SearchUpItem",
+      [ 70, 4, -100 ]
     ],
     [
       "SpeedUpItem",
-      [ 70, 0, -100 ]
-    ],
-    [
-      "SpeedUpItem",
-      [ -30, 0, 100 ]
+      [ -30, 2, 100 ]
     ]
   ]
 }
