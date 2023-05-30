@@ -19,6 +19,7 @@ SearchUpItem::SearchUpItem(GameObject* parent)
 	hModel_(-1)
 {
 	value_ = SEARCH;
+	SetItemName("SearchUP");
 }
 
 SearchUpItem::~SearchUpItem()

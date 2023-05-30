@@ -17,6 +17,7 @@ private:
 	bool isCollision_;
 	bool isAttached_;
 	int iniTime_;
+	std::string itemName_;
 	int lifeTime_;
 	GameObject* attacheObject_;
 	float defaultParameter_;
@@ -29,12 +30,14 @@ public:
 	ITEM_TYPE GetItemType();
 	int GetLifeTime();
 	float GetDefaultParameter() { return defaultParameter_; }
+	const std::string* GetItemName() { return &itemName_; };
 	void SetItemType(ITEM_TYPE type);
 	void SetLifeTime(int time);
 	void SetDefaultParameter(float param);
+	void SetItemName(std::string name) { itemName_ = name; };
 	GameObject* GetAttacheObject() { return attacheObject_; }
-	bool IsAttach();
 	void SetCollision();
+	bool IsAttach();
 	bool IsCollision();
 	void Reset() { lifeTime_ = iniTime_; }
 	virtual void PlayParticle(XMFLOAT3 pos) {};

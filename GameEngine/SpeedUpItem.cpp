@@ -16,6 +16,7 @@ SpeedUpItem::SpeedUpItem(GameObject* parent)
 	hModel_(-1)
 {
 	value_ = SPEED;
+	SetItemName("SpeedUP");
 }
 
 SpeedUpItem::~SpeedUpItem()

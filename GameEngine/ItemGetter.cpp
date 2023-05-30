@@ -30,7 +30,7 @@ void ItemGetter::Update()
 			RemoveItemEffect((*itr));
 			(*itr)->KillMe();
 			//アイテム情報の通知を消す
-			order_->DelNotice((*itr)->GetObjectName());
+			order_->DelNotice((*itr)->GetItemName()->c_str());
 			itr = itemList_.erase(itr);
 		}
 		else
@@ -102,9 +102,9 @@ void ItemGetter::CreateItemText(ItemBase* item)
 	Text* text=new Text;
 	
 	//アイテム名と残り時間取得
-	std::string effectName = item->GetObjectName();
+	std::string effectName = item->GetItemName()->c_str();
 	std::string effectTime= std::to_string(item->GetLifeTime() / 60);
-	std::string txt = effectName + ":" + effectTime + "sec";
+	std::string txt = "ITEM:"+effectName + " " + effectTime + ":sec";
 	
 	//テキスト用矩形
 	TEXT_RECT rect = { 0,0,500,100 };
@@ -119,9 +119,9 @@ void ItemGetter::CreateItemText(ItemBase* item)
 void ItemGetter::UpdateText(ItemBase* item)
 {
 	//テキスト情報更新
-	std::string effectName = item->GetObjectName();
+	std::string effectName = item->GetItemName()->c_str();
 	std::string effectTime = std::to_string(item->GetLifeTime() / 60);
-	order_->ChangeNotice(item->GetObjectName(), effectName + ":" + effectTime + "sec");
+	order_->ChangeNotice(item->GetItemName()->c_str(), "ITEM:" + effectName + " " + effectTime + ":sec");
 }
 
 void ItemGetter::RemoveItemEffect(ItemBase* item)
