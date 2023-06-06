@@ -11,7 +11,7 @@ namespace
 {
 	static const int SHOT_COUNT = 10;
 	static const int RELOAD = 90;
-	static const float MAX_TO_PLAYERDIST = 70.0f;
+	static const float MAX_TO_PLAYERDIST = 60.0f;
 	static const float COLLISION_SIZE = 3.0f;
 	static const XMFLOAT4 COLOR_RED = { 1,0,0,1 };
 	static const XMFLOAT4 COLOR_YELLOW = { 1,1,0,1 };

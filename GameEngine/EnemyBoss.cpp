@@ -66,7 +66,7 @@ void EnemyBoss::Initialize()
 	//HP設定
 	SetLife(LIFE);
 	//位置設定
-	transform_.position_ = { 110,10,110 };
+	//transform_.position_ = { 110,10,110 };
 	
 	//捜索ステートに設定
 	ChangeState(StateSearch::GetInstance());
