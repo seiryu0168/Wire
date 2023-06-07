@@ -52,9 +52,8 @@ bool EnemyManager::LoadFile(std::string fileName)
 	{
 		return false;
 	}
-		enemyData_ = new json;
-		*enemyData_ = json::parse(fileReader);
-		//fileReader >> (*enemyData_);
+	enemyData_ = new json;
+	*enemyData_ = json::parse(fileReader);
 	fileReader.close();
 	SetCurrentDirectory(currentDir);
 	return true;

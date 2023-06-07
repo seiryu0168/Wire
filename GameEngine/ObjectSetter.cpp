@@ -17,6 +17,11 @@
 #include"Test.h"
 #include"MissionUI.h"
 #include"Stage1.h"
+
+#ifdef _DEBUG
+#include"Engine/DirectX_11/Input.h"
+#endif // DEBUG
+
 namespace 
 {
 	static const int DELAY = 180;
@@ -99,6 +104,11 @@ void ObjectSetter::Initialize()
 
 void ObjectSetter::Update()
 {
+#ifdef _DEBUG
+
+	DebugCommand();
+#endif // DEBUG
+
 	if (pManager_->IsSceneChange()==false)
 	{
 
@@ -189,6 +199,14 @@ void ObjectSetter::BlackOutUpdate()
 {
 	ImageManager::SetAlpha(hPict_, (float)(DELAY - pManager_->GetCountDown()) / (float)DELAY);
 }
+#ifdef _DEBUG
+void ObjectSetter::DebugCommand()
+{
+	if (Input::IsKey(DIK_LSHIFT) && Input::IsKeyDown(DIK_R))
+		pManager_->ChangeScene(nowSceneID_);
+}
+#endif // DEBUG
+
 
 void ObjectSetter::GetEnemyList(std::list<Enemy*>* list)
 {

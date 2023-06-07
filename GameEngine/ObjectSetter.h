@@ -50,6 +50,10 @@ public:
         void TutorialUpdate();
 
         void BlackOutUpdate();
+#ifdef _DEBUG
+        void DebugCommand();
+#endif // _DEBUG
+
 
         void GetEnemyList(std::list<Enemy*>* list);      //プレイヤーが認識してるエネミーのリストを返す
         void SetStageNum(int stageNum);
