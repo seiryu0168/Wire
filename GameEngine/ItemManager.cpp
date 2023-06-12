@@ -12,6 +12,8 @@ namespace
 										   "Stage3ItemData.json", };
 }
 ItemManager::ItemManager()
+	:itemCount_(0),
+	pObject_(nullptr)
 {
 }
 

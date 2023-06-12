@@ -56,6 +56,8 @@ namespace
     static const XMFLOAT4 LINECOLOR_RED = { 1,0,0,1 };
     static const XMFLOAT4 LINECOLOR_DEFAULT = { 1,1,1,1 };
 
+    static const int HALF_PI = 100*XMConvertToRadians(90.0f);
+
     static const std::string PLAYER_MODEL = "Assets\\Model\\WireShooter_Maya.fbx";
     static const std::string LIFE_IMAGE = "Assets\\Image\\LifeImage.png";
     static const std::string LINEPARTICLE_IMAGE = "Assets\\Image\\Effect01.png";
@@ -712,9 +714,9 @@ void Player::Aim(RayCastData* ray)
     //当たる位置の計算
     XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
-    XMVECTOR vPtrDir = vPlayerDir;
+    XMVECTOR vPtrDir = XMVectorZero();
     ray->start = bonePos;
-    XMStoreFloat3(&ray->dir, vPtrDir);
+    XMStoreFloat3(&ray->dir, vPlayerDir);
 
     //エイムアシスト範囲内かどうか判定
     pSetter_->GetEnemyList(&enemyList_);
@@ -727,7 +729,17 @@ void Player::Aim(RayCastData* ray)
             //エネミーの座標取得
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             //エネミーへのベクトル生成
-            vPtrDir = toEnemy - bonePos;
+            XMVECTOR vToEnemy = XMVector3Normalize(toEnemy - bonePos);
+            XMVECTOR cross = XMVector3Cross(vPlayerDir, vToEnemy);
+            //エネミーへのベクトルとプレイヤーの向きベクトルの角度
+            float EnemyToPlayerAngle = acosf(VectorDot(vPlayerDir, vToEnemy));
+
+            //エネミーへのベクトルとプレイヤーの向きベクトルの角度を使って
+            //エイムアシストの補正倍率を強める
+
+            ////外積と上ベクトルの角度計算
+            //float angle = acosf(VectorDot(baseUpVec_, cross))*2.0f;
+            //vPtrDir=
             
             //ベクトルの長さ
             toEnemyDist = VectorLength(vPtrDir);
