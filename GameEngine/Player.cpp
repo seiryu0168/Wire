@@ -710,7 +710,7 @@ void Player::Aim(RayCastData* ray)
     ray->distLimit = ASSISTLIMIT;
     aimFlag_ = true;
     lockOn_ = false;
-    float toEnemyDist = -1.0f;
+    float pointerDist = -1.0f;
 
     //当たる位置の計算
     XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
@@ -735,7 +735,7 @@ void Player::Aim(RayCastData* ray)
             XMVECTOR vToEnemy = toEnemy - bonePos;
 
             //ベクトルの長さ
-            toEnemyDist = VectorLength(vToEnemy);
+            pointerDist = VectorLength(vToEnemy);
             vToEnemy = XMVector3Normalize(vToEnemy);
             XMVECTOR cross = XMVector3Cross(vPlayerDir, vToEnemy);
             //エネミーへのベクトルとプレイヤーの向きベクトルの角度
@@ -744,11 +744,14 @@ void Player::Aim(RayCastData* ray)
             //DebugUI::DebugLog(this, std::to_string(enemyToPlayerAngle));
             //エネミーへのベクトルとプレイヤーの向きベクトルの角度を使って
             //エイムアシストの補正倍率を変える
+            //倍率
             float angleDiff = (AIM_ASSIST_ANGLE-enemyToPlayerAngle) / AIM_ASSIST_ANGLE;
-            float r = cosf(angleDiff);
-            toEnemyDist*=angleDiff;
-            float ratio = enemyToPlayerAngle* angleDiff;
-            XMVECTOR rotationQuaternion = XMQuaternionRotationAxis(cross, ratio);
+            //ポインタの位置を倍率で補正する
+            pointerDist *=angleDiff;
+            //回転角度計算
+            float angle = enemyToPlayerAngle* angleDiff;
+            //回転
+            XMVECTOR rotationQuaternion = XMQuaternionRotationAxis(cross, angle);
            
             vPtrDir = XMVector3Rotate(vPtrDir, rotationQuaternion);
 
@@ -798,13 +801,14 @@ void Player::Aim(RayCastData* ray)
         pPointerLine_->AddPosition(bonePos);
         pPointerLine_->AddPosition(pPointer_->GetPosition());
     }
+    //当たってなくて、エネミーが捕捉できそうな場合
     else if(pEnemy!=nullptr)
     {
-        pPointer_->SetPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir * toEnemyDist)));
+        pPointer_->SetPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir * pointerDist)));
         pPointer_->SetDraw(true);
 
         pPointerLine_->AddPosition(bonePos);
-        pPointerLine_->AddPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir*toEnemyDist)));
+        pPointerLine_->AddPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir* pointerDist)));
     }
 
 }
