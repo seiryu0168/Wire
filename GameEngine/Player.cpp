@@ -20,6 +20,7 @@
 #include"Pointer.h"
 #include"Engine/DirectX_11/Math.h"
 #include"Wire.h"
+#include"DebugUI.h"
 
 #include<list>
 namespace
@@ -44,7 +45,7 @@ namespace
     static const float CAMERA_ROTATESPEED_NORMAL = 4.0f;
     static const float LOW_CAMERA_ROTATE_SPEED = 0.55f;
 
-    static const float AIM_ASSIST_ANGLE = XMConvertToRadians(30.0f);
+    static const float AIM_ASSIST_ANGLE = XMConvertToRadians(40.0f);
     static const float ATTACK_SPEED = 1.8f;
     static const float MAX_VELOCITY = 2.0f;
     static const float DELTA_FLY_TIME = 0.01f;
@@ -98,7 +99,7 @@ Player::Player(GameObject* parent)
     wireLength_(100.0f),
     angleY_(0),
     angleX_(0),
-    lockOnAngleLimit_(0.2f),
+    lockOnAngleLimit_(XMConvertToRadians(30.0f)),
     lockOn_(false),
     flyFlag_(false),
     airFlag_(false),
@@ -714,35 +715,43 @@ void Player::Aim(RayCastData* ray)
     //当たる位置の計算
     XMFLOAT3 bonePos = ModelManager::GetBonePosition(hModel_, "shotPos");
     XMVECTOR vPlayerDir = XMVector3TransformCoord(vBaseTarget_, matCamY_ * matCamX_);
-    XMVECTOR vPtrDir = XMVectorZero();
+    vPlayerDir = XMVector3Normalize(vPlayerDir);
+    XMVECTOR vPtrDir = vPlayerDir;
     ray->start = bonePos;
     XMStoreFloat3(&ray->dir, vPlayerDir);
 
     //エイムアシスト範囲内かどうか判定
     pSetter_->GetEnemyList(&enemyList_);
+    Enemy* pEnemy = nullptr;
     if (enemyList_.size() > 0)
     {
-        Enemy* pEnemy = AimAssist(ray);
+        pEnemy = AimAssist(ray);
         //エネミーを捕捉しているならエネミーの情報を取得、ロックオンフラグを立てる
         if (pEnemy != nullptr)
         {
             //エネミーの座標取得
             XMFLOAT3 toEnemy = pEnemy->GetTransform().position_;
             //エネミーへのベクトル生成
-            XMVECTOR vToEnemy = XMVector3Normalize(toEnemy - bonePos);
+            XMVECTOR vToEnemy = toEnemy - bonePos;
+
+            //ベクトルの長さ
+            toEnemyDist = VectorLength(vToEnemy);
+            vToEnemy = XMVector3Normalize(vToEnemy);
             XMVECTOR cross = XMVector3Cross(vPlayerDir, vToEnemy);
             //エネミーへのベクトルとプレイヤーの向きベクトルの角度
-            float EnemyToPlayerAngle = acosf(VectorDot(vPlayerDir, vToEnemy));
-
+            float enemyToPlayerAngle = acosf(VectorDot(vPlayerDir, vToEnemy));
+            enemyToPlayerAngle = Clamp<float>(enemyToPlayerAngle, 0, 0.4f);
+            //DebugUI::DebugLog(this, std::to_string(enemyToPlayerAngle));
             //エネミーへのベクトルとプレイヤーの向きベクトルの角度を使って
-            //エイムアシストの補正倍率を強める
+            //エイムアシストの補正倍率を変える
+            float angleDiff = (AIM_ASSIST_ANGLE-enemyToPlayerAngle) / AIM_ASSIST_ANGLE;
+            float r = cosf(angleDiff);
+            toEnemyDist*=angleDiff;
+            float ratio = enemyToPlayerAngle* angleDiff;
+            XMVECTOR rotationQuaternion = XMQuaternionRotationAxis(cross, ratio);
+           
+            vPtrDir = XMVector3Rotate(vPtrDir, rotationQuaternion);
 
-            ////外積と上ベクトルの角度計算
-            //float angle = acosf(VectorDot(baseUpVec_, cross))*2.0f;
-            //vPtrDir=
-            
-            //ベクトルの長さ
-            toEnemyDist = VectorLength(vPtrDir);
 
             //レイキャストの始点と方向を入力
                 XMStoreFloat3(&ray->dir, vPtrDir);
@@ -766,7 +775,7 @@ void Player::Aim(RayCastData* ray)
         XMFLOAT3 dir;
         if (lockOn_ == false)
         {
-            XMStoreFloat3(&dir, vPlayerDir);
+            XMStoreFloat3(&dir, vPtrDir);
             ray->Init(bonePos, dir, ASSISTLIMIT);
             
             ModelManager::RayCast(*ray);
@@ -789,6 +798,15 @@ void Player::Aim(RayCastData* ray)
         pPointerLine_->AddPosition(bonePos);
         pPointerLine_->AddPosition(pPointer_->GetPosition());
     }
+    else if(pEnemy!=nullptr)
+    {
+        pPointer_->SetPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir * toEnemyDist)));
+        pPointer_->SetDraw(true);
+
+        pPointerLine_->AddPosition(bonePos);
+        pPointerLine_->AddPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir*toEnemyDist)));
+    }
+
 }
 
 void Player::CheckTargetList()

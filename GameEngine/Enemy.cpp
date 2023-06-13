@@ -88,10 +88,10 @@ void Enemy::TurnToPlayer(XMVECTOR vToPlayer)
 bool Enemy::IsLockOned(Enemy* enemy)
 {
 	//プレイヤーがターゲットを捕捉していなかったら
-	if (GetPlayerPointer()->GetTargetEnemyNum() == -1)
-		return false;
-	else if (GetPlayerPointer()->GetTargetEnemyNum() == enemy->GetObjectID())
+	if (GetPlayerPointer()->IsLockOn())
 		return true;
+	
+		return false;
 }
 
 void Enemy::LoadModel(std::string fileName)
