@@ -239,6 +239,7 @@
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="EnemyTutorial.cpp" />
+    <ClCompile Include="TutorialExplanation.cpp" />
     <ClCompile Include="TutorialOrder.cpp" />
     <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TutorialUI.cpp" />
@@ -331,6 +332,7 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="EnemyTutorial.h" />
+    <ClInclude Include="TutorialExplanation.h" />
     <ClInclude Include="TutorialOrder.h" />
     <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TutorialUI.h" />
