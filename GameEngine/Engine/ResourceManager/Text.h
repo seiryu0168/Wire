@@ -42,9 +42,9 @@ public:
 	TEXT_POSITION				  transform2D;		//ç¿ïW
 	Text();
 	~Text();
-	int Load(const std::string& text, const std::string& fontName, TEXT_RECT rect, STARTING_TYPE type,int size = 72);
+	int Load(const std::string& text, const std::string& fontName, TEXT_RECT rect, ALIGNMENT_TYPE type,int size = 72);
 	void Draw();
-	void SetAlinmentType(STARTING_TYPE type);
+	void SetAlinmentType(ALIGNMENT_TYPE type);
 	HRESULT SetFont(const FontData& data);
 	void SetTextColor(D2D1_COLOR_F color);
 	void SetBackColor(const D2D1_COLOR_F& color);

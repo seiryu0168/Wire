@@ -32,7 +32,7 @@ void Text::Release()
 	SAFE_RELEASE(pTextColorBrush_);
 }
 
-int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type, int size)
+int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,ALIGNMENT_TYPE type, int size)
 {
 	//フォント名用の配列用意
 	size_t ret;
@@ -212,7 +212,7 @@ void Text::SetRect(TEXT_RECT rect)
 {	
 	layoutRect_ = rect;
 }
-void Text::SetAlinmentType(STARTING_TYPE type)
+void Text::SetAlinmentType(ALIGNMENT_TYPE type)
 {
 
 	switch (type)

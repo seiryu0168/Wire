@@ -1,6 +1,6 @@
 #pragma once
 #include"MissionUI.h"
-
+#include"TutorialExplanation.h"
 class TutorialOrder : public MissionUI
 {
 private:
@@ -8,6 +8,7 @@ private:
 	float ratio_;
 	float alpha_;
 	int hPict_;
+	TutorialExplanation te_	;
 
 public:
 	TutorialOrder(GameObject* parent);
@@ -15,6 +16,7 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
+	void SecondDraw() override;
 	void EraseText();
 	void Release() override;
 };

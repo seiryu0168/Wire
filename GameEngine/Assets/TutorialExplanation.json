@@ -6,17 +6,17 @@
     ],
     [
       "TutorialImage_LockOn.png",
-      [ 1024, 200, 0 ]
+      [ 0, 200, 0 ]
     ],
     [
       "TutorialImage_Item.png",
-      [2048, 200, 0 ]
+      [ 0, 200, 0 ]
     ]
   ],
 
   "TextList": [
     "ExplanationText.csv",
-    [ 0, 0, 300, 200 ],
-    [ 0, 0.0 ]
+    [ 0, 0, 900, 300 ],
+    [960,800.0]
   ]
 }

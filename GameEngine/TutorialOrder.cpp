@@ -27,6 +27,7 @@ TutorialOrder::~TutorialOrder()
 
 void TutorialOrder::Initialize()
 {
+	te_.Initialize();
 }
 
 void TutorialOrder::Update()
@@ -38,6 +39,7 @@ void TutorialOrder::Update()
 		//テキストと背景を徐々に薄くする
 		EraseText();
 	}
+	te_.Update();
 
 	//テキスト移動
 	textList[0]->SetRatio(Easing::EaseInOutQuint(ratio_) * TEXT_POS.x, TEXT_POS.y);
@@ -52,6 +54,11 @@ void TutorialOrder::Draw()
 	{
 		i.second->Draw();
 	}
+}
+
+void TutorialOrder::SecondDraw()
+{
+	te_.Draw();
 }
 
 void TutorialOrder::EraseText()

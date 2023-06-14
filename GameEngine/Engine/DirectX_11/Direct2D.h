@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib,"dwrite.lib")
-enum STARTING_TYPE
+enum ALIGNMENT_TYPE
 {
 	LEFT_TOP = 0,
 	LEFT_CENTER,

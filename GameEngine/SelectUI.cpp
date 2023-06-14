@@ -83,7 +83,7 @@ void SelectUI::MoveButton(float ratio)
 		ImageManager::SetImagePos(i.hButtonPict_,
 			XMFLOAT3(i.position_.x,
 					 i.position_.y + delta,
-					 0));
+					 0));	
 		ImageManager::SetImagePos(i.hMissionPict_,
 			XMFLOAT3(400.0f,
 					(i.position_.y + delta)*3.0f,
