@@ -13,8 +13,8 @@ namespace
 	static const std::string PATH = "Assets\\IMage\\";
 	static const int MOVE_INTERVAL = 1000;
 	static const float TILT = 0.7f;
-	static const short UP = -1;
-	static const short DOWN = 1;
+	static const short RIGHT = -1;
+	static const short LEFT = 1;
 	static const int MAX_MOVE_TIME = 11;
 }
 void TutorialExplanation::Input()
@@ -22,23 +22,23 @@ void TutorialExplanation::Input()
 	//ボタンの処理
 	moveDir_ = 0;
 	//上に移動
-	if (Input::GetLStick_Y() >= TILT)
+	if (Input::GetLStick_X() >= TILT)
 	{
-		moveDir_ = UP;
+		moveDir_ = RIGHT;
 		//ボタンが
-		if (slideNum_ > 0)
-			mode_ = INPUT_MODE::MODE_MOVE;
-	}
-	//下に移動
-	else if (Input::GetLStick_Y() <= -TILT)
-	{
-		moveDir_ = DOWN;
-		//ボタンの番号が最後尾じゃなかったら移動モードに切り替える
 		if (slideNum_ < (imageList_.size() - 1))
 			mode_ = INPUT_MODE::MODE_MOVE;
 	}
+	//下に移動
+	else if (Input::GetLStick_X() <= -TILT)
+	{
+		moveDir_ = LEFT;
+		if (slideNum_ > 0)
+			mode_ = INPUT_MODE::MODE_MOVE;
+		//ボタンの番号が最後尾じゃなかったら移動モードに切り替える
+	}
 	//ボタンの番号を調整
-	slideNum_ += moveDir_;
+	slideNum_ -= moveDir_;
 	slideNum_ = Clamp<float>(slideNum_, 0, imageList_.size() - 1);
 }
 void TutorialExplanation::Move()
@@ -124,10 +124,10 @@ void TutorialExplanation::MoveSlide(float ratio)
 	float delta = MOVE_INTERVAL * ratio * moveDir_;
 	for (auto& i : imageList_)
 	{
-		//ボタンを移動させる
+		//画像を移動させる
 		ImageManager::SetImagePos(i.hPict_,
-			XMFLOAT3(i.position_.x,
-					 i.position_.y + delta,
+			XMFLOAT3(i.position_.x + delta,
+					 i.position_.y,
 					 0));
 	}
 }
