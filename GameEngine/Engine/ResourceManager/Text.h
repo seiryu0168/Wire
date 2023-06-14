@@ -32,10 +32,12 @@ private:
 	D2D1_RECT_F			  layoutRect_;		//レイアウトレクト
 	wchar_t*			  pText_;			//テキスト
 	wchar_t*			  pFontName_;
-	ID2D1SolidColorBrush* pColorBrush_;		//ブラシ	
+	ID2D1SolidColorBrush* pTextColorBrush_;		//テキストブラシ	
+	ID2D1SolidColorBrush* pBackColorBrush_;		//背景ブラシ	
 	IDWriteFactory*		  pWriteFactory_;	//文字描画のファクトリ
 	IDWriteTextFormat*	  pTextFormat_;     //テキストフォーマット
 	IDWriteTextLayout*	  pLayout_;			//テキストレイアウト
+	D2D1_COLOR_F		  backGroungColor_;
 public:
 	TEXT_POSITION				  transform2D;		//座標
 	Text();
@@ -44,7 +46,8 @@ public:
 	void Draw();
 	void SetAlinmentType(STARTING_TYPE type);
 	HRESULT SetFont(const FontData& data);
-	void SetColor(XMFLOAT4 color);
+	void SetTextColor(D2D1_COLOR_F color);
+	void SetBackColor(const D2D1_COLOR_F& color);
 	HRESULT SetTextSize(float size,UINT32 startPos,UINT32 length);
 	HRESULT SetTextSize(float size);
 	HRESULT SetFontWeight(DWRITE_FONT_WEIGHT weightType,UINT32 startPos,UINT32 length);

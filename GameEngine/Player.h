@@ -26,6 +26,15 @@ class Player : public GameObject
         DIR_DOWN,
         DIR_MAX,
     };
+
+    enum class PLAYER_STATUS
+    {
+        LIVING=0,
+        DEATH,
+    };
+
+    PLAYER_STATUS playerStatus;
+
     char status_;
     char prevHitBit_;
 
@@ -103,6 +112,9 @@ public:
     void Draw() override;
 
     void SecondDraw() override;
+
+    void LivingUpdate();
+    void DeathUpdate();
 
     //ƒLƒƒƒ‰‚ª•Ç‚ð‚·‚è”²‚¯‚È‚¢‚æ‚¤‚É‚·‚é
     void CharactorControll(XMVECTOR &moveVector);

@@ -79,7 +79,7 @@ void MissionOrder::Draw()
 void MissionOrder::EraseText()
 {
 	//アルファ値減らしていく
-	textList[0]->SetColor({ 1,1,1,alpha_ });
+	textList[0]->SetTextColor({ 1,1,1,alpha_ });
 	ImageManager::SetAlpha(hPict_, alpha_);
 	alpha_ -= DELTA_ALPHA;
 }

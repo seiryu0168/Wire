@@ -8,11 +8,12 @@ Text::Text()
 	textLength_	   = 0;
 	transform2D = { 0,0 };
 	pText_		   = nullptr;
-	pColorBrush_   = nullptr;
+	pTextColorBrush_   = nullptr;
 	pWriteFactory_ = nullptr;
 	pTextFormat_   = nullptr;
 	pLayout_	   = nullptr;
-
+	backGroungColor_ = { 0,0,0,0 };
+	pBackColorBrush_ = nullptr;
 }
 Text::~Text()
 {
@@ -28,7 +29,7 @@ void Text::Release()
 {
 	SAFE_RELEASE(pTextFormat_);
 	SAFE_RELEASE(pWriteFactory_);
-	SAFE_RELEASE(pColorBrush_);
+	SAFE_RELEASE(pTextColorBrush_);
 }
 
 int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT rect,STARTING_TYPE type, int size)
@@ -70,7 +71,12 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 	//アライメント設定
 	SetAlinmentType(type);
 	//描画のためのブラシ作成
-	hr=D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pColorBrush_);
+	hr=D2D::GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pTextColorBrush_);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	hr = D2D::GetRenderTarget()->CreateSolidColorBrush(backGroungColor_,&pBackColorBrush_);
 	if (FAILED(hr))
 	{
 		return hr;
@@ -91,7 +97,13 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 void Text::Draw()
 {
 	D2D::GetRenderTarget()->BeginDraw();
-	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pColorBrush_);
+	TEXT_RECT rect = { layoutRect_.left + transform2D.x,
+					   layoutRect_.top + transform2D.y,
+					   layoutRect_.right + transform2D.x,
+					   layoutRect_.bottom + transform2D.y };
+	D2D::GetRenderTarget()->FillRectangle(&rect, pBackColorBrush_);
+	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pTextColorBrush_);
+
 	//D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
 	//							    { transform2D.x + layoutRect_.left,
 	//								  transform2D.y + layoutRect_.top,
@@ -99,10 +111,14 @@ void Text::Draw()
 	//								  transform2D.y + layoutRect_.bottom }, pColorBrush_);
 	D2D::GetRenderTarget()->EndDraw();
 }
-void Text::SetColor(XMFLOAT4 color)
+void Text::SetTextColor(D2D1_COLOR_F color)
 {
-	D2D1_COLOR_F colorF = { color.x, color.y,color.z,color.w };
-	pColorBrush_->SetColor(colorF);
+	//D2D1_COLOR_F colorF = { color.x, color.y,color.z,color.w };
+	pTextColorBrush_->SetColor(color);
+}
+void Text::SetBackColor(const D2D1_COLOR_F& color)
+{
+	pBackColorBrush_->SetColor(color);
 }
 void Text::SetRatio(float ratioX, float ratioY)
 {

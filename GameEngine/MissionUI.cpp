@@ -62,7 +62,7 @@ void MissionUI::CalcTextDistance()
 	//Šî€‚ÌˆÊ’u‚©‚ç‚Ì‹——£‚ðŒvŽZ‚µ‚Ä‡‚É•À‚×‚é
 	for (auto itr = noticeTextList_.begin(); itr != noticeTextList_.end(); itr++)
 	{
-		totalMove += move;
+		totalMove += move*2;
 		(*itr).second->SetPosition({ FIRST_NOTICE_POS.x,
 									 FIRST_NOTICE_POS.y+totalMove });
 		move = (*itr).second->GetRect().bottom;

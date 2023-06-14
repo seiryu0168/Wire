@@ -107,11 +107,12 @@ void ItemGetter::CreateItemText(ItemBase* item)
 	std::string txt = "ITEM:"+effectName + " " + effectTime + ":sec";
 	
 	//テキスト用矩形
-	TEXT_RECT rect = { 0,0,500,100 };
+	TEXT_RECT rect = { 0,0,500,50 };
 	text->Load(txt, "Sitka Text", rect, LEFT_TOP);
 	text->SetPosition(NOTICE_POS);
 	HRESULT hr = text->SetTextSize(40);
-	text->SetColor({ 0,0,0,1 });
+	text->SetTextColor({ 1,1,1,1});
+	text->SetBackColor({ 0,0,0,0.3f });
 	order_->AddNotice(effectName, text);
 }
 

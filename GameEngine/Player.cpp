@@ -69,7 +69,8 @@ namespace
 
 //コンストラクタ
 Player::Player(GameObject* parent)
-    :GameObject(parent, "Player"),
+    :GameObject(parent, "Player"), 
+    playerStatus(PLAYER_STATUS::LIVING),
     baseUpVec_(XMVectorSet(0, 1, 0, 0)),
     playerLife_(MAX_LIFE),
     prevHitBit_(0),
@@ -192,14 +193,52 @@ void Player::Initialize()
 //更新
 void Player::Update()
 {
+    switch (playerStatus)
+    {
+    case Player::PLAYER_STATUS::LIVING:
+        LivingUpdate();
+        break;
+    case Player::PLAYER_STATUS::DEATH:
+        DeathUpdate();
+        break;
+    default:
+        break;
+    }
+}
+
+//描画
+void Player::Draw()
+{
+    //((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
+    ModelManager::SetTransform(hModel_, transform_);
+    ModelManager::Draw(hModel_); 
+}
+
+void Player::SecondDraw()
+{
+    wire_->Draw(transform_);
+    if (pPointer_->IsDraw())
+    {
+        if (lockOn_)
+        {
+            pPointerLine_->SetColor(LINECOLOR_RED);
+        }
+        else
+            pPointerLine_->SetColor(LINECOLOR_DEFAULT);
+        pPointerLine_->Draw(&transform_);
+    }
+}
+
+void Player::LivingUpdate()
+{
     //無敵時間の処理
     if (godFlag_)
     {
-        cameraShake_ = XMVectorSet((float)(rand() % 10)/10, (float)(rand() % 10) / 10, 0, 0)*SHAKE_RATE;
+        cameraShake_ = XMVectorSet((float)(rand() % 10) / 10, (float)(rand() % 10) / 10, 0, 0) * SHAKE_RATE;
         godTime_--;
-        godTime_ = max(godTime_,0);
+        godTime_ = max(godTime_, 0);
     }
-    if(godTime_==0)
+    if (godTime_ == 0)
     {
         cameraShake_ = XMVectorZero();
         godFlag_ = false;
@@ -207,14 +246,14 @@ void Player::Update()
 
     //回転速度やらポジションの取得やらの処理
     rotateSpeed_ = CAMERA_ROTATESPEED_NORMAL;
-    vPlayerPos_   = XMLoadFloat3(&transform_.position_);
+    vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     XMVECTOR vFly = XMVectorZero();
 
     pPointer_->SetDraw(false);
     RayCastData ray;
     CheckTargetList();
     aimFlag_ = false;
-    
+
     //トリガーを引くと移動できる壁にマーカーが表示される
     if (Input::GetLTrigger())
     {
@@ -239,14 +278,14 @@ void Player::Update()
             wire_->ShotWire(vPlayerPos_, ray.hitPos);
             Audio::Play(hAudioShoot_);
         }
-        
+
     }
     wire_->Update();
-    if (wire_->GetWireState()==WIRE_STATE::EXTEND)
+    if (wire_->GetWireState() == WIRE_STATE::EXTEND)
     {
         vFlyMove_ = wire_->GetWireVec() * maxSpeed_;
         SetStatus(ATC_ATTACK);
-        
+
         pPointer_->SetPosition({ 9999.0f,9999.0f,9999.0f });
     }
     else if (wire_->GetWireState() == WIRE_STATE::STRETCH)
@@ -255,7 +294,7 @@ void Player::Update()
     }
 
     //当たってなかったらジャンプ
-    else if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)&&airFlag_==false)
+    else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && airFlag_ == false)
     {
         //ワイヤーで飛んでたらjumpFlag_はfalseにし、そうでなければtrue
         jumpFlag_ = flyFlag_ == true ? false : true;
@@ -271,8 +310,8 @@ void Player::Update()
     }
 
     //左スティックの入力値を入れる変数
-    float moveX=0;
-    float moveZ=0;
+    float moveX = 0;
+    float moveZ = 0;
 
     //重力加算
     vFly += XMVectorSet(0, velocity_, 0, 0);
@@ -293,26 +332,26 @@ void Player::Update()
 
     //L,Rスティックで移動
     XMVECTOR vMove = XMVectorSet(moveX, 0, moveZ, 0);
-    
+
     //ワイヤーで飛んでいれば徐々に加速し、飛んでなければ徐々に減速
-   
-    if(flyFlag_==false)
+
+    if (flyFlag_ == false)
     {
         flyTime_ -= DELTA_FLY_TIME;
-        flyTime_=max(flyTime_, 0);
+        flyTime_ = max(flyTime_, 0);
     }
     else
     {
-        flyTime_ += DELTA_FLY_TIME*10;
+        flyTime_ += DELTA_FLY_TIME * 10;
         flyTime_ = min(flyTime_, 1);
     }
-    
+
     //行列で移動のベクトルをカメラの向きに変形
     vMove = XMVector3TransformCoord(vMove, matCamX_);
 
     //移動
-    vPlayerMove_  = vMove;
-    velocity_     = max(velocity_, -MAX_VELOCITY);
+    vPlayerMove_ = vMove;
+    velocity_ = max(velocity_, -MAX_VELOCITY);
     vPlayerMove_ += XMVectorLerp(XMVectorZero(), vFlyMove_, Easing::EaseOutQuad(flyTime_));
     vPlayerMove_ += vFly;
     CharactorControll(vPlayerMove_);
@@ -321,27 +360,8 @@ void Player::Update()
     pItemGetter_->Update();
 }
 
-//描画
-void Player::Draw()
+void Player::DeathUpdate()
 {
-    //((ModelComponent*)GetComponent(0))->SetTransform(&transform_);
-    ModelManager::SetTransform(hModel_, transform_);
-    ModelManager::Draw(hModel_); 
-}
-
-void Player::SecondDraw()
-{
-    wire_->Draw(transform_);
-    if (pPointer_->IsDraw())
-    {
-        if (lockOn_)
-        {
-            pPointerLine_->SetColor(LINECOLOR_RED);
-        }
-        else
-            pPointerLine_->SetColor(LINECOLOR_DEFAULT);
-        pPointerLine_->Draw(&transform_);
-    }
 }
 
 //開放
@@ -700,6 +720,7 @@ void Player::OnCollision(GameObject* pTarget)
     if (playerLife_ <= 0)
     {
         DelCollider(*this);
+        playerStatus = PLAYER_STATUS::DEATH;
         return;
     }
 }
