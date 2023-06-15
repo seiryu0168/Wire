@@ -1,22 +1,30 @@
 {
   "ImageList": [
     [
-      "TutorialImage_Aim.png",
-      [ 0, 200, 0 ]
+      "ClearTarget.png",
+      [ 0, 300, 0 ]
     ],
     [
-      "TutorialImage_LockOn.png",
-      [ 1024, 200, 0 ]
+      "MoveAndCamera.png",
+      [ 2048, 300, 0 ]
     ],
     [
-      "TutorialImage_Item.png",
-      [ 2048, 200, 0 ]
+      "AimMode.png",
+      [ 4096, 300, 0 ]
+    ],
+    [
+      "ShotWire.png",
+      [ 6144, 300, 0 ]
+    ],
+    [
+      "ItemImage.png",
+      [ 8192, 300, 0 ]
     ]
   ],
 
   "TextList": [
     "ExplanationText.csv",
-    [ 0, 0, 900, 300 ],
-    [960,800.0]
+    [ 0, 0, 1600, 300 ],
+    [960,900.0]
   ]
 }

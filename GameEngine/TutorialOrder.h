@@ -7,6 +7,7 @@ private:
 	Text* pText_;
 	float ratio_;
 	float alpha_;
+	bool isTutorial_;
 	int hPict_;
 	TutorialExplanation te_	;
 
@@ -16,7 +17,8 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
-	void SecondDraw() override;
+	void ThirdDraw() override;
+	void ChangeScreen();
 	void EraseText();
 	void Release() override;
 };

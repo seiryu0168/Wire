@@ -97,11 +97,12 @@ int Text::Load(const std::string& text, const std::string& fontName, TEXT_RECT r
 void Text::Draw()
 {
 	D2D::GetRenderTarget()->BeginDraw();
-	TEXT_RECT rect = { layoutRect_.left + transform2D.x,
-					   layoutRect_.top + transform2D.y,
-					   layoutRect_.right + transform2D.x,
-					   layoutRect_.bottom + transform2D.y };
+	TEXT_RECT rect = { (layoutRect_.left-margin_) + transform2D.x,
+					   (layoutRect_.top-margin_) + transform2D.y,
+					   (layoutRect_.right +margin_)+ transform2D.x,
+					   (layoutRect_.bottom+margin_) + transform2D.y };
 	D2D::GetRenderTarget()->FillRectangle(&rect, pBackColorBrush_);
+	//D2D::GetRenderTarget()->DrawRectangle(&rect, pBackColorBrush_, 30.0f);
 	D2D::GetRenderTarget()->DrawTextLayout(transform2D, pLayout_, pTextColorBrush_);
 
 	//D2D::GetRenderTarget()->DrawText(pText_, textLength_, pTextFormat_,
@@ -206,6 +207,11 @@ HRESULT Text::SetFont(const FontData& data)
 void Text::SetTransform(TEXT_POSITION pos)
 {
 	transform2D = pos;
+}
+
+void Text::SetMargin(float mgn)
+{
+	margin_ = max(0,mgn);
 }
 
 void Text::SetRect(TEXT_RECT rect)

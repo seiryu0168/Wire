@@ -9,13 +9,17 @@
 #include<sstream>
 namespace 
 {
-	static const std::string FILENAME = "TutorialExplanation.json";
-	static const std::string PATH = "Assets\\IMage\\";
-	static const int MOVE_INTERVAL = 1000;
-	static const float TILT = 0.7f;
-	static const short RIGHT = -1;
-	static const short LEFT = 1;
-	static const int MAX_MOVE_TIME = 11;
+	const std::string FILENAME = "TutorialExplanation.json";
+	const std::string PATH = "Assets\\IMage\\";
+	const std::string FRAME_NAME = "MissionImageFrame.png";
+	const int MOVE_INTERVAL = 50;
+	const float MOVE_RATIO = 90.0f;
+	const float TILT = 0.7f;
+	const short RIGHT = -1;
+	const short LEFT = 1;
+	const int MAX_MOVE_TIME = 11;
+	const float MARGIN = 40.0f;
+	const D2D1_COLOR_F BackColor = { 0,0,0,0.2f };
 }
 void TutorialExplanation::Input()
 {
@@ -82,10 +86,14 @@ void TutorialExplanation::Initialize()
 		std::string fileName = elem[0];
 		data.hPict_ = ImageManager::Load(PATH + fileName);
 		assert(data.hPict_ >= 0);
-		data.position_ = { elem[1][0],elem[1][1],elem[1][2] };
-		ImageManager::SetImagePos(data.hPict_, data.position_);
+		data.position_ = { 50.0f*(float)imageList_.size(),elem[1][1],elem[1][2]};
+		ImageManager::SetImagePos(data.hPict_, { data.position_.x * MOVE_RATIO,
+												 data.position_.y,
+											     data.position_.z });
 		imageList_.push_back(data);
 	}
+
+	//テキストの情報(CSVファイル)読み込む
 	auto textFileData = tutorialFile_["TextList"];
 	std::string textFilePath = textFileData[0];
 	CsvReader csv_("Assets\\"+textFilePath);
@@ -94,14 +102,21 @@ void TutorialExplanation::Initialize()
 						   textFileData[1][2],
 						   textFileData[1][3]};
 
+	//テキストリストに追加
 	for (int i = 0; i < csv_.GetLines(); i++) 
 	{
 		Text* pText = new Text();
 		std::string str=csv_.GetString(i, 0);
 		pText->Load(str, "Arial", rect, ALIGNMENT_TYPE::LEFT_TOP,50);
 		pText->SetTransform({ textFileData[2][0]-(rect.right / 2),textFileData[2][1] - (rect.bottom / 2)});
+		pText->SetBackColor(BackColor);
+		pText->SetMargin(MARGIN);
 		textList_.push_back(pText);
 	}
+	hFramePict_ = ImageManager::Load(PATH + FRAME_NAME);
+	ImageManager::SetImagePos(hFramePict_, { 0,300,0 });
+	assert(hFramePict_ >= 0);
+
 }
 
 void TutorialExplanation::Update()
@@ -126,16 +141,11 @@ void TutorialExplanation::MoveSlide(float ratio)
 	{
 		//画像を移動させる
 		ImageManager::SetImagePos(i.hPict_,
-			XMFLOAT3(i.position_.x + delta,
-					 i.position_.y,
+			XMFLOAT3((i.position_.x + delta)* MOVE_RATIO,
+					  i.position_.y,
 					 0));
 	}
 }
-
-//Text TutorialExplanation::CreateText(std::string str)
-//{
-//	return "";
-//}
 
 bool TutorialExplanation::Load(std::string fileName)
 {
@@ -161,10 +171,11 @@ bool TutorialExplanation::Load(std::string fileName)
 
 void TutorialExplanation::Draw()
 {
+	ImageManager::Draw(hFramePict_);
 	for (int i=0;i<imageList_.size();i++)
 	{
 		ImageManager::Draw(imageList_[i].hPict_);
-		textList_[0]->Draw();
-		
+		if(slideNum_<=textList_.size())
+		textList_[slideNum_]->Draw();
 	}
 }

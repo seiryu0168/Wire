@@ -29,6 +29,7 @@ class Text
 	};
 private:
 	size_t				  textLength_;		//テキストの長さ
+	float				  margin_;
 	D2D1_RECT_F			  layoutRect_;		//レイアウトレクト
 	wchar_t*			  pText_;			//テキスト
 	wchar_t*			  pFontName_;
@@ -53,6 +54,7 @@ public:
 	HRESULT SetFontWeight(DWRITE_FONT_WEIGHT weightType,UINT32 startPos,UINT32 length);
 	HRESULT SetText(std::string text);
 	void SetTransform(TEXT_POSITION pos);
+	void SetMargin(float mgn);
 	void SetTextLayout();
 	void SetRatio(float ratioX,float ratioY);
 	void SetPosition(XMFLOAT2 position);

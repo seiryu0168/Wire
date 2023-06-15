@@ -61,7 +61,6 @@ void PauseUI::Initialize()
 
 void PauseUI::Update()
 {
-
 		switch (uiMode_)
 		{
 		case UI_MODE::MODE_INVALID:

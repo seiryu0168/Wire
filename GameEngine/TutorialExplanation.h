@@ -19,6 +19,7 @@ class TutorialExplanation
 
 	int moveTime_;
 	int slideNum_;
+	int hFramePict_;
 	short moveDir_;
 	INPUT_MODE mode_;
 	using json = nlohmann::json;
@@ -33,7 +34,6 @@ public:
 	void Initialize();
 	void Update();
 	void MoveSlide(float ratio);
-	Text CreateText(std::string str);
 	bool Load(std::string fileName);
 	void Draw();
 };

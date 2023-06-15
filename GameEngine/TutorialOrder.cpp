@@ -1,4 +1,5 @@
 #include "TutorialOrder.h"
+#include"Engine/DirectX_11/Input.h"
 #include"Engine/ResourceManager/ImageManager.h"
 #include"Easing.h"
 namespace 
@@ -13,7 +14,8 @@ TutorialOrder::TutorialOrder(GameObject* parent)
 	pText_(nullptr),
 	ratio_(0),
 	hPict_(-1),
-	alpha_(1)
+	alpha_(1),
+	isTutorial_(true)
 {
 	pText_ = new Text();
 	TEXT_RECT rect = { 0,0,500,100 };
@@ -27,19 +29,29 @@ TutorialOrder::~TutorialOrder()
 
 void TutorialOrder::Initialize()
 {
+	FindObject("Player")->SetUpdate(!isTutorial_);
+	FindObject("PauseUI")->SetUpdate(!isTutorial_);
 	te_.Initialize();
 }
 
 void TutorialOrder::Update()
 {
-	ratio_ += DELTA_RATIO;
-	//ratio_が1以上になったら
-	if (ratio_ >= 1.0f)
+	if (isTutorial_ == false)
 	{
-		//テキストと背景を徐々に薄くする
-		EraseText();
+
+		ratio_ += DELTA_RATIO;
+		//ratio_が1以上になったら
+		if (ratio_ >= 1.0f)
+		{
+			//テキストと背景を徐々に薄くする
+			EraseText();
+		}
 	}
-	te_.Update();
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_BACK))
+		ChangeScreen();
+
+	if (isTutorial_)
+		te_.Update();
 
 	//テキスト移動
 	textList[0]->SetRatio(Easing::EaseInOutQuint(ratio_) * TEXT_POS.x, TEXT_POS.y);
@@ -56,9 +68,17 @@ void TutorialOrder::Draw()
 	}
 }
 
-void TutorialOrder::SecondDraw()
+void TutorialOrder::ThirdDraw()
 {
-	te_.Draw();
+	if (isTutorial_)
+		te_.Draw();
+}
+
+void TutorialOrder::ChangeScreen()
+{
+	isTutorial_ = !isTutorial_;
+	FindObject("Player")->SetUpdate(!isTutorial_);
+	FindObject("PauseUI")->SetUpdate(!isTutorial_);
 }
 
 void TutorialOrder::EraseText()
