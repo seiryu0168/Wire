@@ -12,6 +12,7 @@ namespace
 	const std::string FILENAME = "TutorialExplanation.json";
 	const std::string PATH = "Assets\\IMage\\";
 	const std::string FRAME_NAME = "MissionImageFrame.png";
+	const std::string BLACKIMAGE_NAME = "Black.png";
 	const int MOVE_INTERVAL = 50;
 	const float MOVE_RATIO = 90.0f;
 	const float TILT = 0.7f;
@@ -21,15 +22,27 @@ namespace
 	const float MARGIN = 40.0f;
 	const D2D1_COLOR_F BackColor = { 0,0,0,0.2f };
 }
+TutorialExplanation::TutorialExplanation()
+	:moveTime_(0),
+	mode_(INPUT_MODE::MODE_INPUT),
+	hTutorialBackGroundPict_(-1),
+	hFramePict_(-1)
+{
+}
+
+TutorialExplanation::~TutorialExplanation()
+{
+}
+
 void TutorialExplanation::Input()
 {
-	//ボタンの処理
+	//入力の処理
 	moveDir_ = 0;
 	//上に移動
 	if (Input::GetLStick_X() >= TILT)
 	{
 		moveDir_ = RIGHT;
-		//ボタンが
+		//スライド番号が最後じゃなければ
 		if (slideNum_ < (imageList_.size() - 1))
 			mode_ = INPUT_MODE::MODE_MOVE;
 	}
@@ -37,11 +50,11 @@ void TutorialExplanation::Input()
 	else if (Input::GetLStick_X() <= -TILT)
 	{
 		moveDir_ = LEFT;
+		//スライド番号が0じゃなかったら
 		if (slideNum_ > 0)
 			mode_ = INPUT_MODE::MODE_MOVE;
-		//ボタンの番号が最後尾じゃなかったら移動モードに切り替える
 	}
-	//ボタンの番号を調整
+	//スライド番号を調整
 	slideNum_ -= moveDir_;
 	slideNum_ = Clamp<float>(slideNum_, 0, imageList_.size() - 1);
 }
@@ -54,32 +67,32 @@ void TutorialExplanation::Move()
 	{
 		mode_ = INPUT_MODE::MODE_INPUT;
 		moveTime_ = 0;
-		//動かしたセレクト画面の位置を確定させる
+		//動かしたスライドの位置を確定させる
 		for (auto& i : imageList_)
 		{
 			i.position_.x += MOVE_INTERVAL * moveDir_;
 		}
 		return;
 	}
-	//セレクト画面を動かす
+	//スライドを動かす
 	MoveSlide(Easing::EaseInCubic((float)moveTime_ / (float)(MAX_MOVE_TIME - 1)));
-}
-TutorialExplanation::TutorialExplanation()
-	:moveTime_(0),
-	mode_(INPUT_MODE::MODE_INPUT)
-{
-}
-
-TutorialExplanation::~TutorialExplanation()
-{
 }
 
 void TutorialExplanation::Initialize()
 {
 	if (Load(FILENAME) == false)
 		return;
-
-
+	//チュートリアルの背景画像
+	hTutorialBackGroundPict_ = ImageManager::Load(PATH + BLACKIMAGE_NAME);
+	assert(hTutorialBackGroundPict_ >= 0);
+	ImageManager::SetAlpha(hTutorialBackGroundPict_, 0.2f);
+	
+	//画像のフレーム画像
+	hFramePict_ = ImageManager::Load(PATH + FRAME_NAME);
+	assert(hFramePict_ >= 0);
+	ImageManager::SetImagePos(hFramePict_, { 0,300,0 });
+	
+	//スライド画像の読み込み
 	for (auto &elem : tutorialFile_["ImageList"])
 	{
 		imageData data;
@@ -113,10 +126,6 @@ void TutorialExplanation::Initialize()
 		pText->SetMargin(MARGIN);
 		textList_.push_back(pText);
 	}
-	hFramePict_ = ImageManager::Load(PATH + FRAME_NAME);
-	ImageManager::SetImagePos(hFramePict_, { 0,300,0 });
-	assert(hFramePict_ >= 0);
-
 }
 
 void TutorialExplanation::Update()
@@ -136,10 +145,13 @@ void TutorialExplanation::Update()
 
 void TutorialExplanation::MoveSlide(float ratio)
 {
+	//動く大きさを求める
 	float delta = MOVE_INTERVAL * ratio * moveDir_;
+	
+
 	for (auto& i : imageList_)
 	{
-		//画像を移動させる
+		//スライドを移動させる
 		ImageManager::SetImagePos(i.hPict_,
 			XMFLOAT3((i.position_.x + delta)* MOVE_RATIO,
 					  i.position_.y,
@@ -157,6 +169,8 @@ bool TutorialExplanation::Load(std::string fileName)
 	{
 		return false;
 	}
+	
+	//ファイル読み込み
 	std::ifstream fileReader;
 	fileReader.open(fileName.c_str());
 	if (fileReader.good() == false)
@@ -171,6 +185,7 @@ bool TutorialExplanation::Load(std::string fileName)
 
 void TutorialExplanation::Draw()
 {
+	ImageManager::Draw(hTutorialBackGroundPict_);
 	ImageManager::Draw(hFramePict_);
 	for (int i=0;i<imageList_.size();i++)
 	{

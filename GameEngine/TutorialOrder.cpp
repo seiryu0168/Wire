@@ -9,6 +9,7 @@ namespace
 	static const float DELTA_ALPHA = 0.01f;
 	static const std::string BACKGROUND_IMAGE = "Assets\\Image\\TextBackGround.png";
 }
+
 TutorialOrder::TutorialOrder(GameObject* parent)
 	:MissionUI(parent,"TutorialOrder"),
 	pText_(nullptr),
@@ -76,7 +77,9 @@ void TutorialOrder::ThirdDraw()
 
 void TutorialOrder::ChangeScreen()
 {
+	//フラグを変える
 	isTutorial_ = !isTutorial_;
+	//プレイヤーとポーズのアップデートをオンオフ
 	FindObject("Player")->SetUpdate(!isTutorial_);
 	FindObject("PauseUI")->SetUpdate(!isTutorial_);
 }

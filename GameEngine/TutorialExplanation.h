@@ -20,6 +20,7 @@ class TutorialExplanation
 	int moveTime_;
 	int slideNum_;
 	int hFramePict_;
+	int hTutorialBackGroundPict_;
 	short moveDir_;
 	INPUT_MODE mode_;
 	using json = nlohmann::json;
