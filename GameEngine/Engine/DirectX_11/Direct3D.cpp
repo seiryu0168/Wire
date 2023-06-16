@@ -16,6 +16,14 @@ namespace Direct3D
 	ID3D11DepthStencilState* pDepthStencilState[(int)BLEND_MODE::BLEND_MAX];	//デプスステンシルステート
 
 
+	//深度テクスチャ用
+	ID3D11Texture2D* pDepthTexture;
+	ID3D11RenderTargetView* pDwpthRenderTargetView;
+	ID3D11DepthStencilView* pDepthDepthStencilView;
+	ID3D11Texture2D* pDepthDepthStencil;
+	ID3D11ShaderResourceView* pDepthTextureView;
+
+
 	struct SHADER_BUNDLE
 	{
 		ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー

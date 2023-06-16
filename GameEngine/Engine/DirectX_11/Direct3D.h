@@ -62,6 +62,8 @@ namespace Direct3D
 	HRESULT InitShaderOutLine();
 	HRESULT InitShaderToon();
 
+	HRESULT InitShaderShadow();
+
 	void SetShader(SHADER_TYPE type);
 	void SetBlendMode(BLEND_MODE mode);
 	ID3D11Device* GetDevice();
