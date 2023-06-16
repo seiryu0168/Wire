@@ -78,7 +78,7 @@ void Sprite::Draw(Transform& transform, RECT rect, XMFLOAT4 changeColor,float al
 
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
 	
-	//頂点、インデックス、コンスタントバッファをセット
+	////////////////頂点、インデックス、コンスタントバッファをセット//////////////////////
 	
 	//頂点バッファ
 	UINT stride = sizeof(VERTEX);

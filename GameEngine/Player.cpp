@@ -535,32 +535,15 @@ void Player::CharactorControll(XMVECTOR &moveVector)
 
     moveVector = XMLoadFloat3(&moveDist)+ wallzuri;
 
-    if (transform_.position_.x <= -areaLimit_.x)
-    {
-        transform_.position_.x = -areaLimit_.x;
-    }
-    if (transform_.position_.x >= areaLimit_.x)
-    {
-        transform_.position_.x = areaLimit_.x;
-    }
-
+    //à⁄ìÆêßå¿
+    transform_.position_.x=Clamp<float>(transform_.position_.x, -areaLimit_.x, areaLimit_.x);
+    transform_.position_.z=Clamp<float>(transform_.position_.z, -areaLimit_.z, areaLimit_.z);
+    transform_.position_.y = min(transform_.position_.y, areaLimit_.y);
     if (transform_.position_.y <= areaLimit_.w)
     {
         transform_.position_.y = 0;
     }
-    if (transform_.position_.y >= areaLimit_.y)
-    {
-        transform_.position_.y = areaLimit_.y;
-    }
 
-    if (transform_.position_.z <= -areaLimit_.z)
-    {
-        transform_.position_.z = -areaLimit_.z;
-    }
-    if (transform_.position_.z >= areaLimit_.z)
-    {
-        transform_.position_.z = areaLimit_.z;
-    }
     vPlayerPos_ = XMLoadFloat3(&transform_.position_);
     
     XMStoreFloat3(&transform_.position_, vPlayerPos_ + moveVector* speed_);

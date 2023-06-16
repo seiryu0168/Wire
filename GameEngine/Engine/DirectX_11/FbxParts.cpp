@@ -37,8 +37,9 @@ FbxParts::~FbxParts()
 	{
 		SAFE_RELEASE(ppIndexBuffer_[i]);
 		SAFE_DELETE(pMaterialList_[i].pTexture);
-		SAFE_DELETE_ARRAY(ppIndex_);
+		SAFE_DELETE_ARRAY(ppIndex_[i]);
 	}
+	SAFE_DELETE_ARRAY(ppIndex_);
 	SAFE_DELETE_ARRAY(ppIndexBuffer_);
 	SAFE_RELEASE(pConstantBuffer_);
 
@@ -413,14 +414,14 @@ HRESULT FbxParts::InitSkelton(FbxMesh* pMesh)
 	}
 	pSkinInfo_ = (FbxSkin*)pDeformer;
 
-	struct POLY_INDEX
-	{
-		int* polyIndex;
-		int* vertexIndex;
-		int refNum;
-	};
+	//struct POLY_INDEX
+	//{
+	//	int* polyIndex;
+	//	int* vertexIndex;
+	//	int refNum;
+	//};
 
-	POLY_INDEX* polyTable = new POLY_INDEX[vertexCount_];
+	/*POLY_INDEX* polyTable = new POLY_INDEX[vertexCount_];
 	for (int i = 0; i < vertexCount_; i++)
 	{
 		polyTable[i].polyIndex = new int[polygonCount_ * 3];
@@ -441,7 +442,7 @@ HRESULT FbxParts::InitSkelton(FbxMesh* pMesh)
 				}
 			}
 		}
-	}
+	}*/
 
 	//ボーン情報取得
 	boneNum_ = pSkinInfo_->GetClusterCount();
@@ -513,13 +514,13 @@ HRESULT FbxParts::InitSkelton(FbxMesh* pMesh)
 		}
 	}
 
-	//一時的に取っておいたメモリ開放
-	for (int i = 0; i < vertexCount_; i++)
-	{
-		SAFE_DELETE_ARRAY(polyTable[i].polyIndex);
-		SAFE_DELETE_ARRAY(polyTable[i].vertexIndex);
-	}
-	SAFE_DELETE_ARRAY(polyTable);
+	////一時的に取っておいたメモリ開放
+	//for (int i = 0; i < vertexCount_; i++)
+	//{
+	//	SAFE_DELETE_ARRAY(polyTable[i].polyIndex);
+	//	SAFE_DELETE_ARRAY(polyTable[i].vertexIndex);
+	//}
+	//SAFE_DELETE_ARRAY(polyTable);
 	return E_NOTIMPL;
 }
 
