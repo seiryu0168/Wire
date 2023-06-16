@@ -8,6 +8,8 @@ namespace
 	static const float DELTA_RATIO = 0.015f;
 	static const float DELTA_ALPHA = 0.01f;
 	static const std::string BACKGROUND_IMAGE = "Assets\\Image\\TextBackGround.png";
+	const std::string BACKBUTTON_SELECT = "Assets\\Image\\BackButton_Selected.png";
+	const std::string BACKBUTTON = "Assets\\Image\\BackButton_Default.png";
 }
 
 TutorialOrder::TutorialOrder(GameObject* parent)
@@ -22,6 +24,11 @@ TutorialOrder::TutorialOrder(GameObject* parent)
 	TEXT_RECT rect = { 0,0,500,100 };
 	pText_->Load("チュートリアル", "Sitka Text", rect,LEFT_TOP);
 	hPict_ = ImageManager::Load(BACKGROUND_IMAGE);
+
+	//バックボタンの画像
+	hPictBackButton_ = ImageManager::Load(BACKBUTTON);
+	assert(hPictBackButton_ >= 0);
+	ImageManager::SetImagePos(hPictBackButton_, { 1500,-900,0 });
 }
 
 TutorialOrder::~TutorialOrder()
@@ -60,6 +67,10 @@ void TutorialOrder::Update()
 
 void TutorialOrder::Draw()
 {
+}
+
+void TutorialOrder::ThirdDraw()
+{
 	//描画
 	textList[0]->Draw();
 	ImageManager::Draw(imageList[0]);
@@ -67,12 +78,11 @@ void TutorialOrder::Draw()
 	{
 		i.second->Draw();
 	}
-}
-
-void TutorialOrder::ThirdDraw()
-{
 	if (isTutorial_)
+	{
 		te_.Draw();
+		ImageManager::Draw(hPictBackButton_);
+	}
 }
 
 void TutorialOrder::ChangeScreen()

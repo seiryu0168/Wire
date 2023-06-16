@@ -9,6 +9,7 @@ private:
 	float alpha_;
 	bool isTutorial_;
 	int hPict_;
+	int hPictBackButton_;
 	TutorialExplanation te_	;
 
 public:

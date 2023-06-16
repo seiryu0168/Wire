@@ -57,6 +57,7 @@ FbxParts::~FbxParts()
 
 HRESULT FbxParts::Init(FbxNode* pNode)
 {
+	
 	FbxMesh* mesh = pNode->GetMesh();
 	pToonTexture_ = new Texture;
 	pToonTexture_->Load("../Image\\ToonTexture.jpg");

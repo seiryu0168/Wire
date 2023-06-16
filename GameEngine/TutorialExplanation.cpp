@@ -13,6 +13,10 @@ namespace
 	const std::string PATH = "Assets\\IMage\\";
 	const std::string FRAME_NAME = "MissionImageFrame.png";
 	const std::string BLACKIMAGE_NAME = "Black.png";
+	const std::string LARROW[2] = { "LArrow_Default.png","LArrow_Select.png" };
+	const std::string RARROW[2] = { "RArrow_Default.png","RArrow_Select.png" };
+	const XMFLOAT3 LARROW_POS = { 900.0f,-900.0f,0 };
+	const XMFLOAT3 RARROW_POS = { 1200.0f,-900.0f,0 };
 	const int MOVE_INTERVAL = 50;
 	const float MOVE_RATIO = 90.0f;
 	const float TILT = 0.7f;
@@ -25,8 +29,8 @@ namespace
 TutorialExplanation::TutorialExplanation()
 	:moveTime_(0),
 	mode_(INPUT_MODE::MODE_INPUT),
-	hTutorialBackGroundPict_(-1),
-	hFramePict_(-1)
+	hPictTutorialBackGround_(-1),
+	hPictFrame_(-1)
 {
 }
 
@@ -83,15 +87,28 @@ void TutorialExplanation::Initialize()
 	if (Load(FILENAME) == false)
 		return;
 	//チュートリアルの背景画像
-	hTutorialBackGroundPict_ = ImageManager::Load(PATH + BLACKIMAGE_NAME);
-	assert(hTutorialBackGroundPict_ >= 0);
-	ImageManager::SetAlpha(hTutorialBackGroundPict_, 0.2f);
+	hPictTutorialBackGround_ = ImageManager::Load(PATH + BLACKIMAGE_NAME);
+	assert(hPictTutorialBackGround_ >= 0);
+	ImageManager::SetAlpha(hPictTutorialBackGround_, 0.2f);
 	
 	//画像のフレーム画像
-	hFramePict_ = ImageManager::Load(PATH + FRAME_NAME);
-	assert(hFramePict_ >= 0);
-	ImageManager::SetImagePos(hFramePict_, { 0,300,0 });
-	
+	hPictFrame_ = ImageManager::Load(PATH + FRAME_NAME);
+	assert(hPictFrame_ >= 0);
+	ImageManager::SetImagePos(hPictFrame_, { 0,300,0 });
+
+	hPictLArrow_ = ImageManager::Load(PATH + LARROW[0]);
+	assert(hPictLArrow_);
+	ImageManager::SetImagePos(hPictLArrow_, LARROW_POS);
+	hPictLArrowSelect_ = ImageManager::Load(PATH + LARROW[1]);
+	assert(hPictLArrowSelect_);
+	ImageManager::SetImagePos(hPictLArrowSelect_, LARROW_POS);
+	hPictRArrow_ = ImageManager::Load(PATH + RARROW[0]);
+	assert(hPictRArrow_);
+	ImageManager::SetImagePos(hPictRArrow_, RARROW_POS);
+	hPictRArrowSelect_ = ImageManager::Load(PATH + RARROW[1]);
+	assert(hPictRArrowSelect_);
+	ImageManager::SetImagePos(hPictRArrowSelect_, RARROW_POS);
+
 	//スライド画像の読み込み
 	for (auto &elem : tutorialFile_["ImageList"])
 	{
@@ -185,12 +202,27 @@ bool TutorialExplanation::Load(std::string fileName)
 
 void TutorialExplanation::Draw()
 {
-	ImageManager::Draw(hTutorialBackGroundPict_);
-	ImageManager::Draw(hFramePict_);
-	for (int i=0;i<imageList_.size();i++)
+	ImageManager::Draw(hPictTutorialBackGround_);
+	ImageManager::Draw(hPictFrame_);
+	for (int i = 0; i < imageList_.size(); i++)
 	{
 		ImageManager::Draw(imageList_[i].hPict_);
-		if(slideNum_<=textList_.size())
-		textList_[slideNum_]->Draw();
+		if (slideNum_ <= textList_.size())
+			textList_[slideNum_]->Draw();
 	}
+
+	if (mode_ == INPUT_MODE::MODE_MOVE)
+	{
+		if (moveDir_ == LEFT)
+		{
+
+			ImageManager::Draw(hPictLArrowSelect_);
+		}
+		else
+			ImageManager::Draw(hPictRArrowSelect_);
+	}
+
+	ImageManager::Draw(hPictLArrow_);
+	ImageManager::Draw(hPictRArrow_);
+
 }

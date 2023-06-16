@@ -43,7 +43,7 @@ namespace
     static const float ANGLE_MAX     = 69.0f;
     static const float ANGLE_MIN     = -89.0f;
     static const float CAMERA_ROTATESPEED_NORMAL = 4.0f;
-    static const float LOW_CAMERA_ROTATE_SPEED = 0.55f;
+    static const float LOW_CAMERA_ROTATE_SPEED = 0.65f;
 
     static const float AIM_ASSIST_ANGLE = XMConvertToRadians(40.0f);
     static const float ATTACK_SPEED = 1.8f;
@@ -766,21 +766,21 @@ void Player::Aim(RayCastData* ray)
             //エネミーへのベクトルとプレイヤーの向きベクトルの角度を使って
             //エイムアシストの補正倍率を変える
             //倍率
-            float angleDiff = (AIM_ASSIST_ANGLE-enemyToPlayerAngle) / AIM_ASSIST_ANGLE;
+            float angleDiff = (AIM_ASSIST_ANGLE - enemyToPlayerAngle) / AIM_ASSIST_ANGLE;
             //ポインタの位置を倍率で補正する
-            pointerDist *=angleDiff;
+            pointerDist *= angleDiff;
             //回転角度計算
-            float angle = enemyToPlayerAngle* angleDiff;
+            float angle = enemyToPlayerAngle * angleDiff;
             //回転
             XMVECTOR rotationQuaternion = XMQuaternionRotationAxis(cross, angle);
-           
+
             vPtrDir = XMVector3Rotate(vPtrDir, rotationQuaternion);
 
 
             //レイキャストの始点と方向を入力
-                XMStoreFloat3(&ray->dir, vPtrDir);
-                ModelManager::RayCast(*ray);
-            if (ray->hit&&ray->hitModelList.begin()->hModel==pEnemy->GethModel())
+            XMStoreFloat3(&ray->dir, vPtrDir);
+            ModelManager::RayCast(*ray);
+            if (ray->hit && ray->hitModelList.begin()->hModel == pEnemy->GethModel())
             {
                 lockOn_ = true;
             }
@@ -799,7 +799,7 @@ void Player::Aim(RayCastData* ray)
         XMFLOAT3 dir;
         if (lockOn_ == false)
         {
-            XMStoreFloat3(&dir, vPtrDir);
+            XMStoreFloat3(&dir, vPlayerDir);
             ray->Init(bonePos, dir, ASSISTLIMIT);
             
             ModelManager::RayCast(*ray);
@@ -831,7 +831,6 @@ void Player::Aim(RayCastData* ray)
         pPointerLine_->AddPosition(bonePos);
         pPointerLine_->AddPosition(StoreFloat3(XMLoadFloat3(&bonePos) + (vPtrDir* pointerDist)));
     }
-
 }
 
 void Player::CheckTargetList()

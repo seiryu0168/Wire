@@ -37,8 +37,10 @@ HRESULT Fbx::Load(std::string fileName)
 	//メッシュ情報を取得
 	FbxNode* rootNode = pFbxScene_->GetRootNode();
 	FbxNode* pNode = rootNode->GetChild(0);
+	FbxGeometryConverter geomtryCoverter(pFbxManager_);
 	
-
+	//三角化
+	geomtryCoverter.Triangulate(pFbxScene_,true);
 
 	//現在のカレントディレクトリを退避しておく
 	WCHAR defaultDirectory[MAX_PATH];
@@ -56,7 +58,7 @@ HRESULT Fbx::Load(std::string fileName)
 	//ファイル名
 	modelName_ = fName;
 	
-
+	
 	//ディレクトリ変更
 	SetCurrentDirectory(wDir);
 	
