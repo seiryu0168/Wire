@@ -68,6 +68,7 @@ class Fbx
 	float animSpeed_;
 	int startFrame_;
 	int endFrame_;
+	bool useShadow_;
 	std::string modelName_;
 	HRESULT CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList);
 public:
@@ -78,8 +79,9 @@ public:
 	void RayCast(RayCastData& ray,Transform& transform);
 	XMFLOAT3 GetBonePosition(std::string boneName);
 	std::string GetModelName();
-	void    Draw(Transform& transform, SHADER_TYPE shaderType,int frame);
-	void	DrawOutLine(Transform& transform, int frame, XMFLOAT4 lineColor = {0,0,0,1});
-	void	DrawToon(Transform& transform, bool isOutLine, int frame);
-	void    Release();
+	void UseShadow(bool isUse) { useShadow_ = isUse; }	
+	void Draw(Transform& transform, SHADER_TYPE shaderType,int frame);
+	void DrawOutLine(Transform& transform, int frame, XMFLOAT4 lineColor = {0,0,0,1});
+	void DrawToon(Transform& transform, bool isOutLine, int frame);
+	void Release();
 };

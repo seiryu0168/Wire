@@ -13,6 +13,8 @@ cbuffer global
 {
 	float4x4	g_matWVP;			// ワールド・ビュー・プロジェクションの合成行列
 	float4x4	g_matW;				//ワールド行列
+	float4x4	g_matWLP;			//ワールド、ライト、プロジェクションの合成行列
+	float4x4	g_matWLPT;			//ワールド、ライト、プロジェクション、テクスチャ座標の合成行列
 	float4x4    g_matNormal;		//法線変形行列(回転行列と拡大行列の逆行列)
 	float4		g_diffuseColor;		// ディフューズカラー（マテリアルの色）
 	float4		g_ambient;			//アンビエント
@@ -78,7 +80,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	tangent = normalize(tangent);
 
 	//接空間におけるライトの向きをライトベクトルと各ベクトルで求める
-	float4 light = float4(0, -1, 0, 0);
+	float4 light = g_lightDirection;
 	//outData.light.x = dot(light, tangent);
 	//outData.light.y = dot(light, biNormal);
 	//outData.light.z = dot(light, normal);

@@ -577,6 +577,7 @@
     <FxCompile Include="OutLine.hlsl" />
     <FxCompile Include="ToonShader.hlsl" />
     <FxCompile Include="newSimple3D.hlsl" />
+    <FxCompile Include="DepthShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dialog.rc">

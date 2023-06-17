@@ -355,6 +355,11 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 {
 	Direct3D::SetShader(shaderType);
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
+
+	for (auto i : parts_)
+	{
+		i->DrawShadow(transform);
+	}
 	for (int i = 0; i<parts_.size(); i++)
 	{
 		FbxTime time;
@@ -410,10 +415,11 @@ void Fbx::DrawOutLine(Transform& transform, int frame, XMFLOAT4 lineColor)
 
 void Fbx::DrawToon(Transform& transform, bool isOutLine, int frame)
 {
+	
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
 	if (isOutLine)
 	{
-	Direct3D::SetShader(SHADER_TYPE::SHADER_OUTLINE);
+		Direct3D::SetShader(SHADER_TYPE::SHADER_OUTLINE);
 
 		for (int i = 0; i < parts_.size(); i++)
 		{

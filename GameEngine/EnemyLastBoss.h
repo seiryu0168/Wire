@@ -7,7 +7,6 @@ private:
 
 	class StateFirstMode : public EnemyState<EnemyLastBoss>
 	{
-
 		int hModel_;
 	public:
 		static StateFirstMode* GetInstance()

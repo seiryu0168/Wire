@@ -24,7 +24,16 @@ FbxParts::FbxParts()
 	ppIndexBuffer_ = nullptr;
 	pConstantBuffer_ = nullptr;
 	pToonTexture_ = nullptr;
+	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, 0, 0),
+						  		  XMVectorSet(0, 0, 0, 0),
+							      XMVectorSet(0, 1, 0, 0));
+	ZeroMemory(&clipToUV_, sizeof(XMMATRIX));
 
+	clipToUV_ = XMMatrixSet(0.5f, 0, 0, 0,
+							0, -0.5f, 0, 0,
+							0,     0, 1, 0, 
+							0,  0.5f, 0.5f, 1);
+	
 }
 
 FbxParts::~FbxParts()
@@ -78,6 +87,9 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 
 void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 {
+	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, 0, 0),
+		XMVectorSet(0, 0, 0, 0),
+		XMVectorSet(0, 1, 0, 0));
 	transform.Calclation();
 	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
 
@@ -89,7 +101,8 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-		cb.lightDirection = XMFLOAT4(0, 1, 0, 0);
+		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix());
+		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 
 		cb.isTexture = pMaterialList_[i].pTexture != nullptr;
@@ -98,6 +111,7 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.speculer = pMaterialList_[i].speculer;
 		cb.shininess = pMaterialList_[i].shininess;
+		cb.lightDirection = { 0,-1,0,0 };
 		cb.customColor = lineColor;
 		XMVECTOR a = pVertices_[i].tangent;
 		D3D11_MAPPED_SUBRESOURCE pdata;
@@ -143,6 +157,11 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		Direct3D::pContext->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
 		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
+}
+
+void FbxParts::DrawShadow(Transform& transform)
+{
+
 }
 
 void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineColor)

@@ -22,7 +22,8 @@ namespace Direct3D
 	ID3D11DepthStencilView*	  pDepthDepthStencilView;	//ステンシルバッファ
 	ID3D11Texture2D*		  pDepthDepthStencil;		//深度バッファ用テクスチャ
 	ID3D11ShaderResourceView* pDepthTextureView;		//深度テクスチャをシェーダーに渡すやつ
-
+	ID3D11VertexShader*	      pDepthVertexShader;		//影用頂点シェーダー
+	ID3D11PixelShader*		  pDepthPixelShader;		//影用ピクセルシェーダー
 
 	struct SHADER_BUNDLE
 	{
@@ -173,6 +174,11 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);        // 描画先を設定
 	pContext->RSSetViewports(1, &vp);
 
+
+	hr=InitDepthTexture();
+	if (FAILED(hr))
+		return hr;
+
 	//シェーダー準備
 	 hr=InitShader();
 	 if (FAILED(hr))
@@ -208,6 +214,32 @@ HRESULT Direct3D::InitDepthTexture()
 		return hr;
 	}
 
+	//レンダーターゲットビュー作成
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	ZeroMemory(&rtvDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
+	rtvDesc.Format = textureDesc.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Texture2D.MipSlice = 0;
+
+	hr = pDevice->CreateRenderTargetView(pDepthTexture, &rtvDesc, &pDwpthRenderTargetView);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"深度テクスチャ用レンダーターゲットビュー作成に失敗", L"エラー", MB_OK);
+		return hr;
+	}
+
+	//深度テクスチャ用シェーダーリソースビュー作成
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	hr = pDevice->CreateShaderResourceView(pDepthTexture, &srvDesc, &pDepthTextureView);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"深度テクスチャ用シェーダーリソースビュー作成に失敗", L"エラー", MB_OK);
+		return hr;
+	}
 
 
 	return TRUE;
@@ -217,26 +249,23 @@ HRESULT Direct3D::InitDepthTexture()
 HRESULT Direct3D::InitShader()
 {
 	if (FAILED(InitShader2D()))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(InitShader3D()))
-	{
-		return E_FAIL;
-	}
-	if(FAILED(InitShaderEFF()))
-	{
 		return E_FAIL;
 
-	}
+	if (FAILED(InitShader3D()))
+		return E_FAIL;
+
+	if (FAILED(InitShaderEFF()))
+		return E_FAIL;
+
 	if (FAILED(InitShaderOutLine()))
-	{
 		return E_FAIL;
-	}
+
 	if (FAILED(InitShaderToon()))
-	{
 		return E_FAIL;
-	}
+	
+	if (FAILED(InitShaderShadow()))
+		return E_FAIL;
+	
 	return S_OK;
 
 }
@@ -320,7 +349,7 @@ HRESULT Direct3D::InitShader3D()
 	}
 
 	//////////////////////////////////////////////////頂点インプットレイアウト///////////////////////////////////////////////
-	//HLSL(シェーダーの事)に送る情報の種類とその設定を行う
+	//HLSL(シェーダーのソースコード)に送る情報の種類とその設定を行う
 	//1.セマンティックの名前
 	//2.セマンティックインデックス(同じセマンティックを持つ要素が複数あるときに使う)
 	//3.要素データのデータデータ型
@@ -586,6 +615,62 @@ HRESULT Direct3D::InitShaderToon()
 	return S_OK;
 }
 
+HRESULT Direct3D::InitShaderShadow()
+{
+	HRESULT hr;
+	ID3DBlob* pCompiledVS = nullptr;
+	ID3DBlob* pVSError = nullptr;
+
+	hr = D3DCompileFromFile(L"DepthShader.hlsl", nullptr, nullptr, "VS_Depth", "vs_5_0", NULL, 0, &pCompiledVS, &pVSError);
+	if (FAILED(hr))
+	{
+		if (pVSError != nullptr)
+		{
+			MessageBox(nullptr, (LPCWSTR)pVSError->GetBufferPointer(), L"シェーダーエラー", MB_OK);
+		}
+		MessageBox(nullptr, L"ピクセルシェーダの作成に失敗", L"エラー", MB_OK);
+		SAFE_RELEASE(pVSError);
+		return hr;
+	}
+	SAFE_RELEASE(pVSError);
+	hr = pDevice->CreateVertexShader(pCompiledVS->GetBufferPointer(), pCompiledVS->GetBufferSize(), NULL,&pDepthVertexShader);
+		if (FAILED(hr))
+		{
+			MessageBox(nullptr, L"頂点シェーダの作成に失敗", L"エラー", MB_OK);
+			SAFE_RELEASE(pCompiledVS);
+			return hr;
+		}
+////////////////////////////////////ピクセルシェーダー//////////////////////////////////
+
+	ID3DBlob* pCompiledPS = nullptr;
+	ID3DBlob* pPSError = nullptr;
+
+	hr = D3DCompileFromFile(L"DepthShader.hlsl", nullptr, nullptr, "PS_Depth", "ps_5_0", NULL, 0, &pCompiledPS, &pPSError);
+	if (FAILED(hr))
+	{
+		if (pPSError != nullptr)
+		{
+			MessageBox(nullptr, (LPCWSTR)pPSError->GetBufferPointer(), L"シェーダーエラー", MB_OK);
+		}
+		MessageBox(nullptr, L"ピクセルシェーダの作成に失敗", L"エラー", MB_OK);
+		SAFE_RELEASE(pPSError);
+		return hr;
+	}
+	SAFE_RELEASE(pPSError);
+
+	hr = pDevice->CreatePixelShader(pCompiledPS->GetBufferPointer(), pCompiledPS->GetBufferSize(), NULL, &pDepthPixelShader);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"ピクセルシェーダの作成に失敗", L"エラー", MB_OK);
+		SAFE_RELEASE(pCompiledPS);
+		return hr;
+	}
+		SAFE_RELEASE(pCompiledPS);
+
+
+	return TRUE;
+}
+
 void Direct3D::SetShader(SHADER_TYPE type)
 {
 	//それぞれをデバイスコンテキストにセット  これらの情報を使って描画を行う
@@ -680,6 +765,11 @@ void Direct3D::Release()
 		SAFE_RELEASE(pDepthStencilState[i]);
 		SAFE_RELEASE(pBlendState[i]);				//深度ステンシル
 	}
+	SAFE_RELEASE(pDepthTextureView);
+	SAFE_RELEASE(pDepthDepthStencil);
+	SAFE_RELEASE(pDepthDepthStencilView);
+	SAFE_RELEASE(pDwpthRenderTargetView);
+	SAFE_RELEASE(pDepthTexture);
 	SAFE_RELEASE(pDepthStencilView);				//深度ステンシルビュー
 	SAFE_RELEASE(pDepthStencil);
 	SAFE_RELEASE(pRenderTargetView);

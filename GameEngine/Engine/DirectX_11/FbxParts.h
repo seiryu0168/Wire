@@ -27,6 +27,8 @@ private:
 	{
 		XMMATRIX matWVP;			//ワールド、ビュー、プロジェクション行列の合成(頂点変換に使う)
 		XMMATRIX matW;				//ワールド行列
+		XMMATRIX matWLP;				//ワールド、ライト、プロジェクション行列の合成
+		XMMATRIX matWLPT;				//ワールド、ライト、プロジェクション、テクスチャ座標行列の合成
 		XMMATRIX matNormal;			//回転行列と拡大行列の合成(法線の変形に使う)
 		XMFLOAT4 diffuseColor;		//ディフューズ(マテリアルの色)
 		XMFLOAT4 ambient;			//アンビエント
@@ -87,6 +89,9 @@ private:
 	VERTEX* pVertices_;
 	Texture* pToonTexture_;
 
+	XMMATRIX lightView_;
+	XMMATRIX clipToUV_;
+
 	HRESULT InitVertex(fbxsdk::FbxMesh* mesh);
 	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);
 	HRESULT CreateConstantBuffer();
@@ -99,6 +104,7 @@ public:
 
 	HRESULT Init(FbxNode* pNode);
 	void Draw(Transform& transform, XMFLOAT4 lineColor = { 0,0,0,1 });
+	void DrawShadow(Transform& transform);
 	void DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineColor = { 0,0,0,0 });
 	//void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
 	FbxSkin* GetSkinInfo() { return pSkinInfo_; }
