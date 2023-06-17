@@ -53,6 +53,7 @@ namespace Direct3D
 
 	//初期化
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
+	HRESULT InitDepthTexture();
 
 	//シェーダー準備
     HRESULT InitShader();

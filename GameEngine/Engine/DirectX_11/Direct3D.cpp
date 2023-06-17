@@ -6,22 +6,22 @@
 //変数
 namespace Direct3D
 {
-	ID3D11Device* pDevice;										//デバイス
-	ID3D11DeviceContext* pContext;								//デバイスコンテキスト
-	IDXGISwapChain* pSwapChain;									//スワップチェイン
-	ID3D11RenderTargetView* pRenderTargetView;					//レンダーターゲットビュー
-	ID3D11Texture2D* pDepthStencil;								//深度ステンシル
-	ID3D11DepthStencilView* pDepthStencilView;									//深度ステンシルビュー
-	ID3D11BlendState* pBlendState[(int)BLEND_MODE::BLEND_MAX];					//ブレンドステート
-	ID3D11DepthStencilState* pDepthStencilState[(int)BLEND_MODE::BLEND_MAX];	//デプスステンシルステート
+	ID3D11Device*			 pDevice;										//デバイス
+	ID3D11DeviceContext*	 pContext;										//デバイスコンテキスト
+	IDXGISwapChain*			 pSwapChain;									//スワップチェイン
+	ID3D11RenderTargetView*	 pRenderTargetView;								//レンダーターゲットビュー
+	ID3D11Texture2D*		 pDepthStencil;									//深度ステンシル
+	ID3D11DepthStencilView*	 pDepthStencilView;								//深度ステンシルビュー
+	ID3D11BlendState*		 pBlendState[(int)BLEND_MODE::BLEND_MAX];		//ブレンドステート
+	ID3D11DepthStencilState* pDepthStencilState[(int)BLEND_MODE::BLEND_MAX];//デプスステンシルステート
 
 
 	//深度テクスチャ用
-	ID3D11Texture2D* pDepthTexture;
-	ID3D11RenderTargetView* pDwpthRenderTargetView;
-	ID3D11DepthStencilView* pDepthDepthStencilView;
-	ID3D11Texture2D* pDepthDepthStencil;
-	ID3D11ShaderResourceView* pDepthTextureView;
+	ID3D11Texture2D*		  pDepthTexture;			//描画先
+	ID3D11RenderTargetView*	  pDwpthRenderTargetView;	//レンダーターゲット
+	ID3D11DepthStencilView*	  pDepthDepthStencilView;	//ステンシルバッファ
+	ID3D11Texture2D*		  pDepthDepthStencil;		//深度バッファ用テクスチャ
+	ID3D11ShaderResourceView* pDepthTextureView;		//深度テクスチャをシェーダーに渡すやつ
 
 
 	struct SHADER_BUNDLE
@@ -181,6 +181,36 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	 }
 
 	 return S_OK;
+}
+
+HRESULT Direct3D::InitDepthTexture()
+{
+	HRESULT hr;
+
+	//深度テクスチャの描画先作成
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+	textureDesc.Width = screenWidth;
+	textureDesc.Height = screenHeight;
+	textureDesc.ArraySize = 1;
+	textureDesc.MipLevels = 1;
+	textureDesc.MiscFlags = 0;
+	textureDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	hr=pDevice->CreateTexture2D(&textureDesc, NULL, &pDepthTexture);
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"深度テクスチャ作成に失敗", L"エラー", MB_OK);
+		return hr;
+	}
+
+
+
+	return TRUE;
 }
 
 //シェーダー準備
