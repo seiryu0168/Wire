@@ -193,6 +193,8 @@ void Player::Initialize()
 //çXêV
 void Player::Update()
 {
+    Camera::SetPosition(XMVectorSet(0, 10, 0, 0));
+    Camera::SetTarget(XMVectorSet(0, 0, 0, 0));
     switch (playerStatus)
     {
     case Player::PLAYER_STATUS::LIVING:

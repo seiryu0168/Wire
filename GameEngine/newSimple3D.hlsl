@@ -3,6 +3,7 @@
 //───────────────────────────────────────
 Texture2D		g_texture		: register(t0);	//テクスチャー
 Texture2D		g_normalTexture : register(t2); //ノーマルマップ
+Texture2D		g_depthTexture	: register(t3); //深度テクスチャ
 SamplerState	g_sampler		: register(s0);	//サンプラー
 
 //───────────────────────────────────────
@@ -11,7 +12,7 @@ SamplerState	g_sampler		: register(s0);	//サンプラー
 //───────────────────────────────────────
 cbuffer global
 {
-	float4x4	g_matWVP;			// ワールド・ビュー・プロジェクションの合成行列
+	float4x4	g_matWVP;			//ワールド・ビュー・プロジェクションの合成行列
 	float4x4	g_matW;				//ワールド行列
 	float4x4	g_matWLP;			//ワールド、ライト、プロジェクションの合成行列
 	float4x4	g_matWLPT;			//ワールド、ライト、プロジェクション、テクスチャ座標の合成行列
@@ -32,14 +33,22 @@ cbuffer global
 //───────────────────────────────────────
 struct VS_OUT
 {
-	float4 pos		: SV_POSITION;	//位置
-	float4 normal	: TEXCOORD0;	//法線
-	float4 light	: TEXCOORD1;	//ライト
-	float4 eyeVector: TEXCOORD2;	//視線
-	float4 col		: COLOR0;		//カラー
-	float4 fog		: COLOR1;		//フォグ
-	float4 wPos     : COLOR2;		//
-	float2 uv		: TEXCOORD3;	//UV座標
+	float4 pos			: SV_POSITION;	//位置
+	float4 normal		: TEXCOORD0;	//法線
+	float4 light		: TEXCOORD1;	//ライト
+	float4 eyeVector	: TEXCOORD2;	//視線
+	float4 col			: COLOR0;		//カラー
+	//float4 fog			: COLOR1;		//フォグ
+	float4 wPos			: COLOR2;		//ワールド座標上の頂点位置
+	float4 lightTex		: TEXCOORD3;		//ライトから見たトキのテクスチャ点位置
+	float4 lightViewPos : TEXCOORD4;		//ライトから見た頂点座標
+	float2 uv			: TEXCOORD5;	//UV座標
+};
+
+struct VS_OUT_DEPTH
+{
+	float4 pos	 : SV_POSITION;
+	float4 depth : POSITION;
 };
 
 //───────────────────────────────────────
@@ -94,6 +103,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//outData.eyeVector.w = 0;
 	//outData.eyeVector = vecView;
 
+
+	outData.lightTex = mul(pos, g_matWLPT); 
+	outData.lightViewPos = mul(pos, g_matWLP);
 	//UV
 	outData.uv = uv;
 
@@ -162,10 +174,37 @@ float4 PS(VS_OUT inData) : SV_Target
 
 	//speculer.w = 0;
 	float4 outColor;
+
+
+
 	outColor = diffuse * shade + diffuse * ambient+speculer;
 	
+	/////////////影///////////
+	inData.lightTex /= inData.light.w;
+	//ライトから見た頂点のZ値と深度テクスチャの値を比べて、深度テクスチャの方が小さければ影とみなす
+	float depthValue = g_depthTexture.Sample(g_sampler, inData.lightTex).r;
+	float lightLength = inData.lightViewPos.z / inData.lightViewPos.w;
+	if (depthValue + 0.01f < lightLength)
+	{
+		outColor *= 0.6f;
+	}
+		outColor.a = diffuse.a;
 	//outColor = speculer;
 	return outColor;
 }
 
+VS_OUT_DEPTH VS_Depth(float4 pos : POSITION)
+{
+	VS_OUT_DEPTH outDepth;
+	outDepth.pos = mul(pos, g_matWVP);
+	outDepth.depth = outDepth.pos;
+	return outDepth;
+}
 
+float4 PS_Depth(VS_OUT_DEPTH inData) : SV_Target
+{
+	float4 color = float4(0,0,0,0);
+	color = inData.depth.z / inData.depth.w;
+	color.a = 1;
+	return color;
+}

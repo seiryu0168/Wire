@@ -12,17 +12,6 @@ SamplerState	g_sampler		: register(s0);	//サンプラー
 cbuffer global
 {
 	float4x4	g_matWVP;			// ワールド・ビュー・プロジェクションの合成行列
-	float4x4	g_matW;				//ワールド行列
-	float4x4    g_matNormal;		//法線変形行列(回転行列と拡大行列の逆行列)
-	float4		g_diffuseColor;		// ディフューズカラー（マテリアルの色）
-	float4		g_ambient;			//アンビエント
-	float4		g_speculer;			//スペキュラー
-	float4		g_lightDirection;	//ライトの向き
-	float4		g_cameraPosition;	//カメラの位置
-	float4      g_customColor;		//プログラム側で色を変える場合の変数
-	float		g_shininess;		//ハイライトの強さ
-	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
-	bool		g_isNormal;  //プログラム側で変える色
 };
 
 //───────────────────────────────────────
@@ -31,22 +20,19 @@ cbuffer global
 struct VS_OUT
 {
 	float4 pos		: SV_POSITION;	//位置
-	float4 normal	: TEXCOORD0;	//法線
-	float4 light	: TEXCOORD1;	//ライト
-	float4 eyeVector: TEXCOORD2;	//視線
-	float4 col		: COLOR0;		//カラー
-	float4 fog		: COLOR1;		//フォグ
-	float4 wPos     : COLOR2;		//
-	float2 uv		: TEXCOORD3;	//UV座標
+	float4 depth	: TEXCOORD0;
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS_Depth(/*float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, float4 tangent : TANGENT*/)
+VS_OUT VS_Depth(float4 pos : POSITION/*, float4 uv : TEXCOORD, float4 normal : NORMAL, float4 tangent : TANGENT */ )
 {
 	VS_OUT outData;
-	outData.pos = float4(0,0,0,0);
+	float4 WVPpos = mul(pos, g_matWVP);
+	outData.pos = WVPpos;
+	outData.depth = WVPpos;
+
 	return outData;
 }
 //───────────────────────────────────────
@@ -54,7 +40,10 @@ VS_OUT VS_Depth(/*float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : N
 //───────────────────────────────────────
 float4 PS_Depth(VS_OUT inData) : SV_Target
 {
-	return float4(0,0,0,0);
+	float4 color = float4(0,0,0,1);
+	color = (inData.pos.z*10.0f) / inData.pos.w;
+	color.a = 1;
+	return color;
 }
 
 

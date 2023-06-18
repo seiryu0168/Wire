@@ -146,16 +146,30 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				DebugUI::Log();
 				ImGui::Render();
 #endif 
+
+				if (Direct3D::IsUseShadow())
+				{
+					Direct3D::BeginShadowDraw();
+
+					//‰e•`‰æ
+					Direct3D::BeginDraw();
+					pRootJob->DrawSub();
+
+					pRootJob->SecondDrawSub();
+					pRootJob->ThirdDrawSub();
+
+					Direct3D::EndShadowDraw();
+				}
 				//•`‰æˆ—
 				Direct3D::BeginDraw();
 				//D2D::BeginDraw();
 				pRootJob->DrawSub();
 
 				pRootJob->SecondDrawSub();
+				pRootJob->ThirdDrawSub();
 
 				//D2D::EndDraw();
 				ImageManager::DrawUI();
-				pRootJob->ThirdDrawSub();
 #ifdef _DEBUG	
 				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif

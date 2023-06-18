@@ -35,7 +35,7 @@ void SearchUpItem::Initialize()
 	hModel_ = ModelManager::Load(ITEM_MODEL);
 	SetItemType(ITEM_TYPE::SEARCH);
 	pData_ = std::make_unique<EmitterData>();
-	PlayParticle(transform_.position_);
+	//PlayParticle(transform_.position_);
 }
 
 void SearchUpItem::Update()

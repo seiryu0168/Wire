@@ -17,6 +17,7 @@ enum class SHADER_TYPE
 	SHADER_EFF,
 	SHADER_OUTLINE,
 	SHADER_TOON,
+	SHADER_DEPTH,
 	SHADER_MAX,
 };
 enum classTARGET
@@ -67,9 +68,16 @@ namespace Direct3D
 
 	void SetShader(SHADER_TYPE type);
 	void SetBlendMode(BLEND_MODE mode);
+	void SetDepthRender();
+	bool IsUseShadow();
+	void SetShadowEnable(bool isUseShadow);
+	bool IsRenderShadow();
+	void BeginShadowDraw();
+	void EndShadowDraw();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	IDXGISwapChain* GetSwapChain();
+	ID3D11ShaderResourceView* GetDepthSRV();
 	int GetScreenWidth();
 	int GetScreenHeight();
 	void SetDepthBufferWriteEnable(bool isWrite);
