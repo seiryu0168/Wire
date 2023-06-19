@@ -348,7 +348,7 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 //				pMaterialList_[i].pNormalMap = nullptr;
 //			}
 //		}
-//	}
+//	}	
 //}
 
 void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
@@ -356,10 +356,10 @@ void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
 	if (Direct3D::IsUseShadow())
 	{
+		if (Direct3D::IsRenderShadow())
 			Direct3D::SetShader(SHADER_TYPE::SHADER_DEPTH);
-		//if (Direct3D::IsRenderShadow())
-		//else
-		//	Direct3D::SetShader(SHADER_TYPE::SHADER_3D);
+		else
+			Direct3D::SetShader(SHADER_TYPE::SHADER_3D);
 
 		for (int i = 0; i < parts_.size(); i++)
 		{

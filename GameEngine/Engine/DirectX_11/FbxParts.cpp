@@ -23,12 +23,7 @@ FbxParts::FbxParts()
 	pVertexBuffer_ = nullptr;
 	ppIndexBuffer_ = nullptr;
 	pConstantBuffer_ = nullptr;
-	pToonTexture_ = nullptr;
-	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, 0, 0),
-						  		  XMVectorSet(0, 0, 0, 0),
-							      XMVectorSet(0, 1, 0, 0));
-	
-	
+	pToonTexture_ = nullptr;	
 }
 
 FbxParts::~FbxParts()
@@ -82,7 +77,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 
 void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 {
-	lightView_ = XMMatrixLookAtLH(XMVectorSet(1, 70, 50, 0),
+	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 100, 10, 0),
 		XMVectorSet(0, 0, 0, 0),
 		XMVectorSet(0, 1, 0, 0));
 	transform.Calclation();	
@@ -96,7 +91,7 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix());
-		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * clipToUV_);
+		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * Direct3D::clipToUV);
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 
@@ -135,9 +130,11 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		Direct3D::pContext->PSSetShaderResources(1, 1, &pToonSRV);
 		if (Direct3D::IsRenderShadow() == false)
 		{
-		}
-			ID3D11ShaderResourceView* depthView = Direct3D::GetDepthSRV();
+			ID3D11ShaderResourceView* depthView = Direct3D::pDepthSRV;
+			ID3D11SamplerState* depthSampler = Direct3D::pDepthSampler;
+			Direct3D::pContext->PSSetSamplers(2, 1, &depthSampler);
 			Direct3D::pContext->PSSetShaderResources(3, 1, &depthView);
+		}
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//ÄŠJ
 		//Direct3D::pContext->Unmap(pConstantBuffer_, 0);//ÄŠJ
 

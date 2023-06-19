@@ -193,19 +193,19 @@ void Player::Initialize()
 //çXêV
 void Player::Update()
 {
-    Camera::SetPosition(XMVectorSet(0, 100, 10, 0));
-    Camera::SetTarget(XMVectorSet(0, 0, 0, 0));
-    //switch (playerStatus)
-    //{
-    //case Player::PLAYER_STATUS::LIVING:
-    //    LivingUpdate();
-    //    break;
-    //case Player::PLAYER_STATUS::DEATH:
-    //    DeathUpdate();
-    //    break;
-    //default:
-    //    break;
-    //}
+    //Camera::SetPosition(XMVectorSet(0, 100, 10, 0));
+    //Camera::SetTarget(XMVectorSet(0, 0, 0, 0));
+    switch (playerStatus)
+    {
+    case Player::PLAYER_STATUS::LIVING:
+        LivingUpdate();
+        break;
+    case Player::PLAYER_STATUS::DEATH:
+        DeathUpdate();
+        break;
+    default:
+        break;
+    }
 }
 
 //ï`âÊ

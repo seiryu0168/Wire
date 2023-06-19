@@ -23,7 +23,7 @@ void Camera::Initialize(float width,float height)
 	nearClipping = 0.1f;
 	farClipping = 1000.0f;
 	// プロジェクション行列
-		projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)width / (FLOAT)height, 0.1f, 1000.0f);
+		projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)width / (FLOAT)height, nearClipping, farClipping);
 }
 
 //更新

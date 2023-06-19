@@ -41,10 +41,13 @@ struct VS_OUT
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 VS_OUT VS_Depth(float4 pos : POSITION/*, float4 uv : TEXCOORD, float4 normal : NORMAL, float4 tangent : TANGENT */ )
 {
-	VS_OUT outData;
+	VS_OUT outData = (VS_OUT)0;
 	
-	outData.pos = mul(pos, g_matWVP);
+	outData.pos = mul(pos, g_matWLP);
 	outData.depth = outData.pos;
+	float w = outData.depth.w;
+	outData.depth = normalize(outData.depth);
+	outData.depth.w = w;
 
 	return outData;
 }
@@ -54,7 +57,7 @@ VS_OUT VS_Depth(float4 pos : POSITION/*, float4 uv : TEXCOORD, float4 normal : N
 float4 PS_Depth(VS_OUT inData) : SV_Target
 {
 	float4 color = float4(0,0,0,1);
-	color = inData.depth.z/inData.depth.w;
+	color = 1.0f-(inData.depth.z / inData.depth.w)*3;
 	color.a = 1;
 	return color;
 }

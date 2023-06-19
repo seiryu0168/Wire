@@ -5,6 +5,7 @@ Texture2D		g_texture		: register(t0);	//テクスチャー
 Texture2D		g_normalTexture : register(t2); //ノーマルマップ
 Texture2D		g_depthTexture	: register(t3); //深度テクスチャ
 SamplerState	g_sampler		: register(s0);	//サンプラー
+SamplerState	g_depthSampler  : register(s2); //深度テクスチャサンプラー
 
 //───────────────────────────────────────
  // コンスタントバッファ
@@ -15,7 +16,7 @@ cbuffer global
 	float4x4	g_matWVP;			//ワールド・ビュー・プロジェクションの合成行列
 	float4x4	g_matW;				//ワールド行列
 	float4x4	g_matWLP;			//ワールド、ライト、プロジェクションの合成行列
-	float4x4	g_matWLPT;			//ワールド、ライト、プロジェクション、テクスチャ座標の合成行列
+	float4x4	g_matWLPT;			//ワールド、ライト、プロジェクション、テクスチャ座標行列の合成行列
 	float4x4    g_matNormal;		//法線変形行列(回転行列と拡大行列の逆行列)
 	float4		g_diffuseColor;		// ディフューズカラー（マテリアルの色）
 	float4		g_ambient;			//アンビエント
@@ -180,11 +181,16 @@ float4 PS(VS_OUT inData) : SV_Target
 	outColor = diffuse * shade + diffuse * ambient+speculer;
 	
 	/////////////影///////////
-	inData.lightTex /= inData.light.w;
+
+	float2 texCoord;
+	texCoord.x = (1.0f + inData.lightViewPos.x / inData.lightViewPos.w) * 0.5f;
+	texCoord.y = (1.0f - inData.lightViewPos.y / inData.lightViewPos.w) * 0.5f;
+
+	inData.lightTex /= inData.lightTex.w;
 	//ライトから見た頂点のZ値と深度テクスチャの値を比べて、深度テクスチャの方が小さければ影とみなす
-	float depthValue = g_depthTexture.Sample(g_sampler, inData.lightTex).r;
+	float depthTextureValue = g_depthTexture.Sample(g_depthSampler, texCoord).x;
 	float lightLength = inData.lightViewPos.z / inData.lightViewPos.w;
-	if (depthValue + 0.01f < lightLength)
+	if (depthTextureValue +0.001  < lightLength)
 	{
 		outColor *= 0.6f;
 	}
@@ -195,7 +201,7 @@ float4 PS(VS_OUT inData) : SV_Target
 
 VS_OUT_DEPTH VS_Depth(float4 pos : POSITION)
 {
-	VS_OUT_DEPTH outDepth;
+	VS_OUT_DEPTH outDepth=(VS_OUT_DEPTH)0;
 	outDepth.pos = mul(pos, g_matWVP);
 	outDepth.depth = outDepth.pos;
 	return outDepth;

@@ -48,6 +48,7 @@ namespace Direct3D
 	extern ID3D11Device* pDevice;				//デバイス
 	extern ID3D11DeviceContext* pContext;		//デバイスコンテキスト
 	extern ID3D11ShaderResourceView* pDepthSRV;
+	extern ID3D11SamplerState* pDepthSampler;
 	extern XMMATRIX lightView;
 	extern XMMATRIX clipToUV;
 
