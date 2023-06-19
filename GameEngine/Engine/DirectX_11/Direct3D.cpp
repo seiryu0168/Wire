@@ -36,9 +36,10 @@ namespace Direct3D
 
 	int screenWidth;
 	int screenHeight;
+	XMMATRIX clipToUV;
 	bool useShadow = true;
-	//XMMATRIX lightView;
 	bool shadowRender;
+
 }
 
 //èâä˙âª
@@ -188,6 +189,16 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	 {
 		 return hr;
 	 }
+
+	XMFLOAT4X4 clip;
+	ZeroMemory(&clip, sizeof(XMFLOAT4X4));
+	clip._11 = 0.5;
+	clip._22 = -0.5;
+	clip._33 = 1;
+	clip._41 = 0.5;
+	clip._42 = 0.5;
+	clip._44 = 1;
+	clipToUV = XMLoadFloat4x4(&clip);	
 
 	 return S_OK;
 }

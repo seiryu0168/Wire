@@ -27,16 +27,7 @@ FbxParts::FbxParts()
 	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, 0, 0),
 						  		  XMVectorSet(0, 0, 0, 0),
 							      XMVectorSet(0, 1, 0, 0));
-	ZeroMemory(&clipToUV_, sizeof(XMMATRIX));
-	XMFLOAT4X4 clip;
-	ZeroMemory(&clip, sizeof(XMFLOAT4X4));
-	clip._11 = 0.5;
-	clip._22 = -0.5;
-	clip._33 = 1;
-	clip._41 = 0.5;
-	clip._42 = 0.5;
-	clip._44 = 1;
-	clipToUV_ = XMLoadFloat4x4(&clip);
+	
 	
 }
 
@@ -91,7 +82,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 
 void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 {
-	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, 0, 0),
+	lightView_ = XMMatrixLookAtLH(XMVectorSet(1, 70, 50, 0),
 		XMVectorSet(0, 0, 0, 0),
 		XMVectorSet(0, 1, 0, 0));
 	transform.Calclation();	
@@ -171,8 +162,6 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 
 void FbxParts::DrawShadow(Transform& transform)
 {
-	//Camera::SetPosition(XMVectorSet(0, 10, -50, 0));
-	//Camera::SetTarget(XMVectorSet(0, 0, 0, 0));
 	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, -50, 0),
 		XMVectorSet(0, 0, 0, 0),
 		XMVectorSet(0, 1, 0, 0));
@@ -187,7 +176,7 @@ void FbxParts::DrawShadow(Transform& transform)
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix());
-		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * clipToUV_);
+		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * Direct3D::clipToUV);
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 
@@ -228,7 +217,7 @@ void FbxParts::DrawShadow(Transform& transform)
 
 		if (Direct3D::IsRenderShadow()==false)
 		{
-			ID3D11ShaderResourceView* depthView = Direct3D::GetDepthSRV();
+			ID3D11ShaderResourceView* depthView = Direct3D::pDepthSRV;
 			Direct3D::pContext->PSSetShaderResources(3, 1, &depthView);
 		}
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);//ÄŠJ

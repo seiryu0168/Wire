@@ -46,7 +46,7 @@ void Stage::FixedUpdate()
 void Stage::Draw()
 {
 	ModelManager::SetTransform(hModel_, transform_);
-	ModelManager::Draw(hModel_);
+	//ModelManager::Draw(hModel_);
 }
 
 //ŠJ•ú
