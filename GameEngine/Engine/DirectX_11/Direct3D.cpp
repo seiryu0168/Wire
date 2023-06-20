@@ -38,6 +38,7 @@ namespace Direct3D
 	int screenWidth;
 	int screenHeight;
 	XMMATRIX clipToUV;
+	XMMATRIX lightView;
 	ID3D11SamplerState* pDepthSampler;
 	bool useShadow = true;
 	bool shadowRender;
@@ -294,13 +295,18 @@ HRESULT Direct3D::InitDepthTexture()
 	depthVp.TopLeftX = 0;	//左
 	depthVp.TopLeftY = 0;	//上
 
-	//深度テクスチャ用ビューポート作成
+	//深度テクスチャ用サンプラー作成
 	D3D11_SAMPLER_DESC  depthSmplDesc;
 	ZeroMemory(&depthSmplDesc, sizeof(D3D11_SAMPLER_DESC));
 	depthSmplDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	depthSmplDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	depthSmplDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	depthSmplDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+	lightView = XMMatrixLookAtLH(XMVectorSet(0, 600, 0, 0),
+		XMVectorSet(0, 0,-1, 0),
+		XMVectorSet(0, 1, 0, 0));
+
 	hr = Direct3D::pDevice->CreateSamplerState(&depthSmplDesc, &pDepthSampler);
 	if (FAILED(hr))
 	{

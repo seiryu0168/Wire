@@ -329,6 +329,8 @@ void LineParticle::SetIndex()
 
 void LineParticle::Draw(Transform* transform)
 {
+	if (Direct3D::IsRenderShadow())
+		return;
 	HRESULT hr;
 	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
 	CONSTANT_BUFFER cb;

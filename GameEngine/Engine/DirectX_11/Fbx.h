@@ -17,13 +17,13 @@ class Texture;
 
 struct RayCastData
 {
-	XMFLOAT3 start;//レイの発射位置
-	XMFLOAT3 dir;//レイの発射方向
+	XMFLOAT3 start;	//レイの発射位置
+	XMFLOAT3 dir;	//レイの発射方向
 	XMVECTOR hitPos;//当たった位置
 	XMVECTOR normal;//当たった位置の法線
-	float dist;//当たった距離
-	float angle;//当たった角度
-	BOOL hit;//当たったかどうか
+	float dist;		//当たった距離
+	float angle;	//当たった角度
+	BOOL hit;		//当たったかどうか
 	float distLimit;//レイの有効距離
 	class hitData
 	{
@@ -68,8 +68,8 @@ class Fbx
 	float animSpeed_;
 	int startFrame_;
 	int endFrame_;
-	bool useShadow_;
 	std::string modelName_;
+	bool useShadow_;	//影使うかどうか
 	HRESULT CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList);
 public:
 

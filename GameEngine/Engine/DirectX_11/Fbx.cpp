@@ -10,6 +10,7 @@ Fbx::Fbx()
 	animSpeed_ = 0;
 	pFbxManager_ = nullptr;
 	pFbxScene_ = nullptr;
+	useShadow_ = true;
 }
 Fbx::~Fbx()
 {
@@ -354,7 +355,7 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 {
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
-	if (Direct3D::IsUseShadow())
+	if (useShadow_)
 	{
 		if (Direct3D::IsRenderShadow())
 			Direct3D::SetShader(SHADER_TYPE::SHADER_DEPTH);

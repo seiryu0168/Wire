@@ -404,7 +404,7 @@ void Player::CameraMove(RayCastData ray)
 
     //ƒJƒƒ‰‚Ì‰æŠp
     float AOVRate = max(NORMAL_AOV,flyTime_ * ACCEL_AOV);
-    Camera::SetAOV(XMConvertToRadians(AOVRate));
+    //Camera::SetAOV(XMConvertToRadians(AOVRate));
     angleX_ += -Input::GetRStick_Y() * rotateSpeed_;
     angleY_ += Input::GetRStick_X() * rotateSpeed_;
     

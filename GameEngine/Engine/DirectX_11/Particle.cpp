@@ -2,7 +2,8 @@
 #include"../GameObject/Camera.h"
 
 Particle::Particle(GameObject* parent)
-	:GameObject(parent,"Particle")
+	:GameObject(parent,"Particle"),
+	useShadow_(false)
 {
 
 }
@@ -183,6 +184,10 @@ int Particle::ParticleStart(EmitterData data)
 	return handle;
 }
 
+void Particle::ShadowEnable(bool isUse)
+{
+}
+
 void Particle::KillEmitter(int hEmitter)
 {
 	for (auto itr : emitterList_)
@@ -202,6 +207,8 @@ void Particle::FixedUpdate()
 //•`‰æ
 void Particle::Draw()
 {
+	if (useShadow_==false&&Direct3D::IsRenderShadow())
+		return;
 	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_ADD);
 

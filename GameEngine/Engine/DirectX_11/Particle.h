@@ -75,6 +75,8 @@ private:
     std::list<Emitter*>      emitterList_;
     std::list<ParticleData*> particleList_;
 
+    bool useShadow_;
+
 public:
     Particle(GameObject* parent);
 
@@ -96,6 +98,7 @@ public:
     //パーティクル発生
     int ParticleStart(EmitterData data);
     
+    void ShadowEnable(bool isUse);
     //エミッター消去
     void KillEmitter(int hEmitter);
 

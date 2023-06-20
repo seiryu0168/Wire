@@ -17,7 +17,7 @@ namespace ModelManager
 		float animSpeed_;
 		int	  startFrame_;
 		int   endFrame_;
-
+		bool  useShadow_;
 		ModelData()
 		{
 			pfbx_ = nullptr;
@@ -332,6 +332,15 @@ void ModelManager::DeleteModelNum(int modelNum)
 		}
 		itr++;
 	}
+}
+
+void ModelManager::ShadowEnable(int modelNum, bool useShadow)
+{
+	if (modelNum < 0 || modelNum >= modelData_.size() || modelData_[modelNum] == nullptr)
+	{
+		return;
+	}
+	modelData_[modelNum]->useShadow_ = useShadow;
 }
 
 void ModelManager::AllDeleteModelNum()

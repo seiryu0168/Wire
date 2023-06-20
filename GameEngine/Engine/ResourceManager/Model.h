@@ -53,6 +53,7 @@ namespace ModelManager
 	/// </summary>
 	/// <param name="modelNum"></param>
 	void DeleteModelNum(int modelNum);
+	void ShadowEnable(int modelNum,bool useShadow);
 	void AllDeleteModelNum();
 	Texture* GetNormalMap();
 	int AddMComponentList(ModelComponent* mComp);
