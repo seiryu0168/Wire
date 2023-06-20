@@ -860,11 +860,10 @@ void Direct3D::BeginDraw()
 	EngineTime::SetTime();
 	//画面をクリア
 		//背景色
-		float clearColor[4] = { 0.1f,0.5f,0.5f,1.0f };
-		pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthDepthStencilView);
-		//レンダーターゲットビューをクリア
-		pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
-
+	float clearColor[4] = { 0.1f,0.5f,0.5f,1.0f };
+	pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthDepthStencilView);
+	//レンダーターゲットビューをクリア
+	pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
 	//深度バッファクリア
 	pContext->ClearDepthStencilView(pDepthDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	pContext->RSSetViewports(1, &vp);
