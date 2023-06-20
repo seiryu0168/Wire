@@ -186,11 +186,12 @@ float4 PS(VS_OUT inData) : SV_Target
 	texCoord.x = (1.0f + inData.lightViewPos.x / inData.lightViewPos.w) * 0.5f;
 	texCoord.y = (1.0f - inData.lightViewPos.y / inData.lightViewPos.w) * 0.5f;
 
+
 	inData.lightTex /= inData.lightTex.w;
 	//ライトから見た頂点のZ値と深度テクスチャの値を比べて、深度テクスチャの方が小さければ影とみなす
-	float depthTextureValue = g_depthTexture.Sample(g_depthSampler, texCoord).x;
-	float lightLength = inData.lightViewPos.z / inData.lightViewPos.w;
-	if (depthTextureValue +0.001  < lightLength)
+	float depthTextureValue = g_depthTexture.Sample(g_depthSampler, inData.lightTex).r;
+	float lightLength = normalize(inData.lightViewPos.z);// / inData.lightViewPos.w;
+	if (depthTextureValue +0.000001  < lightLength)
 	{
 		outColor *= 0.6f;
 	}

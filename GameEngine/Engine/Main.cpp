@@ -152,7 +152,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 					Direct3D::BeginShadowDraw();
 
 					//‰e•`‰æ
-					Direct3D::BeginDraw();
 					pRootJob->DrawSub();
 
 					pRootJob->SecondDrawSub();

@@ -294,6 +294,7 @@ HRESULT Direct3D::InitDepthTexture()
 	depthVp.TopLeftX = 0;	//左
 	depthVp.TopLeftY = 0;	//上
 
+	//深度テクスチャ用ビューポート作成
 	D3D11_SAMPLER_DESC  depthSmplDesc;
 	ZeroMemory(&depthSmplDesc, sizeof(D3D11_SAMPLER_DESC));
 	depthSmplDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

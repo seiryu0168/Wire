@@ -77,7 +77,7 @@ HRESULT FbxParts::Init(FbxNode* pNode)
 
 void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 {
-	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 100, 10, 0),
+	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 1000, 1, 0),
 		XMVectorSet(0, 0, 0, 0),
 		XMVectorSet(0, 1, 0, 0));
 	transform.Calclation();	
