@@ -20,6 +20,7 @@ void Pointer::Initialize()
 	//SphereCollider* pCollision = new SphereCollider({ 0,0,0 }, 3);
 	//AddCollider(pCollision);
 	hModel_ = ModelManager::Load("Assets\\Model\\Mark.fbx");
+	ModelManager::ShadowEnable(hModel_, false);
 	assert(hModel_ >= 0);
 }
 

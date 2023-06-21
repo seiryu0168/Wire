@@ -4,7 +4,7 @@
 
 namespace
 {
-	static const std::string ENEMY_MODEL = "Assets\\Model\\EnemyTurret.fbx";
+	static const std::string ENEMY_MODEL = "Assets\\Model\\EnemyTurret_Maya.fbx";
 }
 EnemyTutorial::EnemyTutorial(GameObject* parent)
 	:Enemy(parent,"TutorialEnemy"),

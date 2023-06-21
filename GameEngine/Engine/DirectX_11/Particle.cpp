@@ -11,7 +11,7 @@ Particle::Particle(GameObject* parent)
 //デストラクタ
 Particle::~Particle()
 {
-//	Release();
+	Release();
 }
 
 //初期化
@@ -234,5 +234,4 @@ void Particle::Release()
 	{
 		SAFE_DELETE(*itr);
 	}
-
 }

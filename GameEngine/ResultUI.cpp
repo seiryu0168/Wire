@@ -72,9 +72,7 @@ void ResultUI::Initialize()
 	{
 		hPictResult_ = ImageManager::Load(GAMEOVER_IMAGE);
 	}
-	//
-	ImageManager::SetUIList(hPictResult_);
-	assert(hPictResult_ >= 0);
+	
 	LoadImageFile();
 }
 
@@ -182,6 +180,7 @@ void ResultUI::ReadFile(std::string fileName)
 
 void ResultUI::ThirdDraw()
 {
+	ImageManager::Draw(hPictResult_);
 	for (auto& i : buttonList_)
 	{
 		i.buttonText_->Draw();

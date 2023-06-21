@@ -30,12 +30,15 @@ void DebugUI::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* 
 void DebugUI::Debug(GameObject* object)
 {
 	ImGui::Begin("Debug");
+	bool useShadow = Direct3D::IsUseShadow();
+	ImGui::Checkbox("UseShadow", &useShadow);
+	Direct3D::SetShadowEnable(useShadow);
 	ObjectCount(*(object->GetChildList()->begin()));
 	std::string count = std::to_string(objectCount_);
 	PrintProcessMemory();
 	
 	ImGui::Text(count.c_str());
-	ImGui::Text(object->GetObjectName().c_str());
+	ImGui::Text(object->GetObjectName().c_str());	
 	objectCount_ = 0;
 	ImGui::End();
 	
@@ -44,6 +47,7 @@ void DebugUI::Debug(GameObject* object)
 void DebugUI::DebugLog(GameObject* object, std::string message)
 {
 	debugData* pData = new debugData;
+	
 	pData->objectName_ = object->GetObjectName();
 	pData->message_ = message;
 	debugLogs.push_back(pData);

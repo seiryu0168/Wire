@@ -11,8 +11,10 @@ SamplerState	g_sampler		: register(s0);	//サンプラー
 //───────────────────────────────────────
 cbuffer global
 {
-	float4x4	g_matWVP;			// ワールド・ビュー・プロジェクションの合成行列
+	float4x4	g_matWVP;			//ワールド・ビュー・プロジェクションの合成行列
 	float4x4	g_matW;				//ワールド行列
+	float4x4	g_matWLP;			//ワールド、ライト、プロジェクションの合成行列
+	float4x4	g_matWLPT;			//ワールド、ライト、プロジェクション、テクスチャ座標行列の合成行列
 	float4x4    g_matNormal;		//法線変形行列(回転行列と拡大行列の逆行列)
 	float4		g_diffuseColor;		// ディフューズカラー（マテリアルの色）
 	float4		g_ambient;			//アンビエント
@@ -22,6 +24,7 @@ cbuffer global
 	float4      g_customColor;		//プログラム側で色を変える場合の変数
 	float		g_shininess;		//ハイライトの強さ
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
+	bool		g_useShadow;		//影使うかどうか
 	bool		g_isNormal;  //プログラム側で変える色
 };
 

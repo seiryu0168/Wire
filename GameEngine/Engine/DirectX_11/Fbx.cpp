@@ -82,6 +82,7 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 		//パーツインスタンス作って追加
 		FbxParts* pParts = new FbxParts;
 		hr = pParts->Init(pNode);
+		pParts->SetShadowEnable(useShadow_);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -355,7 +356,7 @@ HRESULT Fbx::CheckNode(FbxNode* pNode, std::vector<FbxParts*>* pPartsList)
 void Fbx::Draw(Transform& transform, SHADER_TYPE shaderType,int frame)
 {
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_DEFAULT);
-	if (useShadow_)
+	if (useShadow_&&Direct3D::IsUseShadow)
 	{
 		if (Direct3D::IsRenderShadow())
 			Direct3D::SetShader(SHADER_TYPE::SHADER_DEPTH);

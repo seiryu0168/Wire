@@ -22,8 +22,6 @@ namespace Direct3D
 	ID3D11DepthStencilView*	  pDepthDepthStencilView;	//ステンシルバッファ
 	ID3D11Texture2D*		  pDepthDepthStencil;		//深度バッファ用テクスチャ
 	ID3D11ShaderResourceView* pDepthSRV;		//深度テクスチャをシェーダーに渡すやつ
-	ID3D11VertexShader*	      pDepthVertexShader;		//影用頂点シェーダー
-	ID3D11PixelShader*		  pDepthPixelShader;		//影用ピクセルシェーダー
 	D3D11_VIEWPORT depthVp;
 
 	struct SHADER_BUNDLE
@@ -192,7 +190,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	 {
 		 return hr;
 	 }
-
+	 useShadow = false;
 	
 
 	 return S_OK;
@@ -280,12 +278,12 @@ HRESULT Direct3D::InitDepthTexture()
 
 	XMFLOAT4X4 clip;
 	ZeroMemory(&clip, sizeof(XMFLOAT4X4));
-	clip._11 = 0.5;
-	clip._22 = -0.5;
-	clip._33 = 1;
-	clip._41 = 0.5;
-	clip._42 = 0.5;
-	clip._44 = 1;
+	clip._11 = 0.5f;
+	clip._22 = -0.5f;
+	clip._33 = 1.0f;
+	clip._41 = 0.5f;
+	clip._42 = 0.5f;
+	clip._44 = 1.0f;
 	clipToUV = XMLoadFloat4x4(&clip);
 
 	depthVp.Width = (float)screenWidth;	//幅
@@ -303,8 +301,8 @@ HRESULT Direct3D::InitDepthTexture()
 	depthSmplDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	depthSmplDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-	lightView = XMMatrixLookAtLH(XMVectorSet(0, 600, 0, 0),
-		XMVectorSet(0, 0,-1, 0),
+	lightView = XMMatrixLookAtLH(XMVectorSet(10, 600, 0, 0),
+		XMVectorSet(0, 0,-50, 0),
 		XMVectorSet(0, 1, 0, 0));
 
 	hr = Direct3D::pDevice->CreateSamplerState(&depthSmplDesc, &pDepthSampler);
@@ -844,9 +842,9 @@ void Direct3D::SetDepthBufferWriteEnable(bool isWrite)
 void Direct3D::BeginShadowDraw()
 {
 		float color[4] = { 0,0,0,0 };
-	pContext->OMSetRenderTargets(1, &pDepthRenderTargetView, pDepthStencilView);
+	pContext->OMSetRenderTargets(1, &pDepthRenderTargetView, pDepthDepthStencilView);
 	pContext->ClearRenderTargetView(pDepthRenderTargetView, color);
-	pContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	pContext->ClearDepthStencilView(pDepthDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	pContext->RSSetViewports(1,&depthVp);
 	shadowRender = true;
 }
@@ -861,11 +859,11 @@ void Direct3D::BeginDraw()
 	//画面をクリア
 		//背景色
 	float clearColor[4] = { 0.1f,0.5f,0.5f,1.0f };
-	pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthDepthStencilView);
+	pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 	//レンダーターゲットビューをクリア
 	pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
 	//深度バッファクリア
-	pContext->ClearDepthStencilView(pDepthDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	pContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	pContext->RSSetViewports(1, &vp);
 }
 

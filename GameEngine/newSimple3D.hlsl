@@ -26,6 +26,7 @@ cbuffer global
 	float4      g_customColor;		//プログラム側で色を変える場合の変数
 	float		g_shininess;		//ハイライトの強さ
 	bool		g_isTexture;		// テクスチャ貼ってあるかどうか
+	bool		g_useShadow;		//影使うかどうか
 	bool		g_isNormal;  //プログラム側で変える色
 };
 
@@ -182,17 +183,11 @@ float4 PS(VS_OUT inData) : SV_Target
 	
 	/////////////影///////////
 
-	float2 texCoord;
-	texCoord.x = (1.0f + inData.lightViewPos.x / inData.lightViewPos.w) * 0.5f;
-	texCoord.y = (1.0f - inData.lightViewPos.y / inData.lightViewPos.w) * 0.5f;
-
-
 	inData.lightTex /= inData.lightTex.w;
 	//ライトから見た頂点のZ値と深度テクスチャの値を比べて、深度テクスチャの方が小さければ影とみなす
 	float depthTextureValue = g_depthTexture.Sample(g_depthSampler, inData.lightTex).r;
-	float w = inData.lightViewPos.w;
 	float lightLength = inData.lightViewPos.z / inData.lightViewPos.w;
-	if (depthTextureValue +0.00001  < lightLength)
+	if (g_useShadow&&(depthTextureValue+0.001  < lightLength))
 	{
 		outColor *= 0.6f;
 	}

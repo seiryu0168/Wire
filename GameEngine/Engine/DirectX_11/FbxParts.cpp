@@ -100,6 +100,7 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.shininess = pMaterialList_[i].shininess;
 		cb.lightDirection = { 0,-1,0,0 };
 		cb.customColor = lineColor;
+		cb.useShadow = Direct3D::IsUseShadow()&&useShadow_;
 		XMVECTOR a = pVertices_[i].tangent;
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); //GPUからのデータアクセスを止める
@@ -285,6 +286,11 @@ void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineCo
 		Direct3D::pContext->Unmap(pVertexBuffer_, 0);
 	}
 	Draw(transform,lineColor);
+}
+
+void FbxParts::SetShadowEnable(bool useShadow)
+{
+	useShadow_ = useShadow;
 }
 
 

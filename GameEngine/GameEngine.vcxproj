@@ -349,6 +349,7 @@
     </FxCompile>
     <FxCompile Include="DepthShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_Depth</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS_Depth</EntryPointName>
     </FxCompile>
     <FxCompile Include="newSimple3D.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>

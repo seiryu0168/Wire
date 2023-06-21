@@ -38,6 +38,7 @@ private:
 		XMFLOAT4 customColor;       //プログラム側で色を変えたい場合
 		FLOAT	 shininess;			//ハイライトの強さ
 		BOOL	 isTexture;			//テクスチャが貼ってあるかどうか
+		BOOL	 useShadow;
 		BOOL     isNormal;	//ノーマルマップがあるかどうか
 	};
 
@@ -96,6 +97,9 @@ private:
 	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);
 	HRESULT CreateConstantBuffer();
 	HRESULT InitSkelton(FbxMesh* pMesh);
+
+	bool    useShadow_;
+
 	void InitMaterial(fbxsdk::FbxNode* pNode);
 	void CalcTangent(VERTEX& vertex0, const VERTEX& vertex1, const VERTEX& vertex2);
 public:
@@ -107,6 +111,7 @@ public:
 	void DrawShadow(Transform& transform);
 	void DrawSkinAnime(Transform& transform, FbxTime time, XMFLOAT4 lineColor = { 0,0,0,0 });
 	//void DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene);
+	void SetShadowEnable(bool useShadow);
 	FbxSkin* GetSkinInfo() { return pSkinInfo_; }
 	bool GetBonePosition(std::string boneName, XMFLOAT3* position);
 	void RayCast(RayCastData& rayData, Transform& transform);

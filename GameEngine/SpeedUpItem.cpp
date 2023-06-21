@@ -33,7 +33,7 @@ void SpeedUpItem::Initialize()
 	//アイテムタイプ設定
 	SetItemType(ITEM_TYPE::SPEED);
 	pData_ = std::make_unique<EmitterData>();
-	//PlayParticle(transform_.position_);
+	PlayParticle(transform_.position_);
 }
 
 void SpeedUpItem::Update()
