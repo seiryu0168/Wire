@@ -306,10 +306,10 @@ HRESULT Direct3D::InitDepthTexture()
 	depthSmplDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	depthSmplDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-	lightViewMatrix = XMMatrixLookAtLH(XMVectorSet(0, 800, 0, 0),
-		XMVectorSet(0, 0,50, 0),
+	lightViewMatrix = XMMatrixLookAtLH(XMVectorSet(50, 800, -50, 0),
+		XMVectorSet(0, 0,0, 0),
 		XMVectorSet(0, 1, 0, 0));
-	lightPrjMatrix_= XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)screenWidth / (FLOAT)screenHeight,600, 1000);
+	lightPrjMatrix_= XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)screenWidth / (FLOAT)screenHeight,700, 1000);
 
 	hr = Direct3D::pDevice->CreateSamplerState(&depthSmplDesc, &pDepthSampler);
 	if (FAILED(hr))
