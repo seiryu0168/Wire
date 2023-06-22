@@ -35,8 +35,9 @@ namespace Direct3D
 	D3D11_VIEWPORT vp;
 	int screenWidth;
 	int screenHeight;
-	XMMATRIX clipToUV;
-	XMMATRIX lightView;
+	XMMATRIX clipToUVMatrix;
+	XMMATRIX lightViewMatrix;
+	XMMATRIX lightPrjMatrix_;
 	ID3D11SamplerState* pDepthSampler;
 	bool useShadow = true;
 	bool shadowRender;
@@ -278,13 +279,17 @@ HRESULT Direct3D::InitDepthTexture()
 
 	XMFLOAT4X4 clip;
 	ZeroMemory(&clip, sizeof(XMFLOAT4X4));
-	clip._11 = 0.5f;
+	clip = { 0.5,     0,   0,   0,
+			   0,  -0.5,   0,   0,
+			   0,     0, 1.0,   0,
+			 0.5,   0.5,   0, 1.0 };
+	/*clip._11 = 0.5f;
 	clip._22 = -0.5f;
 	clip._33 = 1.0f;
 	clip._41 = 0.5f;
 	clip._42 = 0.5f;
-	clip._44 = 1.0f;
-	clipToUV = XMLoadFloat4x4(&clip);
+	clip._44 = 1.0f;*/
+	clipToUVMatrix = XMLoadFloat4x4(&clip);
 
 	depthVp.Width = (float)screenWidth;	//•
 	depthVp.Height = (float)screenHeight;//‚‚³
@@ -301,9 +306,10 @@ HRESULT Direct3D::InitDepthTexture()
 	depthSmplDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	depthSmplDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-	lightView = XMMatrixLookAtLH(XMVectorSet(10, 600, 0, 0),
-		XMVectorSet(0, 0,-50, 0),
+	lightViewMatrix = XMMatrixLookAtLH(XMVectorSet(0, 800, 0, 0),
+		XMVectorSet(0, 0,50, 0),
 		XMVectorSet(0, 1, 0, 0));
+	lightPrjMatrix_= XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)screenWidth / (FLOAT)screenHeight,600, 1000);
 
 	hr = Direct3D::pDevice->CreateSamplerState(&depthSmplDesc, &pDepthSampler);
 	if (FAILED(hr))

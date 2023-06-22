@@ -45,9 +45,9 @@ VS_OUT VS_Depth(float4 pos : POSITION/*, float4 uv : TEXCOORD, float4 normal : N
 	
 	outData.pos = mul(pos, g_matWLP);
 	outData.depth = outData.pos;
-	float w = outData.depth.w;
-	outData.depth = normalize(outData.depth);
-	outData.depth.w = w;
+	//float w = outData.depth.w;
+	//outData.depth = normalize(outData.depth);
+	//outData.depth.w = w;
 
 	return outData;
 }
@@ -57,7 +57,7 @@ VS_OUT VS_Depth(float4 pos : POSITION/*, float4 uv : TEXCOORD, float4 normal : N
 float4 PS_Depth(VS_OUT inData) : SV_Target
 {
 	float4 color = float4(0,0,0,1);
-	color = 1.0f-(inData.depth.z / inData.depth.w)*3;
+	color = inData.depth.z / inData.depth.w;
 	color.a = 1;
 	return color;
 }

@@ -87,8 +87,8 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightView * Camera::GetProjectionMatrix());
-		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightView * Camera::GetProjectionMatrix() * Direct3D::clipToUV);
+		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightViewMatrix * Direct3D::lightPrjMatrix_);
+		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightViewMatrix * Direct3D::lightPrjMatrix_ * Direct3D::clipToUVMatrix);
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 
@@ -171,7 +171,7 @@ void FbxParts::DrawShadow(Transform& transform)
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix());
-		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * Direct3D::clipToUV);
+		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * Direct3D::clipToUVMatrix);
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 

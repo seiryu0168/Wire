@@ -187,7 +187,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	//ライトから見た頂点のZ値と深度テクスチャの値を比べて、深度テクスチャの方が小さければ影とみなす
 	float depthTextureValue = g_depthTexture.Sample(g_depthSampler, inData.lightTex).r;
 	float lightLength = inData.lightViewPos.z / inData.lightViewPos.w;
-	if (g_useShadow&&(depthTextureValue+0.00001  < lightLength))
+	if (g_useShadow&&(depthTextureValue+0.01  < lightLength))
 	{
 		outColor *= 0.6f;
 	}

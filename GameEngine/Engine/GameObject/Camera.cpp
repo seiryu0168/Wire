@@ -20,7 +20,7 @@ void Camera::Initialize(float width,float height)
 	upVector_ = XMVectorSet(0, 1, 0, 0);
 	angleOfView = XM_PIDIV4;
 	aspectRadio = (FLOAT)width / (FLOAT)height;
-	nearClipping = 0.1f;
+	nearClipping = 0.5f;
 	farClipping = 1000.0f;
 	// プロジェクション行列
 		projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)width / (FLOAT)height, nearClipping, farClipping);
