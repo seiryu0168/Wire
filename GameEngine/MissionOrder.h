@@ -22,6 +22,7 @@ public:
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
+	void ThirdDraw() override;
 	/// <summary>
 	/// テキストをだんだん薄くする
 	/// </summary>

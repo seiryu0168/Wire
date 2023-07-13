@@ -32,7 +32,7 @@ namespace
     static const float DELTA_AIM_TIME = 0.05f;
     //‘Ì—Í‚Ì’è”
     static const float LIFE_OFFSET_X = -1800.0f;
-    static const float LIFE_OFFSET_Y = -900.0f;
+    static const float LIFE_OFFSET_Y = -1000.0f;
     static const int   LIFE_INTERVAL = 105;
     static const XMFLOAT3 LIFE_SIZE = { 0.2f,0.2f,1.0f };
     //ƒJƒƒ‰‚Ì’è”
@@ -189,7 +189,7 @@ void Player::Initialize()
         int hPict_ = ImageManager::Load(LIFE_IMAGE);
         ImageManager::SetImagePos(hPict_, { LIFE_OFFSET_X+ LIFE_INTERVAL *i, LIFE_OFFSET_Y, 0 });
         ImageManager::SetImageSize(hPict_, LIFE_SIZE);
-        ImageManager::SetUIList(hPict_);
+        //ImageManager::SetUIList(hPict_);
         life_.push_back(hPict_);
     }
 }
@@ -233,6 +233,12 @@ void Player::SecondDraw()
             pPointerLine_->SetColor(LINECOLOR_DEFAULT);
         pPointerLine_->Draw(&transform_);
     }
+}
+
+void Player::ThirdDraw()
+{
+    for (int i : life_)
+        ImageManager::Draw(i);
 }
 
 void Player::LivingUpdate()

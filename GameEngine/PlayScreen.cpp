@@ -51,7 +51,7 @@ void PlayScreen::Initialize()
 	ImageManager::SetImagePos(hPict_[3], { 1410,10,0 });
 	for (int i : hPict_)
 	{
-		ImageManager::SetUIList(i);
+		ImageManager::SetAlpha(i,0);
 	}
 	ObjectSetter* p = (ObjectSetter*)FindObject("ObjectSetter");
 }
@@ -61,6 +61,13 @@ void PlayScreen::Draw()
 	if (((Player*)GetParent())->GetLife() <= LOW_HP)
 	{
 		ImageManager::Draw(hLowHPPict_);
+	}
+}
+void PlayScreen::SecondDraw()
+{
+	for (int i : hPict_)
+	{
+		ImageManager::Draw(i);
 	}
 }
 void PlayScreen::ThirdDraw()

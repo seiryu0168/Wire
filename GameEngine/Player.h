@@ -112,6 +112,7 @@ public:
     void Draw() override;
 
     void SecondDraw() override;
+    void ThirdDraw() override;
 
     void LivingUpdate();
     void DeathUpdate();

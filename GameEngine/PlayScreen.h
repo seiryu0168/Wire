@@ -15,6 +15,7 @@ public:
 	~PlayScreen();
 	void Initialize() override;
 	void Draw() override;
+	void SecondDraw() override;
 	void ThirdDraw() override;
 	void Release() override;
 	void SetDir(XMFLOAT2 dir);

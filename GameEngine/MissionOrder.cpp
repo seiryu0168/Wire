@@ -65,6 +65,10 @@ void MissionOrder::Update()
 
 void MissionOrder::Draw()
 {
+}
+
+void MissionOrder::ThirdDraw()
+{
 	ImageManager::Draw(hPict_);
 	for (auto& i : textList)
 	{
