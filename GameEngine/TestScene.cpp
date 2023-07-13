@@ -3,7 +3,8 @@
 //コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
 TestScene::TestScene(GameObject* parent)
-	:SceneBase(parent,"TestScene")
+	:SceneBase(parent,"TestScene"),
+	pLine_(nullptr)
 {
 
 }

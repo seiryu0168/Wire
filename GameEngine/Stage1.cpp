@@ -8,7 +8,8 @@ namespace
 //コンストラクタ
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage1"),
-	hModel_(-1)
+	hModel_(-1),
+	stageNum_(0)
 {
 	stageTable_.Initialize(FILE_NAME);
 }

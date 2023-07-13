@@ -20,6 +20,7 @@ namespace ModelManager
 		bool  useShadow_;
 		ModelData()
 		{
+			useShadow_ = false;
 			pfbx_ = nullptr;
 			nowFrame_ = 0;
 			animSpeed_ = 0;

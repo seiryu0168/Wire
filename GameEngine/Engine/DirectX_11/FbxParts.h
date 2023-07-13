@@ -90,9 +90,6 @@ private:
 	VERTEX* pVertices_;
 	Texture* pToonTexture_;
 
-	XMMATRIX lightView_;
-	XMMATRIX clipToUV_;
-
 	HRESULT InitVertex(fbxsdk::FbxMesh* mesh);
 	HRESULT InitIndex(fbxsdk::FbxMesh* mesh);
 	HRESULT CreateConstantBuffer();

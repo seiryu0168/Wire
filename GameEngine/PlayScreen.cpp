@@ -17,14 +17,13 @@ namespace
 }
 PlayScreen::PlayScreen(GameObject* parent)
 	:GameObject(parent,"PlayScreen"),
-	pUI(nullptr),
-	hLowHPPict_(-1)
+	hLowHPPict_(-1),
+	pUI(nullptr)
 {
-	for (int i : hPict_)
-	{
-		i = -1;
-
-	}
+	hPict_[0] = -1;
+	hPict_[1] = -1;
+	hPict_[2] = -1;
+	hPict_[3] = -1;
 }
 
 PlayScreen::~PlayScreen()

@@ -157,9 +157,6 @@ void FbxParts::Draw(Transform& transform,XMFLOAT4 lineColor)
 
 void FbxParts::DrawShadow(Transform& transform)
 {
-	lightView_ = XMMatrixLookAtLH(XMVectorSet(0, 10, -50, 0),
-		XMVectorSet(0, 0, 0, 0),
-		XMVectorSet(0, 1, 0, 0));
 	transform.Calclation();
 	float factor[4] = { D3D11_BLEND_ZERO,D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
 
@@ -170,8 +167,8 @@ void FbxParts::DrawShadow(Transform& transform)
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix());
-		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * lightView_ * Camera::GetProjectionMatrix() * Direct3D::clipToUVMatrix);
+		cb.matWLP = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightViewMatrix * Camera::GetProjectionMatrix());
+		cb.matWLPT = XMMatrixTranspose(transform.GetWorldMatrix() * Direct3D::lightViewMatrix * Camera::GetProjectionMatrix() * Direct3D::clipToUVMatrix);
 		cb.lightDirection = XMFLOAT4(0, -1, 0, 0);
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
 

@@ -15,7 +15,8 @@ SceneManager::SceneManager(GameObject* parent)
 	: GameObject(parent, "SceneManager"),
 	currentSceneID_(SCENE_ID::SCENE_ID_TITLE),
 	nextSceneID_(SCENE_ID::SCENE_ID_TITLE),
-	isSceneChange_(false)
+	isSceneChange_(false),
+	countDown_(0)
 {
 	currentSceneID_ = SCENE_ID::SCENE_ID_TITLE;
 	nextSceneID_ = currentSceneID_;

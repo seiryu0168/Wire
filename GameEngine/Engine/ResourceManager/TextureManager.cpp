@@ -4,8 +4,9 @@ namespace TextureManager
 {
 	struct textureData
 	{
-		Texture* pTexture_;
+		Texture* pTexture_=nullptr;
 		std::string fileName_;
+		
 	};
 	std::vector<textureData*> textureList_;
 }

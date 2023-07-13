@@ -1,10 +1,16 @@
 #include "ItemBase.h"
 
 ItemBase::ItemBase(GameObject* parent, std::string itemName)
-	:GameObject(parent,itemName),
+	:GameObject(parent, itemName),
 	itemType_(ITEM_TYPE::ITEM_NONE),
 	pParticle_(nullptr),
-	attacheObject_(nullptr)
+	attacheObject_(nullptr),
+	defaultParameter_(0),
+	iniTime_(0),
+	isAttached_(false),
+	isCollision_(false),
+	lifeTime_(0)
+
 {
 	SetTag("Item");
 	pParticle_ = Instantiate<Particle>(this);

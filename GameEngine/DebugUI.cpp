@@ -63,7 +63,7 @@ void DebugUI::StartImGui()
 void DebugUI::Log()
 {
 	ImGui::Begin("Log");
-	for (int i = debugLogs.size()-1; i >=0; i--)
+	for (size_t i = debugLogs.size()-1; i >=0; i--)
 	{
 		std::string msg = debugLogs[i]->objectName_ + " : " + debugLogs[i]->message_;
 		ImGui::Text(msg.c_str());

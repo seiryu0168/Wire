@@ -3,6 +3,8 @@
 #include"Engine/Collider/SphereCollider.h"
 Pointer::Pointer(GameObject* parent)
 	:GameObject(parent,"Pointer"),
+	hModel_(-1),
+	objectType_(-1),
 	drawFlag_(false)
 {
 

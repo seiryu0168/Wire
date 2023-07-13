@@ -10,6 +10,11 @@ private:
 	{
 		std::string itemName_;
 		XMFLOAT3 position_;
+		ItemData()
+		{
+			itemName_ = "";
+			position_ = { 0,0,0 };
+		}
 	};
 	std::vector<ItemData*> itemDatas_;
 	GameObject* pObject_;

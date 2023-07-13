@@ -16,7 +16,8 @@ namespace
 }
 SearchUpItem::SearchUpItem(GameObject* parent)
 	:ItemBase(parent, "SearchUpItem"),
-	hModel_(-1)
+	hModel_(-1),
+	hEmitter_(-1)
 {
 	value_ = SEARCH;
 	SetItemName("SearchUP");

@@ -19,7 +19,8 @@ EnemyNormal::EnemyNormal(GameObject* parent)
 	hModel_(-1),
 	knockBackVec_(XMVectorZero()),
 	knockBackTime_(0),
-	moveSpeed_(0.6f)
+	moveSpeed_(0.6f),
+	pState_(nullptr)
 {
 
 }

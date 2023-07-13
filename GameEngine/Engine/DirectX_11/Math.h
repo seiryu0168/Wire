@@ -45,25 +45,7 @@ inline T Clamp(const T& in, const T& low, const T& high)
 	T out = std::min<T>(std::max<T>(in, low), high);
 	return out;
 }
-//template<typename T>
-//inline bool IsPositive(const T& in)
-//{
-//	if (in > 0)
-//	{
-//		return true;
-//	}
-//	return false;
-//}
-//template<typename T>
-//inline bool IsNegative(const T& in)
-//{
-//	if (in < 0)
-//	{
-//		return true;
-//	}
-//	return false;
-//}
-//----------------------------------------------------------------------------------------
+
 inline XMVECTOR operator*=(XMVECTOR& f1, const XMMATRIX& m1)
 {
 	//f1‚ðm1‚Å•ÏŒ`‚³‚¹‚é

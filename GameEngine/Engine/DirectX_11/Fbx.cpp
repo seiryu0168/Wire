@@ -7,6 +7,9 @@
 
 Fbx::Fbx()
 {
+	endFrame_ = 0;
+	frameRate_ = FbxTime::EMode::eFrames60;
+	startFrame_ = 0;
 	animSpeed_ = 0;
 	pFbxManager_ = nullptr;
 	pFbxScene_ = nullptr;

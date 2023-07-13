@@ -3,7 +3,15 @@
 
 
 ModelComponent::ModelComponent(GameObject* obj)
-	:Component(obj)
+	:Component(obj),
+	animSpeed_(0),
+	color_({0,0,0,0}),
+	startFrame_(0),
+	nowFrame_(0),
+	endFrame_(0),
+	hModel_(-1),
+	pFbxModel_(nullptr),
+	shaderType_(SHADER_TYPE::SHADER_3D)
 {
 }
 

@@ -28,9 +28,14 @@ namespace
 }
 TutorialExplanation::TutorialExplanation()
 	:moveTime_(0),
+	slideNum_(0),
 	mode_(INPUT_MODE::MODE_INPUT),
 	hPictTutorialBackGround_(-1),
-	hPictFrame_(-1)
+	hPictFrame_(-1),
+	hPictLArrowSelect_(-1),
+	hPictLArrow_(-1),
+	hPictRArrowSelect_(-1),
+	hPictRArrow_(-1)
 {
 }
 

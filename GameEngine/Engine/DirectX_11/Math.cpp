@@ -33,29 +33,6 @@ bool Math::Intersect(XMFLOAT3 start, XMFLOAT3 dir, XMFLOAT3 v0, XMFLOAT3 v1, XMF
 	return false;
 }
 
-//bool Math::Intersect(RayCastData& rayCast, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2)
-//{
-//	XMFLOAT3 e1 = XMFLOAT3(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z);
-//	XMFLOAT3 e2 = XMFLOAT3(v2.x - v0.x, v2.y - v0.y, v2.z - v0.z);
-//	XMFLOAT3 d = XMFLOAT3(-rayCast.dir.x, -rayCast.dir.y, -rayCast.dir.z);
-//	XMFLOAT3 s = XMFLOAT3(rayCast.start.x - v0.x, rayCast.start.y - v0.y, rayCast.start.z - v0.z);
-//	float e1e2d = Math::Det(e1, e2, d);
-//	float u = Math::Det(s, e2, d) / e1e2d;
-//	float v = Math::Det(e1, s, d) / e1e2d;
-//	float l = Math::Det(e1, e2, s) / e1e2d;
-//
-//	if (u >= 0 && u <= 1 && v >= 0 && v <= 1 && (u + v) <= 1 && l >= 0)
-//	{
-//		XMVECTOR vU = XMLoadFloat3(&e1)*u;
-//		XMVECTOR vV = XMLoadFloat3(&e2)*v;
-//		XMVECTOR vV0 = XMLoadFloat3(&v0);
-//		rayCast.hitPos=vV0 + vU + vV;
-//		rayCast.dist = l;
-//		return true;
-//	}
-//	return false;
-//}
-
 bool Math::IsFrontSurface(XMVECTOR vNormal, XMVECTOR vDir)
 {
 	XMFLOAT3 normal;

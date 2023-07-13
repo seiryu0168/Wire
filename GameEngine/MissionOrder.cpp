@@ -17,7 +17,10 @@ MissionOrder::MissionOrder(GameObject* parent)
 	pText_(nullptr),
 	pCountText_(nullptr),
 	hPict_(-1),
-	alpha_(1.0f)
+	alpha_(1.0f),
+	EnemyCount_(0),
+	EnemyMax_(0),
+	pSetter_(nullptr)
 
 {
 	hPict_ = ImageManager::Load(BACKGROUND_IMAGE);

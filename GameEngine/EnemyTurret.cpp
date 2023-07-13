@@ -36,7 +36,8 @@ EnemyTurret::EnemyTurret(GameObject* parent)
 	shotTime_(),
 	rpm_(300),
 	shotCount_(0),
-	reLoadTime_(0)
+	reLoadTime_(0),
+	pState_(nullptr)
 {
 
 }

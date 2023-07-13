@@ -79,17 +79,20 @@ Player::Player(GameObject* parent)
     hAudio_(-1),
     hAudioShoot_(-1),
     stageNum_(-1),
+    enemyNumber_(-1),
     prevPositionVec(XMVectorZero()),
     vCamPos_(XMVectorSet(0, 10, -30, 0)),
     vPlayerPos_(XMVectorZero()),
     vBaseTarget_(XMVectorSet(0, 0, 80, 0)),
     vBaseAim_(XMVectorSet(3, 2, -4, 0)),
+    areaLimit_({0,0,0,0}),
     vFlyMove_(XMVectorZero()),
     vPlayerMove_(XMVectorZero()),
     cameraShake_(XMVectorZero()),
     matCamX_(XMMatrixIdentity()),
     matCamY_(XMMatrixIdentity()),
     moveTime_(0),
+    status_(0),
     aimTime_(0),
     flyTime_(0),
     godTime_(0),
@@ -112,7 +115,8 @@ Player::Player(GameObject* parent)
     pParticle_(nullptr),
     pPointer_(nullptr),
     pSetter_(nullptr),
-    wire_(nullptr)
+    wire_(nullptr),
+    pItemGetter_(nullptr)
 {
     Instantiate<PlayerBase>(this);
     pScreen_ = Instantiate<PlayScreen>(this);

@@ -29,7 +29,8 @@ EnemyBoss::EnemyBoss(GameObject* parent)
 	perShot_(false),
 	shotCount_(0),
 	reLoadTime_(0),
-	RELOAD(90)
+	RELOAD(90),
+	pState_(nullptr)
 {
 	SetActive(false);
 
@@ -77,10 +78,6 @@ void EnemyBoss::Update()
 	//À•WÝ’è
 	SetPositionVec(XMLoadFloat3(&transform_.position_));
 	pState_->Update(*this);
-}
-
-void EnemyBoss::FixedUpdate()
-{
 }
 
 void EnemyBoss::Draw()

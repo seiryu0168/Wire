@@ -9,7 +9,8 @@ Component::Component()
 
 Component::Component( GameObject* obj)
 	:pObject_(obj),
-	active_(true)
+	active_(true),
+	componentType_(COMPONENT_TYPE::COMP_MODEL)
 {
 }
 

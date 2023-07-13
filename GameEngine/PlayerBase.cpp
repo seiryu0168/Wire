@@ -13,8 +13,14 @@ namespace
 PlayerBase::PlayerBase(GameObject* parent)
     :GameObject(parent, "PlayerBase"),
     hModel_(-1),
-    prevPos_(XMFLOAT3(0, 0, 0))
+    hAudio_(-1),
+    prevPos_(XMFLOAT3(0, 0, 0)),
+    moveVec_(XMVectorSet(0,0,0,0))
 {
+    vSparkPos_[0] = XMVectorSet(0, 0, 0, 0);
+    vSparkPos_[1] = XMVectorSet(0, 0, 0, 0);
+    vSparkPos_[2] = XMVectorSet(0, 0, 0, 0);
+    vSparkPos_[3] = XMVectorSet(0, 0, 0, 0);
 	pParticle_ = Instantiate<Particle>(this);
 }
 

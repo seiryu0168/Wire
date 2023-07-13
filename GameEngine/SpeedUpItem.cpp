@@ -13,7 +13,8 @@ namespace
 }
 SpeedUpItem::SpeedUpItem(GameObject* parent)
 	:ItemBase(parent,"SpeedUpItem"),
-	hModel_(-1)
+	hModel_(-1),
+	hEmitter_(-1)
 {
 	value_ = SPEED;
 	SetItemName("SpeedUP");

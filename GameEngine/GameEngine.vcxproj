@@ -215,7 +215,6 @@
     <ClCompile Include="ModelComponent.cpp" />
     <ClCompile Include="ObjectSetter.cpp" />
     <ClCompile Include="PauseUI.cpp" />
-    <ClCompile Include="PlayButton.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBase.cpp" />
     <ClCompile Include="PlayScene.cpp" />

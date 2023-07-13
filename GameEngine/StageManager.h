@@ -10,6 +10,11 @@ private:
 	{
 		XMFLOAT4 areaLimit_;
 		std::string stageName_;
+		StageData()
+		{
+			areaLimit_ = { 0,0,0,0 };
+			stageName_ = "";
+		}
 	};
 	std::vector<StageData*> stageDatas_;
 public:

@@ -5,15 +5,18 @@
 
 Text::Text()
 {
-	textLength_	   = 0;
-	transform2D = { 0,0 };
-	pText_		   = nullptr;
+	margin_			   = 0;
+	textLength_		   = 0;
+	transform2D		   = { 0,0 };
+	layoutRect_		   = { 0,0,0,0 };
+	backGroungColor_   = { 0,0,0,0 };
+	pFontName_         = nullptr;
+	pText_		       = nullptr;
 	pTextColorBrush_   = nullptr;
-	pWriteFactory_ = nullptr;
-	pTextFormat_   = nullptr;
-	pLayout_	   = nullptr;
-	backGroungColor_ = { 0,0,0,0 };
-	pBackColorBrush_ = nullptr;
+	pWriteFactory_	   = nullptr;
+	pTextFormat_       = nullptr;
+	pLayout_	       = nullptr;
+	pBackColorBrush_   = nullptr;
 }
 Text::~Text()
 {

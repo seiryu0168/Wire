@@ -31,9 +31,10 @@ namespace
 ObjectSetter::ObjectSetter(GameObject* parent)
 	:GameObject(parent, "ObjectSetter"),
 	pPlayer_(nullptr),
+	pManager_(nullptr),
 	countDown_(0),
 	bossSpawn_(false),
-	pManager_(nullptr),
+	resultFrag_(false),
 	hPict_(-1)
 {
 	set_ = new SetObject(GetParent());

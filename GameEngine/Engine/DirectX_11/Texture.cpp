@@ -5,6 +5,8 @@
 #pragma comment( lib, "WindowsCodecs.lib" )
 Texture::Texture()
 {
+	imgHeight_ = 0;
+	imgWidth_ = 0;
 	pSampler_ = nullptr;
 	pSRV_ = nullptr;
 }

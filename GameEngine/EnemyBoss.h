@@ -84,7 +84,6 @@ public:
     //XV
     void Update() override;
 
-    void FixedUpdate() override;
     //•`‰æ
     void Draw() override;
 

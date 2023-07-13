@@ -3,22 +3,6 @@
 #include<chrono>
 #pragma comment(lib, "winmm.lib")
 
-//EngineTime::EngineTime()
-//	:time(0),deltaTime(0),timeScale(1)
-//{
-//
-//}
-//EngineTime::~EngineTime()
-//{
-//
-//}
-//namespace EngineTime
-//{
-//	unsigned long time;
-//	float deltaTime;
-//	float timeScale;
-//};
-
 namespace EngineTime
 {
 	double time;
