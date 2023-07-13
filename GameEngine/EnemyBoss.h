@@ -52,9 +52,6 @@ private:
 
     class StateSecondMode : public EnemyState<EnemyBoss>
     {
-    private:
-        int waitTime_;
-        int hModel_;
     public:
         static StateSecondMode* GetInstance()
         {

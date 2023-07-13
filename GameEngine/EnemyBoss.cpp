@@ -200,7 +200,6 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			{
 				Transform pos;
 				pos.position_ = { 9999,9999,9999 };
-				//GetComponent<ModelComponent>()->SetActive(false);
 				ModelManager::DeleteModelNum(hModelCore_);
 				SetIsList(false);
 				KillMe();
@@ -208,7 +207,6 @@ void EnemyBoss::OnCollision(GameObject* pTarget)
 			else if (GetLife() < SECOND_MODE_LIFE)
 			{
 				ChangeState(StateSecondMode::GetInstance());
-				//GetComponent<ModelComponent>(1)->SetActive(false);
 				ModelManager::DeleteModelNum(hModelShield_);
 				SethModel(hModelCore_);
 			}
