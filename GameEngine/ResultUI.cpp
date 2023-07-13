@@ -95,7 +95,7 @@ void ResultUI::Update()
 void ResultUI::MoveButton(float ratio)
 {
 	//最大移動量＊割合＊方向
-	int delta = -(MOVE * ratio * buttonMove_);
+	int delta = -(int)(MOVE * ratio * buttonMove_);
 		//ボタンを移動させる
 		ImageManager::SetImagePos(hPictButtonFrame_,
 								  {buttonFramePos_.x,
@@ -133,7 +133,7 @@ void ResultUI::Input()
 	}
 	//ボタンの番号を調整
 	buttonNum_ += buttonMove_;
-	buttonNum_ = Clamp<float>((float)buttonNum_, 0.0f, (float)(buttonCount_ - 1));
+	buttonNum_ = Clamp<int>(buttonNum_, 0, (buttonCount_ - 1));
 
 	PushedButton(buttonNum_);
 }
@@ -185,6 +185,7 @@ void ResultUI::ThirdDraw()
 	{
 		i.buttonText_->Draw();
 	}
+	ImageManager::Draw(hPictButtonFrame_);
 }
 
 void ResultUI::PushedButton(int num)
@@ -214,7 +215,7 @@ void ResultUI::LoadImageFile()
 	assert(hPictButtonFrame_ >= 0);
 
 	ImageManager::SetImagePos(hPictButtonFrame_, BUTTON_FIRST_POS);
-	ImageManager::SetUIList(hPictButtonFrame_);
+	//ImageManager::SetUIList(hPictButtonFrame_);
 	
 	//ボタン画像読み込み
 	for (auto elem : fileReader_[0][BUTTON_LIST_NAME].items().begin().value())
