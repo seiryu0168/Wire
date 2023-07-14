@@ -207,13 +207,16 @@ void Particle::FixedUpdate()
 //•`‰æ
 void Particle::Draw()
 {
+	//DebugUI::DumpMessage("Particle : Draw-Start");
 	if (useShadow_==false&&Direct3D::IsRenderShadow())
 		return;
 	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_ADD);
-
+	//DebugUI::DumpMessage("Particle : ShaderSet");
+	int k = 0;
 	for (auto i = particleList_.begin(); i != particleList_.end(); i++)
 	{
+		//DebugUI::DumpMessage("Particle : Draw-"+std::to_string(k));
 		XMMATRIX matW;
 
 		//ˆÚ“®s—ñ
@@ -224,7 +227,9 @@ void Particle::Draw()
 
 		matW = matScale * Camera::GetBillBoardMatrix() * matTrans;
 		(*i)->pEmitter->pBillBoard->Draw(matW, (*i)->nowData.color);
+		k++;
 	}
+	//DebugUI::DumpMessage("Particle : Draw-Success");
 }
 
 //ŠJ•ú

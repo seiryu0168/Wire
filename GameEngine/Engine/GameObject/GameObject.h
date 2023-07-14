@@ -9,6 +9,7 @@
 #include"../../Component.h"
 #include<vector>
 #include"Transform.h"
+#include"../../DebugUI.h"
 
 class GameObject
 {

@@ -27,5 +27,8 @@ namespace DebugUI
 	void GetProcess(DWORD processID);
 	void ObjectCount(GameObject* object);
 	void CountSub(GameObject* object);
+
+	//どこまで初期化できたかテキストファイルにダンプする関数
+	void DumpMessage(std::string message);
 };
 

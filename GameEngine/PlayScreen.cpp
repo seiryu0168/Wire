@@ -58,17 +58,21 @@ void PlayScreen::Initialize()
 
 void PlayScreen::Draw()
 {
+	//DebugUI::DumpMessage(this->objectName_ + " : Draw-Start.\n");
 	if (((Player*)GetParent())->GetLife() <= LOW_HP)
 	{
 		ImageManager::Draw(hLowHPPict_);
 	}
+	//DebugUI::DumpMessage(this->objectName_ + " : Draw-Success.\n");
 }
 void PlayScreen::SecondDraw()
 {
+	//DebugUI::DumpMessage(this->objectName_ + " : SecondDraw-Start.\n");
 	for (int i : hPict_)
 	{
 		ImageManager::Draw(i);
 	}
+	//DebugUI::DumpMessage(this->objectName_ + " : SecondDraw-Success.\n");
 }
 void PlayScreen::ThirdDraw()
 {

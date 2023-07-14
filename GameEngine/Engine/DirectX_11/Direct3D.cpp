@@ -1,6 +1,7 @@
 #include <d3dcompiler.h>
 #include"../../EngineTime.h"
 #include "Direct3D.h"
+#include"../../DebugUI.h"
 #include<array>
 
 //•Ï”

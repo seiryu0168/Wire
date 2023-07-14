@@ -65,7 +65,7 @@ void TutorialExplanation::Input()
 	}
 	//ƒXƒ‰ƒCƒh”Ô†‚ğ’²®
 	slideNum_ -= moveDir_;
-	slideNum_ = Clamp<float>(slideNum_, 0, imageList_.size() - 1);
+	slideNum_ = Clamp<int>(slideNum_, 0, imageList_.size() - 1);
 }
 void TutorialExplanation::Move()
 {

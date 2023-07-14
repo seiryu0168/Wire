@@ -17,6 +17,7 @@
 #include"Test.h"
 #include"MissionUI.h"
 #include"Stage1.h"
+#include"DebugUI.h"
 
 #ifdef _DEBUG
 #include"Engine/DirectX_11/Input.h"
@@ -89,6 +90,7 @@ ObjectSetter::ObjectSetter(GameObject* parent)
 		Instantiate<TutorialUI>(GetParent());
 	}
 	//set_->ObjectSet();
+	//DebugUI::DumpMessage("ObjectSetter : Constructor-Success.\n");
 }
 
 ObjectSetter::~ObjectSetter()
@@ -101,6 +103,7 @@ void ObjectSetter::Initialize()
 	hPict_ = ImageManager::Load(BLACK_IMAGE);
 	assert(hPict_ >= 0);
 	ImageManager::SetAlpha(hPict_,0.0f);
+	//DebugUI::DumpMessage("ObjectSetter : Initialize-Success.\n");
 }
 
 void ObjectSetter::Update()

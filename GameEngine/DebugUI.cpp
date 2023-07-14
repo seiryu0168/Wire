@@ -1,8 +1,12 @@
 #include "DebugUI.h"
 #include"Engine/SceneManager.h"
 #include<psapi.h>
+#include<fstream>
 
-
+namespace
+{
+	std::string DUMP_FILE_NAME= "dump.txt";
+}
 namespace DebugUI
 {
 	int objectCount_;
@@ -24,6 +28,10 @@ void DebugUI::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* 
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(pDevice,pContext);
+	std::ofstream ofs;
+	ofs.open(DUMP_FILE_NAME, std::ios::out);
+	ofs << "";
+	ofs.close();
 
 }
 
@@ -166,4 +174,14 @@ void DebugUI::CountSub(GameObject* object)
 		ImGui::TreePop();
 	}
 
+}
+
+void DebugUI::DumpMessage(std::string message)
+{
+	std::ofstream ofs;
+	std::string fileName = DUMP_FILE_NAME;
+	
+	ofs.open(fileName, std::ios::app);
+	ofs << message << std::endl;
+	ofs.close();
 }

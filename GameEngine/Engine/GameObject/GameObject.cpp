@@ -31,12 +31,16 @@ void GameObject::UpdateSub()
 	{
 		GameObject* p = GetRootJob();
 		this->Initialize();
+		//DebugUI::DumpMessage(this->objectName_ + " : Initialize-Success.\n");
 		this->startFlag_ = true;
 	}
-	else if(startFlag_&&
-			activeFlag_&&
-			isUpdate_)
-	Update();
+	else if (startFlag_ &&
+		activeFlag_ &&
+		isUpdate_)
+	{
+		Update();
+		//DebugUI::DumpMessage(this->objectName_ + " : Update-Success.\n");
+	}
 
 
 
@@ -99,6 +103,7 @@ void GameObject::DrawSub()
 			componentList_[i]->Update(true);
 		}
 		Draw();
+		//DebugUI::DumpMessage(this->objectName_ + " : Draw-Success./n");
 	}
 	for (auto i = childList_.begin(); i != childList_.end(); i++)
 	{
@@ -112,6 +117,7 @@ void GameObject::SecondDrawSub()
 	if (drawFlag_ && startFlag_)
 	{
 		SecondDraw();
+		//DebugUI::DumpMessage(this->objectName_ + " : SecondDraw-Success./n");
 	}
 
 	for (auto i = childList_.begin(); i != childList_.end(); i++)
@@ -125,6 +131,7 @@ void GameObject::ThirdDrawSub()
 	if (drawFlag_&&startFlag_)
 	{
 		ThirdDraw();
+		//DebugUI::DumpMessage(this->objectName_ + " : ThirdDraw-Success./n");
 	}
 
 	for (auto i = childList_.begin(); i != childList_.end(); i++)

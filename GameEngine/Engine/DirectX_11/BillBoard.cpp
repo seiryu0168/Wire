@@ -1,6 +1,7 @@
 #include "BillBoard.h"
 #include"../GameObject/Camera.h"
 #include"../ResourceManager/TextureManager.h"
+#include"../../DebugUI.h"
 BillBoard::BillBoard()
 	:hTexture_(-1)
 {
@@ -40,7 +41,7 @@ HRESULT BillBoard::Load(std::string fileName)
 	data_vertex.pSysMem = vertices;
 
 	hr=Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ビルボード頂点バッファの作成に失敗", L"エラー", MB_OK);
 		return hr;
@@ -57,7 +58,7 @@ HRESULT BillBoard::Load(std::string fileName)
 	cb.StructureByteStride = 0;
 
 	hr=Direct3D::pDevice->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ビルボードコンスタントバッファの作成に失敗", L"エラー", MB_OK);
 		return hr;
@@ -77,8 +78,8 @@ HRESULT BillBoard::Load(std::string fileName)
 	initData.SysMemPitch = 0;
 	initData.SysMemSlicePitch = 0;
 
-	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &initData, &pIndexBuffer_);
-	if (FALSE(hr))
+	hr = Direct3D::pDevice->CreateBuffer(&bd_index, &initData, &pIndexBuffer_);
+	if (FAILED(hr))
 	{
 		MessageBox(nullptr, L"ビルボードインデックスバッファの作成に失敗", L"エラー", MB_OK);
 		return hr;
@@ -97,6 +98,9 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 {
 	Direct3D::SetBlendMode(BLEND_MODE::BLEND_ADD);
 	Direct3D::SetShader(SHADER_TYPE::SHADER_EFF);
+	//DebugUI::DumpMessage("BillBord : ShaderSet");
+
+	//DebugUI::DumpMessage("BillBord : Draw-Start");
 
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(matW * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
@@ -108,9 +112,12 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	
 		ID3D11SamplerState* pSampler = TextureManager::GetTexture(hTexture_)->GetSampler();
 		Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+		//DebugUI::DumpMessage("BillBord : PSSetSampler-Success");
 
 		ID3D11ShaderResourceView* pSRV1 = TextureManager::GetTexture(hTexture_)->GetSRV();
 		Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV1);
+		//DebugUI::DumpMessage("BillBord : PSSetShaderResource-Success");
+
 
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);//再開
 	
@@ -118,18 +125,22 @@ void BillBoard::Draw(XMMATRIX matW, XMFLOAT4 col)
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
+	//DebugUI::DumpMessage("BillBord : IASetVertexBuffer-Success");
 	
 	// インデックスバッファーをセット
 	stride = sizeof(int);
 	offset = 0;
 	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+	//DebugUI::DumpMessage("BillBord : IASetIndexBuffer-Success");
 
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);							//頂点シェーダー用	
+	//DebugUI::DumpMessage("BillBord : VSSetConstantBuffer-Success");
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);							//ピクセルシェーダー用
+	//DebugUI::DumpMessage("BillBord : PSSetConstantBuffer-Success");
 
 	Direct3D::pContext->DrawIndexed(6, 0, 0);
+	//DebugUI::DumpMessage("BillBoard : Draw-Success");
 }
 
 void BillBoard::Release()
